@@ -7,9 +7,9 @@
 
 #include "index.h"
 
+//flash用
 const uint32_t start_address = 0x08160000; //sentor15 start address
 const uint32_t end_adress = 0x0817FFFF; // sector15 end address
-
 
 /*
  *@brief erase sector15

@@ -83,6 +83,28 @@ void set_mode_number(uint8_t mn)
 	mode_number = mn;
 }
 
+//機能	:右タイヤによるインジケータ用番号変更
+//引数	:現在の番号
+//返り値	変更された番号
+uint8_t select_num_r_tire (uint8_t temp_num)
+{
+	while(get_tire_r_speed() != 0); //いったんタイヤ停止するまで待ち
+	init_tire_speed(); //タイヤの最大、最低速度初期化
+	HAL_Delay(200);	//タイヤ最大値更新時間
+
+	if (get_tire_r_speed_max() > mode_count_up_th) //右タイヤ速度＞正の閾値の時の処理
+	{
+		temp_num	+= 1;
+	}
+
+	if (get_tire_r_speed_min() < mode_count_down_th) //m右タイヤ速度＜負の閾値の時の処理
+	{
+		temp_num -= 1;
+	}
+
+		return temp_num;
+}
+
 //機能	:右タイヤの速度を入力に、モード番号を変更、LEDに出力
 //引数	:なし
 //返り値	:なし
@@ -90,21 +112,7 @@ void mode_select (void)
 {
 	static uint8_t mode_number_old = 0;
 
-	while(get_tire_r_speed() != 0); //いったんタイヤ停止するまで待ち
-
-	init_tire_speed(); //タイヤの最大、最低速度初期化
-
-	HAL_Delay(200);	//タイヤ最大値更新時間
-
-	if (get_tire_r_speed_max() > mode_count_up_th) //m右タイヤ速度＞正の閾値の時の処理
-	{
-		mode_count	+= 1;
-	}
-
-	if (get_tire_r_speed_min() < mode_count_down_th) //m右タイヤ速度＜負の閾値の時の処理
-	{
-		mode_count -= 1;
-	}
+	mode_count =  select_num_r_tire (mode_count);
 
 	mode_count &= 0b00001111;	//8bit->4bit
 
@@ -119,11 +127,10 @@ void mode_select (void)
 
 //機能	:左タイヤ速度を入力とし、モードを決定する。
 //引数	:なし
-//返り値	:モード決定状態
+//返り値	:モード決定状態 0:決定前 1:決定後
 uint8_t mode_decide_jud(void)
 {
 	uint8_t temp = 0;
-	
 	if(mode_stanby_th < get_tire_l_speed_max() )
 	{
 		temp = after;

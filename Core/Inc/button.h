@@ -10,11 +10,10 @@
 #include <stdio.h>
 #include "gpio.h"
 
-
-
 uint8_t read_button(void);//ボタン情報読み込み(1msタスク)
 uint8_t cnt_button(void);//ボタンによるカウンタのインクリメント
 
+extern uint8_t button_state;
 
 
 

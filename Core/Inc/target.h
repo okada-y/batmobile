@@ -16,8 +16,8 @@ typedef enum {
 
 //加速モード
 typedef enum {
-	acceleration 	= 0, //加速
-	deceleration 	= 1, //減速
+	deceleration	= 0, //減速
+	acceleration	= 1, //加速
 } accel_mode;
 
 //下限速度モード

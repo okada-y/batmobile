@@ -40,6 +40,9 @@ typedef enum {
 	search_mode 	= 0,
  	fust_run_mode 	= 1,
 } maze_search_flg;
+
+
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -78,13 +81,15 @@ int main(void)
   /* USER CODE BEGIN 1 */
 //	char temp_str[200];
 	  /*迷路変数定義*/
-	  static uint8_t maze_x_size = x_size;//x方向の壁の枚数(x方向のマスの数+1)
-	  static uint8_t maze_y_size = y_size;//y方向の壁の枚数(y方向のマスの数+1)
-	  static uint8_t goal_size = g_size; //ゴールのマスの数
-	  static uint8_t maze_goal[18] = goal_cordinate;
-	  static uint8_t m_wall_tmp[1024];//迷路情報格納用配列
-	  static uint8_t m_search_tmp[1024];//探索情報格納用配列
-	  static uint8_t run_mode = search_mode;
+//	  static uint8_t maze_x_size = x_size;//x方向の壁の枚数(x方向のマスの数+1)
+//	  static uint8_t maze_y_size = y_size;//y方向の壁の枚数(y方向のマスの数+1)
+//	  static uint8_t goal_size = g_size; //ゴールのマスの数
+//	  static uint8_t maze_goal[18] = goal_cordinate;
+//	  static uint8_t m_wall_tmp[1024];//迷路情報格納用配列
+//	  static uint8_t m_search_tmp[1024];//探索情報格納用配列
+
+	static uint8_t run_mode = search_mode;
+	uint8_t maze_data_mode = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -229,16 +234,47 @@ uint16_t i = 0;
 			  module_test();
 			  break;
 
-		  case 14:
+		  case 14:	//探索モードで走行
+			  //迷路データの初期化
+			  maze_init(maze_data.maze_y_size, maze_data.maze_x_size, maze_data.m_wall_tmp, maze_data.m_search_tmp);
+
+			  run_mode = search_mode;
+			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size, maze_data.maze_goal, maze_data.goal_size, run_mode);
 			  break;
 
-		  case 15:
-			  /*迷路データの初期化*/
-			  maze_init(maze_y_size, maze_x_size, m_wall_tmp, m_search_tmp);
+		  case 15:	//迷路データの書き込み、読み込み、消去
+			  maze_data_mode = 0;
 
-			  /*探索モードで走行*/
-			  run_mode = search_mode;
-			  maze_solve(m_wall_tmp, m_search_tmp, maze_y_size, maze_x_size, maze_goal, goal_size, run_mode);
+			  while(!button_state){
+				  maze_data_mode = select_num_r_tire (maze_data_mode);
+				  Indicator_number(maze_data_mode);
+			  }
+
+			  for(int i=0; i<2; i++){ // モード処理終了時、LEDを2回点灯
+				  LED_ALL_ON();
+				  HAL_Delay(700);
+				  LED_ALL_OFF();
+				  HAL_Delay(300);
+			  }
+
+			  switch(maze_data_mode){
+			  case 0://迷路データの出力
+				  maze_data_output();
+				  break;
+			  case 1://読み込み
+				  loadFlash(start_address, (uint8_t*)&maze_data, sizeof(maze_data_t));
+				  break;
+			  case 2://書き込み
+				  writeFlash(start_address, (uint8_t*)&maze_data, sizeof(maze_data_t));
+				  break;
+			  case 3://消去
+				  eraseFlash()	;
+				  break;
+			  case 4://迷路データの初期化
+				  maze_init(maze_data.maze_y_size, maze_data.maze_x_size, maze_data.m_wall_tmp, maze_data.m_search_tmp);
+				  break;
+			  }
+
 			  break;
 		  }
 

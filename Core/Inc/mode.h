@@ -21,6 +21,7 @@ void set_mode_number(uint8_t);
 void mode_select (void);
 uint8_t mode_decide_jud(void);
 void mode_start(void);
+uint8_t select_num_r_tire (uint8_t);
 
 
 #endif /* MODE_H_ */

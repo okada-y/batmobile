@@ -112,7 +112,7 @@ void data_read(void)
 
 
 	//パラメータ名が出力されたのち、ボタンを押してデータを吐き出す
-	while(!read_button()){
+	while(!button_state){
 		HAL_Delay(1);
 	}
 
@@ -145,36 +145,11 @@ void data_read(void)
 					log_store[i].front_sensor_l ,
 					log_store[i].side_sensor_r ,
 					log_store[i].side_sensor_l );
-////		  SEGGER_RTT_WriteString(0,temp_str);
-//		  HAL_Delay(50);
-//		printf("%f,",log_store[i].time);
-//		printf("%f,",log_store[i].interrupt_duty);
-//		printf("%f,",log_store[i].V_battery);
-//	    printf("%f,",log_store[i].duty_r);
-//	    printf("%f,",log_store[i].duty_l);
-//	    printf("%f,",log_store[i].speed_r);
-//	    printf("%f,",log_store[i].speed_l);
-//	    printf("%f,",log_store[i].angle_r);
-//	    printf("%f,",log_store[i].angle_l);
-//	    printf("%f,",log_store[i].correct_r);
-//	    printf("%f,",log_store[i].correct_l);
-//	    printf("%f,",log_store[i].target_speed_m);
-//	    printf("%f,",log_store[i].speed_m);
-//	    printf("%f,",log_store[i].ideal_d_m);
-//	    printf("%f,",log_store[i].real_d_m);
-//	    printf("%f,",log_store[i].accel_m);
-//	    printf("%f,",log_store[i].target_speed_w);
-//	    printf("%f,",log_store[i].speed_w);
-//	    printf("%f,",log_store[i].ideal_d_w);
-//	    printf("%f,",log_store[i].real_d_w);
-//	    printf("%f,",log_store[i].front_sensor_r);
-//	    printf("%f,",log_store[i].front_sensor_l);
-//	    printf("%f,",log_store[i].side_sensor_r);
-//	    printf("%f,",log_store[i].side_sensor_l);
-//	    printf("\r\n"); // 改行
 	    HAL_Delay(50);
 	}
 }
+
+
 
 /* ---------------------------------------------------------------
 	有線でのパラメータ確認関数
@@ -210,4 +185,6 @@ void module_test( void )
 				  HAL_Delay(500);
 	}
 }
+
+
 

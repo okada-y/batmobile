@@ -31,6 +31,7 @@
 #include "adjust.h"
 #include "movement.h"
 #include"target.h"
+#include	"maze.h"
 #include "flash.h"
 
 
