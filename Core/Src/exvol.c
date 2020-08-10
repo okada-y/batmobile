@@ -42,6 +42,15 @@ void set_mode_ctrl(ctrl_mode_num mode_num)
 	ctrl_mode = mode_num;
 }
 
+//機能 	:制御モードを取得
+//引数 	:なし
+//返り値:なし
+ctrl_mode_num get_mode_ctrl(void)
+{
+	return ctrl_mode;
+}
+
+
 //機能 	:制御モード番号に従い、電圧を印可
 //引数 	:なし
 //返り値:なし

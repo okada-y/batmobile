@@ -32,8 +32,8 @@
 #define Sampling_cycle      (0.001)  //サンプリング周期
 
 /*module_test*/
-#define log_count_lim		(10000)	//データ取得する期間[ms]
-#define log_count_step		(10)	    //データを取得する時間間隔[ms]
+#define log_count_lim		(4000)	//データ取得する期間[ms]
+#define log_count_step		(4)	    //データを取得する時間間隔[ms]
 
 #define DATA_DEFAULT              //測定モード１
 //#define DATA_SIDE                 //測定モード２
@@ -145,6 +145,11 @@
 #define MOT_DUTY_MIN	(30)						//モータの最低Duty
 #define MOT_DUTY_MAX	(800)						//モータの最大Duty
 
+//failsafe
+#define speed_m_err_th (0.05f)					//速度偏差の閾値(m/s)
+#define theta_err_th (0.1f)							//角度偏差の閾値(rad)
+#define mouse_state_err_count_th 	(50)		//速度、角度偏差によるエラー検出のカウンタ値(ms)
+#define front_wall_err_count_th 	(1000)		//前壁制御時のエラー検出のカウンタ値(ms)
 
 
 

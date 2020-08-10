@@ -10,6 +10,7 @@ typedef enum {
 
 void motor_1ms ( void );
 void set_mode_ctrl( ctrl_mode_num );
+ctrl_mode_num get_mode_ctrl(void);
 void set_motor_vol(void);
 void set_motor_vol_trace(void);
 void set_motor_vol_front_wall(void);

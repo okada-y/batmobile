@@ -23,86 +23,93 @@ static float		boot_time = 0.f;
 --------------------------------------------------------------- */
 void Interrupt_Main( void )
 {
-	calc_move_speed();
-	button_state = read_button();
-	if(get_mode_state() == process)
-	{
-		switch(get_mode_number())
+		calc_move_speed();
+		button_state = read_button();
+		if(get_mode_state() == process)
 		{
-			case 0 :
-				break;
+			//フェイセーフが無効、もしくは有効かつエラーフラグが立っていないとき
+			if(!failsafe_en_flg || !jud_mouse_state_err()){
+			switch(get_mode_number())
+			{
+				case 0 :
+					break;
 
-			case 1 :
-				 data_get();
-				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
-				break;
+				case 1 :
+					 data_get();
+					 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
+					break;
 
-			case 2 :
-				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
-				 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
-				 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
-				 adjust_1ms();			//壁制御による印加電圧を計算
-				 motor_1ms();			//制御モードに応じた印加電圧を出力
-				 data_get();
-				break;
+				case 2 :
+					 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
+					 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
+					 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
+					 adjust_1ms();			//壁制御による印加電圧を計算
+					 motor_1ms();			//制御モードに応じた印加電圧を出力
+					 data_get();
+					break;
 
-			case 3 :
-				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
-				 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
-				 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
-				 adjust_1ms();			//壁制御による印加電圧を計算
-				 motor_1ms();			//制御モードに応じた印加電圧を出力
-				 data_get();
-				break;
+				case 3 :
+					 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
+					 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
+					 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
+					 adjust_1ms();			//壁制御による印加電圧を計算
+					 motor_1ms();			//制御モードに応じた印加電圧を出力
+					 data_get();
+					break;
 
-			case 4 :
-				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
-				 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
-				 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
-				 adjust_1ms();			//壁制御による印加電圧を計算
-				 motor_1ms();			//制御モードに応じた印加電圧を出力
-				 data_get();
-				break;
+				case 4 :
+					 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
+					 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
+					 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
+					 adjust_1ms();			//壁制御による印加電圧を計算
+					 motor_1ms();			//制御モードに応じた印加電圧を出力
+					 data_get();
+					break;
 
-			case 5 :
-				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
-				 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
-				 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
-				 adjust_1ms();			//壁制御による印加電圧を計算
-				 motor_1ms();			//制御モードに応じた印加電圧を出力
-				 data_get();
-				break;
+				case 5 :
+					 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
+					 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
+					 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
+					 adjust_1ms();			//壁制御による印加電圧を計算
+					 motor_1ms();			//制御モードに応じた印加電圧を出力
+					 data_get();
+					break;
 
-			case 6 :
-				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
-				 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
-				 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
-				 adjust_1ms();			//壁制御による印加電圧を計算
-				 motor_1ms();			//制御モードに応じた印加電圧を出力
-				 data_get();
-				break;
+				case 6 :
+					 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
+					 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
+					 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
+					 adjust_1ms();			//壁制御による印加電圧を計算
+					 motor_1ms();			//制御モードに応じた印加電圧を出力
+					 data_get();
+					break;
 
-			case 7 :
-				break;
+				case 7 :
+					break;
 
-			case 14 :
-				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
-				 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
-				 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
-				 adjust_1ms();			//壁制御による印加電圧を計算
-				 motor_1ms();			//制御モードに応じた印加電圧を出力
-				 data_get();
-				break;
+				case 14 :
+					 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
+					 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
+					 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
+					 adjust_1ms();			//壁制御による印加電圧を計算
+					 motor_1ms();			//制御モードに応じた印加電圧を出力
+					 data_get();
+					break;
 
-			case 15 :
-//				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
-//				 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
-//				 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
-//				 adjust_1ms();			//壁制御による印加電圧を計算
-//				 motor_1ms();			//制御モードに応じた印加電圧を出力
-//				 data_get();
-				break;
+				case 15 :
+	//				 mouse_state_1ms();		//マウスの速度、角速度、移動距離、角度を計算
+	//				 target_1ms();			//目標距離、角度から目標速度、角速度、加速度、角加速度を計算
+	//				 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
+	//				 adjust_1ms();			//壁制御による印加電圧を計算
+	//				 motor_1ms();			//制御モードに応じた印加電圧を出力
+	//				 data_get();
+					break;
+			}
 		}
+			else//フェールセーフ時の処理
+			{
+				Processing_on_error();
+			}
 	}
 }
 

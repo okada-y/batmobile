@@ -192,7 +192,7 @@ uint16_t i = 0;
 			 	set_accel_mode(deceleration);
 				/*回転方向設定*/
 				set_rotation_mode(clockwise);
-			    set_target_angle(-2*PI*10);
+			    set_target_angle(-2*PI*2);
 
 			    /*360度回転するまで待機*/
 			    while (1)
@@ -237,7 +237,9 @@ uint16_t i = 0;
 		  case 14:	//探索モードで走行
 			  //迷路データの初期化
 			  maze_init(maze_data.maze_y_size, maze_data.maze_x_size, maze_data.m_wall_tmp, maze_data.m_search_tmp);
-
+			  //フェイルセーフ有効化
+			  set_failsafe_flg(1);
+			  //探索モードで走行
 			  run_mode = search_mode;
 			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size, maze_data.maze_goal, maze_data.goal_size, run_mode);
 			  break;

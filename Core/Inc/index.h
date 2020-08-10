@@ -33,6 +33,8 @@
 #include"target.h"
 #include	"maze.h"
 #include "flash.h"
+#include "failsafe.h"
+
 
 
 
