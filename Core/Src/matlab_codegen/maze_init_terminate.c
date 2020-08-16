@@ -2,23 +2,30 @@
  * Sponsored License - for use in support of a program or activity
  * sponsored by MathWorks.  Not for government, commercial or other
  * non-sponsored organizational use.
- * File: matlab_code_gen_data.c
+ * File: maze_init_terminate.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 18-Nov-2019 23:53:15
+ * C/C++ source code generated on  : 14-Aug-2020 15:40:02
  */
 
 /* Include Files */
 #include "maze_init.h"
 #include "maze_solve.h"
-#include "matlab_code_gen_data.h"
-#include "param.h"
+#include "maze_init_terminate.h"
 
-/* Variable Definitions */
-
+/* Function Definitions */
 
 /*
- * File trailer for matlab_code_gen_data.c
+ * Arguments    : void
+ * Return Type  : void
+ */
+void maze_init_terminate(void)
+{
+  /* (no terminate code required) */
+}
+
+/*
+ * File trailer for maze_init_terminate.c
  *
  * [EOF]
  */

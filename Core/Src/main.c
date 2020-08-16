@@ -31,7 +31,6 @@
 #include"index.h"
 #include "maze_init.h"
 #include "maze_solve.h"
-#include "matlab_code_gen_data.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -238,10 +237,11 @@ uint16_t i = 0;
 			  //迷路データの初期化
 			  maze_init(maze_data.maze_y_size, maze_data.maze_x_size, maze_data.m_wall_tmp, maze_data.m_search_tmp);
 			  //フェイルセーフ有効化
-			  set_failsafe_flg(1);
+			  //set_failsafe_flg(1);
 			  //探索モードで走行
 			  run_mode = search_mode;
-			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size, maze_data.maze_goal, maze_data.goal_size, run_mode);
+			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size,
+					  	  maze_data.goal_size,maze_data.maze_goal, run_mode,maze_data.contour_map,maze_data.row_num_node,maze_data.col_num_node);
 			  break;
 
 		  case 15:	//迷路データの書き込み、読み込み、消去

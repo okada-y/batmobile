@@ -5,7 +5,7 @@
  * File: maze_init.h
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 18-Nov-2019 23:53:15
+ * C/C++ source code generated on  : 14-Aug-2020 15:40:02
  */
 
 #ifndef MAZE_INIT_H
@@ -15,7 +15,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "rtwtypes.h"
-#include "matlab_code_gen_types.h"
+#include "maze_init_types.h"
 
 /* Function Declarations */
 extern void maze_init(unsigned char maze_row_size, unsigned char maze_col_size,

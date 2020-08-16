@@ -5,7 +5,7 @@
  * File: maze_init.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 18-Nov-2019 23:53:15
+ * C/C++ source code generated on  : 14-Aug-2020 15:40:02
  */
 
 /* Include Files */
@@ -13,15 +13,12 @@
 #include "maze_init.h"
 #include "maze_solve.h"
 
-/* Include Original*/
-#include "index.h"
-
 /* Function Definitions */
 
 /*
- * maze_init è¿·è·¯æƒ…å ±ã®åˆæœŸåŒ–
- * å…¥åŠ› è¿·è·¯æ¨ªã‚µã‚¤ã‚º, è¿·è·¯ç¸¦ã‚µã‚¤ã‚º
- * å‡ºåŠ› è¿·è·¯å£æƒ…å ±,è¿·è·¯å£æ¢ç´¢æ¸ˆã¿æƒ…å ±
+ * maze_init –À˜Hî•ñ‚Ì‰Šú‰»
+ * “ü—Í –À˜H‰¡ƒTƒCƒY, –À˜HcƒTƒCƒY
+ * o—Í –À˜H•Çî•ñ,–À˜H•Ç’TõÏ‚İî•ñ
  * Arguments    : unsigned char maze_row_size
  *                unsigned char maze_col_size
  *                unsigned char maze_wall[1024]
@@ -39,13 +36,13 @@ void maze_init(unsigned char maze_row_size, unsigned char maze_col_size,
   int n;
   int maze_wall_tmp;
 
-  /* æ–¹è§’å®šç¾© */
-  /* è¿·è·¯æƒ…å ±ã€æ¢ç´¢æ¸ˆæƒ…å ±åˆæœŸåŒ– */
+  /* •ûŠp’è‹` */
+  /* –À˜Hî•ñA’TõÏî•ñ‰Šú‰» */
   /*  maze_wall = uint8(zeros(maze_col_size-1,maze_row_size-1)); */
   /*  maze_wall_search = uint8(zeros(maze_col_size-1,maze_row_size-1)); */
   memset(&maze_wall[0], 0, sizeof(unsigned char) << 10);
 
-  /* æ—¢çŸ¥ã¨ãªã‚‹å¤–å‘¨4è¾ºã®å£æƒ…å ±ã‚’å…¥åŠ›ã€æ¢ç´¢æ¸ˆã¿ã¨ã™ã‚‹ã€‚ */
+  /* Šù’m‚Æ‚È‚éŠOü4•Ó‚Ì•Çî•ñ‚ğ“ü—ÍA’TõÏ‚İ‚Æ‚·‚éB */
   qY = maze_row_size - 1U;
   if (qY > maze_row_size) {
     qY = 0U;
@@ -60,7 +57,7 @@ void maze_init(unsigned char maze_row_size, unsigned char maze_col_size,
 
     i1 = (int)qY;
     for (n = 0; n < i1; n++) {
-      /* åŒ—å´ */
+      /* –k‘¤ */
       qY = maze_row_size - 1U;
       if (qY > maze_row_size) {
         qY = 0U;
@@ -71,7 +68,7 @@ void maze_init(unsigned char maze_row_size, unsigned char maze_col_size,
         maze_wall[maze_wall_tmp] |= 1;
       }
 
-      /* æ±å´ */
+      /* “Œ‘¤ */
       qY = maze_col_size - 1U;
       if (qY > maze_col_size) {
         qY = 0U;
@@ -81,31 +78,49 @@ void maze_init(unsigned char maze_row_size, unsigned char maze_col_size,
         maze_wall[i + (n << 5)] = (unsigned char)(maze_wall[i + (n << 5)] | 2);
       }
 
-      /* å—å´ */
+      /* “ì‘¤ */
       if (1 + i == 1) {
         maze_wall[n << 5] = (unsigned char)(maze_wall[n << 5] | 4);
       }
 
-      /* è¥¿å´ */
+      /* ¼‘¤ */
       if (1 + n == 1) {
         maze_wall[i] = (unsigned char)(maze_wall[i] | 8);
       }
     }
   }
 
-  /* ã‚¹ã‚¿ãƒ¼ãƒˆæ™‚ã®å£ã¯|_|ã¨ãªã£ã¦ã„ã‚‹ã®ã§ã€ã‚ã‚‰ã‹ã˜ã‚å…¥åŠ› */
-  /* ã‚¹ã‚¿ãƒ¼ãƒˆãƒã‚¹ã‹ã‚‰è¦‹ã¦æ±å´ */
+  /* ƒXƒ^[ƒg‚Ì•Ç‚Í|_|‚Æ‚È‚Á‚Ä‚¢‚é‚Ì‚ÅA‚ ‚ç‚©‚¶‚ß“ü—Í */
+  /* ƒXƒ^[ƒgƒ}ƒX‚©‚çŒ©‚Ä“Œ‘¤ */
   maze_wall[0] = (unsigned char)(maze_wall[0] | 2);
 
-  /* ã‚¹ã‚¿ãƒ¼ãƒˆãƒã‚¹ã®ä¸€ãƒã‚¹æ±å´ã®ãƒã‚¹ã‹ã‚‰è¦‹ã¦è¥¿å´ */
+  /* ƒXƒ^[ƒgƒ}ƒX‚Ìˆêƒ}ƒX“Œ‘¤‚Ìƒ}ƒX‚©‚çŒ©‚Ä¼‘¤ */
   maze_wall[32] = (unsigned char)(maze_wall[32] | 8);
 
-  /* ä»¥ä¸Šã®å£æƒ…å ±ã¯æ¢ç´¢æ¸ˆã¿ã¨ã™ã‚‹ */
+  /* ˆÈã‚Ì•Çî•ñ‚Í’TõÏ‚İ‚Æ‚·‚é */
   memcpy(&maze_wall_search[0], &maze_wall[0], sizeof(unsigned char) << 10);
 
-  /* åº§æ¨™(1,1)ã®åŒ—å´ã€(2,1)ã®å—å´ã¯å£ãŒãªã„ã“ã¨ãŒã‚ã‹ã£ã¦ã„ã‚‹ã®ã§æ¢ç´¢æ¸ˆã¿ã¨ã™ã‚‹ã€‚ */
+  /* À•W(1,1)‚Ì–k‘¤A(2,1)‚Ì“ì‘¤‚Í•Ç‚ª‚È‚¢‚±‚Æ‚ª‚í‚©‚Á‚Ä‚¢‚é‚Ì‚Å’TõÏ‚İ‚Æ‚·‚éB */
   maze_wall_search[0] = (unsigned char)(maze_wall[0] | 1);
   maze_wall_search[1] = (unsigned char)(maze_wall[1] | 4);
+
+  /* –À˜H‚ª32ƒ}ƒX–¢–‚ÌAƒTƒCƒYˆÈã‚Ì”ÍˆÍ‚ÍA’Tõ•s—vi•s‰Âj‚Ì‚½‚ßA’TõÏ‚İ‚Æ‚·‚éB */
+  if (maze_col_size < 32) {
+    i = 33 - maze_col_size;
+    for (i0 = 0; i0 < i; i0++) {
+      for (i1 = 0; i1 < 32; i1++) {
+        maze_wall_search[i1 + (((maze_col_size + i0) - 1) << 5)] = 15U;
+      }
+    }
+  }
+
+  if (maze_row_size < 32) {
+    i = 33 - maze_row_size;
+    for (i0 = 0; i0 < 32; i0++) {
+      memset(&maze_wall_search[((i0 << 5) + maze_row_size) + -1], 15, (unsigned
+              int)(i * (int)sizeof(unsigned char)));
+    }
+  }
 }
 
 /*

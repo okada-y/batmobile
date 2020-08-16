@@ -293,31 +293,31 @@ void slalom_conclock_90 (void)
 //機能	: 前進
 //引数	: なし
 //返り値	: なし
-void move_front (void)
+void move_front (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property)
 {
-	if(run_first_flg == start)
+	//停止直後の動作
+	if(start_flg == start)
 	{
 		set_mode_ctrl(side_wall);
 		half_acceleration();//半区画加速
 		set_mode_ctrl(trace);
 	}
-	if(run_first_flg == already)
+	//走行中の動作
+	if(start_flg == already)
 	{
 		set_mode_ctrl(side_wall);
 		constant_speed();//定速で一マス前進
 		set_mode_ctrl(trace);
 	}
-	run_first_flg = already;
-	clr_wall_flg();
 }
 
 //機能	: 右折
 //引数	: なし
 //返り値	: なし
-void move_right (void)
+void move_right  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property)
 {
-	if(run_first_flg == start){
-		if(front_wall_flg == wall){
+	if(start_flg == start){
+		if((wall_flg & 1)== 1){
 			front_wall_calibrate();
 		}
 		turn_clk_90();		//時計回りに90度回転
@@ -325,7 +325,7 @@ void move_right (void)
 		half_acceleration();//半区画加速
 		set_mode_ctrl(trace);
 	}
-	if(run_first_flg == already){
+	if(start_flg == already){
 		// half_deceleration();//半区画減速で中央に停止
 		// if(front_wall_flg == wall){
 		// 	fornt_wall_calibrate();
@@ -336,17 +336,15 @@ void move_right (void)
 		// set_mode_ctrl(trace);
 		slalom_clock_90 ();
 	}
-	run_first_flg = already;
-	clr_wall_flg();
 }
 
 //機能	: 左折
 //引数	: なし
 //返り値	: なし
-void move_left (void)
+void move_left  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property)
 {
-	if(run_first_flg == start){
-		if(front_wall_flg == wall){
+	if(start_flg == start){
+		if((wall_flg & 1)== 1){
 			front_wall_calibrate();
 		}
 		turn_conclk_90();	//m反時計回りに90度回転
@@ -354,7 +352,7 @@ void move_left (void)
 		half_acceleration();//m半区画加速
 		set_mode_ctrl(trace);
 	}
-	if(run_first_flg == already){
+	if(start_flg == already){
 		// half_deceleration();//m半区画減速で中央に停止
 		// if(front_wall_flg == wall){
 		// 	fornt_wall_calibrate();
@@ -365,68 +363,49 @@ void move_left (void)
 		// set_mode_ctrl(trace);
 		slalom_conclock_90 ();
 	}
-	run_first_flg = already;
-	clr_wall_flg();
 }
 
 //機能	: 後進
 //引数	: なし
 //返り値	: なし
-void move_back (void)
+void move_back(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property)
 {
-	if(run_first_flg == start){
+	//走行中であれば、減速させ、中央にとめる。
+	if(start_flg == already){
+		set_mode_ctrl(side_wall);
+		half_deceleration();//m半区画減速で中央に停止
+		set_mode_ctrl(trace);
+	}
 
-		if(front_wall_flg == wall){
+		//壁の有無で位置補正処理を変更
+
+		//前壁があるとき
+		if((wall_flg & 1)== 1){
 			front_wall_calibrate();
-			if(right_wall_flg == wall){
+			//右壁があるとき
+			if((wall_flg & 2)== 2){
 				turn_clk_90();
 				front_wall_calibrate();
 				turn_clk_90();
 			}
-			else if(left_wall_flg == wall){
+			//右壁がなく左壁があるとき
+			else if((wall_flg & 8)== 8){
 					turn_conclk_90();
 					front_wall_calibrate();
 					turn_conclk_90();
 			}
+			//左右に壁がないとき
 			else {
 				turn_conclk_180();	//反時計回りに180度回転
 			}
 		}
+		//前壁がないとき
 		else{
 			turn_conclk_180();	//反時計回りに180度回転
 		}
+
 		set_mode_ctrl(side_wall);
 		half_acceleration();//半区画加速
 		set_mode_ctrl(trace);
-	}
-	if(run_first_flg == already){
-		set_mode_ctrl(side_wall);
-		half_deceleration();//m半区画減速で中央に停止
-		set_mode_ctrl(trace);
-		if(front_wall_flg == wall){
-			front_wall_calibrate();
-			if(right_wall_flg == wall){
-				turn_clk_90();
-				front_wall_calibrate();
-				turn_clk_90();
-			}
-			else if(left_wall_flg == wall){
-				turn_conclk_90();
-				front_wall_calibrate();
-				turn_conclk_90();
-			}
-			else {
-				turn_conclk_180();	//反時計回りに180度回転
-			}
-		}
-		else{
-			turn_conclk_180();	//m反時計回りに180度回転
-		}
-		set_mode_ctrl(side_wall);
-		half_acceleration();//半区画加速
-		set_mode_ctrl(trace);
-	}
-	run_first_flg = already;
-	clr_wall_flg();
 }
 

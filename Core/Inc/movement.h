@@ -3,8 +3,8 @@
 
 
 typedef enum {
-	start 	= 0, //走行開始
-	already = 1, //それ以外
+	 already = 0, //走行中
+	 start = 1, //停止直後
 } run_start;
 
 typedef enum {
@@ -28,10 +28,10 @@ void clr_wall_flg (void);
 void set_front_wall_flg ( void );
 void set_rigth_wall_flg ( void );
 void set_left_wall_flg ( void );
-void move_front (void);
-void move_right (void);
-void move_left (void);
-void move_back (void);
+void  move_front (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+void move_right  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+void move_left  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+void move_back  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
 void slalom_clock_90 (void);
 void slalom_conclock_90 (void);
