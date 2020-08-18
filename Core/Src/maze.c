@@ -6,7 +6,7 @@
  */
 #include "index.h"
 
-maze_data_t maze_data = {x_size,y_size,g_size,goal_cordinate,0,0,0,0,0};
+maze_data_t maze_data = {x_size,y_size,g_size,goal_cordinate,{0},{0},{0},{0},{0}};
 
 /* ---------------------------------------------------------------
 	迷路データの出力
