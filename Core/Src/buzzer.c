@@ -1,6 +1,7 @@
 #include "buzzer.h"
 
-uint8_t Melody_A_flg;
+uint8_t buzzer_flg = 0;
+uint8_t Melody_A_flg = 0;;
 
 void TIM2_PWM_START(void)
 {
@@ -15,6 +16,59 @@ void TIM2_PWM_CC_set(uint8_t cc)
 	}
 	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, cc);
 }
+
+//機能	:1msにてブザーフラグを監視。フラグに応じた音階、時間をブザーから出力する
+//引数	:なし
+//返り値 :なし
+//備考	: 1msタスク
+void buzzer_1ms(void){
+
+	static uint8_t tmp_buzzer_flg = 0;
+	static uint8_t buzzer_process_flg = 0;//出力判定用フラグ　0:スタンバイ　1:出力中
+	uint8_t buzzor_comp_flg = 0;//出力完了フラグ 0:スタンバイ　1:出力中　2:完了
+
+	//スタンバイ時、フラグを監視
+	if(buzzer_process_flg == 0){
+		tmp_buzzer_flg = buzzer_flg;
+	}
+	//ブザーフラグが立った時、出力を開始する。
+	if(tmp_buzzer_flg != 0){
+		//出力判定フラグを出力中に変更
+		buzzer_process_flg = 1;
+		switch(tmp_buzzer_flg){
+		case 1://共進周波数 4部音符
+			buzzor_comp_flg = Set_buzzer_tone(Scale_resonance,note_Quarter);
+			break;
+		case 2://共進周波数 16分音符
+			buzzor_comp_flg = Set_buzzer_tone(Scale_resonance,note_sixteenth);
+			break;
+		//フラグが想定のものでなければ、各フラグをクリアする。
+		default:
+			buzzer_process_flg = 0;
+			tmp_buzzer_flg = 0;
+			buzzer_flg = 0;
+			break;
+		}
+		//出力処理が完了したら、各フラグをクリアする。
+		if(buzzor_comp_flg == 2){
+			buzzer_process_flg = 0;
+			tmp_buzzer_flg = 0;
+			buzzer_flg = 0;
+		}
+	}
+
+
+}
+
+//機能	:ブザーフラグをセットする
+//引数	:ブザーフラグ
+//返り値 :なし
+void set_buzzer_flg(uint8_t b_flg)
+{
+	buzzer_flg = b_flg;
+}
+
+
 
 //機能	:指定された音を指定した時間出力する
 //引数	:音、長さ(ms)

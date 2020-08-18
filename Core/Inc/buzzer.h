@@ -17,7 +17,7 @@
 #define note_half		(60.0f/BPM*2.0f*1000.0f)	//2分音符の長さ(ms)
 #define note_Quarter	(60.0f/BPM*1000.0f)			//4分音符の長さ(ms)
 #define note_eighth		(60.0f/BPM/2.0f*1000.0f)	//8分音符の長さ(ms)
-#define note_sixteenth	(60.0f/BPM/2.0f*1000.0f)	//8分音符の長さ(ms)
+#define note_sixteenth	(60.0f/BPM/4.0f*1000.0f)	//16分音符の長さ(ms)
 
 //音階
 #define  Scale_C 	(3669)
@@ -39,6 +39,7 @@
 #define  Scale_EH 	(1456)
 #define  Scale_FH 	(1374)
 #define  Scale_FHS 	(1297)
+#define  Scale_resonance 	(240)
 
 //休符
 #define  Scale_Reft (9999)
@@ -50,6 +51,8 @@ void		TIM2_PWM_CC_set		(uint8_t);
 void 		TIM2_PWM_START		(void);
 uint8_t		Set_buzzer_tone		(uint16_t, float);
 uint8_t		Melody_A			(uint8_t);
+void set_buzzer_flg(uint8_t b_flg);
+void buzzer_1ms(void);
 
 //グローバル変数定義
 extern uint8_t Melody_A_flg;//メロディAを開始するフラグ
