@@ -151,11 +151,8 @@ void mode_start(void)
 	{
 		if( Sensor_GetValue(front_right) >= 500)
 		{
-			while(Set_buzzer_tone(Scale_A,note_eighth)!=2)
-			{
-				HAL_Delay(1);
-			}
-		    IMU_ResetReference(); //IMUのリファレンス取得
+			set_buzzer_flg(1);//ブザー出力
+			IMU_ResetReference(); //IMUのリファレンス取得
 			mode_state = process;//モードを実行中に遷移
 			break;
 		}

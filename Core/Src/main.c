@@ -176,20 +176,24 @@ uint16_t i = 0;
 		    case 2:
 		        log_init();
 		 	    set_mode_ctrl(trace);
-		 		set_direction_mode(forward_mode);
-		 		set_accel_mode(deceleration);
-		 	    set_target_length(0.72);
+		 	    set_target_turn_param(search, 0.72, 0);
 		 	    HAL_Delay(4000);
 //		        start_acceleration();
 //		        half_acceleration();
 //		        constant_speed();
-//		        half_deceleration();
+//		        slalom_clock_90();
+//		        constant_speed();
+//		        for(uint8_t i = 0;i<5;i++){
+//					constant_speed();
+//		        }
+//				half_deceleration();
+//				HAL_Delay(2000);
 		    	break;
 
 		  case 3:
 			  	log_init();
-			 	set_accel_mode(deceleration);
 				/*回転方向設定*/
+			  	set_target_turn_param(search, 0, 0);
 				set_rotation_mode(clockwise);
 			    set_target_angle(-2*PI*2);
 
@@ -214,16 +218,16 @@ uint16_t i = 0;
 			  log_init();
 		      set_mode_ctrl(trace);
 		      half_acceleration();
-		      constant_speed();
-		      turn_clk_90();
-		      constant_speed();
+		      move_front (already,2,1);
+		      move_front (already,0,1);
+		      move_front (already,2,1);
 		      half_deceleration();
-		      HAL_Delay(2000);
+		      HAL_Delay(4000);
 			  break;
 
 		  case 6:
 		       log_init();
-		       set_accel_mode(deceleration);
+		       set_target_turn_param(search, 0.0, 0.0);
 		       while(1){
 
 		       }
