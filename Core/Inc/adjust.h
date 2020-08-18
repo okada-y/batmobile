@@ -28,7 +28,10 @@ float get_target_sensor_sr ( void );
 float get_target_sensor_sl ( void );
 double get_side_sensor_l_th ( void );
 double get_side_sensor_r_th ( void );
-
+void wall_break_calibrate(void);
+void en_wall_break_calibrate(void);
+void set_wall_break_mode(uint8_t wall_info);
+void set_wall_break_ref(float tmp_wall_break);
 
 
 

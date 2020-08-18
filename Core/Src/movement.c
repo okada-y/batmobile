@@ -31,7 +31,7 @@ uint8_t move_comp_jud ( void )
 uint8_t move_comp_jud_stop ( void )
 {
     return (uint8_t)((get_target_length() - get_move_length()) 
-							< get_target_move_speed() * get_target_move_speed()/(2 * move_accel));
+							< get_target_move_speed() * get_target_move_speed()/(2 * get_target_move_accel()));
 }
 
 
@@ -48,16 +48,19 @@ uint8_t rotate_comp_jud ( void )
 //返り値	: なし
 void start_acceleration (void)
 {
-	/*移動方向、加速モード設定*/
-	set_direction_mode(forward_mode);
-	set_accel_mode(acceleration);
-    set_target_length(0.05-0.045);
+	/*加速度等パラメータ、移動距離、終端速度設定*/
+	set_target_turn_param(search, 0.05-0.045, search_move_speed_max);
 
     /*半区画進むまで待機*/
     while (1)
     {
     	if(move_comp_jud())
 	 	{
+    		/*理想移動距離、実移動距離をクリア*/
+    		set_ideal_length(0.0);
+    		set_move_length(0.0);
+    		//終端速度をキープするよう設定
+    		set_target_turn_param(search, 1.0, search_move_speed_max);
     		break;
     	}
     }
@@ -69,15 +72,19 @@ void start_acceleration (void)
 void half_acceleration (void)
 {
 	/*移動方向、加速モード設定*/
-	set_direction_mode(forward_mode);
-	set_accel_mode(acceleration);
-    set_target_length(0.045);
+	/*加速度等パラメータ、移動距離、終端速度設定*/
+	set_target_turn_param(search, 0.045, search_move_speed_max);
 
     /*半区画進むまで待機*/
     while (1)
     {
     	if(move_comp_jud())
     	{
+    		/*理想移動距離、実移動距離をクリア*/
+    		set_ideal_length(0.0);
+    		set_move_length(0.0);
+    		//終端速度をキープするよう設定
+    		set_target_turn_param(search, 1.0, search_move_speed_max);
     		break;
     	}
     }
@@ -90,17 +97,20 @@ void half_acceleration (void)
 void half_deceleration (void)
 {
 	/*移動方向、加速モード設定*/
-	set_direction_mode(forward_mode);
-	set_accel_mode(deceleration);
-    set_target_length(0.045);
-	set_speed_under_lim_flg(slow);
+	/*加速度等パラメータ、移動距離、終端速度設定*/
+	set_target_turn_param(search, 0.045, 0);
+
+
     /*半区画進むまで待機*/
     while (1)
     {
-    	if(move_comp_jud_stop())
+    	if(move_comp_jud())
     	{
-			set_speed_under_lim_flg(zero);
-			HAL_Delay(100);
+    		/*理想移動距離、実移動距離をクリア*/
+    		set_ideal_length(0.0);
+    		set_move_length(0.0);
+    		//終端速度をキープするよう設定
+    		set_target_turn_param(search, 0.0, 0);
     		break;
     	}
     }
@@ -111,16 +121,21 @@ void half_deceleration (void)
 //返り値	: なし
 void constant_speed (void)
 {
-	/*移動方向、加速モード設定*/
-	set_direction_mode(forward_mode);
-    set_accel_mode(acceleration);
-    set_target_length(0.09);
+
+	/*加速度等パラメータ、移動距離、終端速度設定*/
+	set_target_turn_param(search, 0.09, search_move_speed_max);
+
 
     /*一区画進むまで待機*/
     while (1)
     {
     	if(move_comp_jud())
     	{
+    		/*理想移動距離、実移動距離をクリア*/
+    		set_ideal_length(0.0);
+    		set_move_length(0.0);
+    		//終端速度をキープするよう設定
+    		set_target_turn_param(search, 1.0, search_move_speed_max);
     		break;
     	}
     }
@@ -131,16 +146,20 @@ void constant_speed (void)
 //返り値	: なし
 void constant_speed_offset (float offset_length)
 {
-	/*移動方向、加速モード設定*/
-	set_direction_mode(forward_mode);
-    set_accel_mode(acceleration);
-    set_target_length(offset_length);
+
+	/*加速度等パラメータ、移動距離、終端速度設定*/
+	set_target_turn_param(search, offset_length, search_move_speed_max);
 
     /*一区画進むまで待機*/
     while (1)
     {
     	if(move_comp_jud())
     	{
+    		/*理想移動距離、実移動距離をクリア*/
+    		set_ideal_length(0.0);
+    		set_move_length(0.0);
+    		//終端速度をキープするよう設定
+    		set_target_turn_param(search, 1.0, search_move_speed_max);
     		break;
     	}
     }
@@ -154,6 +173,10 @@ void turn_clk_90 (void)
 	/*回転方向設定*/
 	set_rotation_mode(clockwise);
     set_target_angle(-PI/2);
+
+    /*理想角度、実角度をクリア*/
+    set_ideal_angle(0.0);
+    set_rotation_angle(0.0);
 
     /*90度回転するまで待機*/
     while (1)
@@ -175,6 +198,10 @@ void turn_conclk_90 (void)
 	set_rotation_mode(counter_clockwise);
     set_target_angle(PI/2);
 
+    /*理想角度、実角度をクリア*/
+    set_ideal_angle(0.0);
+    set_rotation_angle(0.0);
+
     /*90度回転するまで待機*/
     while (1)
     {
@@ -194,6 +221,10 @@ void turn_conclk_180 (void)
 	/*回転方向設定*/
 	set_rotation_mode(counter_clockwise);
     set_target_angle(PI);
+
+    /*理想角度、実角度をクリア*/
+    set_ideal_angle(0.0);
+    set_rotation_angle(0.0);
 
     /*180度回転するまで待機*/
     while (1)
@@ -266,9 +297,19 @@ void set_left_wall_flg ( void )
 //返り値	: なし
 void slalom_clock_90 (void)
 {
+	//前距離
 	constant_speed_offset(slalom_clk_90_before_offset);
+
+	//90degターン
 	turn_clk_90();
-	set_target_length(slalom_clk_90_offset); //並進距離を目標距離に加算
+
+	/*理想移動距離、実移動距離をクリア*/
+	set_ideal_length(0.0);
+	set_move_length(0.0);
+	//終端速度をキープするよう設定
+	set_target_turn_param(search, 1.0, search_move_speed_max);
+
+	//後距離
 	constant_speed_offset(slalom_clk_90_after_offset);
 }
 
@@ -277,9 +318,19 @@ void slalom_clock_90 (void)
 //返り値	: なし
 void slalom_conclock_90 (void)
 {
+	//前距離
 	constant_speed_offset(slalom_conclk_90_before_offset);
+
+	//90degターン
 	turn_conclk_90();
-	set_target_length(slalom_conclk_90_offset); //並進距離を目標距離に加算
+
+	/*理想移動距離、実移動距離をクリア*/
+	set_ideal_length(0.0);
+	set_move_length(0.0);
+	//終端速度をキープするよう設定
+	set_target_turn_param(search, 1.0, search_move_speed_max);
+
+	//後距離
 	constant_speed_offset(slalom_conclk_90_after_offset);
 }
 
@@ -305,6 +356,11 @@ void move_front (unsigned char start_flg,unsigned char wall_flg,unsigned char mo
 	//走行中の動作
 	if(start_flg == already)
 	{
+		//壁切れ補正フラグ処理
+		set_wall_break_mode(wall_flg);
+		set_wall_break_ref(0.09-wall_break_calib_ref_dis);
+		en_wall_break_calibrate();
+
 		set_mode_ctrl(side_wall);
 		constant_speed();//定速で一マス前進
 		set_mode_ctrl(trace);

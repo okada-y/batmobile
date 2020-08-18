@@ -25,6 +25,8 @@ void Interrupt_Main( void )
 {
 		calc_move_speed();
 		button_state = read_button();
+		buzzer_1ms();
+
 		if(get_mode_state() == process)
 		{
 			//フェイセーフが無効、もしくは有効かつエラーフラグが立っていないとき

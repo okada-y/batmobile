@@ -9,6 +9,7 @@
 #include "target.h"
 #include "ir_sensor.h"
 #include "lookuptable.h"
+#include "index.h"
 
 
 static double front_sensor_move_err_I = 0;   	//偏差和のI項
@@ -34,6 +35,11 @@ static side_wall_ctrl side_wall_ctrl_mode = none;	//横壁補正モード（左�
 static double side_sensor_l_th = 0;				//左壁制御の閾値
 static double side_sensor_r_th = 0;				//右壁制御の閾値
 
+uint8_t wall_break_calib_flg = 0; 	//壁切れ制御有効化フラグ
+uint8_t wall_break_calib_mode = 0; 	//壁切れ補正モード(0:なし　2:右 8:左)（壁情報と同じ）
+float wall_break_calib_ref = 0; 	//壁切れ推定距離
+
+
 //機能	: adjust.cの1msタスクまとめ
 //引数	: なし
 //返り値	: なし
@@ -45,7 +51,8 @@ void adjust_1ms (void)
 	adjust_theta_side_wall();		//横壁補正のモードに応じ、軌跡制御における角度を調整する（未実装）
 	calc_motor_vol_side_wall();		//横壁補正における印加電圧計算
 	calc_motor_vol_front_wall();	//前壁制御における印加電圧計算
-	calibrate_tim();				//前壁制御用タイマ
+	calibrate_tim();							//前壁制御用タイマ
+	wall_break_calibrate();			//壁切れ補正
 }
 
 //機能	: 壁トレースの目標距離をセットする
@@ -440,5 +447,122 @@ void calibrate_tim (void){
 	}
 }
 
+//機能	: 壁切れ補正（フラグにより有効化。壁情報により監視対象選択）
+//引数	: なし
+//返り値	: なし
+//備考 : 1msタスク
+//			事前にフラグをたて、壁情報、壁切れ推定値をセットすること。
+void wall_break_calibrate(void){
+
+	static float right_wall_break = 0;//右壁切れ目距離[m]
+	static float left_wall_break = 0;//左壁切れ目距離[m]
+	float temp_wall_break = 0;//壁切れ目距離
+
+	if(wall_break_calib_flg){
+		switch(wall_break_calib_mode){
+		case 2://右のみ
+			//推定壁切れ位置+猶予距離内である時
+			if(wall_break_calib_ref + wall_break_calib_margin > get_move_length()){
+				//センサ値が閾値を上回れば、距離を保持
+				if (wall_break_calib_right_th < get_wall_dis_table(Sensor_GetValue(side_right), side_right)){
+					temp_wall_break = wall_break_calib_ref;
+				}
+			}
+			//推定壁切れ位置+猶予距離外である時、フラグを切る
+			else{
+				wall_break_calib_flg = 0;
+			}
+			break;
+
+		case 8://左のみ
+			//推定壁切れ位置+猶予距離内である時
+			if(wall_break_calib_ref + wall_break_calib_margin > get_move_length()){
+				//センサ値が閾値を上回れば、距離を保持
+				if (wall_break_calib_left_th < get_wall_dis_table(Sensor_GetValue(side_left), side_left)){
+					temp_wall_break = wall_break_calib_ref;
+				}
+			}
+			//推定壁切れ位置+猶予距離外である時、フラグを切る
+			else{
+				wall_break_calib_flg = 0;
+			}
+			break;
+
+		case 10://左右
+			//推定壁切れ位置+猶予距離内である時
+			if(wall_break_calib_ref + wall_break_calib_margin > get_move_length()){
+				//センサ値が閾値を上回れば、距離を保持
+				//右
+				if(right_wall_break == 0){//距離を保持していなければ、センサ値を監視
+					if (wall_break_calib_right_th < get_wall_dis_table(Sensor_GetValue(side_right), side_right)){
+						right_wall_break = wall_break_calib_ref - get_move_length();//想定壁切れ位置からのずれ
+					}
+				}
+				//左
+				if(left_wall_break == 0){//距離を保持していなければ、センサ値を監視
+					if (wall_break_calib_left_th < get_wall_dis_table(Sensor_GetValue(side_left), side_left)){
+						left_wall_break = wall_break_calib_ref - get_move_length();//想定壁切れ位置からのずれ
+					}
+				}
+				//左右の壁切れを検出していれば、距離を保持
+				if(right_wall_break != 0 && left_wall_break != 0){
+					temp_wall_break = 0.5*(right_wall_break+left_wall_break) + get_move_length();
+				}
+			}
+			//推定壁切れ位置+猶予距離外である時、左右の壁どちらかが壁切れを検出していれば距離を保持、
+			//そうでなければフラグを切る
+			else{
+				if(right_wall_break != 0){
+					temp_wall_break = right_wall_break + get_move_length();
+				}
+				else if(left_wall_break != 0){
+					temp_wall_break = left_wall_break + get_move_length();
+				}
+				else{
+				wall_break_calib_flg = 0;
+				}
+			}
+			break;
+
+		default:
+			//壁位置が想定外であれば、フラグを切る
+			wall_break_calib_flg = 0;
+			break;
+		}
+		//壁切れ位置が保持されていれば、位置を補正。フラグを切る。
+		if(temp_wall_break != 0){
+			//補正時、ブザーを鳴らす
+			set_buzzer_flg(2);
+
+			set_ideal_length(temp_wall_break);
+			set_move_length(temp_wall_break);
+			wall_break_calib_flg = 0;
+			//変数の初期化
+			right_wall_break = 0;
+			left_wall_break = 0;
+		}
+	}
+}
+
+//機能	: 壁切れ補正フラグ有効化
+//引数	: なし
+//返り値	: なし
+void en_wall_break_calibrate(void){
+	wall_break_calib_flg = 1;
+}
+
+//機能	: 壁切れモードセット
+//引数	: 壁情報(1:前　2:右　4:後　8:左)
+//返り値	: なし
+void set_wall_break_mode(uint8_t wall_info){
+	wall_break_calib_mode = wall_info;
+}
+
+//機能	: 壁切れ推定値セット
+//引数	: 壁切れ推定値
+//返り値	: なし
+void set_wall_break_ref(float tmp_wall_break){
+	wall_break_calib_ref = tmp_wall_break;
+}
 
 

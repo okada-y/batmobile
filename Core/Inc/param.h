@@ -68,11 +68,12 @@
 
 
 //target
-#define move_accel          (1.5f)      //移動加速度[m/ss]
-#define rotat_accel         (25*PI)      //角加速度[rad/ss]
-#define move_speed_max      (0.2f)      //最大移動速度[m/s]
-#define rotat_speed_max     (3*PI)      //最大角速度[rad/s]
-#define move_speed_slow     (0.03)      //スロー走行時の速度[m/s]
+//探索パラメータ
+#define search_move_accel          (1.5f)      //移動加速度[m/ss]
+#define search_rotate_accel         (25*PI)      //角加速度[rad/ss]
+#define search_move_speed_max      (0.2f)      //最大移動速度[m/s]
+#define search_rotate_speed_max     (3*PI)      //最大角速度[rad/s]
+#define search_move_speed_slow     (0.03)      //スロー走行時の速度[m/s]
 
 //control
 //FF制御
@@ -122,8 +123,13 @@
 #define side_wall_P             (150.0)               //横壁制御　Pゲイン
 #define side_wall_D             (3)                //横壁制御　Dゲイン
 
-
 #define ir_diff_ave_num         (3)                //IRセンサの変動値の移動平均期間
+
+#define wall_break_calib_right_th (0.029) 	//壁切れ補正の右閾値
+#define wall_break_calib_left_th (0.032)		//壁切れ補正の左閾値
+#define wall_break_calib_margin (0.01)		//壁切れ補正の猶予
+#define wall_break_calib_ref_dis (0.0408)   //壁切れ位置と車体の位置の差
+
 
 //imu
 #define REFFERENCE_NUM		(1000)		//何回の平均をもってジャイロのリファレンス電圧とするか
