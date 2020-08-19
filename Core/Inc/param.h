@@ -92,6 +92,7 @@
 #define rotate_comp_th      (0.001f)    //回転完了の閾値
 
 ///slalom
+#define slalom_front_wall_adj (0.0545) //探索90における前距離補正時の前壁距離
 //90度時計周り
 #define slalom_clk_90_before_offset (0.011)      //前オフセット距離
 #define slalom_clk_90_after_offset (0.011)       //後オフセット距離

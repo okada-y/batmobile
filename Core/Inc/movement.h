@@ -33,8 +33,8 @@ void move_right  (unsigned char start_flg,unsigned char wall_flg,unsigned char m
 void move_left  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 void move_back  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-void slalom_clock_90 (void);
-void slalom_conclock_90 (void);
+void slalom_clock_90 (unsigned char wall_flg);
+void slalom_conclock_90 (unsigned char wall_flg);
 
 
 

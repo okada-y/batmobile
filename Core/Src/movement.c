@@ -10,6 +10,7 @@
 #include "exvol.h"
 #include "mouse_state.h"
 #include "main.h"
+#include "index.h"
 
 static run_start run_first_flg = 0;			// 走行開始フラグ 0:走行開始時　1:それ以外
 static wall_flg	front_wall_flg = nowall;	//　前壁の有無フラグ
@@ -165,6 +166,33 @@ void constant_speed_offset (float offset_length)
     }
 }
 
+//前壁距離がある値になるまで、定速
+//引数	: 目標前壁距離
+//返り値	: なし
+void constant_speed_front_wall_adj(float target_front_wall_length)
+{
+	float temp=0;
+	/*加速度等パラメータ、移動距離、終端速度設定*/
+	set_target_turn_param(search, 1.0, search_move_speed_max);
+
+    while (1)
+    {
+    	temp = 0.5 * (get_wall_dis_table(Sensor_GetValue(front_left), front_left)
+    				+get_wall_dis_table(Sensor_GetValue(front_right), front_right));
+    	//前壁距離が目標値よりも小さくなるとき、終了
+    	if(temp < target_front_wall_length){
+    		//ブザーをならす。
+    		set_buzzer_flg(2);
+    		/*理想移動距離、実移動距離をクリア*/
+    		set_ideal_length(0.0);
+    		set_move_length(0.0);
+    		//終端速度をキープするよう設定
+    		set_target_turn_param(search, 1.0, search_move_speed_max);
+    		break;
+    	}
+    }
+}
+
 //機能	: 時計回りに90度回転
 //引数	: なし
 //返り値	: なし
@@ -293,13 +321,18 @@ void set_left_wall_flg ( void )
 ////////////////////////////////////////
 
 //機能	: 時計回り90度のスラローム軌跡
-//引数	: なし
+//引数	: 壁情報
 //返り値	: なし
-void slalom_clock_90 (void)
+void slalom_clock_90 (unsigned char wall_flg)
 {
-	//前距離
-	constant_speed_offset(slalom_clk_90_before_offset);
-
+	//前壁の有無で前距離処理を変更する
+	if ((wall_flg & 1) == 1 )//前壁があるとき
+	{
+		constant_speed_front_wall_adj(slalom_front_wall_adj);
+	}else{//前壁がないとき
+	//エンコーダによる一定距離移動
+		constant_speed_offset(slalom_clk_90_before_offset);
+	}
 	//90degターン
 	turn_clk_90();
 
@@ -314,13 +347,18 @@ void slalom_clock_90 (void)
 }
 
 //機能	: 反時計回り90度のスラローム軌跡
-//引数	: なし
+//引数	: 壁情報
 //返り値	: なし
-void slalom_conclock_90 (void)
+void slalom_conclock_90 (unsigned char wall_flg)
 {
+	//前壁の有無で前距離処理を変更する
+	if ((wall_flg & 1) == 1 )//前壁があるとき
+	{
+		constant_speed_front_wall_adj(slalom_front_wall_adj);
+	}else{//前壁がないとき
 	//前距離
-	constant_speed_offset(slalom_conclk_90_before_offset);
-
+		constant_speed_offset(slalom_conclk_90_before_offset);
+	}
 	//90degターン
 	turn_conclk_90();
 
@@ -390,7 +428,7 @@ void move_right  (unsigned char start_flg,unsigned char wall_flg,unsigned char m
 		// set_mode_ctrl(side_wall);
 		// half_acceleration();//半区画加速
 		// set_mode_ctrl(trace);
-		slalom_clock_90 ();
+		slalom_clock_90 (wall_flg);
 	}
 }
 
@@ -417,7 +455,7 @@ void move_left  (unsigned char start_flg,unsigned char wall_flg,unsigned char mo
 		// set_mode_ctrl(side_wall);
 		// half_acceleration();//m半区画加速
 		// set_mode_ctrl(trace);
-		slalom_conclock_90 ();
+		slalom_conclock_90 (wall_flg);
 	}
 }
 
