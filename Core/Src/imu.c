@@ -110,37 +110,38 @@ void IMU_Initialize( void )
 	HAL_Delay(100);
 
 	// DMAの開始
-//	HAL_GPIO_WritePin(SPI2_CS_GPIO_Port, SPI2_CS_Pin, GPIO_PIN_RESET);//CSpinをLowに、SPI通信開始
-//	HAL_SPI_TransmitReceive_DMA( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t) );
+	HAL_GPIO_WritePin(SPI2_CS_GPIO_Port, SPI2_CS_Pin, GPIO_PIN_RESET);//CSpinをLowに、SPI通信開始
+	HAL_SPI_TransmitReceive_DMA( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t) );
 //	HAL_SPI_TransmitReceive( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t),100);
 }
 
 /*IMUからx方向加速度,ヨー方向角速度を取得（DMA未使用)*/
 void IMU_Receive(void){
-			HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_RESET );//CSpinをLoに、SPI通信開始
-			HAL_SPI_TransmitReceive( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t),10000);
-			accel_x_value = ( ( (int16_t)imu_value[3]<<8 ) | ( (int16_t)imu_value[4]&0x00ff ) );//ICMのy軸方向加速度をx方向加速度として取得
-			gyro_z_value =  ( ( (int16_t)imu_value[11]<<8 ) | ( (int16_t)imu_value[12]&0x00ff ) );//z軸角速度を取得
-			HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_SET );//CSpinをHiに、SPI通信停止
+//			HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_RESET );//CSpinをLoに、SPI通信開始
+//			HAL_SPI_TransmitReceive( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t),10000);
+//			accel_x_value = ( ( (int16_t)imu_value[3]<<8 ) | ( (int16_t)imu_value[4]&0x00ff ) );//ICMのy軸方向加速度をx方向加速度として取得
+//			gyro_z_value =  ( ( (int16_t)imu_value[11]<<8 ) | ( (int16_t)imu_value[12]&0x00ff ) );//z軸角速度を取得
+//			HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_SET );//CSpinをHiに、SPI通信停止
 }
 
 
 /* ---------------------------------------------------------------
 	DMA送受信完了後のコールバック関数
 --------------------------------------------------------------- */
-//void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi)
-//{
-////	SEGGER_RTT_printf(0,"dma_comp\r\n" );
-//	//spi2 -> imu
-////	if(hspi == &hspi2){
-////		HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_SET );//CSpinをHIに、SPI通信停止
-////		accel_x_value = ( ( (int16_t)imu_value[3]<<8 ) | ( (int16_t)imu_value[4]&0x00ff ) );//ICMのy軸方向加速度をx方向加速度として取得
-////		gyro_z_value =  ( ( (int16_t)imu_value[11]<<8 ) | ( (int16_t)imu_value[12]&0x00ff ) );//z軸角速度を取得
-////		HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_RESET );//CSpinをLowに、SPI通信開始
-////		HAL_SPI_TransmitReceive_DMA( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t) );
-////	}
-//
-//}
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi)
+{
+
+	//spi2 -> imu
+	if(hspi == &hspi2){
+//		printf("dma_comp\r\n" );
+		HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_SET );//CSpinをHIに、SPI通信停止
+		accel_x_value = ( ( (int16_t)imu_value[3]<<8 ) | ( (int16_t)imu_value[4]&0x00ff ) );//ICMのy軸方向加速度をx方向加速度として取得
+		gyro_z_value =  ( ( (int16_t)imu_value[11]<<8 ) | ( (int16_t)imu_value[12]&0x00ff ) );//z軸角速度を取得
+		HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_RESET );//CSpinをLowに、SPI通信開始
+		HAL_SPI_TransmitReceive_DMA( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t) );
+	}
+
+}
 
 /* ---------------------------------------------------------------
 	IMUのリファレンスを補正する関数

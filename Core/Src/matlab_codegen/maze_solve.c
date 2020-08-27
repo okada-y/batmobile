@@ -5,7 +5,7 @@
  * File: maze_solve.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 16-Aug-2020 15:44:45
+ * C/C++ source code generated on  : 27-Aug-2020 23:23:48
  */
 
 /* Include Files */
@@ -14,8 +14,6 @@
 #include "maze_init.h"
 #include "maze_solve.h"
 #include "rem.h"
-#include "maze_init_emxutil.h"
-#include "idivide.h"
 #include "isequal.h"
 #include "maze_init_data.h"
 #include "C:\work\matlab\maze_sim_git\src\C_src\matlab_movement.h"
@@ -48,6 +46,25 @@ typedef struct {
 } coder_internal_ref_2;
 
 #endif                                 /*typedef_coder_internal_ref_2*/
+
+#ifndef typedef_h_struct_T
+#define typedef_h_struct_T
+
+typedef struct {
+  unsigned char goal;
+  unsigned char search;
+} h_struct_T;
+
+#endif                                 /*typedef_h_struct_T*/
+
+#ifndef typedef_coder_internal_ref_3
+#define typedef_coder_internal_ref_3
+
+typedef struct {
+  h_struct_T contents;
+} coder_internal_ref_3;
+
+#endif                                 /*typedef_coder_internal_ref_3*/
 
 #ifndef typedef_g_struct_T
 #define typedef_g_struct_T
@@ -88,19 +105,26 @@ typedef struct {
 #endif                                 /*typedef_coder_internal_ref_5*/
 
 /* Function Declarations */
-static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
-  coder_internal_ref_3 *num_temp, const coder_internal_ref_5 *wall, const
-  coder_internal_ref_4 *search, const unsigned char maze_goal[2], const unsigned
-  char maze_wall[1024], const unsigned char maze_wall_search[1024], unsigned
-  short row_num_node[1056], unsigned short col_num_node[1056], unsigned short
-  *start_num);
+static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
+  *wall_flg, const coder_internal_ref_5 *wall, const unsigned char maze_wall
+  [1024], const unsigned short contour_map[1024], const unsigned char maze_goal
+  [18], unsigned short max_length, unsigned char start_x, unsigned char start_y);
+static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
+  char maze_goal[2], const unsigned char maze_wall[1024], unsigned char
+  current_x, unsigned char current_y, unsigned short contour_map[1024]);
+static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
+  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+  char maze_goal[2], const unsigned char maze_wall[1024], const unsigned char
+  maze_wall_search[1024], unsigned short row_num_node[1056], unsigned short
+  col_num_node[1056], unsigned short *start_num);
 static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   *wall_flg, const coder_internal_ref_4 *search, const coder_internal_ref_1
-  *maze_goal, coder_internal_ref_3 *num_temp, unsigned char *current_x, unsigned
-  char *current_y, unsigned char *current_dir, unsigned char maze_row_size,
-  unsigned char maze_col_size, unsigned char maze_wall[1024], unsigned char
-  maze_wall_search[1024], const unsigned char exploration_goal[18], unsigned
-  char *start_flg, unsigned char goal_after_flg, unsigned short contour_map[1024]);
+  *maze_goal, const coder_internal_ref_3 *adachi_search_mode, unsigned char
+  *current_x, unsigned char *current_y, unsigned char *current_dir, unsigned
+  char maze_row_size, unsigned char maze_col_size, unsigned char maze_wall[1024],
+  unsigned char maze_wall_search[1024], const unsigned char exploration_goal[2],
+  unsigned char *start_flg, unsigned char stop_flg, unsigned char goal_after_flg,
+  unsigned char adachi_s_mode, unsigned short contour_map[1024]);
 static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
   char goal_size, const unsigned short row_num_node[1056], const unsigned short
   col_num_node[1056], unsigned char goal_node[2], unsigned char *goal_matrix_dir,
@@ -109,12 +133,13 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   unsigned char goal_node[2], unsigned char goal_matrix_dir, unsigned char
   goal_dir, unsigned char goal_section[2], unsigned char goal_node2[2], unsigned
   char *goal_matrix_dir2);
-static void fust_run(coder_internal_ref *current_x, coder_internal_ref
-                     *current_y, coder_internal_ref *current_dir, const
-                     coder_internal_ref *goal_size, const coder_internal_ref_5
-                     *wall, const unsigned char maze_wall[1024], const unsigned
-                     short contour_map[1024], const unsigned char maze_goal[18],
-                     unsigned short max_length);
+static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
+                     *wall_flg, const coder_internal_ref_5 *wall, const unsigned
+                     char maze_wall[1024], const unsigned char maze_wall_search
+                     [1024], const unsigned short contour_map[1024], const
+                     unsigned char maze_goal[18], unsigned short max_length,
+                     unsigned char start_flg, unsigned char unexp_square[1024],
+                     unsigned char *unexp_square_idx);
 static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   unsigned short col_num_node[1056], unsigned char current_move_dir, const
   unsigned char current_node[2], unsigned char current_matrix_dir, const
@@ -128,37 +153,48 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
   unsigned char ref_move_mode);
 static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
   unsigned char y);
-static void make_map_find(coder_internal_ref_3 *num_temp, const
-  coder_internal_ref_5 *wall, const unsigned char maze_goal[18], unsigned char
-  l_goal_size, const unsigned char maze_wall[1024], unsigned short contour_map
+static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
+  maze_goal[18], unsigned char l_goal_size, const unsigned char maze_wall[1024],
+  unsigned char current_x, unsigned char current_y, unsigned short contour_map
   [1024]);
-static void make_map_fustrun(const coder_internal_ref *goal_size,
-  coder_internal_ref_3 *num_temp, const coder_internal_ref_5 *wall, const
-  coder_internal_ref_4 *search, const unsigned char maze_goal[18], const
-  unsigned char maze_wall[1024], const unsigned char maze_wall_search[1024],
-  unsigned short contour_map[1024]);
-static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
-  coder_internal_ref_3 *num_temp, const coder_internal_ref_5 *wall, const
-  coder_internal_ref_4 *search, const unsigned char maze_goal[18], unsigned char
-  goal_size, const unsigned char maze_wall[1024], const unsigned char
-  maze_wall_search[1024], unsigned short row_num_node[1056], unsigned short
-  col_num_node[1056], unsigned short *start_num);
+static void make_map_fustrun(const coder_internal_ref *goal_size, const
+  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+  char maze_goal[18], const unsigned char maze_wall[1024], const unsigned char
+  maze_wall_search[1024], unsigned char unknown_wall_flg, unsigned short
+  contour_map[1024]);
+static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
+  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+  char maze_goal[18], unsigned char goal_size, const unsigned char maze_wall
+  [1024], const unsigned char maze_wall_search[1024], unsigned short
+  row_num_node[1056], unsigned short col_num_node[1056], unsigned short
+  *start_num);
+static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
+  char maze_wall[1024], const unsigned char maze_wall_search[1024], unsigned
+  char current_x, unsigned char current_y, unsigned short contour_map[1024],
+  unsigned char new_goal[2]);
+static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
+  char maze_wall[1024], unsigned char current_x, unsigned char current_y, const
+  unsigned char unexp_square[1024], unsigned char unexp_square_idx, unsigned
+  short contour_map[1024], unsigned char new_goal[2]);
 static void make_route_diagonal(const unsigned short row_num_node[1056], const
   unsigned short col_num_node[1056], const unsigned char goal_section[2], const
   unsigned char goal_node2[2], unsigned char goal_node_property);
-static void move_step(unsigned char *current_x, unsigned char *current_y,
-                      unsigned char current_dir);
+static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
+                      char temp_dir);
 static void move_straight(unsigned char current_node[2], unsigned char
   *current_node_property, unsigned char *current_move_dir, unsigned char
   *current_move_mode, unsigned char straight_count);
 static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   *wall_flg, const coder_internal_ref_4 *search, const coder_internal_ref_1
-  *maze_goal, coder_internal_ref_3 *num_temp, unsigned char *current_x, unsigned
-  char *current_y, unsigned char *current_dir, unsigned char maze_row_size,
-  unsigned char maze_col_size, unsigned char maze_wall[1024], unsigned char
-  maze_wall_search[1024], const unsigned char exploration_goal[18], unsigned
-  char l_goal_size, unsigned char *start_flg, unsigned char goal_after_flg,
-  unsigned short contour_map[1024]);
+  *maze_goal, const coder_internal_ref_3 *adachi_search_mode, unsigned char
+  *current_x, unsigned char *current_y, unsigned char *current_dir, unsigned
+  char maze_row_size, unsigned char maze_col_size, unsigned char maze_wall[1024],
+  unsigned char maze_wall_search[1024], const unsigned char exploration_goal[18],
+  unsigned char l_goal_size, unsigned char *start_flg, unsigned char
+  adachi_s_mode, unsigned short contour_map[1024]);
+static unsigned char sh_route_unexp_sq_jud(const unsigned char
+  temp_unexp_square[1024], unsigned char temp_unexp_square_idx, unsigned char
+  temp_y, unsigned char temp_x);
 static void turn_180deg(unsigned char *current_dir);
 static void turn_clk_90deg(unsigned char *current_dir);
 static void turn_conclk_90deg(unsigned char *current_dir);
@@ -191,11 +227,708 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 /* Function Definitions */
 
 /*
+ * 入力　壁情報,壁探索情報,等高線MAP,ゴール座標,最大経路長
+ * 出力   最短経路上の未探索マスの座標、未探索マスの数
+ * Arguments    : const coder_internal_ref *goal_size
+ *                coder_internal_ref *wall_flg
+ *                const coder_internal_ref_5 *wall
+ *                const unsigned char maze_wall[1024]
+ *                const unsigned short contour_map[1024]
+ *                const unsigned char maze_goal[18]
+ *                unsigned short max_length
+ *                unsigned char start_x
+ *                unsigned char start_y
+ * Return Type  : void
+ */
+static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
+  *wall_flg, const coder_internal_ref_5 *wall, const unsigned char maze_wall
+  [1024], const unsigned short contour_map[1024], const unsigned char maze_goal
+  [18], unsigned short max_length, unsigned char start_x, unsigned char start_y)
+{
+  unsigned char goal_flag;
+  unsigned short little;
+  unsigned char temp_x;
+  unsigned char temp_y;
+  unsigned char temp_dir;
+  unsigned char next_dir;
+  int tempk;
+  bool exitg1;
+  int i69;
+  int tempi;
+  int i70;
+  int i71;
+  unsigned short u5;
+  int i72;
+  int i73;
+  int b_temp_dir;
+  int i74;
+  int i75;
+  unsigned int qY;
+  unsigned char switch_expression;
+
+  /*     %% fust_run 最短経路走行 */
+  /* 最短経路表示用ax */
+  /*          global sh_route_ax */
+  /* local変数宣言 */
+  goal_flag = 0U;
+
+  /* ゴール判定フラグ */
+  little = max_length;
+
+  /* 進行方向選定用閾値 */
+  /*          %マウス位置表示用オブジェクト */
+  /*          if coder.target('MATLAB') */
+  /*              ax = gca; */
+  /*              h = hgtransform('Parent',ax); */
+  /*          end */
+  /* マウスの初期位置設定 */
+  temp_x = start_x;
+  temp_y = start_y;
+
+  /* マウスの初期方向定義 */
+  temp_dir = g_direction.North;
+  next_dir = g_direction.North;
+
+  /* 探索開始時x */
+  /* 探索開始時y */
+  /* 実行時、既存の最短ルート表示を削除する(MATLABのみ) */
+  tempk = 0;
+  exitg1 = false;
+  while ((!exitg1) && (tempk <= max_length - 1)) {
+    /* 現在位置が未探索マスか判定 */
+    /* 現在位置がゴールか判定 */
+    i69 = goal_size->contents;
+    for (tempi = 0; tempi < i69; tempi++) {
+      if ((temp_x == maze_goal[tempi]) && (temp_y == maze_goal[tempi + 9])) {
+        goal_flag = 1U;
+      }
+    }
+
+    if (goal_flag == 1) {
+      /* ゴールのとき、停止処理を実施 */
+      m_goal_movement(0, wall_flg->contents, move_dir_property.straight);
+      exitg1 = true;
+    } else {
+      /*         %%進行方向選定 */
+      /* 優先順位　北⇒東⇒南⇒西 */
+      /* 北側の壁のありなし */
+      i69 = temp_y + ((temp_x - 1) << 5);
+      tempi = maze_wall[i69 - 1];
+      if (g_direction.North <= 7) {
+        i70 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i70 = 0;
+      }
+
+      if (((tempi & i70) == wall->contents.nowall) && (contour_map[i69] < little))
+      {
+        /* 北側の等高線mapが閾値より低ければ、 */
+        /* 閾値を北側の等高map値に変更 */
+        little = contour_map[temp_y + ((temp_x - 1) << 5)];
+
+        /* 北側を進行方向に変更y */
+        next_dir = g_direction.North;
+      }
+
+      /* 東側 */
+      if (g_direction.East <= 7) {
+        i71 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i71 = 0;
+      }
+
+      if ((tempi & i71) == wall->contents.nowall) {
+        u5 = contour_map[(temp_y + (temp_x << 5)) - 1];
+        if (u5 < little) {
+          little = u5;
+          next_dir = g_direction.East;
+        }
+      }
+
+      /* 南側 */
+      if (g_direction.South <= 7) {
+        i72 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i72 = 0;
+      }
+
+      if ((tempi & i72) == wall->contents.nowall) {
+        u5 = contour_map[i69 - 2];
+        if (u5 < little) {
+          little = u5;
+          next_dir = g_direction.South;
+        }
+      }
+
+      /* 西側 */
+      if (g_direction.West <= 7) {
+        i73 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i73 = 0;
+      }
+
+      if ((tempi & i73) == wall->contents.nowall) {
+        u5 = contour_map[(temp_y + ((temp_x - 2) << 5)) - 1];
+        if (u5 < little) {
+          little = u5;
+          next_dir = g_direction.West;
+        }
+      }
+
+      /* 探索壁情報に応じて、壁フラグをセット */
+      /* 前 */
+      if (temp_dir <= 7) {
+        b_temp_dir = (unsigned char)(1 << temp_dir);
+      } else {
+        b_temp_dir = 0;
+      }
+
+      if ((tempi & (b_temp_dir % 15)) != 0) {
+        wall_flg->contents |= 1;
+      }
+
+      /* 右 */
+      i69 = (int)(temp_dir + 1U);
+      if ((unsigned int)i69 > 255U) {
+        i69 = 255;
+      }
+
+      if ((unsigned char)i69 <= 7) {
+        i74 = (unsigned char)(1 << (unsigned char)i69);
+      } else {
+        i74 = 0;
+      }
+
+      if ((tempi & (i74 % 15)) != 0) {
+        wall_flg->contents = (unsigned char)(wall_flg->contents | 2);
+      }
+
+      /* 左 */
+      i69 = (int)(temp_dir + 3U);
+      if ((unsigned int)i69 > 255U) {
+        i69 = 255;
+      }
+
+      if ((unsigned char)i69 <= 7) {
+        i75 = (unsigned char)(1 << (unsigned char)i69);
+      } else {
+        i75 = 0;
+      }
+
+      if ((tempi & (i75 % 15)) != 0) {
+        wall_flg->contents = (unsigned char)(wall_flg->contents | 8);
+      }
+
+      /*         %%現在方向と進行方向に応じた処理 */
+      tempi = (int)(4U + next_dir);
+      if ((unsigned int)tempi > 255U) {
+        tempi = 255;
+      }
+
+      qY = (unsigned int)tempi - temp_dir;
+      if (qY > (unsigned int)tempi) {
+        qY = 0U;
+      }
+
+      switch_expression = (unsigned char)((int)qY % 4);
+      if (l_direction.front == switch_expression) {
+        tempi = 0;
+      } else if (l_direction.right == switch_expression) {
+        tempi = 1;
+      } else if (l_direction.back == switch_expression) {
+        tempi = 2;
+      } else if (l_direction.left == switch_expression) {
+        tempi = 3;
+      } else {
+        tempi = -1;
+      }
+
+      switch (tempi) {
+       case 0:
+        /* 入力 現在位置x,y,現在方向 */
+        /* 出力 現在位置x,y */
+        /*     %% move_step 一マス前進する関数 */
+        /* 北に一マス */
+        if (temp_dir == g_direction.North) {
+          temp_y++;
+
+          /* disp("north_step") */
+        }
+
+        /* 東に一マス */
+        if (temp_dir == g_direction.East) {
+          temp_x++;
+
+          /* disp("east_step") */
+        }
+
+        /* 南に一マス */
+        if (temp_dir == g_direction.South) {
+          temp_y--;
+
+          /* disp("south_step") */
+        }
+
+        /* 西に一マス */
+        if (temp_dir == g_direction.West) {
+          temp_x--;
+
+          /* disp("west_step") */
+        }
+
+        /* disp("front") */
+        /* 走行モード時、Cの動作関数を呼び出し */
+        m_move_front(0, wall_flg->contents, move_dir_property.straight);
+
+        /* スタート直後フラグと壁フラグをクリア */
+        wall_flg->contents = 0U;
+        break;
+
+       case 1:
+        /* 入力 現在方向 */
+        /* 出力 現在方向 */
+        /*     %% turn_clk_90deg 時計周りに90度ターンする関数 */
+        i69 = (int)(4U + temp_dir);
+        if ((unsigned int)i69 > 255U) {
+          i69 = 255;
+        }
+
+        i69++;
+        if ((unsigned int)i69 > 255U) {
+          i69 = 255;
+        }
+
+        temp_dir = (unsigned char)(i69 % 4);
+
+        /* 入力 現在位置x,y,現在方向 */
+        /* 出力 現在位置x,y */
+        /*     %% move_step 一マス前進する関数 */
+        /* 北に一マス */
+        if (temp_dir == g_direction.North) {
+          temp_y++;
+
+          /* disp("north_step") */
+        }
+
+        /* 東に一マス */
+        if (temp_dir == g_direction.East) {
+          temp_x++;
+
+          /* disp("east_step") */
+        }
+
+        /* 南に一マス */
+        if (temp_dir == g_direction.South) {
+          temp_y--;
+
+          /* disp("south_step") */
+        }
+
+        /* 西に一マス */
+        if (temp_dir == g_direction.West) {
+          temp_x--;
+
+          /* disp("west_step") */
+        }
+
+        /* disp("right") */
+        /* 走行モード時、Cの動作関数を呼び出し */
+        m_move_right(0, wall_flg->contents, move_dir_property.straight);
+
+        /* スタート直後フラグと壁フラグをクリア */
+        wall_flg->contents = 0U;
+        break;
+
+       case 2:
+        /* 入力 現在方向 */
+        /* 出力 現在方向 */
+        /*     %% turn_180deg 180度ターンする関数 */
+        i69 = (int)(4U + temp_dir);
+        if ((unsigned int)i69 > 255U) {
+          i69 = 255;
+        }
+
+        temp_dir = (unsigned char)((i69 - 2) % 4);
+
+        /* 入力 現在位置x,y,現在方向 */
+        /* 出力 現在位置x,y */
+        /*     %% move_step 一マス前進する関数 */
+        /* 北に一マス */
+        if (temp_dir == g_direction.North) {
+          temp_y++;
+
+          /* disp("north_step") */
+        }
+
+        /* 東に一マス */
+        if (temp_dir == g_direction.East) {
+          temp_x++;
+
+          /* disp("east_step") */
+        }
+
+        /* 南に一マス */
+        if (temp_dir == g_direction.South) {
+          temp_y--;
+
+          /* disp("south_step") */
+        }
+
+        /* 西に一マス */
+        if (temp_dir == g_direction.West) {
+          temp_x--;
+
+          /* disp("west_step") */
+        }
+
+        /* disp("back") */
+        /* 走行モード時、Cの動作関数を呼び出し */
+        m_move_back(0, wall_flg->contents, move_dir_property.straight);
+
+        /* スタート直後フラグと壁フラグをクリア */
+        wall_flg->contents = 0U;
+        break;
+
+       case 3:
+        /* 入力　現在方向 */
+        /* 出力　現在方向 */
+        /*     %% turn_conclk_90deg 反時計周りに90度回る関数 */
+        i69 = (int)(4U + temp_dir);
+        if ((unsigned int)i69 > 255U) {
+          i69 = 255;
+        }
+
+        temp_dir = (unsigned char)((i69 - 1) % 4);
+
+        /* 入力 現在位置x,y,現在方向 */
+        /* 出力 現在位置x,y */
+        /*     %% move_step 一マス前進する関数 */
+        /* 北に一マス */
+        if (temp_dir == g_direction.North) {
+          temp_y++;
+
+          /* disp("north_step") */
+        }
+
+        /* 東に一マス */
+        if (temp_dir == g_direction.East) {
+          temp_x++;
+
+          /* disp("east_step") */
+        }
+
+        /* 南に一マス */
+        if (temp_dir == g_direction.South) {
+          temp_y--;
+
+          /* disp("south_step") */
+        }
+
+        /* 西に一マス */
+        if (temp_dir == g_direction.West) {
+          temp_x--;
+
+          /* disp("west_step") */
+        }
+
+        /* disp("left") */
+        /* 走行モード時、Cの動作関数を呼び出し */
+        m_move_left(0, wall_flg->contents, move_dir_property.straight);
+
+        /* スタート直後フラグと壁フラグをクリア */
+        wall_flg->contents = 0U;
+        break;
+      }
+
+      /* for code generation */
+      tempk++;
+    }
+  }
+
+  /*          pause(0.01) */
+}
+
+/*
+ * 入力 迷路縦サイズ,迷路横サイズ,ゴール座標,迷路情報(16進数)
+ * 出力 等高線map,最大経路長
+ * Arguments    : const coder_internal_ref_5 *wall
+ *                const unsigned char maze_goal[2]
+ *                const unsigned char maze_wall[1024]
+ *                unsigned char current_x
+ *                unsigned char current_y
+ *                unsigned short contour_map[1024]
+ * Return Type  : void
+ */
+static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
+  char maze_goal[2], const unsigned char maze_wall[1024], unsigned char
+  current_x, unsigned char current_y, unsigned short contour_map[1024])
+{
+  unsigned char contor_renew_square[2048];
+  unsigned char contor_renew_square_temp[2048];
+  unsigned char contor_renew_square_idx;
+  unsigned char contor_renew_square_idx_temp;
+  int i17;
+  unsigned short tempi;
+  bool exitg1;
+  unsigned char change_flag;
+  int tempn;
+  int i18;
+  int i19;
+  int i20;
+  int i21;
+  int i22;
+  int i23;
+  int i24;
+  unsigned int qY;
+  int i25;
+
+  /*     %%  make_map_find 壁情報から等高線MAPを生成 */
+  /*  迷路パラメータ設定 */
+  /* コンター更新マス保管用 */
+  /* 更新座標 */
+  memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
+
+  /* 更新座標更新用 */
+  contor_renew_square_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_square_idx_temp = 1U;
+
+  /* 更新座標更新用 */
+  /* MAPの初期化(すべての要素にmax_lengthを入力) */
+  /* 32マス分mapを保持 */
+  /* 16bitにすべき */
+  for (i17 = 0; i17 < 1024; i17++) {
+    contour_map[i17] = MAX_uint16_T;
+  }
+
+  /* ゴール座標に0を入力 */
+  contour_map[(maze_goal[1] + ((maze_goal[0] - 1) << 5)) - 1] = 0U;
+  contor_renew_square[0] = maze_goal[1];
+  contor_renew_square[1024] = maze_goal[0];
+  tempi = 0U;
+  exitg1 = false;
+  while ((!exitg1) && (tempi < 65535)) {
+    /* 歩数カウントは0~max_length */
+    /* map更新確認用フラグ */
+    change_flag = 0U;
+
+    /* 更新された座標に対し、歩数mapを更新 */
+    i17 = contor_renew_square_idx;
+    for (tempn = 0; tempn < i17; tempn++) {
+      /* 北側 */
+      /* if (bitand(maze_wall(row(tempn),col(tempn)),bitshift(uint8(1),g_direction.North)) == wall.nowall) */
+      if (g_direction.North <= 7) {
+        i18 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i18 = 0;
+      }
+
+      if ((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
+              1024] - 1) << 5)) - 1] & i18) == wall->contents.nowall) {
+        /* 北側のMAPが更新されているか判断、されていなければ書き込み */
+        i19 = (int)(contor_renew_square[tempn] + 1U);
+        i20 = i19;
+        if ((unsigned int)i19 > 255U) {
+          i20 = 255;
+        }
+
+        if (contour_map[(i20 + ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+            1] == 65535) {
+          i20 = i19;
+          if ((unsigned int)i19 > 255U) {
+            i20 = 255;
+          }
+
+          contour_map[(i20 + ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
+            = (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          if ((unsigned int)i19 > 255U) {
+            i19 = 255;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
+            char)i19;
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            contor_renew_square[tempn + 1024];
+
+          /* 更新マス用インデックスを増加 */
+          i19 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i19 > 255U) {
+            i19 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i19;
+        }
+      }
+
+      /* 東側 */
+      contor_renew_square_idx = contor_renew_square[tempn + 1024];
+      i19 = (contor_renew_square_idx - 1) << 5;
+      i20 = maze_wall[(contor_renew_square[tempn] + i19) - 1];
+      if (g_direction.East <= 7) {
+        i21 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i21 = 0;
+      }
+
+      if ((i20 & i21) == wall->contents.nowall) {
+        /* 東側のMAPが更新されているか判断、されていなければ書き込み */
+        i22 = (int)(contor_renew_square[tempn + 1024] + 1U);
+        i23 = i22;
+        if ((unsigned int)i22 > 255U) {
+          i23 = 255;
+        }
+
+        if (contour_map[(contor_renew_square[tempn] + ((i23 - 1) << 5)) - 1] ==
+            65535) {
+          i23 = i22;
+          if ((unsigned int)i22 > 255U) {
+            i23 = 255;
+          }
+
+          contour_map[(contor_renew_square[tempn] + ((i23 - 1) << 5)) - 1] =
+            (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+            contor_renew_square[tempn];
+          if ((unsigned int)i22 > 255U) {
+            i22 = 255;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            (unsigned char)i22;
+
+          /* 更新マス用インデックスを増加 */
+          i22 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i22 > 255U) {
+            i22 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i22;
+        }
+      }
+
+      /* 南側 */
+      if (g_direction.South <= 7) {
+        i24 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i24 = 0;
+      }
+
+      if ((i20 & i24) == wall->contents.nowall) {
+        /* 南側のMAPが更新されているか判断、されていなければ書き込み */
+        qY = contor_renew_square[tempn] - 1U;
+        if (qY > contor_renew_square[tempn]) {
+          qY = 0U;
+        }
+
+        if (contour_map[((int)qY + i19) - 1] == 65535) {
+          qY = contor_renew_square[tempn] - 1U;
+          if (qY > contor_renew_square[tempn]) {
+            qY = 0U;
+          }
+
+          contour_map[((int)qY + i19) - 1] = (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          qY = contor_renew_square[tempn] - 1U;
+          if (qY > contor_renew_square[tempn]) {
+            qY = 0U;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
+            char)qY;
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            contor_renew_square_idx;
+
+          /* 更新マス用インデックスを増加 */
+          i19 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i19 > 255U) {
+            i19 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i19;
+        }
+      }
+
+      /* 西側 */
+      if (g_direction.West <= 7) {
+        i25 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i25 = 0;
+      }
+
+      if ((i20 & i25) == wall->contents.nowall) {
+        /* 西側のMAPが更新されているか判断、されていなければ書き込み */
+        qY = contor_renew_square_idx - 1U;
+        if (qY > contor_renew_square_idx) {
+          qY = 0U;
+        }
+
+        if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) - 1]
+            == 65535) {
+          qY = contor_renew_square_idx - 1U;
+          if (qY > contor_renew_square_idx) {
+            qY = 0U;
+          }
+
+          contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) - 1] =
+            (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+            contor_renew_square[tempn];
+          qY = contor_renew_square_idx - 1U;
+          if (qY > contor_renew_square_idx) {
+            qY = 0U;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            (unsigned char)qY;
+
+          /* 更新マス用インデックスを増加 */
+          i19 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i19 > 255U) {
+            i19 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i19;
+        }
+      }
+    }
+
+    /* ゴール更新マスの更新とインデックスのクリア */
+    for (i17 = 0; i17 < 2048; i17++) {
+      contor_renew_square[i17] = contor_renew_square_temp[i17];
+      contor_renew_square_temp[i17] = 0U;
+    }
+
+    contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
+    contor_renew_square_idx_temp = 1U;
+
+    /* 更新がない、もしくは現在位置が更新されていれば終了 */
+    if ((change_flag == 0) || (contour_map[(current_y + ((current_x - 1) << 5))
+         - 1] != 65535)) {
+      exitg1 = true;
+    } else {
+      tempi++;
+    }
+  }
+}
+
+/*
  * 未知壁の領域は仮想壁をおいて侵入しない。
  * 入力 迷路縦サイズ,迷路横サイズ,ゴール座標,迷路情報(16進数),迷路探索情報(16進数)
  * 出力 等高線map,最大経路長
  * Arguments    : coder_internal_ref_2 *max_length
- *                coder_internal_ref_3 *num_temp
  *                const coder_internal_ref_5 *wall
  *                const coder_internal_ref_4 *search
  *                const unsigned char maze_goal[2]
@@ -206,102 +939,126 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
  *                unsigned short *start_num
  * Return Type  : void
  */
-static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
-  coder_internal_ref_3 *num_temp, const coder_internal_ref_5 *wall, const
-  coder_internal_ref_4 *search, const unsigned char maze_goal[2], const unsigned
-  char maze_wall[1024], const unsigned char maze_wall_search[1024], unsigned
-  short row_num_node[1056], unsigned short col_num_node[1056], unsigned short
-  *start_num)
+static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
+  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+  char maze_goal[2], const unsigned char maze_wall[1024], const unsigned char
+  maze_wall_search[1024], unsigned short row_num_node[1056], unsigned short
+  col_num_node[1056], unsigned short *start_num)
 {
-  int i114;
-  unsigned short row_num_node_temp[1056];
-  unsigned short col_num_node_temp[1056];
-  int idx;
+  unsigned char contor_renew_node_row_idx;
+  unsigned char contor_renew_node_row_idx_temp;
+  unsigned char contor_renew_node_row[2048];
+  unsigned char contor_renew_node_row_temp[2048];
+  unsigned char contor_renew_node_col[2048];
+  unsigned char contor_renew_node_col_temp[2048];
+  unsigned char contor_renew_node_col_idx;
+  unsigned char contor_renew_node_col_idx_temp;
+  int i154;
   unsigned char row_dir_node[1056];
   unsigned char col_dir_node[1056];
-  int i115;
-  int ii;
-  int i116;
-  int i117;
-  int row_num_node_tmp;
-  int i118;
-  int i119;
-  int i120;
-  emxArray_uint16_T *row;
-  emxArray_uint16_T *col;
-  emxArray_uint16_T *b_num_temp;
-  int i121;
-  unsigned char change_flag;
-  unsigned int qY;
-  unsigned short u8;
-  unsigned short i;
-  bool exitg1;
-  short ii_data[1056];
-  int i122;
-  int i123;
-  int i124;
-  int i125;
-  int i126;
-  unsigned char a;
-  int i127;
-  int i128;
-  unsigned int u9;
-  int i129;
-  int i130;
-  int i131;
-  int i132;
-  int i133;
-  int i134;
-  int i135;
-  int i136;
-  int i137;
-  int i138;
-  int i139;
-  int i140;
-  int i141;
-  int i142;
-  int i143;
-  int i144;
-  int i145;
-  int i146;
-  int i147;
-  int i148;
-  int i149;
-  int i150;
-  int i151;
-  int i152;
-  int i153;
-  int i154;
   int i155;
   int i156;
   int i157;
   int i158;
   int i159;
+  int row_num_node_tmp;
   int i160;
   int i161;
   int i162;
+  unsigned int qY;
   int i163;
+  unsigned short i;
+  bool exitg1;
+  unsigned char change_flag;
   int i164;
   int i165;
   int i166;
   int i167;
+  unsigned int b_qY;
   int i168;
   int i169;
   int i170;
   int i171;
   int i172;
+  unsigned int c_qY;
   int i173;
   int i174;
   int i175;
   int i176;
+  unsigned int u9;
   int i177;
   int i178;
   int i179;
   int i180;
   int i181;
+  int i182;
+  int i183;
+  int i184;
+  int i185;
+  int i186;
+  int i187;
+  int i188;
+  int i189;
+  int i190;
+  int i191;
+  int i192;
+  int i193;
+  int i194;
+  int i195;
+  int i196;
+  int i197;
+  int i198;
+  int i199;
+  int i200;
+  int i201;
+  int i202;
+  int i203;
+  int i204;
+  int i205;
+  int i206;
+  int i207;
+  int i208;
+  int i209;
+  int i210;
+  int i211;
+  int i212;
+  int i213;
+  int i214;
+  int i215;
+  int i216;
+  int i217;
+  int i218;
+  int i219;
+  int i220;
+  int i221;
+  int i222;
+  int i223;
 
-  /*  make_map_fustrun_diagonal 最短走行用等高線MAPを生成 */
+  /*     %% make_map_fustrun_diagonal 最短走行用等高線MAPを生成 */
   /* ローカル変数設定 */
+  /* コンター更新ノード(行)保管用 */
+  /* 更新座標 */
+  /* 更新座標更新用 */
+  contor_renew_node_row_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_node_row_idx_temp = 1U;
+
+  /* 更新座標更新用 */
+  /* コンター更新ノード（列）保管用 */
+  /* 更新座標 */
+  memset(&contor_renew_node_row[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_node_row_temp[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_node_col[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_node_col_temp[0], 0, sizeof(unsigned char) << 11);
+
+  /* 更新座標更新用 */
+  contor_renew_node_col_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_node_col_idx_temp = 1U;
+
+  /* 更新座標更新用 */
   /* パラメータ設定 */
   /*  迷路パラメータ設定 */
   max_length->contents = 1024U;
@@ -309,2708 +1066,1661 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
   /*  ルートの重み設定 */
   /* MAPの初期化(すべてのノードにmax_lengthを入力) */
   /* 歩数MAP */
-  /* 更新用MAP */
+  /*  %更新用MAP */
+  /*  row_num_node_temp = ones(33,32,'uint16')*uint16(65535); */
+  /*  col_num_node_temp = ones(32,33,'uint16')*uint16(65535); */
   /* 進行方向保持用ノード作成 */
-  for (i114 = 0; i114 < 1056; i114++) {
-    row_num_node[i114] = MAX_uint16_T;
-    col_num_node[i114] = MAX_uint16_T;
-    row_num_node_temp[i114] = MAX_uint16_T;
-    col_num_node_temp[i114] = MAX_uint16_T;
-    row_dir_node[i114] = 0U;
-    col_dir_node[i114] = 0U;
+  for (i154 = 0; i154 < 1056; i154++) {
+    row_num_node[i154] = MAX_uint16_T;
+    col_num_node[i154] = MAX_uint16_T;
+    row_dir_node[i154] = 0U;
+    col_dir_node[i154] = 0U;
   }
 
   /* ゴールセクションが確定している場合 */
+  *start_num = MAX_uint16_T;
+
   /* ゴールマスから、東西南北にマップを展開 */
   /* 北壁 */
-  i114 = maze_goal[0] - 1;
-  idx = (maze_goal[1] + (i114 << 5)) - 1;
+  i154 = maze_goal[0] - 1;
+  i155 = (maze_goal[1] + (i154 << 5)) - 1;
   if (g_direction.North <= 7) {
-    i115 = (unsigned char)(1 << g_direction.North);
+    i156 = (unsigned char)(1 << g_direction.North);
   } else {
-    i115 = 0;
+    i156 = 0;
   }
 
-  if ((maze_wall[idx] & i115) == 0) {
+  if ((maze_wall[i155] & i156) == 0) {
     /* 歩数更新 */
-    ii = (int)(maze_goal[1] + 1U);
-    i116 = ii;
-    if ((unsigned int)ii > 255U) {
-      i116 = 255;
+    i157 = (int)(maze_goal[1] + 1U);
+    i158 = i157;
+    if ((unsigned int)i157 > 255U) {
+      i158 = 255;
     }
 
-    row_num_node_tmp = 33 * i114;
-    row_num_node[(i116 + row_num_node_tmp) - 1] = 3U;
+    row_num_node_tmp = 33 * i154;
+    row_num_node[(i158 + row_num_node_tmp) - 1] = 3U;
 
     /* 方向追加 */
-    i114 = ii;
-    if ((unsigned int)ii > 255U) {
-      i114 = 255;
+    i154 = i157;
+    if ((unsigned int)i157 > 255U) {
+      i154 = 255;
     }
 
     if (g_d_direction.North <= 7) {
-      row_dir_node[(i114 + row_num_node_tmp) - 1] = (unsigned char)(1 <<
+      row_dir_node[(i154 + row_num_node_tmp) - 1] = (unsigned char)(1 <<
         g_d_direction.North);
     } else {
-      row_dir_node[(i114 + row_num_node_tmp) - 1] = 0U;
+      row_dir_node[(i154 + row_num_node_tmp) - 1] = 0U;
     }
 
-    /* 更新用MAP更新 */
-    if ((unsigned int)ii > 255U) {
-      ii = 255;
+    /* 更新ノードを更新 */
+    if ((unsigned int)i157 > 255U) {
+      i157 = 255;
     }
 
-    row_num_node_temp[(ii + row_num_node_tmp) - 1] = 0U;
+    contor_renew_node_row[0] = (unsigned char)i157;
+    contor_renew_node_row[1024] = maze_goal[0];
+
+    /* 更新マス用インデックスを増加 */
+    contor_renew_node_row_idx = 2U;
   }
 
   /* 東壁 */
   if (g_direction.East <= 7) {
-    i117 = (unsigned char)(1 << g_direction.East);
+    i159 = (unsigned char)(1 << g_direction.East);
   } else {
-    i117 = 0;
+    i159 = 0;
   }
 
-  if ((maze_wall[idx] & i117) == 0) {
+  if ((maze_wall[i155] & i159) == 0) {
     /* 歩数更新 */
-    i114 = (int)(maze_goal[0] + 1U);
-    ii = i114;
-    if ((unsigned int)i114 > 255U) {
-      ii = 255;
+    i154 = (int)(maze_goal[0] + 1U);
+    i157 = i154;
+    if ((unsigned int)i154 > 255U) {
+      i157 = 255;
     }
 
-    col_num_node[(maze_goal[1] + ((ii - 1) << 5)) - 1] = 3U;
+    col_num_node[(maze_goal[1] + ((i157 - 1) << 5)) - 1] = 3U;
 
     /* 方向追加 */
-    ii = i114;
-    if ((unsigned int)i114 > 255U) {
-      ii = 255;
+    i157 = i154;
+    if ((unsigned int)i154 > 255U) {
+      i157 = 255;
     }
 
     if (g_d_direction.East <= 7) {
-      col_dir_node[(maze_goal[1] + ((ii - 1) << 5)) - 1] = (unsigned char)(1 <<
+      col_dir_node[(maze_goal[1] + ((i157 - 1) << 5)) - 1] = (unsigned char)(1 <<
         g_d_direction.East);
     } else {
-      col_dir_node[(maze_goal[1] + ((ii - 1) << 5)) - 1] = 0U;
+      col_dir_node[(maze_goal[1] + ((i157 - 1) << 5)) - 1] = 0U;
     }
 
-    /* 更新用MAP更新 */
-    if ((unsigned int)i114 > 255U) {
-      i114 = 255;
+    /* 更新ノードを更新 */
+    contor_renew_node_col[0] = maze_goal[1];
+    if ((unsigned int)i154 > 255U) {
+      i154 = 255;
     }
 
-    col_num_node_temp[(maze_goal[1] + ((i114 - 1) << 5)) - 1] = 0U;
+    contor_renew_node_col[1024] = (unsigned char)i154;
+
+    /* 更新マス用インデックスを増加 */
+    contor_renew_node_col_idx = 2U;
   }
 
   /* 南壁 */
   if (g_direction.South <= 7) {
-    i118 = (unsigned char)(1 << g_direction.South);
+    i160 = (unsigned char)(1 << g_direction.South);
   } else {
-    i118 = 0;
+    i160 = 0;
   }
 
-  if ((maze_wall[idx] & i118) == 0) {
+  if ((maze_wall[i155] & i160) == 0) {
     /* 歩数更新 */
     row_num_node_tmp = (maze_goal[1] + 33 * (maze_goal[0] - 1)) - 1;
     row_num_node[row_num_node_tmp] = 3U;
 
     /* 方向追加 */
     if (g_d_direction.South <= 7) {
-      i120 = (unsigned char)(1 << g_d_direction.South);
+      i162 = (unsigned char)(1 << g_d_direction.South);
     } else {
-      i120 = 0;
+      i162 = 0;
     }
 
     row_dir_node[row_num_node_tmp] = (unsigned char)
-      (row_dir_node[row_num_node_tmp] | i120);
+      (row_dir_node[row_num_node_tmp] | i162);
 
-    /* 更新用MAP更新 */
-    row_num_node_temp[row_num_node_tmp] = 0U;
+    /* 更新ノードを更新 */
+    contor_renew_node_row[contor_renew_node_row_idx - 1] = maze_goal[1];
+    contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[0];
+
+    /* 更新マス用インデックスを増加 */
+    contor_renew_node_row_idx++;
   }
 
   /* 西壁 */
   if (g_direction.West <= 7) {
-    i119 = (unsigned char)(1 << g_direction.West);
+    i161 = (unsigned char)(1 << g_direction.West);
   } else {
-    i119 = 0;
+    i161 = 0;
   }
 
-  if ((maze_wall[idx] & i119) == 0) {
+  if ((maze_wall[i155] & i161) == 0) {
     /* 歩数更新 */
-    col_num_node[idx] = 3U;
+    col_num_node[i155] = 3U;
 
     /* 方向追加 */
     if (g_d_direction.West <= 7) {
-      i121 = (unsigned char)(1 << g_d_direction.West);
+      i163 = (unsigned char)(1 << g_d_direction.West);
     } else {
-      i121 = 0;
+      i163 = 0;
     }
 
-    col_dir_node[idx] = (unsigned char)(col_dir_node[idx] | i121);
+    col_dir_node[i155] = (unsigned char)(col_dir_node[i155] | i163);
 
-    /* 更新用MAP更新 */
-    col_num_node_temp[idx] = 0U;
+    /* 更新ノードを更新 */
+    contor_renew_node_col[contor_renew_node_col_idx - 1] = maze_goal[1];
+    contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[0];
+
+    /* 更新マス用インデックスを増加 */
+    contor_renew_node_col_idx++;
   }
 
-  /* ゴールセクションが確定していない場合     */
-  emxInit_uint16_T(&row, 1);
-  emxInit_uint16_T(&col, 1);
-  emxInit_uint16_T(&b_num_temp, 1);
-  do {
+  /* ゴールセクションが確定していない場合 */
+  row_num_node_tmp = max_length->contents;
+  qY = row_num_node_tmp - 1U;
+  if (qY > (unsigned int)row_num_node_tmp) {
+    qY = 0U;
+  }
+
+  i = 0U;
+  exitg1 = false;
+  while ((!exitg1) && (i <= (unsigned short)qY)) {
+    /* 更新確認用の歩数カウントは0~max_length */
     change_flag = 0U;
 
     /* map更新確認用フラグ */
-    idx = max_length->contents;
-    qY = idx - 1U;
-    if (qY > (unsigned int)idx) {
-      qY = 0U;
-    }
-
-    u8 = (unsigned short)qY;
-    for (i = 0; i <= u8; i++) {
-      /* 更新確認用の歩数カウントは0~max_length */
-      /* Row_Edgeの処理[33行,32列] */
-      /* 歩数が確定している座標を検索 */
-      /* 最初は0,更新され、増加したマスを次々検索していく */
-      idx = 0;
-      ii = 0;
-      exitg1 = false;
-      while ((!exitg1) && (ii < 1056)) {
-        if (row_num_node_temp[ii] == i) {
-          idx++;
-          ii_data[idx - 1] = (short)(ii + 1);
-          if (idx >= 1056) {
-            exitg1 = true;
-          } else {
-            ii++;
-          }
-        } else {
-          ii++;
-        }
-      }
-
-      if (1 > idx) {
-        ii = 0;
+    /* Row_Edgeの処理[33行,32列] */
+    /* 検索した座標に対し、歩数mapを更新 */
+    i154 = contor_renew_node_row_idx;
+    for (row_num_node_tmp = 0; row_num_node_tmp <= i154 - 2; row_num_node_tmp++)
+    {
+      /* 北側 */
+      /* 壁が無い & 探索済みであるとき */
+      i155 = contor_renew_node_row[row_num_node_tmp + 1024] - 1;
+      i157 = (contor_renew_node_row[row_num_node_tmp] + (i155 << 5)) - 1;
+      if (g_direction.North <= 7) {
+        i164 = (unsigned char)(1 << g_direction.North);
       } else {
-        ii = idx;
+        i164 = 0;
       }
 
-      i114 = num_temp->contents->size[0];
-      num_temp->contents->size[0] = ii;
-      emxEnsureCapacity_uint16_T(num_temp->contents, i114);
-      for (i114 = 0; i114 < ii; i114++) {
-        num_temp->contents->data[i114] = (unsigned short)ii_data[i114];
-      }
-
-      /* 33行なので、行番号:33で割ったあまり */
-      i114 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i114);
-      ii = num_temp->contents->size[0];
-      for (i114 = 0; i114 < ii; i114++) {
-        idx = num_temp->contents->data[i114];
-        qY = idx - 1U;
-        if (qY > (unsigned int)idx) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i114] = (unsigned short)qY;
-      }
-
-      d_rem(b_num_temp, row);
-      i114 = row->size[0];
-      emxEnsureCapacity_uint16_T(row, i114);
-      ii = row->size[0];
-      for (i114 = 0; i114 < ii; i114++) {
-        qY = row->data[i114] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        row->data[i114] = (unsigned short)qY;
-      }
-
-      /* 列番号:33で割ったときの商 */
-      i114 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i114);
-      ii = num_temp->contents->size[0];
-      for (i114 = 0; i114 < ii; i114++) {
-        idx = num_temp->contents->data[i114];
-        qY = idx - 1U;
-        if (qY > (unsigned int)idx) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i114] = (unsigned short)qY;
-      }
-
-      idivide(b_num_temp, 33.0, col);
-      i114 = col->size[0];
-      emxEnsureCapacity_uint16_T(col, i114);
-      ii = col->size[0];
-      for (i114 = 0; i114 < ii; i114++) {
-        qY = col->data[i114] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        col->data[i114] = (unsigned short)qY;
-      }
-
-      /* 見つかったマスの数 */
-      /* 検索した座標に対し、歩数mapを更新 */
-      i114 = row->size[0];
-      if (i114 < 0) {
-        i114 = 0;
-      } else {
-        if (i114 > 65535) {
-          i114 = 65535;
-        }
-      }
-
-      for (idx = 0; idx < i114; idx++) {
-        /* 北側 */
-        /* 壁が無い & 探索済みであるとき */
+      if (((maze_wall[i157] & i164) != 0) == wall->contents.nowall) {
         if (g_direction.North <= 7) {
-          i122 = (unsigned char)(1 << g_direction.North);
+          i165 = (unsigned char)(1 << g_direction.North);
         } else {
-          i122 = 0;
+          i165 = 0;
         }
 
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i122) != 0) == wall->contents.nowall) {
-          if (g_direction.North <= 7) {
-            i123 = (unsigned char)(1 << g_direction.North);
+        if (((maze_wall_search[i157] & i165) != 0) == search->contents.known) {
+          /* かつ進行方向が北向きである時 */
+          i155 *= 33;
+          i157 = (contor_renew_node_row[row_num_node_tmp] + i155) - 1;
+          if (g_d_direction.North <= 7) {
+            i170 = (unsigned char)(1 << g_d_direction.North);
           } else {
-            i123 = 0;
+            i170 = 0;
           }
 
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i123) != 0) == search->contents.known) {
-            /* かつ進行方向が北向きである時 */
-            if (g_d_direction.North <= 7) {
-              i125 = (unsigned char)(1 << g_d_direction.North);
-            } else {
-              i125 = 0;
+          if ((row_dir_node[i157] & i170) != 0) {
+            /* かつ北のノードが更新予定値よりも大きな値の場合 */
+            i157 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
             }
 
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i125) != 0) {
-              /* かつ北のノードが更新予定値よりも大きな値の場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 6U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(i157 + i155) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 6U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
               }
 
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] > (int)
-                  u9) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+              row_num_node[(i155 + 33 * (contor_renew_node_row[row_num_node_tmp
+                + 1024] - 1)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              if (g_d_direction.North <= 7) {
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.North);
+              } else {
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i155;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
+
+              /* かつ北のノードが更新予定値と同じ場合 */
+            } else {
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i155 + 33 *
+                                (contor_renew_node_row[row_num_node_tmp + 1024]
+                                 - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+                if ((unsigned int)i155 > 255U) {
+                  i155 = 255;
                 }
 
-                u9 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 6U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                i157 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
                 if (g_d_direction.North <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North);
+                  i186 = (unsigned char)(1 << g_d_direction.North);
                 } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] = 0U;
+                  i186 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(row_dir_node[(i157 +
+                  33 * (contor_renew_node_row[row_num_node_tmp + 1024] - 1)) - 1]
+                  | i186);
+              }
+            }
 
-                /* かつ北のノードが更新予定値と同じ場合 */
+            /* かつ進行方向が北向きでないとき */
+          } else {
+            /* かつ北のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i158 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+            if ((unsigned int)i158 > 255U) {
+              i158 = 255;
+            }
+
+            b_qY = row_num_node[i157] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(i158 + i155) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i155 + 33 * (contor_renew_node_row[row_num_node_tmp
+                + 1024] - 1)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              if (g_d_direction.North <= 7) {
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.North);
               } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 6U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North <= 7) {
-                    i136 = (unsigned char)(1 << g_d_direction.North);
-                  } else {
-                    i136 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(a | i136);
-                }
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = 0U;
               }
 
-              /* かつ進行方向が北向きでないとき     */
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i155;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
+
+              /* かつ北のノードが更新予定値と同じ場合 */
             } else {
-              /* かつ北のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              i157 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i157 = 255;
               }
 
-              u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
               }
 
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] > (int)
-                  u9) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+              if (row_num_node[(i157 + 33 *
+                                (contor_renew_node_row[row_num_node_tmp + 1024]
+                                 - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i157 = i155;
+                if ((unsigned int)i155 > 255U) {
+                  i157 = 255;
+                  i155 = 255;
                 }
 
                 if (g_d_direction.North <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North);
+                  i184 = (unsigned char)(1 << g_d_direction.North);
                 } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] = 0U;
+                  i184 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North <= 7) {
-                    i135 = (unsigned char)(1 << g_d_direction.North);
-                  } else {
-                    i135 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(a | i135);
-                }
-              }
-            }
-          }
-        }
-
-        /* 北東側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.East <= 7) {
-          i124 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i124 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i124) != 0) == wall->contents.nowall) {
-          if (g_direction.East <= 7) {
-            i126 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i126 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i126) != 0) == search->contents.known) {
-            /* かつ進行方向が北東向きである時 */
-            if (g_d_direction.North_East <= 7) {
-              i128 = (unsigned char)(1 << g_d_direction.North_East);
-            } else {
-              i128 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i128) != 0) {
-              /* かつ北東のノードが更新予定値よりも大きな値の場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 4U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] >
-                  (int)u9) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_East <= 7) {
-                    i142 = (unsigned char)(1 << g_d_direction.North_East);
-                  } else {
-                    i142 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(a | i142);
-                }
-              }
-
-              /* かつ進行方向が北東向きでないとき     */
-            } else {
-              /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] >
-                  (int)u9) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_East <= 7) {
-                    i141 = (unsigned char)(1 << g_d_direction.North_East);
-                  } else {
-                    i141 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(a | i141);
-                }
-              }
-            }
-          }
-        }
-
-        /* 東側は柱 */
-        /* 南東側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2];
-        if (g_direction.East <= 7) {
-          i127 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i127 = 0;
-        }
-
-        if (((a & i127) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-            2];
-          if (g_direction.East <= 7) {
-            i129 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i129 = 0;
-          }
-
-          if (((a & i129) != 0) == search->contents.known) {
-            /* かつ進行方向が南東向きである時 */
-            if (g_d_direction.South_East <= 7) {
-              i131 = (unsigned char)(1 << g_d_direction.South_East);
-            } else {
-              i131 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i131) != 0) {
-              /* かつ南東のノードが更新予定値よりも大きな値の場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 4U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] >
-                  (int)u9) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.South_East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                    (unsigned char)(1 << g_d_direction.South_East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.South_East <= 7) {
-                    i148 = (unsigned char)(1 << g_d_direction.South_East);
-                  } else {
-                    i148 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                    (unsigned char)(a | i148);
-                }
-              }
-
-              /* かつ進行方向が南東向きでないとき     */
-            } else {
-              /* かつ南東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] >
-                  (int)u9) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.South_East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                    (unsigned char)(1 << g_d_direction.South_East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.South_East <= 7) {
-                    i147 = (unsigned char)(1 << g_d_direction.South_East);
-                  } else {
-                    i147 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                    (unsigned char)(a | i147);
-                }
-              }
-            }
-          }
-        }
-
-        /* 南側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2];
-        if (g_direction.South <= 7) {
-          i130 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i130 = 0;
-        }
-
-        if (((a & i130) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-            2];
-          if (g_direction.South <= 7) {
-            i132 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i132 = 0;
-          }
-
-          if (((a & i132) != 0) == search->contents.known) {
-            /* かつ進行方向が南向きである時 */
-            if (g_d_direction.South <= 7) {
-              i134 = (unsigned char)(1 << g_d_direction.South);
-            } else {
-              i134 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i134) != 0) {
-              /* かつ南のノードが更新予定値よりも大きな値の場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 6U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  2] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 6U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = (unsigned char)(1 << g_d_direction.South);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 6U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                    2] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1))
-                    - 2];
-                  if (g_d_direction.South <= 7) {
-                    i145 = (unsigned char)(1 << g_d_direction.South);
-                  } else {
-                    i145 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = (unsigned char)(a | i145);
-                }
-              }
-
-              /* かつ進行方向が南向きでないとき     */
-            } else {
-              /* かつ南のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  2] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = (unsigned char)(1 << g_d_direction.South);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                    2] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1))
-                    - 2];
-                  if (g_d_direction.South <= 7) {
-                    i144 = (unsigned char)(1 << g_d_direction.South);
-                  } else {
-                    i144 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = (unsigned char)(a | i144);
-                }
-              }
-            }
-          }
-        }
-
-        /* 南西側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2];
-        if (g_direction.West <= 7) {
-          i133 = (unsigned char)(1 << g_direction.West);
-        } else {
-          i133 = 0;
-        }
-
-        if (((a & i133) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-            2];
-          if (g_direction.West <= 7) {
-            i137 = (unsigned char)(1 << g_direction.West);
-          } else {
-            i137 = 0;
-          }
-
-          if (((a & i137) != 0) == search->contents.known) {
-            /* かつ進行方向が南西向きである時 */
-            if (g_d_direction.South_West <= 7) {
-              i139 = (unsigned char)(1 << g_d_direction.South_West);
-            } else {
-              i139 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i139) != 0) {
-              /* かつ南西のノードが更新予定値よりも大きな値の場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 4U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                  2] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 2] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(1 << g_d_direction.South_West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 2] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 2];
-                  if (g_d_direction.South_West <= 7) {
-                    i151 = (unsigned char)(1 << g_d_direction.South_West);
-                  } else {
-                    i151 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(a | i151);
-                }
-              }
-
-              /* かつ進行方向が南西向きでないとき     */
-            } else {
-              /* かつ南西のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                  2] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 2] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(1 << g_d_direction.South_West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 2] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 2];
-                  if (g_d_direction.South_West <= 7) {
-                    i150 = (unsigned char)(1 << g_d_direction.South_West);
-                  } else {
-                    i150 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(a | i150);
-                }
-              }
-            }
-          }
-        }
-
-        /* 北西側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.West <= 7) {
-          i138 = (unsigned char)(1 << g_direction.West);
-        } else {
-          i138 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i138) != 0) == wall->contents.nowall) {
-          if (g_direction.West <= 7) {
-            i140 = (unsigned char)(1 << g_direction.West);
-          } else {
-            i140 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i140) != 0) == search->contents.known) {
-            /* かつ進行方向が北西向きである時 */
-            if (g_d_direction.North_West <= 7) {
-              i143 = (unsigned char)(1 << g_d_direction.North_West);
-            } else {
-              i143 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i143) != 0) {
-              /* かつ北西のノードが更新予定値よりも大きな値の場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 4U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                  1] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.North_West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = (unsigned char)(1 << g_d_direction.North_West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  if (g_d_direction.North_West <= 7) {
-                    i156 = (unsigned char)(1 << g_d_direction.North_West);
-                  } else {
-                    i156 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = (unsigned char)(col_dir_node[(row->data[idx] +
-                    ((col->data[idx] - 1) << 5)) - 1] | i156);
-                }
-              }
-
-              /* かつ進行方向が北西向きでないとき     */
-            } else {
-              /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                  1] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.North_West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = (unsigned char)(1 << g_d_direction.North_West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  if (g_d_direction.North_West <= 7) {
-                    i155 = (unsigned char)(1 << g_d_direction.North_West);
-                  } else {
-                    i155 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = (unsigned char)(col_dir_node[(row->data[idx] +
-                    ((col->data[idx] - 1) << 5)) - 1] | i155);
-                }
+                row_dir_node[(i157 + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(row_dir_node[(i155 +
+                  33 * (contor_renew_node_row[row_num_node_tmp + 1024] - 1)) - 1]
+                  | i184);
               }
             }
           }
         }
       }
 
-      /* Col_Edgeの処理[32行,33列] */
-      /* 歩数が確定している座標を検索 */
-      /* 最初は0,更新され、増加したマスを次々検索していく */
-      idx = 0;
-      ii = 0;
-      exitg1 = false;
-      while ((!exitg1) && (ii < 1056)) {
-        if (col_num_node_temp[ii] == i) {
-          idx++;
-          ii_data[idx - 1] = (short)(ii + 1);
-          if (idx >= 1056) {
-            exitg1 = true;
-          } else {
-            ii++;
-          }
-        } else {
-          ii++;
-        }
-      }
-
-      if (1 > idx) {
-        ii = 0;
+      /* 北東側 */
+      /* 壁が無い & 探索済みであるとき */
+      if (g_direction.East <= 7) {
+        i167 = (unsigned char)(1 << g_direction.East);
       } else {
-        ii = idx;
+        i167 = 0;
       }
 
-      i114 = num_temp->contents->size[0];
-      num_temp->contents->size[0] = ii;
-      emxEnsureCapacity_uint16_T(num_temp->contents, i114);
-      for (i114 = 0; i114 < ii; i114++) {
-        num_temp->contents->data[i114] = (unsigned short)ii_data[i114];
-      }
-
-      /* 32行なので、行番号:32で割ったあまり */
-      i114 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i114);
-      ii = num_temp->contents->size[0];
-      for (i114 = 0; i114 < ii; i114++) {
-        idx = num_temp->contents->data[i114];
-        qY = idx - 1U;
-        if (qY > (unsigned int)idx) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i114] = (unsigned short)qY;
-      }
-
-      c_rem(b_num_temp, row);
-      i114 = row->size[0];
-      emxEnsureCapacity_uint16_T(row, i114);
-      ii = row->size[0];
-      for (i114 = 0; i114 < ii; i114++) {
-        qY = row->data[i114] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        row->data[i114] = (unsigned short)qY;
-      }
-
-      /* 列番号:32で割ったときの商 */
-      i114 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i114);
-      ii = num_temp->contents->size[0];
-      for (i114 = 0; i114 < ii; i114++) {
-        idx = num_temp->contents->data[i114];
-        qY = idx - 1U;
-        if (qY > (unsigned int)idx) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i114] = (unsigned short)qY;
-      }
-
-      idivide(b_num_temp, 32.0, col);
-      i114 = col->size[0];
-      emxEnsureCapacity_uint16_T(col, i114);
-      ii = col->size[0];
-      for (i114 = 0; i114 < ii; i114++) {
-        qY = col->data[i114] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        col->data[i114] = (unsigned short)qY;
-      }
-
-      /* 見つかったマスの数 */
-      /* 検索した座標に対し、歩数mapを更新 */
-      i114 = row->size[0];
-      if (i114 < 0) {
-        i114 = 0;
-      } else {
-        if (i114 > 65535) {
-          i114 = 65535;
-        }
-      }
-
-      for (idx = 0; idx < i114; idx++) {
-        /* 北側は壁 */
-        /* 北東側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.North <= 7) {
-          i146 = (unsigned char)(1 << g_direction.North);
-        } else {
-          i146 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i146) != 0) == wall->contents.nowall) {
-          if (g_direction.North <= 7) {
-            i149 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i149 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i149) != 0) == search->contents.known) {
-            /* かつ進行方向が北東向きである時 */
-            if (g_d_direction.North_East <= 7) {
-              i153 = (unsigned char)(1 << g_d_direction.North_East);
-            } else {
-              i153 = 0;
-            }
-
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i153) != 0) {
-              /* かつ北東のノードが更新予定値よりも大きな値の場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 4U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
-              }
-
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] > (int)
-                  u9) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_East <= 7) {
-                    i167 = (unsigned char)(1 << g_d_direction.North_East);
-                  } else {
-                    i167 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(a | i167);
-                }
-              }
-
-              /* かつ進行方向が北東向きでないとき     */
-            } else {
-              /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
-              }
-
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] > (int)
-                  u9) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_East <= 7) {
-                    i166 = (unsigned char)(1 << g_d_direction.North_East);
-                  } else {
-                    i166 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(a | i166);
-                }
-              }
-            }
-          }
-        }
-
-        /* 東側 */
-        /* 壁が無い & 探索済みであるとき */
+      if (((maze_wall[(contor_renew_node_row[row_num_node_tmp] +
+                       ((contor_renew_node_row[row_num_node_tmp + 1024] - 1) <<
+                        5)) - 1] & i167) != 0) == wall->contents.nowall) {
         if (g_direction.East <= 7) {
-          i152 = (unsigned char)(1 << g_direction.East);
+          i169 = (unsigned char)(1 << g_direction.East);
         } else {
-          i152 = 0;
+          i169 = 0;
         }
 
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i152) != 0) == wall->contents.nowall) {
-          if (g_direction.East <= 7) {
-            i154 = (unsigned char)(1 << g_direction.East);
+        if (((maze_wall_search[(contor_renew_node_row[row_num_node_tmp] +
+                                ((contor_renew_node_row[row_num_node_tmp + 1024]
+                 - 1) << 5)) - 1] & i169) != 0) == search->contents.known) {
+          /* かつ進行方向が北東向きである時 */
+          if (g_d_direction.North_East <= 7) {
+            i173 = (unsigned char)(1 << g_d_direction.North_East);
           } else {
-            i154 = 0;
+            i173 = 0;
           }
 
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i154) != 0) == search->contents.known) {
-            /* かつ進行方向が東向きである時 */
-            if (g_d_direction.East <= 7) {
-              i158 = (unsigned char)(1 << g_d_direction.East);
-            } else {
-              i158 = 0;
+          if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
+               - 1] & i173) != 0) {
+            /* かつ北東のノードが更新予定値よりも大きな値の場合 */
+            i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i155 > 255U) {
+              i155 = 255;
             }
 
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i158) != 0) {
-              /* かつ東のノードが更新予定値よりも大きな値の場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                   1) << 5)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 6U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
               }
 
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] >
-                  (int)u9) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
+              col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1)
+                << 5)) - 1] = (unsigned short)b_qY;
 
-                u9 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
+              /* 移動方向MAP更新 */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
 
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 6U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_d_direction.East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ東のノードが更新予定値と同じ場合 */
+              if (g_d_direction.North_East <= 7) {
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.North_East);
               } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 6U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.East <= 7) {
-                    i173 = (unsigned char)(1 << g_d_direction.East);
-                  } else {
-                    i173 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(a | i173);
-                }
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = 0U;
               }
 
-              /* かつ進行方向が東向きでないとき     */
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[row_num_node_tmp];
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i155;
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i155;
+
+              /* かつ北東のノードが更新予定値と同じ場合 */
             } else {
-              /* かつ東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
               }
 
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] >
-                  (int)u9) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+              if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155
+                     - 1) << 5)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i155 > 255U) {
+                  i155 = 255;
                 }
 
-                u9 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
+                i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_d_direction.East);
+                if (g_d_direction.North_East <= 7) {
+                  i194 = (unsigned char)(1 << g_d_direction.North_East);
                 } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] = 0U;
+                  i194 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = (unsigned char)(col_dir_node
+                  [(contor_renew_node_row[row_num_node_tmp] + ((i157 - 1) << 5))
+                  - 1] | i194);
+              }
+            }
 
-                /* かつ東のノードが更新予定値と同じ場合 */
+            /* かつ進行方向が北東向きでないとき */
+          } else {
+            /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i155 > 255U) {
+              i155 = 255;
+            }
+
+            i157 = (contor_renew_node_row[row_num_node_tmp] + 33 *
+                    (contor_renew_node_row[row_num_node_tmp + 1024] - 1)) - 1;
+            b_qY = row_num_node[i157] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                   1) << 5)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1)
+                << 5)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.North_East);
               } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[row_num_node_tmp];
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i155;
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i155;
+
+              /* かつ北東のノードが更新予定値と同じ場合 */
+            } else {
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              i158 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i158 = 255;
+              }
+
+              b_qY = row_num_node[i157] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i158
+                     - 1) << 5)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i157 = i155;
+                if ((unsigned int)i155 > 255U) {
+                  i157 = 255;
+                  i155 = 255;
                 }
 
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
+                if (g_d_direction.North_East <= 7) {
+                  i192 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i192 = 0;
                 }
 
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.East <= 7) {
-                    i172 = (unsigned char)(1 << g_d_direction.East);
-                  } else {
-                    i172 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(a | i172);
-                }
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i157 -
+                  1) << 5)) - 1] = (unsigned char)(col_dir_node
+                  [(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1) << 5))
+                  - 1] | i192);
               }
             }
           }
         }
+      }
 
-        /* 南東側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.South <= 7) {
-          i157 = (unsigned char)(1 << g_direction.South);
+      /* 東側は柱 */
+      /* 南東側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+      if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+        c_qY = 0U;
+      }
+
+      i155 = (contor_renew_node_row[row_num_node_tmp + 1024] - 1) << 5;
+      if (g_direction.East <= 7) {
+        i175 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i175 = 0;
+      }
+
+      if (((maze_wall[((int)c_qY + i155) - 1] & i175) != 0) ==
+          wall->contents.nowall) {
+        c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+        if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.East <= 7) {
+          i179 = (unsigned char)(1 << g_direction.East);
         } else {
-          i157 = 0;
+          i179 = 0;
         }
 
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i157) != 0) == wall->contents.nowall) {
-          if (g_direction.South <= 7) {
-            i159 = (unsigned char)(1 << g_direction.South);
+        if (((maze_wall_search[((int)c_qY + i155) - 1] & i179) != 0) ==
+            search->contents.known) {
+          /* かつ進行方向が南東向きである時 */
+          if (g_d_direction.South_East <= 7) {
+            i182 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
-            i159 = 0;
+            i182 = 0;
           }
 
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i159) != 0) == search->contents.known) {
-            /* かつ進行方向が南東向きである時 */
-            if (g_d_direction.South_East <= 7) {
-              i161 = (unsigned char)(1 << g_d_direction.South_East);
-            } else {
-              i161 = 0;
+          if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
+               - 1] & i182) != 0) {
+            /* かつ南東のノードが更新予定値よりも大きな値の場合 */
+            c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+            if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+              c_qY = 0U;
             }
 
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i161) != 0) {
-              /* かつ南東のノードが更新予定値よりも大きな値の場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 4U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 4U;
+            u9 = b_qY;
+            if (b_qY > 65535U) {
+              u9 = 65535U;
+            }
+
+            if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] > (int)u9) {
+              /* 歩数MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
               }
 
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
+                short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              if (g_d_direction.South_East <= 7) {
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
+                  char)(1 << g_d_direction.South_East);
+              } else {
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                (unsigned char)c_qY;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i157;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
+
+              /* かつ南東のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] == (int)b_qY)
+              {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  c_qY = 0U;
                 }
 
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)qY;
+                b_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (b_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  b_qY = 0U;
+                }
 
-                /* 移動方向MAP更新 */
+                i158 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i158 > 255U) {
+                  i158 = 255;
+                }
+
                 if (g_d_direction.South_East <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = (unsigned char)(1 << g_d_direction.South_East);
+                  i213 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = 0U;
+                  i213 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                    1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  if (g_d_direction.South_East <= 7) {
-                    i169 = (unsigned char)(1 << g_d_direction.South_East);
-                  } else {
-                    i169 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = (unsigned char)(row_dir_node[(row->data[idx] + 33 *
-                    (col->data[idx] - 1)) - 1] | i169);
-                }
-              }
-
-              /* かつ進行方向が南東向きでないとき     */
-            } else {
-              /* かつ南東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_East <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = (unsigned char)(1 << g_d_direction.South_East);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                    1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  if (g_d_direction.South_East <= 7) {
-                    i168 = (unsigned char)(1 << g_d_direction.South_East);
-                  } else {
-                    i168 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = (unsigned char)(row_dir_node[(row->data[idx] + 33 *
-                    (col->data[idx] - 1)) - 1] | i168);
-                }
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
+                  char)(col_dir_node[((int)b_qY + ((i158 - 1) << 5)) - 1] | i213);
               }
             }
-          }
-        }
 
-        /* 南側は柱 */
-        /* 南西側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1];
-        if (g_direction.South <= 7) {
-          i160 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i160 = 0;
-        }
-
-        if (((a & i160) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-            1];
-          if (g_direction.South <= 7) {
-            i162 = (unsigned char)(1 << g_direction.South);
+            /* かつ進行方向が南東向きでないとき */
           } else {
-            i162 = 0;
-          }
-
-          if (((a & i162) != 0) == search->contents.known) {
-            /* かつ進行方向が南西向きである時 */
-            if (g_d_direction.South_West <= 7) {
-              i164 = (unsigned char)(1 << g_d_direction.South_West);
-            } else {
-              i164 = 0;
+            /* かつ南東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+            if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+              c_qY = 0U;
             }
 
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i164) != 0) {
-              /* かつ南西のノードが更新予定値よりも大きな値の場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 4U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 18U;
+            u9 = b_qY;
+            if (b_qY > 65535U) {
+              u9 = 65535U;
+            }
+
+            if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] > (int)u9) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
               }
 
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
 
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 2)) -
-                  1] = (unsigned short)qY;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
 
-                /* 歩数MAP更新 */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
+              col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
+                short)b_qY;
 
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)qY;
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
 
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_West <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = (unsigned char)(1 << g_d_direction.South_West);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = 0U;
-                }
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南西のノードが更新予定値と同じ場合 */
+              if (g_d_direction.South_East <= 7) {
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
+                  char)(1 << g_d_direction.South_East);
               } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) -
-                    1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2))
-                    - 1];
-                  if (g_d_direction.South_West <= 7) {
-                    i176 = (unsigned char)(1 << g_d_direction.South_West);
-                  } else {
-                    i176 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = (unsigned char)(a | i176);
-                }
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = 0U;
               }
 
-              /* かつ進行方向が南西向きでないとき     */
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                (unsigned char)c_qY;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i157;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
+
+              /* かつ南東のノードが更新予定値と同じ場合 */
             } else {
-              /* かつ南西のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
               }
 
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] == (int)b_qY)
+              {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  c_qY = 0U;
                 }
 
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 2)) -
-                  1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)qY;
+                b_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (b_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  b_qY = 0U;
+                }
 
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_West <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = (unsigned char)(1 << g_d_direction.South_West);
+                i158 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i158 > 255U) {
+                  i158 = 255;
+                }
+
+                if (g_d_direction.South_East <= 7) {
+                  i212 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = 0U;
+                  i212 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) -
-                    1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2))
-                    - 1];
-                  if (g_d_direction.South_West <= 7) {
-                    i175 = (unsigned char)(1 << g_d_direction.South_West);
-                  } else {
-                    i175 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = (unsigned char)(a | i175);
-                }
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
+                  char)(col_dir_node[((int)b_qY + ((i158 - 1) << 5)) - 1] | i212);
               }
             }
           }
         }
+      }
 
-        /* 西側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1];
+      /* 南側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+      if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.South <= 7) {
+        i180 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i180 = 0;
+      }
+
+      if (((maze_wall[((int)c_qY + i155) - 1] & i180) != 0) ==
+          wall->contents.nowall) {
+        c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+        if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.South <= 7) {
+          i185 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i185 = 0;
+        }
+
+        if (((maze_wall_search[((int)c_qY + i155) - 1] & i185) != 0) ==
+            search->contents.known) {
+          /* かつ進行方向が南向きである時 */
+          if (g_d_direction.South <= 7) {
+            i191 = (unsigned char)(1 << g_d_direction.South);
+          } else {
+            i191 = 0;
+          }
+
+          if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
+               - 1] & i191) != 0) {
+            /* かつ南のノードが更新予定値よりも大きな値の場合 */
+            c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+            if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+              c_qY = 0U;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 6U;
+            u9 = b_qY;
+            if (b_qY > 65535U) {
+              u9 = 65535U;
+            }
+
+            if (row_num_node[((int)c_qY + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] > (int)u9) {
+              /* 歩数MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[((int)c_qY + 33 *
+                            (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
+                - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South <= 7) {
+                row_dir_node[((int)c_qY + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South);
+              } else {
+                row_dir_node[((int)c_qY + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)c_qY;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
+
+              /* かつ南のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[((int)c_qY + 33 *
+                                (contor_renew_node_row[row_num_node_tmp + 1024]
+                                 - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (b_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South <= 7) {
+                  i211 = (unsigned char)(1 << g_d_direction.South);
+                } else {
+                  i211 = 0;
+                }
+
+                row_dir_node[((int)c_qY + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(row_dir_node[((int)
+                  b_qY + 33 * (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] | i211);
+              }
+            }
+
+            /* かつ進行方向が南向きでないとき */
+          } else {
+            /* かつ南のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+            if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+              c_qY = 0U;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[((int)c_qY + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[((int)c_qY + 33 *
+                            (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
+                - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South <= 7) {
+                row_dir_node[((int)c_qY + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South);
+              } else {
+                row_dir_node[((int)c_qY + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)c_qY;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
+
+              /* かつ南のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[((int)c_qY + 33 *
+                                (contor_renew_node_row[row_num_node_tmp + 1024]
+                                 - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (b_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South <= 7) {
+                  i210 = (unsigned char)(1 << g_d_direction.South);
+                } else {
+                  i210 = 0;
+                }
+
+                row_dir_node[((int)c_qY + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(row_dir_node[((int)
+                  b_qY + 33 * (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] | i210);
+              }
+            }
+          }
+        }
+      }
+
+      /* 南西側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+      if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.West <= 7) {
+        i189 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i189 = 0;
+      }
+
+      if (((maze_wall[((int)c_qY + i155) - 1] & i189) != 0) ==
+          wall->contents.nowall) {
+        c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+        if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+          c_qY = 0U;
+        }
+
         if (g_direction.West <= 7) {
-          i163 = (unsigned char)(1 << g_direction.West);
+          i198 = (unsigned char)(1 << g_direction.West);
         } else {
-          i163 = 0;
+          i198 = 0;
         }
 
-        if (((a & i163) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-            1];
-          if (g_direction.West <= 7) {
-            i165 = (unsigned char)(1 << g_direction.West);
+        if (((maze_wall_search[((int)c_qY + i155) - 1] & i198) != 0) ==
+            search->contents.known) {
+          /* かつ進行方向が南西向きである時 */
+          if (g_d_direction.South_West <= 7) {
+            i204 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
-            i165 = 0;
+            i204 = 0;
           }
 
-          if (((a & i165) != 0) == search->contents.known) {
-            /* かつ進行方向が西向きである時 */
-            if (g_d_direction.West <= 7) {
-              i171 = (unsigned char)(1 << g_d_direction.West);
-            } else {
-              i171 = 0;
+          if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
+               - 1] & i204) != 0) {
+            /* かつ南西のノードが更新予定値よりも大きな値の場合 */
+            c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+            if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+              c_qY = 0U;
             }
 
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i171) != 0) {
-              /* かつ西のノードが更新予定値よりも大きな値の場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 6U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[((int)c_qY + i155) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
               }
 
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                  1] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
 
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                  - 1] = (unsigned short)qY;
+              col_num_node[((int)c_qY + i155) - 1] = (unsigned short)b_qY;
 
-                /* 歩数MAP更新 */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 6U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
 
-                col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(1 << g_d_direction.West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ西のノードが更新予定値と同じ場合 */
+              if (g_d_direction.South_West <= 7) {
+                col_dir_node[((int)c_qY + i155) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South_West);
               } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 6U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                    - 1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                    - 1];
-                  if (g_d_direction.West <= 7) {
-                    i179 = (unsigned char)(1 << g_d_direction.West);
-                  } else {
-                    i179 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(a | i179);
-                }
+                col_dir_node[((int)c_qY + i155) - 1] = 0U;
               }
 
-              /* かつ進行方向が西向きでないとき     */
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                (unsigned char)c_qY;
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
+
+              /* かつ南西のノードが更新予定値と同じ場合 */
             } else {
-              /* かつ西のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
               }
 
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                  1] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[((int)c_qY + i155) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  c_qY = 0U;
                 }
 
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                  - 1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                b_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (b_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  b_qY = 0U;
                 }
 
-                col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(1 << g_d_direction.West);
+                if (g_d_direction.South_West <= 7) {
+                  i219 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = 0U;
+                  i219 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+                col_dir_node[((int)c_qY + i155) - 1] = (unsigned char)
+                  (col_dir_node[((int)b_qY + i155) - 1] | i219);
+              }
+            }
 
-                /* かつ西のノードが更新予定値と同じ場合 */
+            /* かつ進行方向が南西向きでないとき */
+          } else {
+            /* かつ南西のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+            if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+              c_qY = 0U;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[((int)c_qY + i155) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[((int)c_qY + i155) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South_West <= 7) {
+                col_dir_node[((int)c_qY + i155) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South_West);
               } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                col_dir_node[((int)c_qY + i155) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                (unsigned char)c_qY;
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
+
+              /* かつ南西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+              if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[((int)c_qY + i155) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  c_qY = 0U;
                 }
 
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                    - 1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                    - 1];
-                  if (g_d_direction.West <= 7) {
-                    i178 = (unsigned char)(1 << g_d_direction.West);
-                  } else {
-                    i178 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(a | i178);
+                b_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
+                if (b_qY > contor_renew_node_row[row_num_node_tmp]) {
+                  b_qY = 0U;
                 }
+
+                if (g_d_direction.South_West <= 7) {
+                  i218 = (unsigned char)(1 << g_d_direction.South_West);
+                } else {
+                  i218 = 0;
+                }
+
+                col_dir_node[((int)c_qY + i155) - 1] = (unsigned char)
+                  (col_dir_node[((int)b_qY + i155) - 1] | i218);
               }
             }
           }
         }
+      }
 
-        /* 北西側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1];
-        if (g_direction.North <= 7) {
-          i170 = (unsigned char)(1 << g_direction.North);
+      /* 北西側 */
+      /* 壁が無い & 探索済みであるとき */
+      i155 = (contor_renew_node_row[row_num_node_tmp] + i155) - 1;
+      if (g_direction.West <= 7) {
+        i200 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i200 = 0;
+      }
+
+      if (((maze_wall[i155] & i200) != 0) == wall->contents.nowall) {
+        if (g_direction.West <= 7) {
+          i203 = (unsigned char)(1 << g_direction.West);
         } else {
-          i170 = 0;
+          i203 = 0;
         }
 
-        if (((a & i170) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-            1];
-          if (g_direction.North <= 7) {
-            i174 = (unsigned char)(1 << g_direction.North);
+        if (((maze_wall_search[i155] & i203) != 0) == search->contents.known) {
+          /* かつ進行方向が北西向きである時 */
+          if (g_d_direction.North_West <= 7) {
+            i207 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
-            i174 = 0;
+            i207 = 0;
           }
 
-          if (((a & i174) != 0) == search->contents.known) {
-            /* かつ進行方向が北西向きである時 */
-            if (g_d_direction.North_West <= 7) {
-              i177 = (unsigned char)(1 << g_d_direction.North_West);
-            } else {
-              i177 = 0;
+          if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
+               - 1] & i207) != 0) {
+            /* かつ北西のノードが更新予定値よりも大きな値の場合 */
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
             }
 
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i177) != 0) {
-              /* かつ北西のノードが更新予定値よりも大きな値の場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            if (col_num_node[(contor_renew_node_row[row_num_node_tmp] +
+                              ((contor_renew_node_row[row_num_node_tmp + 1024] -
+                                1) << 5)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
               }
 
-              u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 4U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
-              }
+              col_num_node[i155] = (unsigned short)b_qY;
 
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] > (int)
-                  u9) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_West <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_West);
-                } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北西のノードが更新予定値と同じ場合 */
+              /* 移動方向MAP更新 */
+              if (g_d_direction.North_West <= 7) {
+                col_dir_node[i155] = (unsigned char)(1 <<
+                  g_d_direction.North_West);
               } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_West <= 7) {
-                    i181 = (unsigned char)(1 << g_d_direction.North_West);
-                  } else {
-                    i181 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                    (unsigned char)(a | i181);
-                }
+                col_dir_node[i155] = 0U;
               }
 
-              /* かつ進行方向が北西向きでないとき     */
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[row_num_node_tmp];
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i155;
+
+              /* かつ北西のノードが更新予定値と同じ場合 */
             } else {
-              /* かつ北西のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
               }
 
-              u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (u9 > 65535U) {
-                u9 = 65535U;
-              }
-
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] > (int)
-                  u9) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)u9;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)u9;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
+              if (col_num_node[(contor_renew_node_row[row_num_node_tmp] +
+                                ((contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1) << 5)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
                 if (g_d_direction.North_West <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_West);
+                  i217 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] = 0U;
+                  i217 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+                col_dir_node[i155] = (unsigned char)(col_dir_node[i155] | i217);
+              }
+            }
 
-                /* かつ北西のノードが更新予定値と同じ場合 */
+            /* かつ進行方向が北西向きでないとき */
+          } else {
+            /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[i155] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[i155] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              if (g_d_direction.North_West <= 7) {
+                col_dir_node[i155] = (unsigned char)(1 <<
+                  g_d_direction.North_West);
               } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                col_dir_node[i155] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[row_num_node_tmp];
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i155;
+
+              /* かつ北西のノードが更新予定値と同じ場合 */
+            } else {
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[i155] == (int)b_qY) {
+                /* 移動方向を追加 */
+                if (g_d_direction.North_West <= 7) {
+                  i216 = (unsigned char)(1 << g_d_direction.North_West);
+                } else {
+                  i216 = 0;
                 }
 
-                u9 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u9 > 65535U) {
-                  u9 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] ==
-                    (int)u9) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_West <= 7) {
-                    i180 = (unsigned char)(1 << g_d_direction.North_West);
-                  } else {
-                    i180 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                    (unsigned char)(a | i180);
-                }
+                col_dir_node[i155] = (unsigned char)(col_dir_node[i155] | i216);
               }
             }
           }
@@ -3018,18 +2728,1520 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
       }
     }
 
-    /* 更新がなければ終了(スタート地点の歩数マップを更新)     */
-  } while (!(change_flag == 0));
+    /* Col_Edgeの処理[32行,33列] */
+    /* 検索した座標に対し、歩数mapを更新 */
+    i154 = contor_renew_node_col_idx;
+    for (row_num_node_tmp = 0; row_num_node_tmp <= i154 - 2; row_num_node_tmp++)
+    {
+      /* 北側は壁 */
+      /* 北東側 */
+      /* 壁が無い & 探索済みであるとき */
+      i155 = (contor_renew_node_col[row_num_node_tmp] +
+              ((contor_renew_node_col[row_num_node_tmp + 1024] - 1) << 5)) - 1;
+      if (g_direction.North <= 7) {
+        i166 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i166 = 0;
+      }
 
-  emxFree_uint16_T(&b_num_temp);
-  emxFree_uint16_T(&col);
-  emxFree_uint16_T(&row);
-  qY = row_num_node[1] + 3U;
-  if (qY > 65535U) {
-    qY = 65535U;
+      if (((maze_wall[i155] & i166) != 0) == wall->contents.nowall) {
+        if (g_direction.North <= 7) {
+          i168 = (unsigned char)(1 << g_direction.North);
+        } else {
+          i168 = 0;
+        }
+
+        if (((maze_wall_search[i155] & i168) != 0) == search->contents.known) {
+          /* かつ進行方向が北東向きである時 */
+          if (g_d_direction.North_East <= 7) {
+            i172 = (unsigned char)(1 << g_d_direction.North_East);
+          } else {
+            i172 = 0;
+          }
+
+          if ((col_dir_node[i155] & i172) != 0) {
+            /* かつ北東のノードが更新予定値よりも大きな値の場合 */
+            i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+            if ((unsigned int)i155 > 255U) {
+              i155 = 255;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 4U;
+            u9 = b_qY;
+            if (b_qY > 65535U) {
+              u9 = 65535U;
+            }
+
+            if (row_num_node[(i155 + 33 *
+                              (contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1)) - 1] > (int)u9) {
+              /* 歩数MAP更新 */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i155 + 33 * (contor_renew_node_col[row_num_node_tmp
+                + 1024] - 1)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.North_East);
+              } else {
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i155;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_col[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
+
+              /* かつ北東のノードが更新予定値と同じ場合 */
+            } else {
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i155 + 33 *
+                                (contor_renew_node_col[row_num_node_tmp + 1024]
+                                 - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i155 > 255U) {
+                  i155 = 255;
+                }
+
+                i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
+                }
+
+                if (g_d_direction.North_East <= 7) {
+                  i190 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i190 = 0;
+                }
+
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(row_dir_node[(i157 +
+                  33 * (contor_renew_node_col[row_num_node_tmp + 1024] - 1)) - 1]
+                  | i190);
+              }
+            }
+
+            /* かつ進行方向が北東向きでないとき */
+          } else {
+            /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+            i157 = i155;
+            if ((unsigned int)i155 > 255U) {
+              i157 = 255;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 18U;
+            u9 = b_qY;
+            if (b_qY > 65535U) {
+              u9 = 65535U;
+            }
+
+            i158 = 33 * (contor_renew_node_col[row_num_node_tmp + 1024] - 1);
+            if (row_num_node[(i157 + i158) - 1] > (int)u9) {
+              /* 歩数MAP更新(重みづけあり) */
+              i157 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i157 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i157 + i158) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i157 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i157 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                row_dir_node[(i157 + i158) - 1] = (unsigned char)(1 <<
+                  g_d_direction.North_East);
+              } else {
+                row_dir_node[(i157 + i158) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i155;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_col[row_num_node_tmp + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
+
+              /* かつ北東のノードが更新予定値と同じ場合 */
+            } else {
+              i157 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i157 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i157 + i158) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i157 = i155;
+                if ((unsigned int)i155 > 255U) {
+                  i157 = 255;
+                  i155 = 255;
+                }
+
+                if (g_d_direction.North_East <= 7) {
+                  i188 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i188 = 0;
+                }
+
+                row_dir_node[(i157 + i158) - 1] = (unsigned char)(row_dir_node
+                  [(i155 + i158) - 1] | i188);
+              }
+            }
+          }
+        }
+      }
+
+      /* 東側 */
+      /* 壁が無い & 探索済みであるとき */
+      contor_renew_node_row_idx = contor_renew_node_col[row_num_node_tmp + 1024];
+      i155 = (contor_renew_node_col[row_num_node_tmp] +
+              ((contor_renew_node_row_idx - 1) << 5)) - 1;
+      if (g_direction.East <= 7) {
+        i171 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i171 = 0;
+      }
+
+      if (((maze_wall[i155] & i171) != 0) == wall->contents.nowall) {
+        if (g_direction.East <= 7) {
+          i174 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i174 = 0;
+        }
+
+        if (((maze_wall_search[i155] & i174) != 0) == search->contents.known) {
+          /* かつ進行方向が東向きである時 */
+          if (g_d_direction.East <= 7) {
+            i177 = (unsigned char)(1 << g_d_direction.East);
+          } else {
+            i177 = 0;
+          }
+
+          if ((col_dir_node[i155] & i177) != 0) {
+            /* かつ東のノードが更新予定値よりも大きな値の場合 */
+            i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 6U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
+                   1) << 5)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 - 1)
+                << 5)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              if (g_d_direction.East <= 7) {
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
+                  1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.East);
+              } else {
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
+                  1) << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_col[row_num_node_tmp];
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i157;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
+
+              /* かつ東のノードが更新予定値と同じ場合 */
+            } else {
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157
+                     - 1) << 5)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
+                }
+
+                i158 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i158 > 255U) {
+                  i158 = 255;
+                }
+
+                if (g_d_direction.East <= 7) {
+                  i202 = (unsigned char)(1 << g_d_direction.East);
+                } else {
+                  i202 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
+                  1) << 5)) - 1] = (unsigned char)(col_dir_node
+                  [(contor_renew_node_col[row_num_node_tmp] + ((i158 - 1) << 5))
+                  - 1] | i202);
+              }
+            }
+
+            /* かつ進行方向が東向きでないとき */
+          } else {
+            /* かつ東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+            i158 = i157;
+            if ((unsigned int)i157 > 255U) {
+              i158 = 255;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
+                   1) << 5)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              i158 = i157;
+              if ((unsigned int)i157 > 255U) {
+                i158 = 255;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 - 1)
+                << 5)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i158 = i157;
+              if ((unsigned int)i157 > 255U) {
+                i158 = 255;
+              }
+
+              if (g_d_direction.East <= 7) {
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
+                  1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.East);
+              } else {
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
+                  1) << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_col[row_num_node_tmp];
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i157;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
+
+              /* かつ東のノードが更新予定値と同じ場合 */
+            } else {
+              i158 = i157;
+              if ((unsigned int)i157 > 255U) {
+                i158 = 255;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158
+                     - 1) << 5)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i158 = i157;
+                if ((unsigned int)i157 > 255U) {
+                  i158 = 255;
+                  i157 = 255;
+                }
+
+                if (g_d_direction.East <= 7) {
+                  i199 = (unsigned char)(1 << g_d_direction.East);
+                } else {
+                  i199 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
+                  1) << 5)) - 1] = (unsigned char)(col_dir_node
+                  [(contor_renew_node_col[row_num_node_tmp] + ((i157 - 1) << 5))
+                  - 1] | i199);
+              }
+            }
+          }
+        }
+      }
+
+      /* 南東側 */
+      /* 壁が無い & 探索済みであるとき */
+      if (g_direction.South <= 7) {
+        i176 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i176 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_col[row_num_node_tmp] +
+                       ((contor_renew_node_col[row_num_node_tmp + 1024] - 1) <<
+                        5)) - 1] & i176) != 0) == wall->contents.nowall) {
+        if (g_direction.South <= 7) {
+          i178 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i178 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] +
+                                ((contor_renew_node_col[row_num_node_tmp + 1024]
+                 - 1) << 5)) - 1] & i178) != 0) == search->contents.known) {
+          /* かつ進行方向が南東向きである時 */
+          if (g_d_direction.South_East <= 7) {
+            i181 = (unsigned char)(1 << g_d_direction.South_East);
+          } else {
+            i181 = 0;
+          }
+
+          if ((col_dir_node[(contor_renew_node_col[row_num_node_tmp] +
+                             ((contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1) << 5)) - 1] & i181) != 0) {
+            /* かつ南東のノードが更新予定値よりも大きな値の場合 */
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              (contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                            (contor_renew_node_col[row_num_node_tmp + 1024] - 1))
+                - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              if (g_d_direction.South_East <= 7) {
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              (contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South_East);
+              } else {
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              (contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                contor_renew_node_col[row_num_node_tmp];
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row_idx;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
+
+              /* かつ南東のノードが更新予定値と同じ場合 */
+            } else {
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                                (contor_renew_node_col[row_num_node_tmp + 1024]
+                                 - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                if (g_d_direction.South_East <= 7) {
+                  i196 = (unsigned char)(1 << g_d_direction.South_East);
+                } else {
+                  i196 = 0;
+                }
+
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              (contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(row_dir_node
+                  [(contor_renew_node_col[row_num_node_tmp] + 33 *
+                    (contor_renew_node_col[row_num_node_tmp + 1024] - 1)) - 1] |
+                  i196);
+              }
+            }
+
+            /* かつ進行方向が南東向きでないとき */
+          } else {
+            /* かつ南東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            i157 = (contor_renew_node_col[row_num_node_tmp] + 33 *
+                    (contor_renew_node_col[row_num_node_tmp + 1024] - 1)) - 1;
+            if (row_num_node[i157] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[i157] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              if (g_d_direction.South_East <= 7) {
+                row_dir_node[i157] = (unsigned char)(1 <<
+                  g_d_direction.South_East);
+              } else {
+                row_dir_node[i157] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                contor_renew_node_col[row_num_node_tmp];
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row_idx;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
+
+              /* かつ南東のノードが更新予定値と同じ場合 */
+            } else {
+              b_qY = col_num_node[i155] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[i157] == (int)b_qY) {
+                /* 移動方向を追加 */
+                if (g_d_direction.South_East <= 7) {
+                  i197 = (unsigned char)(1 << g_d_direction.South_East);
+                } else {
+                  i197 = 0;
+                }
+
+                row_dir_node[i157] = (unsigned char)(row_dir_node[i157] | i197);
+              }
+            }
+          }
+        }
+      }
+
+      /* 南側は柱 */
+      /* 南西側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row_idx - 1U;
+      if (c_qY > contor_renew_node_row_idx) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.South <= 7) {
+        i183 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i183 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_col[row_num_node_tmp] + (((int)c_qY - 1)
+              << 5)) - 1] & i183) != 0) == wall->contents.nowall) {
+        c_qY = contor_renew_node_row_idx - 1U;
+        if (c_qY > contor_renew_node_row_idx) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.South <= 7) {
+          i187 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i187 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                 c_qY - 1) << 5)) - 1] & i187) != 0) == search->contents.known)
+        {
+          /* かつ進行方向が南西向きである時 */
+          if (g_d_direction.South_West <= 7) {
+            i195 = (unsigned char)(1 << g_d_direction.South_West);
+          } else {
+            i195 = 0;
+          }
+
+          if ((col_dir_node[i155] & i195) != 0) {
+            /* かつ南西のノードが更新予定値よりも大きな値の場合 */
+            c_qY = contor_renew_node_row_idx - 1U;
+            if (c_qY > contor_renew_node_row_idx) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 * ((int)
+                c_qY - 1)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South_West <= 7) {
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              ((int)c_qY - 1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South_West);
+              } else {
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              ((int)c_qY - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                contor_renew_node_col[row_num_node_tmp];
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
+
+              /* かつ南西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                                ((int)c_qY - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row_idx - 1U;
+                if (c_qY > contor_renew_node_row_idx) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row_idx - 1U;
+                if (b_qY > contor_renew_node_row_idx) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South_West <= 7) {
+                  i215 = (unsigned char)(1 << g_d_direction.South_West);
+                } else {
+                  i215 = 0;
+                }
+
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                                 ((int)b_qY - 1)) - 1] | i215);
+              }
+            }
+
+            /* かつ進行方向が南西向きでないとき */
+          } else {
+            /* かつ南西のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = contor_renew_node_row_idx - 1U;
+            if (c_qY > contor_renew_node_row_idx) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[i155] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 * ((int)
+                c_qY - 1)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South_West <= 7) {
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              ((int)c_qY - 1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South_West);
+              } else {
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              ((int)c_qY - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                contor_renew_node_col[row_num_node_tmp];
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
+
+              /* かつ南西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[i155] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                                ((int)c_qY - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row_idx - 1U;
+                if (c_qY > contor_renew_node_row_idx) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row_idx - 1U;
+                if (b_qY > contor_renew_node_row_idx) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South_West <= 7) {
+                  i214 = (unsigned char)(1 << g_d_direction.South_West);
+                } else {
+                  i214 = 0;
+                }
+
+                row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                              ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
+                                 ((int)b_qY - 1)) - 1] | i214);
+              }
+            }
+          }
+        }
+      }
+
+      /* 西側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row_idx - 1U;
+      if (c_qY > contor_renew_node_row_idx) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.West <= 7) {
+        i193 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i193 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_col[row_num_node_tmp] + (((int)c_qY - 1)
+              << 5)) - 1] & i193) != 0) == wall->contents.nowall) {
+        c_qY = contor_renew_node_row_idx - 1U;
+        if (c_qY > contor_renew_node_row_idx) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.West <= 7) {
+          i201 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i201 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                 c_qY - 1) << 5)) - 1] & i201) != 0) == search->contents.known)
+        {
+          /* かつ進行方向が西向きである時 */
+          if (g_d_direction.West <= 7) {
+            i206 = (unsigned char)(1 << g_d_direction.West);
+          } else {
+            i206 = 0;
+          }
+
+          if ((col_dir_node[i155] & i206) != 0) {
+            /* かつ西のノードが更新予定値よりも大きな値の場合 */
+            c_qY = contor_renew_node_row_idx - 1U;
+            if (c_qY > contor_renew_node_row_idx) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 6U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                   c_qY - 1) << 5)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                c_qY - 1) << 5)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.West <= 7) {
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                  c_qY - 1) << 5)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.West);
+              } else {
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                  c_qY - 1) << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_col[row_num_node_tmp];
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
+
+              /* かつ西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                     c_qY - 1) << 5)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row_idx - 1U;
+                if (c_qY > contor_renew_node_row_idx) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row_idx - 1U;
+                if (b_qY > contor_renew_node_row_idx) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.West <= 7) {
+                  i221 = (unsigned char)(1 << g_d_direction.West);
+                } else {
+                  i221 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                  c_qY - 1) << 5)) - 1] = (unsigned char)(col_dir_node
+                  [(contor_renew_node_col[row_num_node_tmp] + (((int)b_qY - 1) <<
+                  5)) - 1] | i221);
+              }
+            }
+
+            /* かつ進行方向が西向きでないとき */
+          } else {
+            /* かつ西のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = contor_renew_node_row_idx - 1U;
+            if (c_qY > contor_renew_node_row_idx) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                   c_qY - 1) << 5)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                c_qY - 1) << 5)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.West <= 7) {
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                  c_qY - 1) << 5)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.West);
+              } else {
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                  c_qY - 1) << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_col[row_num_node_tmp];
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
+
+              /* かつ西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[i155] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                     c_qY - 1) << 5)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row_idx - 1U;
+                if (c_qY > contor_renew_node_row_idx) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row_idx - 1U;
+                if (b_qY > contor_renew_node_row_idx) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.West <= 7) {
+                  i220 = (unsigned char)(1 << g_d_direction.West);
+                } else {
+                  i220 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                  c_qY - 1) << 5)) - 1] = (unsigned char)(col_dir_node
+                  [(contor_renew_node_col[row_num_node_tmp] + (((int)b_qY - 1) <<
+                  5)) - 1] | i220);
+              }
+            }
+          }
+        }
+      }
+
+      /* 北西側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row_idx - 1U;
+      if (c_qY > contor_renew_node_row_idx) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.North <= 7) {
+        i205 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i205 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_col[row_num_node_tmp] + (((int)c_qY - 1)
+              << 5)) - 1] & i205) != 0) == wall->contents.nowall) {
+        c_qY = contor_renew_node_row_idx - 1U;
+        if (c_qY > contor_renew_node_row_idx) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.North <= 7) {
+          i208 = (unsigned char)(1 << g_direction.North);
+        } else {
+          i208 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
+                 c_qY - 1) << 5)) - 1] & i208) != 0) == search->contents.known)
+        {
+          /* かつ進行方向が北西向きである時 */
+          if (g_d_direction.North_West <= 7) {
+            i209 = (unsigned char)(1 << g_d_direction.North_West);
+          } else {
+            i209 = 0;
+          }
+
+          if ((col_dir_node[(contor_renew_node_col[row_num_node_tmp] +
+                             ((contor_renew_node_col[row_num_node_tmp + 1024] -
+                               1) << 5)) - 1] & i209) != 0) {
+            /* かつ北西のノードが更新予定値よりも大きな値の場合 */
+            i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+            if ((unsigned int)i155 > 255U) {
+              i155 = 255;
+            }
+
+            c_qY = contor_renew_node_row_idx - 1U;
+            if (c_qY > contor_renew_node_row_idx) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
+              - 1) << 5)) - 1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
+                b_qY;
+
+              /* 移動方向MAP更新 */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.North_West <= 7) {
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (1 << g_d_direction.North_West);
+              } else {
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i155;
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
+
+              /* かつ北西のノードが更新予定値と同じ場合 */
+            } else {
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY)
+              {
+                /* 移動方向を追加 */
+                i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i155 > 255U) {
+                  i155 = 255;
+                }
+
+                c_qY = contor_renew_node_row_idx - 1U;
+                if (c_qY > contor_renew_node_row_idx) {
+                  c_qY = 0U;
+                }
+
+                i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
+                }
+
+                b_qY = contor_renew_node_row_idx - 1U;
+                if (b_qY > contor_renew_node_row_idx) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.North_West <= 7) {
+                  i223 = (unsigned char)(1 << g_d_direction.North_West);
+                } else {
+                  i223 = 0;
+                }
+
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(i157 + 33 * ((int)b_qY - 1)) - 1] | i223);
+              }
+            }
+
+            /* かつ進行方向が北西向きでないとき */
+          } else {
+            /* かつ北西のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
+            }
+
+            c_qY = contor_renew_node_row_idx - 1U;
+            if (c_qY > contor_renew_node_row_idx) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[i155] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(i157 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
+                                   ((contor_renew_node_col[row_num_node_tmp +
+                1024] - 1) << 5)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
+                b_qY;
+
+              /* 移動方向MAP更新 */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.North_West <= 7) {
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (1 << g_d_direction.North_West);
+              } else {
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i155;
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
+
+              /* かつ北西のノードが更新予定値と同じ場合 */
+            } else {
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[i155] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i157 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY)
+              {
+                /* 移動方向を追加 */
+                i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i155 > 255U) {
+                  i155 = 255;
+                }
+
+                c_qY = contor_renew_node_row_idx - 1U;
+                if (c_qY > contor_renew_node_row_idx) {
+                  c_qY = 0U;
+                }
+
+                i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
+                }
+
+                b_qY = contor_renew_node_row_idx - 1U;
+                if (b_qY > contor_renew_node_row_idx) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.North_West <= 7) {
+                  i222 = (unsigned char)(1 << g_d_direction.North_West);
+                } else {
+                  i222 = 0;
+                }
+
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(i157 + 33 * ((int)b_qY - 1)) - 1] | i222);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /* ゴール更新ノードの更新とインデックスのクリア */
+    contor_renew_node_col_idx = contor_renew_node_col_idx_temp;
+    contor_renew_node_col_idx_temp = 1U;
+    for (i154 = 0; i154 < 2048; i154++) {
+      contor_renew_node_col[i154] = contor_renew_node_col_temp[i154];
+      contor_renew_node_col_temp[i154] = 0U;
+      contor_renew_node_row[i154] = contor_renew_node_row_temp[i154];
+      contor_renew_node_row_temp[i154] = 0U;
+    }
+
+    contor_renew_node_row_idx = contor_renew_node_row_idx_temp;
+    contor_renew_node_row_idx_temp = 1U;
+
+    /* 更新がなければ終了(スタート地点の歩数マップを更新) */
+    if (change_flag == 0) {
+      b_qY = row_num_node[1] + 3U;
+      if (b_qY > 65535U) {
+        b_qY = 65535U;
+      }
+
+      *start_num = (unsigned short)b_qY;
+      exitg1 = true;
+    } else {
+      i++;
+    }
   }
-
-  *start_num = (unsigned short)qY;
 }
 
 /*
@@ -3039,7 +4251,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
  *                coder_internal_ref *wall_flg
  *                const coder_internal_ref_4 *search
  *                const coder_internal_ref_1 *maze_goal
- *                coder_internal_ref_3 *num_temp
+ *                const coder_internal_ref_3 *adachi_search_mode
  *                unsigned char *current_x
  *                unsigned char *current_y
  *                unsigned char *current_dir
@@ -3047,41 +4259,57 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
  *                unsigned char maze_col_size
  *                unsigned char maze_wall[1024]
  *                unsigned char maze_wall_search[1024]
- *                const unsigned char exploration_goal[18]
+ *                const unsigned char exploration_goal[2]
  *                unsigned char *start_flg
+ *                unsigned char stop_flg
  *                unsigned char goal_after_flg
+ *                unsigned char adachi_s_mode
  *                unsigned short contour_map[1024]
  * Return Type  : void
  */
 static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   *wall_flg, const coder_internal_ref_4 *search, const coder_internal_ref_1
-  *maze_goal, coder_internal_ref_3 *num_temp, unsigned char *current_x, unsigned
-  char *current_y, unsigned char *current_dir, unsigned char maze_row_size,
-  unsigned char maze_col_size, unsigned char maze_wall[1024], unsigned char
-  maze_wall_search[1024], const unsigned char exploration_goal[18], unsigned
-  char *start_flg, unsigned char goal_after_flg, unsigned short contour_map[1024])
+  *maze_goal, const coder_internal_ref_3 *adachi_search_mode, unsigned char
+  *current_x, unsigned char *current_y, unsigned char *current_dir, unsigned
+  char maze_row_size, unsigned char maze_col_size, unsigned char maze_wall[1024],
+  unsigned char maze_wall_search[1024], const unsigned char exploration_goal[2],
+  unsigned char *start_flg, unsigned char stop_flg, unsigned char goal_after_flg,
+  unsigned char adachi_s_mode, unsigned short contour_map[1024])
 {
   unsigned char goal_flg;
+  unsigned char contour_flg;
   int exitg1;
   unsigned char next_dir;
   int q0;
   unsigned int qY;
 
-  /*  search_adachi 足立法での探索 */
+  /*     %% search_adachi 足立法での探索 */
   /* local変数宣言 */
   goal_flg = 0U;
 
   /* ゴール判定フラグ */
+  /* 壁情報更新確認用変数 */
+  contour_flg = 0U;
+
   /*      search_start_x = current_x %探索開始時x */
   /*      search_start_y = current_y %探索開始時y */
+  /* 初回のコンターマップ作製 */
+  b_make_map_find(wall, exploration_goal, maze_wall, *current_x, *current_y,
+                  contour_map);
   do {
     exitg1 = 0;
 
     /* 壁情報取得 */
     /* ゴール直後は壁情報を更新しない */
     if (goal_after_flg != 1) {
+      next_dir = maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
       wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size, *
                current_x, *current_y, *current_dir, maze_wall, maze_wall_search);
+
+      /* 壁情報が更新されれば、コンター更新のフラグを立てる。 */
+      if (next_dir != maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1]) {
+        contour_flg = 1U;
+      }
     } else {
       /* ゴール直後のとき */
       goal_after_flg = 0U;
@@ -3090,13 +4318,27 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
     }
 
     /*  等高線MAP生成 */
-    /*  [contour_map,max_length] = make_map2(maze_row_size,maze_col_size,maze_goal,maze_wall); */
-    make_map_find(num_temp, wall, exploration_goal, 1U, maze_wall, contour_map);
+    /* 壁情報に変更があった場合のみ */
+    if (contour_flg != 0) {
+      b_make_map_find(wall, exploration_goal, maze_wall, *current_x, *current_y,
+                      contour_map);
+    }
 
     /* 現在位置がゴールか判定 */
-    if ((*current_x == exploration_goal[0]) && (*current_y == exploration_goal[9]))
+    if ((*current_x == exploration_goal[0]) && (*current_y == exploration_goal[1]))
     {
       goal_flg = 1U;
+    }
+
+    /* 探索モードの場合、対象のマスがすべて探索済みのとき、ゴールフラグを立てる */
+    if (adachi_s_mode == adachi_search_mode->contents.search) {
+      goal_flg = 1U;
+
+      /* ゴール座標が未探索であれば、フラグをおろし、ブレイク */
+      if (maze_wall_search[(exploration_goal[1] + ((exploration_goal[0] - 1) <<
+            5)) - 1] != 15) {
+        goal_flg = 0U;
+      }
     }
 
     /* ゴール時処理 */
@@ -3192,23 +4434,13 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
     }
   } while (exitg1 == 0);
 
+  if (stop_flg == 1) {
+    /* ゴール時停止フラグが立っているとき */
+    /* 停止動作を実施 */
+    m_goal_movement(*start_flg, wall_flg->contents, move_dir_property.straight);
+  }
+
   /* ゴール時停止フラグが立っていなければ、動作させたまま終了 */
-  /*           */
-  /*      if coder.target('MATLAB') */
-  /*          %for MATLAB     */
-  /*          %探索終了時,マーカーをどこか遠くに */
-  /*          %m = makehgtform('translate',50*9,50*9,0); */
-  /*          %h.Matrix = m; */
-  /*          %別の種類のマーカーを仮置き */
-  /*          hold on */
-  /*          plot(current_x * 9 -4.5,current_y * 9 -4.5,'-ob'); */
-  /*          hold off */
-  /*          %探索状況プロットを透明化 */
-  /*          serface_transparency(search_surf); */
-  /*          drawnow */
-  /*      else */
-  /*          %for code generation */
-  /*      end */
 }
 
 /*
@@ -3231,19 +4463,19 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
   unsigned char next_node_idx_0;
   unsigned char next_node_idx_1;
   unsigned short map_min;
-  int i110;
+  int i150;
   int exitg1;
   unsigned char goal_flag;
   int i;
   bool guard1 = false;
-  int i111;
+  int i151;
   bool guard2 = false;
   bool guard3 = false;
   bool guard4 = false;
   unsigned int qY;
-  unsigned short u7;
+  unsigned short u8;
 
-  /*  decide_goal_node_dir ゴールノード、および方向の確定 */
+  /*     %% decide_goal_node_dir ゴールノード、および方向の確定 */
   /*  斜めのコンターマップから、ゴールとなるノードと、ゴール時の進入角度を確定する。 */
   *goal_matrix_dir = matrix_dir.Row;
 
@@ -3262,11 +4494,11 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
   /* 進行方向（最初の仮の値は北向き） */
   map_min = MAX_uint16_T;
-  i110 = goal_size;
+  i150 = goal_size;
   do {
     exitg1 = 0;
     goal_flag = 0U;
-    for (i = 0; i < i110; i++) {
+    for (i = 0; i < i150; i++) {
       /* 現在のノードが行方向の時 */
       if (*goal_matrix_dir == matrix_dir.Row) {
         /*  %x */
@@ -3275,12 +4507,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
           if (maze_goal[i + 9] == goal_node[0]) {
             guard1 = true;
           } else {
-            i111 = (int)(maze_goal[i + 9] + 1U);
-            if ((unsigned int)i111 > 255U) {
-              i111 = 255;
+            i151 = (int)(maze_goal[i + 9] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (i111 == goal_node[0]) {
+            if (i151 == goal_node[0]) {
               guard1 = true;
             }
           }
@@ -3293,12 +4525,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
             guard3 = false;
             guard4 = false;
             if (*goal_dir == g_d_direction.North_East) {
-              i111 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              if (col_num_node[(goal_node[0] + ((i111 - 1) << 5)) - 1] == 65535)
+              if (col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1] == 65535)
               {
                 *goal_dir = g_d_direction.North;
 
@@ -3317,12 +4549,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                   qY = 0U;
                 }
 
-                i111 = (int)(goal_node[1] + 1U);
-                if ((unsigned int)i111 > 255U) {
-                  i111 = 255;
+                i151 = (int)(goal_node[1] + 1U);
+                if ((unsigned int)i151 > 255U) {
+                  i151 = 255;
                 }
 
-                if (col_num_node[((int)qY + ((i111 - 1) << 5)) - 1] == 65535) {
+                if (col_num_node[((int)qY + ((i151 - 1) << 5)) - 1] == 65535) {
                   *goal_dir = g_d_direction.South;
 
                   /* 南西 */
@@ -3372,12 +4604,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
         if (maze_goal[i] == goal_node[1]) {
           guard1 = true;
         } else {
-          i111 = (int)(maze_goal[i] + 1U);
-          if ((unsigned int)i111 > 255U) {
-            i111 = 255;
+          i151 = (int)(maze_goal[i] + 1U);
+          if ((unsigned int)i151 > 255U) {
+            i151 = 255;
           }
 
-          if (i111 == goal_node[1]) {
+          if (i151 == goal_node[1]) {
             guard1 = true;
           }
         }
@@ -3389,12 +4621,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
           guard2 = false;
           guard3 = false;
           if (*goal_dir == g_d_direction.North_East) {
-            i111 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i111 > 255U) {
-              i111 = 255;
+            i151 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (row_num_node[(i111 + 33 * (goal_node[1] - 1)) - 1] == 65535) {
+            if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] == 65535) {
               *goal_dir = g_d_direction.East;
 
               /* 南東 */
@@ -3431,9 +4663,9 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
           }
 
           if (guard2 && (*goal_dir == g_d_direction.North_West)) {
-            i111 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i111 > 255U) {
-              i111 = 255;
+            i151 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
             qY = goal_node[1] - 1U;
@@ -3441,7 +4673,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               qY = 0U;
             }
 
-            if (row_num_node[(i111 + 33 * ((int)qY - 1)) - 1] == 65535) {
+            if (row_num_node[(i151 + 33 * ((int)qY - 1)) - 1] == 65535) {
               *goal_dir = g_d_direction.West;
             }
           }
@@ -3466,58 +4698,58 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
     } else {
       /* 現在のノードの方向から優先的に進行方向を確定 */
       for (i = 0; i < 8; i++) {
-        i111 = *goal_dir + i;
-        if (i111 > 255) {
-          i111 = 255;
+        i151 = *goal_dir + i;
+        if (i151 > 255) {
+          i151 = 255;
         }
 
-        goal_flag = (unsigned char)(i111 % 8);
+        goal_flag = (unsigned char)(i151 % 8);
 
         /* 現在のノードが行方向の時 */
         if (*goal_matrix_dir == matrix_dir.Row) {
           if (goal_flag == g_d_direction.North) {
-            i111 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i111 > 255U) {
-              i111 = 255;
+            i151 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (row_num_node[(i111 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
+            if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
               /* 最小値を更新 */
-              i111 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              map_min = row_num_node[(i111 + 33 * (goal_node[1] - 1)) - 1];
+              map_min = row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1];
 
               /* 現在ノードの進行方向を北向きに */
               *goal_dir = g_d_direction.North;
 
               /* 進行方向先の座標、行列の方向を更新 */
               next_matrix_dir = matrix_dir.Row;
-              i111 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              next_node_idx_0 = (unsigned char)i111;
+              next_node_idx_0 = (unsigned char)i151;
               next_node_idx_1 = goal_node[1];
             }
           } else if (goal_flag == g_d_direction.North_East) {
-            i111 = (int)(goal_node[1] + 1U);
-            if ((unsigned int)i111 > 255U) {
-              i111 = 255;
+            i151 = (int)(goal_node[1] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (col_num_node[(goal_node[0] + ((i111 - 1) << 5)) - 1] < map_min)
+            if (col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1] < map_min)
             {
               /* 最小値を更新 */
-              i111 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              map_min = col_num_node[(goal_node[0] + ((i111 - 1) << 5)) - 1];
+              map_min = col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1];
 
               /* 現在ノードの進行方向を北向きに */
               *goal_dir = g_d_direction.North_East;
@@ -3525,12 +4757,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               /* 進行方向先の座標、行列の方向を更新 */
               next_matrix_dir = matrix_dir.Col;
               next_node_idx_0 = goal_node[0];
-              i111 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              next_node_idx_1 = (unsigned char)i111;
+              next_node_idx_1 = (unsigned char)i151;
             }
           } else if (goal_flag != g_d_direction.East) {
             if (goal_flag == g_d_direction.South_East) {
@@ -3539,24 +4771,24 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                 qY = 0U;
               }
 
-              i111 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              if (col_num_node[((int)qY + ((i111 - 1) << 5)) - 1] < map_min) {
+              if (col_num_node[((int)qY + ((i151 - 1) << 5)) - 1] < map_min) {
                 /* 最小値を更新 */
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
                   qY = 0U;
                 }
 
-                i111 = (int)(goal_node[1] + 1U);
-                if ((unsigned int)i111 > 255U) {
-                  i111 = 255;
+                i151 = (int)(goal_node[1] + 1U);
+                if ((unsigned int)i151 > 255U) {
+                  i151 = 255;
                 }
 
-                map_min = col_num_node[((int)qY + ((i111 - 1) << 5)) - 1];
+                map_min = col_num_node[((int)qY + ((i151 - 1) << 5)) - 1];
 
                 /* 現在ノードの進行方向を北向きに */
                 *goal_dir = g_d_direction.South_East;
@@ -3569,12 +4801,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                 }
 
                 next_node_idx_0 = (unsigned char)qY;
-                i111 = (int)(goal_node[1] + 1U);
-                if ((unsigned int)i111 > 255U) {
-                  i111 = 255;
+                i151 = (int)(goal_node[1] + 1U);
+                if ((unsigned int)i151 > 255U) {
+                  i151 = 255;
                 }
 
-                next_node_idx_1 = (unsigned char)i111;
+                next_node_idx_1 = (unsigned char)i151;
               }
             } else if (goal_flag == g_d_direction.South) {
               qY = goal_node[0] - 1U;
@@ -3655,51 +4887,51 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
             /* 柱 */
           }
 
-          /* 現在のノードが列方向の時         */
+          /* 現在のノードが列方向の時 */
         } else if (goal_flag != g_d_direction.North) {
           if (goal_flag == g_d_direction.North_East) {
-            i111 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i111 > 255U) {
-              i111 = 255;
+            i151 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (row_num_node[(i111 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
+            if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
               /* 最小値を更新 */
-              i111 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              map_min = row_num_node[(i111 + 33 * (goal_node[1] - 1)) - 1];
+              map_min = row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1];
 
               /* 現在ノードの進行方向を北東向きに */
               *goal_dir = g_d_direction.North_East;
 
               /* 進行方向先の座標、行列の方向を更新 */
               next_matrix_dir = matrix_dir.Row;
-              i111 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              next_node_idx_0 = (unsigned char)i111;
+              next_node_idx_0 = (unsigned char)i151;
               next_node_idx_1 = goal_node[1];
             }
           } else if (goal_flag == g_d_direction.East) {
-            i111 = (int)(goal_node[1] + 1U);
-            if ((unsigned int)i111 > 255U) {
-              i111 = 255;
+            i151 = (int)(goal_node[1] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (col_num_node[(goal_node[0] + ((i111 - 1) << 5)) - 1] < map_min)
+            if (col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1] < map_min)
             {
               /* 最小値を更新 */
-              i111 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              map_min = col_num_node[(goal_node[0] + ((i111 - 1) << 5)) - 1];
+              map_min = col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1];
 
               /* 現在ノードの進行方向を東向きに */
               *goal_dir = g_d_direction.East;
@@ -3707,18 +4939,18 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               /* 進行方向先の座標、行列の方向を更新 */
               next_matrix_dir = matrix_dir.Col;
               next_node_idx_0 = goal_node[0];
-              i111 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i111 > 255U) {
-                i111 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              next_node_idx_1 = (unsigned char)i111;
+              next_node_idx_1 = (unsigned char)i151;
             }
           } else if (goal_flag == g_d_direction.South_East) {
-            u7 = row_num_node[(goal_node[0] + 33 * (goal_node[1] - 1)) - 1];
-            if (u7 < map_min) {
+            u8 = row_num_node[(goal_node[0] + 33 * (goal_node[1] - 1)) - 1];
+            if (u8 < map_min) {
               /* 最小値を更新 */
-              map_min = u7;
+              map_min = u8;
 
               /* 現在ノードの進行方向を南東向きに */
               *goal_dir = g_d_direction.South_East;
@@ -3789,9 +5021,9 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               }
             } else {
               if (goal_flag == g_d_direction.North_West) {
-                i111 = (int)(goal_node[0] + 1U);
-                if ((unsigned int)i111 > 255U) {
-                  i111 = 255;
+                i151 = (int)(goal_node[0] + 1U);
+                if ((unsigned int)i151 > 255U) {
+                  i151 = 255;
                 }
 
                 qY = goal_node[1] - 1U;
@@ -3799,11 +5031,11 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                   qY = 0U;
                 }
 
-                if (row_num_node[(i111 + 33 * ((int)qY - 1)) - 1] < map_min) {
+                if (row_num_node[(i151 + 33 * ((int)qY - 1)) - 1] < map_min) {
                   /* 最小値を更新 */
-                  i111 = (int)(goal_node[0] + 1U);
-                  if ((unsigned int)i111 > 255U) {
-                    i111 = 255;
+                  i151 = (int)(goal_node[0] + 1U);
+                  if ((unsigned int)i151 > 255U) {
+                    i151 = 255;
                   }
 
                   qY = goal_node[1] - 1U;
@@ -3811,19 +5043,19 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                     qY = 0U;
                   }
 
-                  map_min = row_num_node[(i111 + 33 * ((int)qY - 1)) - 1];
+                  map_min = row_num_node[(i151 + 33 * ((int)qY - 1)) - 1];
 
                   /* 現在ノードの進行方向を北西向きに */
                   *goal_dir = g_d_direction.North_West;
 
                   /* 進行方向先の座標、行列の方向を更新 */
                   next_matrix_dir = matrix_dir.Row;
-                  i111 = (int)(goal_node[0] + 1U);
-                  if ((unsigned int)i111 > 255U) {
-                    i111 = 255;
+                  i151 = (int)(goal_node[0] + 1U);
+                  if ((unsigned int)i151 > 255U) {
+                    i151 = 255;
                   }
 
-                  next_node_idx_0 = (unsigned char)i111;
+                  next_node_idx_0 = (unsigned char)i151;
                   qY = goal_node[1] - 1U;
                   if (qY > goal_node[1]) {
                     qY = 0U;
@@ -3865,7 +5097,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   goal_dir, unsigned char goal_section[2], unsigned char goal_node2[2], unsigned
   char *goal_matrix_dir2)
 {
-  int i112;
+  int i152;
   int ex;
   unsigned int qY;
   int k;
@@ -3874,7 +5106,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   bool temp1[18];
   signed char varargin_1[9];
 
-  /*  decide_goal_section ゴールマスの確定 */
+  /*     %% decide_goal_section ゴールマスの確定 */
   /*  確定されたゴールのノードと、ゴール時の進入角度から、 */
   /*  ゴールマスを確定する。 */
   /* (y,x) */
@@ -3885,22 +5117,22 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   *goal_matrix_dir2 = matrix_dir.Row;
   if (goal_dir == g_d_direction.North) {
     if (goal_matrix_dir == matrix_dir.Row) {
-      i112 = (int)(goal_node[0] + 1U);
-      ex = i112;
-      if ((unsigned int)i112 > 255U) {
+      i152 = (int)(goal_node[0] + 1U);
+      ex = i152;
+      if ((unsigned int)i152 > 255U) {
         ex = 255;
       }
 
       if (goal_judge(maze_goal, goal_node[1], (unsigned char)ex) != 0.0) {
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[0] = (unsigned char)i112;
+        goal_section[0] = (unsigned char)i152;
         goal_section[1] = goal_node[1];
 
         /* (y,x) */
-        goal_node2[0] = (unsigned char)i112;
+        goal_node2[0] = (unsigned char)i152;
         goal_node2[1] = goal_node[1];
       } else {
         goal_section[0] = goal_node[0];
@@ -3915,9 +5147,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
     /* 列方向は柱なのでなし */
   } else if (goal_dir == g_d_direction.North_East) {
     if (goal_matrix_dir == matrix_dir.Row) {
-      i112 = (int)(goal_node[1] + 1U);
-      if ((unsigned int)i112 > 255U) {
-        i112 = 255;
+      i152 = (int)(goal_node[1] + 1U);
+      if ((unsigned int)i152 > 255U) {
+        i152 = 255;
       }
 
       ex = (int)(goal_node[0] + 1U);
@@ -3925,80 +5157,80 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         ex = 255;
       }
 
-      if (goal_judge(maze_goal, (unsigned char)i112, (unsigned char)ex) != 0.0)
+      if (goal_judge(maze_goal, (unsigned char)i152, (unsigned char)ex) != 0.0)
       {
-        i112 = (int)(goal_node[0] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[0] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[0] = (unsigned char)i112;
-        i112 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        goal_section[0] = (unsigned char)i152;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i112;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
-        i112 = (int)(goal_node[0] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[0] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_node2[0] = (unsigned char)i112;
-        i112 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        goal_node2[0] = (unsigned char)i152;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_node2[1] = (unsigned char)i112;
+        goal_node2[1] = (unsigned char)i152;
       } else {
-        i112 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        if (goal_judge(maze_goal, (unsigned char)i112, goal_node[0]) != 0.0) {
+        if (goal_judge(maze_goal, (unsigned char)i152, goal_node[0]) != 0.0) {
           goal_section[0] = goal_node[0];
-          i112 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[1] = (unsigned char)i112;
+          goal_section[1] = (unsigned char)i152;
 
           /* (y,x) */
           goal_node2[0] = goal_node[0];
-          i112 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_node2[1] = (unsigned char)i112;
+          goal_node2[1] = (unsigned char)i152;
           *goal_matrix_dir2 = matrix_dir.Col;
         } else {
-          i112 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          if (goal_judge(maze_goal, goal_node[1], (unsigned char)i112) != 0.0) {
-            i112 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i112 > 255U) {
-              i112 = 255;
+          if (goal_judge(maze_goal, goal_node[1], (unsigned char)i152) != 0.0) {
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_section[0] = (unsigned char)i112;
+            goal_section[0] = (unsigned char)i152;
             goal_section[1] = goal_node[1];
 
             /* (y,x) */
-            i112 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i112 > 255U) {
-              i112 = 255;
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_node2[0] = (unsigned char)i112;
+            goal_node2[0] = (unsigned char)i152;
             goal_node2[1] = goal_node[1];
           } else {
             goal_section[0] = goal_node[0];
@@ -4011,9 +5243,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
       }
     } else {
-      i112 = (int)(goal_node[1] + 1U);
-      ex = i112;
-      if ((unsigned int)i112 > 255U) {
+      i152 = (int)(goal_node[1] + 1U);
+      ex = i152;
+      if ((unsigned int)i152 > 255U) {
         ex = 255;
       }
 
@@ -4029,15 +5261,15 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         goal_section[0] = (unsigned char)ex;
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i112;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
         goal_node2[0] = (unsigned char)ex;
-        goal_node2[1] = (unsigned char)i112;
+        goal_node2[1] = (unsigned char)i152;
         *goal_matrix_dir2 = matrix_dir.Col;
       } else {
         ex = (int)(goal_node[0] + 1U);
@@ -4046,32 +5278,32 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         if (goal_judge(maze_goal, goal_node[1], (unsigned char)ex) != 0.0) {
-          i112 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[0] = (unsigned char)i112;
+          goal_section[0] = (unsigned char)i152;
           goal_section[1] = goal_node[1];
 
           /* (y,x) */
-          i112 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_node2[0] = (unsigned char)i112;
+          goal_node2[0] = (unsigned char)i152;
           goal_node2[1] = goal_node[1];
         } else {
-          ex = i112;
-          if ((unsigned int)i112 > 255U) {
+          ex = i152;
+          if ((unsigned int)i152 > 255U) {
             ex = 255;
           }
 
           if (goal_judge(maze_goal, (unsigned char)ex, goal_node[0]) != 0.0) {
             goal_section[0] = goal_node[0];
-            ex = i112;
-            if ((unsigned int)i112 > 255U) {
+            ex = i152;
+            if ((unsigned int)i152 > 255U) {
               ex = 255;
             }
 
@@ -4079,11 +5311,11 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
 
             /* (y,x) */
             goal_node2[0] = goal_node[0];
-            if ((unsigned int)i112 > 255U) {
-              i112 = 255;
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_node2[1] = (unsigned char)i112;
+            goal_node2[1] = (unsigned char)i152;
             *goal_matrix_dir2 = matrix_dir.Col;
           } else {
             goal_section[0] = goal_node[0];
@@ -4100,23 +5332,23 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   } else if (goal_dir == g_d_direction.East) {
     /* 行方向は柱なのでなし */
     if (goal_matrix_dir == matrix_dir.Col) {
-      i112 = (int)(goal_node[1] + 1U);
-      if ((unsigned int)i112 > 255U) {
-        i112 = 255;
+      i152 = (int)(goal_node[1] + 1U);
+      if ((unsigned int)i152 > 255U) {
+        i152 = 255;
       }
 
-      if (goal_judge(maze_goal, (unsigned char)i112, goal_node[0]) != 0.0) {
+      if (goal_judge(maze_goal, (unsigned char)i152, goal_node[0]) != 0.0) {
         goal_section[0] = goal_node[0];
-        i112 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i112;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
         goal_node2[0] = goal_node[0];
-        goal_node2[1] = (unsigned char)i112;
+        goal_node2[1] = (unsigned char)i152;
         *goal_matrix_dir2 = matrix_dir.Col;
       } else {
         goal_section[0] = goal_node[0];
@@ -4130,9 +5362,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
     }
   } else if (goal_dir == g_d_direction.South_East) {
     if (goal_matrix_dir == matrix_dir.Row) {
-      i112 = (int)(goal_node[1] + 1U);
-      if ((unsigned int)i112 > 255U) {
-        i112 = 255;
+      i152 = (int)(goal_node[1] + 1U);
+      if ((unsigned int)i152 > 255U) {
+        i152 = 255;
       }
 
       qY = goal_node[0] - 2U;
@@ -4140,7 +5372,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         qY = 0U;
       }
 
-      if (goal_judge(maze_goal, (unsigned char)i112, (unsigned char)qY) != 0.0)
+      if (goal_judge(maze_goal, (unsigned char)i152, (unsigned char)qY) != 0.0)
       {
         qY = goal_node[0] - 2U;
         if (qY > goal_node[0]) {
@@ -4148,12 +5380,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         goal_section[0] = (unsigned char)qY;
-        i112 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i112;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
         qY = goal_node[0] - 1U;
@@ -4162,16 +5394,16 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         goal_node2[0] = (unsigned char)qY;
-        i112 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_node2[1] = (unsigned char)i112;
+        goal_node2[1] = (unsigned char)i152;
       } else {
-        i112 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
         qY = goal_node[0] - 1U;
@@ -4179,7 +5411,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           qY = 0U;
         }
 
-        if (goal_judge(maze_goal, (unsigned char)i112, (unsigned char)qY) != 0.0)
+        if (goal_judge(maze_goal, (unsigned char)i152, (unsigned char)qY) != 0.0)
         {
           qY = goal_node[0] - 1U;
           if (qY > goal_node[0]) {
@@ -4187,12 +5419,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           }
 
           goal_section[0] = (unsigned char)qY;
-          i112 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[1] = (unsigned char)i112;
+          goal_section[1] = (unsigned char)i152;
 
           /* (y,x) */
           qY = goal_node[0] - 1U;
@@ -4201,12 +5433,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           }
 
           goal_node2[0] = (unsigned char)qY;
-          i112 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_node2[1] = (unsigned char)i112;
+          goal_node2[1] = (unsigned char)i152;
           *goal_matrix_dir2 = matrix_dir.Col;
         } else {
           qY = goal_node[0] - 2U;
@@ -4247,9 +5479,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
       }
     } else {
-      i112 = (int)(goal_node[1] + 1U);
-      if ((unsigned int)i112 > 255U) {
-        i112 = 255;
+      i152 = (int)(goal_node[1] + 1U);
+      if ((unsigned int)i152 > 255U) {
+        i152 = 255;
       }
 
       qY = goal_node[0] - 1U;
@@ -4257,7 +5489,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         qY = 0U;
       }
 
-      if (goal_judge(maze_goal, (unsigned char)i112, (unsigned char)qY) != 0.0)
+      if (goal_judge(maze_goal, (unsigned char)i152, (unsigned char)qY) != 0.0)
       {
         qY = goal_node[0] - 1U;
         if (qY > goal_node[0]) {
@@ -4265,16 +5497,16 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         goal_section[0] = (unsigned char)qY;
-        i112 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i112;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
         goal_node2[0] = (unsigned char)qY;
-        goal_node2[1] = (unsigned char)i112;
+        goal_node2[1] = (unsigned char)i152;
         *goal_matrix_dir2 = matrix_dir.Col;
       } else {
         qY = goal_node[0] - 1U;
@@ -4295,28 +5527,28 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           goal_node2[0] = goal_node[0];
           goal_node2[1] = goal_node[1];
         } else {
-          i112 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          if (goal_judge(maze_goal, (unsigned char)i112, goal_node[0]) != 0.0) {
+          if (goal_judge(maze_goal, (unsigned char)i152, goal_node[0]) != 0.0) {
             goal_section[0] = goal_node[0];
-            i112 = (int)(goal_node[1] + 1U);
-            if ((unsigned int)i112 > 255U) {
-              i112 = 255;
+            i152 = (int)(goal_node[1] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_section[1] = (unsigned char)i112;
+            goal_section[1] = (unsigned char)i152;
 
             /* (y,x) */
             goal_node2[0] = goal_node[0];
-            i112 = (int)(goal_node[1] + 1U);
-            if ((unsigned int)i112 > 255U) {
-              i112 = 255;
+            i152 = (int)(goal_node[1] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_node2[1] = (unsigned char)i112;
+            goal_node2[1] = (unsigned char)i152;
             *goal_matrix_dir2 = matrix_dir.Col;
           } else {
             goal_section[0] = goal_node[0];
@@ -4645,19 +5877,19 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           qY = 0U;
         }
 
-        i112 = (int)(goal_node[0] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[0] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i112) != 0.0)
+        if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i152) != 0.0)
         {
-          i112 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[0] = (unsigned char)i112;
+          goal_section[0] = (unsigned char)i152;
           qY = goal_node[1] - 1U;
           if (qY > goal_node[1]) {
             qY = 0U;
@@ -4666,7 +5898,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           goal_section[1] = (unsigned char)qY;
 
           /* (y,x) */
-          goal_node2[0] = (unsigned char)i112;
+          goal_node2[0] = (unsigned char)i152;
           goal_node2[1] = (unsigned char)qY;
         } else {
           qY = goal_node[1] - 1U;
@@ -4688,28 +5920,28 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
             goal_node2[1] = goal_node[1];
             *goal_matrix_dir2 = matrix_dir.Col;
           } else {
-            i112 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i112 > 255U) {
-              i112 = 255;
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            if (goal_judge(maze_goal, goal_node[1], (unsigned char)i112) != 0.0)
+            if (goal_judge(maze_goal, goal_node[1], (unsigned char)i152) != 0.0)
             {
-              i112 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i112 > 255U) {
-                i112 = 255;
+              i152 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i152 > 255U) {
+                i152 = 255;
               }
 
-              goal_section[0] = (unsigned char)i112;
+              goal_section[0] = (unsigned char)i152;
               goal_section[1] = goal_node[1];
 
               /* (y,x) */
-              i112 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i112 > 255U) {
-                i112 = 255;
+              i152 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i152 > 255U) {
+                i152 = 255;
               }
 
-              goal_node2[0] = (unsigned char)i112;
+              goal_node2[0] = (unsigned char)i152;
               goal_node2[1] = goal_node[1];
             } else {
               goal_section[0] = goal_node[0];
@@ -4727,19 +5959,19 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           qY = 0U;
         }
 
-        i112 = (int)(goal_node[0] + 1U);
-        if ((unsigned int)i112 > 255U) {
-          i112 = 255;
+        i152 = (int)(goal_node[0] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i112) != 0.0)
+        if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i152) != 0.0)
         {
-          i112 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[0] = (unsigned char)i112;
+          goal_section[0] = (unsigned char)i152;
           qY = goal_node[1] - 2U;
           if (qY > goal_node[1]) {
             qY = 0U;
@@ -4748,12 +5980,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           goal_section[1] = (unsigned char)qY;
 
           /* (y,x) */
-          i112 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_node2[0] = (unsigned char)i112;
+          goal_node2[0] = (unsigned char)i152;
           qY = goal_node[1] - 1U;
           if (qY > goal_node[1]) {
             qY = 0U;
@@ -4767,19 +5999,19 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
             qY = 0U;
           }
 
-          i112 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i112 > 255U) {
-            i112 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i112) !=
+          if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i152) !=
               0.0) {
-            i112 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i112 > 255U) {
-              i112 = 255;
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_section[0] = (unsigned char)i112;
+            goal_section[0] = (unsigned char)i152;
             qY = goal_node[1] - 1U;
             if (qY > goal_node[1]) {
               qY = 0U;
@@ -4788,12 +6020,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
             goal_section[1] = (unsigned char)qY;
 
             /* (y,x) */
-            i112 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i112 > 255U) {
-              i112 = 255;
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_node2[0] = (unsigned char)i112;
+            goal_node2[0] = (unsigned char)i152;
             qY = goal_node[1] - 1U;
             if (qY > goal_node[1]) {
               qY = 0U;
@@ -4809,25 +6041,25 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
             /* 入力座標の配列を作成 */
             /* ゴール判定関数 */
             /* ゴール座標と比較 */
-            for (i112 = 0; i112 < 9; i112++) {
-              uv0[i112] = (unsigned char)qY;
-              uv0[9 + i112] = goal_node[0];
+            for (i152 = 0; i152 < 9; i152++) {
+              uv0[i152] = (unsigned char)qY;
+              uv0[9 + i152] = goal_node[0];
             }
 
-            for (i112 = 0; i112 < 18; i112++) {
-              temp1[i112] = (maze_goal[i112] == uv0[i112]);
+            for (i152 = 0; i152 < 18; i152++) {
+              temp1[i152] = (maze_goal[i152] == uv0[i152]);
             }
 
             /* x,yともに一致するか確認、一致なら1を返す */
-            for (i112 = 0; i112 < 9; i112++) {
-              varargin_1[i112] = (signed char)(temp1[i112] * temp1[9 + i112]);
+            for (i152 = 0; i152 < 9; i152++) {
+              varargin_1[i152] = (signed char)(temp1[i152] * temp1[9 + i152]);
             }
 
             ex = varargin_1[0];
             for (k = 0; k < 8; k++) {
-              i112 = varargin_1[k + 1];
-              if (ex < i112) {
-                ex = i112;
+              i152 = varargin_1[k + 1];
+              if (ex < i152) {
+                ex = i152;
               }
             }
 
@@ -4872,41 +6104,54 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
 
 /*
  * 入力　壁情報,壁探索情報,等高線MAP,ゴール座標,最大経路長
- * 出力
- * Arguments    : coder_internal_ref *current_x
- *                coder_internal_ref *current_y
- *                coder_internal_ref *current_dir
- *                const coder_internal_ref *goal_size
+ * 出力   最短経路上の未探索マスの座標、未探索マスの数
+ * Arguments    : const coder_internal_ref *goal_size
+ *                coder_internal_ref *wall_flg
  *                const coder_internal_ref_5 *wall
  *                const unsigned char maze_wall[1024]
+ *                const unsigned char maze_wall_search[1024]
  *                const unsigned short contour_map[1024]
  *                const unsigned char maze_goal[18]
  *                unsigned short max_length
+ *                unsigned char start_flg
+ *                unsigned char unexp_square[1024]
+ *                unsigned char *unexp_square_idx
  * Return Type  : void
  */
-static void fust_run(coder_internal_ref *current_x, coder_internal_ref
-                     *current_y, coder_internal_ref *current_dir, const
-                     coder_internal_ref *goal_size, const coder_internal_ref_5
-                     *wall, const unsigned char maze_wall[1024], const unsigned
-                     short contour_map[1024], const unsigned char maze_goal[18],
-                     unsigned short max_length)
+static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
+                     *wall_flg, const coder_internal_ref_5 *wall, const unsigned
+                     char maze_wall[1024], const unsigned char maze_wall_search
+                     [1024], const unsigned short contour_map[1024], const
+                     unsigned char maze_goal[18], unsigned short max_length,
+                     unsigned char start_flg, unsigned char unexp_square[1024],
+                     unsigned char *unexp_square_idx)
 {
   unsigned char goal_flag;
   unsigned short little;
+  unsigned char temp_x;
+  unsigned char temp_y;
+  unsigned char temp_dir;
   unsigned char next_dir;
-  int exitg1;
-  unsigned char a;
-  int q0;
-  int tempi;
-  int i31;
-  int i32;
-  int i33;
+  int tempk;
+  bool exitg1;
+  int i53;
+  int i54;
+  int i55;
+  int b_unexp_square_idx;
+  int i56;
+  int i57;
+  unsigned short u3;
+  int i58;
+  int i59;
+  int b_temp_dir;
+  int i60;
+  int i61;
   unsigned int qY;
-  int i34;
-  unsigned char u4;
-  unsigned char b_current_dir;
+  unsigned char switch_expression;
 
-  /*  fust_run 最短経路導出 */
+  /*     %% fust_run 最短経路走行 */
+  /* 最短経路表示用ax */
+  /*          global sh_route_ax */
   /* local変数宣言 */
   goal_flag = 0U;
 
@@ -4914,464 +6159,383 @@ static void fust_run(coder_internal_ref *current_x, coder_internal_ref
   little = max_length;
 
   /* 進行方向選定用閾値 */
-  /* マウス位置表示用オブジェクト */
+  memset(&unexp_square[0], 0, sizeof(unsigned char) << 10);
+  *unexp_square_idx = 0U;
+
+  /*          %マウス位置表示用オブジェクト */
+  /*          if coder.target('MATLAB') */
+  /*              ax = gca; */
+  /*              h = hgtransform('Parent',ax); */
+  /*          end */
   /* マウスの初期位置設定 */
-  current_x->contents = 1U;
-  current_y->contents = 1U;
-  current_dir->contents = g_direction.North;
+  temp_x = 1U;
+  temp_y = 1U;
+
+  /* マウスの初期方向定義 */
+  temp_dir = g_direction.North;
   next_dir = g_direction.North;
 
   /* 探索開始時x */
   /* 探索開始時y */
-  /* 探索開始位置プロット */
-  /*      %足跡プロット */
-  /*      hold on */
-  /*      plot(double(current_x) * 9 -4.5,double(current_y) * 9 -4.5,'.r'); */
-  /*      hold off */
-  /*      drawnow limitrate nocallbacks */
-  do {
-    exitg1 = 0;
+  /* 実行時、既存の最短ルート表示を削除する(MATLABのみ) */
+  tempk = 0;
+  exitg1 = false;
+  while ((!exitg1) && (tempk <= max_length - 1)) {
+    /* 現在位置が未探索マスか判定 */
+    i53 = temp_y + ((temp_x - 1) << 5);
+    i54 = i53 - 1;
+    if (maze_wall_search[i54] != 15) {
+      /* 未探索マスであれば、記録する。インデックスを増加させる。 */
+      i55 = (int)(*unexp_square_idx + 1U);
+      b_unexp_square_idx = i55;
+      if ((unsigned int)i55 > 255U) {
+        b_unexp_square_idx = 255;
+      }
+
+      b_unexp_square_idx--;
+      unexp_square[b_unexp_square_idx] = temp_y;
+      unexp_square[512 + b_unexp_square_idx] = temp_x;
+      if ((unsigned int)i55 > 255U) {
+        i55 = 255;
+      }
+
+      *unexp_square_idx = (unsigned char)i55;
+    }
 
     /* 現在位置がゴールか判定 */
-    a = goal_size->contents;
-    q0 = a;
-    for (tempi = 0; tempi < q0; tempi++) {
-      if ((current_x->contents == maze_goal[tempi]) && (current_y->contents ==
-           maze_goal[tempi + 9])) {
+    i55 = goal_size->contents;
+    for (b_unexp_square_idx = 0; b_unexp_square_idx < i55; b_unexp_square_idx++)
+    {
+      if ((temp_x == maze_goal[b_unexp_square_idx]) && (temp_y ==
+           maze_goal[b_unexp_square_idx + 9])) {
         goal_flag = 1U;
       }
     }
 
     if (goal_flag == 1) {
-      exitg1 = 1;
+      /* ゴールのとき、停止処理を実施 */
+      m_goal_movement(start_flg, wall_flg->contents, move_dir_property.straight);
+      exitg1 = true;
     } else {
-      /*             %%進行方向選定 */
+      /*         %%進行方向選定 */
       /* 優先順位　北⇒東⇒南⇒西 */
       /* 北側の壁のありなし */
-      a = maze_wall[(current_y->contents + ((current_x->contents - 1) << 5)) - 1];
       if (g_direction.North <= 7) {
-        i31 = (unsigned char)(1 << g_direction.North);
+        i56 = (unsigned char)(1 << g_direction.North);
       } else {
-        i31 = 0;
+        i56 = 0;
       }
 
-      if ((a & i31) == wall->contents.nowall) {
+      if (((maze_wall[i54] & i56) == wall->contents.nowall) && (contour_map[i53]
+           < little)) {
         /* 北側の等高線mapが閾値より低ければ、 */
-        q0 = (int)(current_y->contents + 1U);
-        if ((unsigned int)q0 > 255U) {
-          q0 = 255;
-        }
+        /* 閾値を北側の等高map値に変更 */
+        little = contour_map[temp_y + ((temp_x - 1) << 5)];
 
-        if (contour_map[(q0 + ((current_x->contents - 1) << 5)) - 1] < little) {
-          /* 閾値を北側の等高map値に変更 */
-          q0 = (int)(current_y->contents + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          little = contour_map[(q0 + ((current_x->contents - 1) << 5)) - 1];
-
-          /* 北側を進行方向に変更y */
-          next_dir = g_direction.North;
-        }
+        /* 北側を進行方向に変更y */
+        next_dir = g_direction.North;
       }
 
       /* 東側 */
-      a = maze_wall[(current_y->contents + ((current_x->contents - 1) << 5)) - 1];
       if (g_direction.East <= 7) {
-        i32 = (unsigned char)(1 << g_direction.East);
+        i57 = (unsigned char)(1 << g_direction.East);
       } else {
-        i32 = 0;
+        i57 = 0;
       }
 
-      if ((a & i32) == wall->contents.nowall) {
-        q0 = (int)(current_x->contents + 1U);
-        if ((unsigned int)q0 > 255U) {
-          q0 = 255;
-        }
-
-        if (contour_map[(current_y->contents + ((q0 - 1) << 5)) - 1] < little) {
-          q0 = (int)(current_x->contents + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          little = contour_map[(current_y->contents + ((q0 - 1) << 5)) - 1];
+      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i57) ==
+          wall->contents.nowall) {
+        u3 = contour_map[(temp_y + (temp_x << 5)) - 1];
+        if (u3 < little) {
+          little = u3;
           next_dir = g_direction.East;
         }
       }
 
       /* 南側 */
-      a = maze_wall[(current_y->contents + ((current_x->contents - 1) << 5)) - 1];
       if (g_direction.South <= 7) {
-        i33 = (unsigned char)(1 << g_direction.South);
+        i58 = (unsigned char)(1 << g_direction.South);
       } else {
-        i33 = 0;
+        i58 = 0;
       }
 
-      if ((a & i33) == wall->contents.nowall) {
-        q0 = current_y->contents;
-        qY = q0 - 1U;
-        if (qY > (unsigned int)q0) {
-          qY = 0U;
-        }
-
-        if (contour_map[((int)qY + ((current_x->contents - 1) << 5)) - 1] <
-            little) {
-          q0 = current_y->contents;
-          qY = q0 - 1U;
-          if (qY > (unsigned int)q0) {
-            qY = 0U;
-          }
-
-          little = contour_map[((int)qY + ((current_x->contents - 1) << 5)) - 1];
+      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i58) ==
+          wall->contents.nowall) {
+        u3 = contour_map[i53 - 2];
+        if (u3 < little) {
+          little = u3;
           next_dir = g_direction.South;
         }
       }
 
       /* 西側 */
-      a = maze_wall[(current_y->contents + ((current_x->contents - 1) << 5)) - 1];
       if (g_direction.West <= 7) {
-        i34 = (unsigned char)(1 << g_direction.West);
+        i59 = (unsigned char)(1 << g_direction.West);
       } else {
-        i34 = 0;
+        i59 = 0;
       }
 
-      if ((a & i34) == wall->contents.nowall) {
-        q0 = current_x->contents;
-        qY = q0 - 1U;
-        if (qY > (unsigned int)q0) {
-          qY = 0U;
-        }
-
-        if (contour_map[(current_y->contents + (((int)qY - 1) << 5)) - 1] <
-            little) {
-          q0 = current_x->contents;
-          qY = q0 - 1U;
-          if (qY > (unsigned int)q0) {
-            qY = 0U;
-          }
-
-          little = contour_map[(current_y->contents + (((int)qY - 1) << 5)) - 1];
+      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i59) ==
+          wall->contents.nowall) {
+        u3 = contour_map[(temp_y + ((temp_x - 2) << 5)) - 1];
+        if (u3 < little) {
+          little = u3;
           next_dir = g_direction.West;
         }
       }
 
-      /*             %%現在方向と進行方向に応じた処理 */
-      q0 = (int)(4U + next_dir);
-      if ((unsigned int)q0 > 255U) {
-        q0 = 255;
+      /* 探索壁情報に応じて、壁フラグをセット */
+      /* 前 */
+      if (temp_dir <= 7) {
+        b_temp_dir = (unsigned char)(1 << temp_dir);
+      } else {
+        b_temp_dir = 0;
       }
 
-      qY = (unsigned int)q0 - current_dir->contents;
-      if (qY > (unsigned int)q0) {
+      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & (b_temp_dir % 15)) !=
+          0) {
+        wall_flg->contents |= 1;
+      }
+
+      /* 右 */
+      i53 = (int)(temp_dir + 1U);
+      if ((unsigned int)i53 > 255U) {
+        i53 = 255;
+      }
+
+      if ((unsigned char)i53 <= 7) {
+        i60 = (unsigned char)(1 << (unsigned char)i53);
+      } else {
+        i60 = 0;
+      }
+
+      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & (i60 % 15)) != 0) {
+        wall_flg->contents = (unsigned char)(wall_flg->contents | 2);
+      }
+
+      /* 左 */
+      i53 = (int)(temp_dir + 3U);
+      if ((unsigned int)i53 > 255U) {
+        i53 = 255;
+      }
+
+      if ((unsigned char)i53 <= 7) {
+        i61 = (unsigned char)(1 << (unsigned char)i53);
+      } else {
+        i61 = 0;
+      }
+
+      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & (i61 % 15)) != 0) {
+        wall_flg->contents = (unsigned char)(wall_flg->contents | 8);
+      }
+
+      /*         %%現在方向と進行方向に応じた処理 */
+      b_unexp_square_idx = (int)(4U + next_dir);
+      if ((unsigned int)b_unexp_square_idx > 255U) {
+        b_unexp_square_idx = 255;
+      }
+
+      qY = (unsigned int)b_unexp_square_idx - temp_dir;
+      if (qY > (unsigned int)b_unexp_square_idx) {
         qY = 0U;
       }
 
-      a = (unsigned char)((unsigned char)qY % 4);
-      if (l_direction.front == a) {
-        q0 = 0;
-      } else if (l_direction.right == a) {
-        q0 = 1;
-      } else if (l_direction.back == a) {
-        q0 = 2;
-      } else if (l_direction.left == a) {
-        q0 = 3;
+      switch_expression = (unsigned char)((int)qY % 4);
+      if (l_direction.front == switch_expression) {
+        b_unexp_square_idx = 0;
+      } else if (l_direction.right == switch_expression) {
+        b_unexp_square_idx = 1;
+      } else if (l_direction.back == switch_expression) {
+        b_unexp_square_idx = 2;
+      } else if (l_direction.left == switch_expression) {
+        b_unexp_square_idx = 3;
       } else {
-        q0 = -1;
+        b_unexp_square_idx = -1;
       }
 
-      switch (q0) {
+      switch (b_unexp_square_idx) {
        case 0:
-        a = current_x->contents;
-        u4 = current_y->contents;
-        b_current_dir = current_dir->contents;
-
         /* 入力 現在位置x,y,現在方向 */
         /* 出力 現在位置x,y */
-        /*  move_step 一マス前進する関数 */
+        /*     %% move_step 一マス前進する関数 */
         /* 北に一マス */
-        if (b_current_dir == g_direction.North) {
-          q0 = (int)(u4 + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          u4 = (unsigned char)q0;
+        if (temp_dir == g_direction.North) {
+          temp_y++;
 
           /* disp("north_step") */
         }
 
         /* 東に一マス */
-        if (b_current_dir == g_direction.East) {
-          q0 = (int)(a + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          a = (unsigned char)q0;
+        if (temp_dir == g_direction.East) {
+          temp_x++;
 
           /* disp("east_step") */
         }
 
         /* 南に一マス */
-        if (b_current_dir == g_direction.South) {
-          qY = u4 - 1U;
-          if (qY > u4) {
-            qY = 0U;
-          }
-
-          u4 = (unsigned char)qY;
+        if (temp_dir == g_direction.South) {
+          temp_y--;
 
           /* disp("south_step") */
         }
 
         /* 西に一マス */
-        if (b_current_dir == g_direction.West) {
-          qY = a - 1U;
-          if (qY > a) {
-            qY = 0U;
-          }
-
-          a = (unsigned char)qY;
+        if (temp_dir == g_direction.West) {
+          temp_x--;
 
           /* disp("west_step") */
         }
-
-        current_x->contents = a;
-        current_y->contents = u4;
 
         /* disp("front") */
         break;
 
        case 1:
-        a = current_dir->contents;
-
         /* 入力 現在方向 */
         /* 出力 現在方向 */
-        /*  turn_clk_90deg 時計周りに90度ターンする関数  */
-        q0 = (int)(4U + a);
-        if ((unsigned int)q0 > 255U) {
-          q0 = 255;
+        /*     %% turn_clk_90deg 時計周りに90度ターンする関数 */
+        i53 = (int)(4U + temp_dir);
+        if ((unsigned int)i53 > 255U) {
+          i53 = 255;
         }
 
-        q0++;
-        if ((unsigned int)q0 > 255U) {
-          q0 = 255;
+        i53++;
+        if ((unsigned int)i53 > 255U) {
+          i53 = 255;
         }
 
-        current_dir->contents = (unsigned char)(q0 % 4);
-        a = current_x->contents;
-        u4 = current_y->contents;
-        b_current_dir = current_dir->contents;
+        temp_dir = (unsigned char)(i53 % 4);
 
         /* 入力 現在位置x,y,現在方向 */
         /* 出力 現在位置x,y */
-        /*  move_step 一マス前進する関数 */
+        /*     %% move_step 一マス前進する関数 */
         /* 北に一マス */
-        if (b_current_dir == g_direction.North) {
-          q0 = (int)(u4 + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          u4 = (unsigned char)q0;
+        if (temp_dir == g_direction.North) {
+          temp_y++;
 
           /* disp("north_step") */
         }
 
         /* 東に一マス */
-        if (b_current_dir == g_direction.East) {
-          q0 = (int)(a + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          a = (unsigned char)q0;
+        if (temp_dir == g_direction.East) {
+          temp_x++;
 
           /* disp("east_step") */
         }
 
         /* 南に一マス */
-        if (b_current_dir == g_direction.South) {
-          qY = u4 - 1U;
-          if (qY > u4) {
-            qY = 0U;
-          }
-
-          u4 = (unsigned char)qY;
+        if (temp_dir == g_direction.South) {
+          temp_y--;
 
           /* disp("south_step") */
         }
 
         /* 西に一マス */
-        if (b_current_dir == g_direction.West) {
-          qY = a - 1U;
-          if (qY > a) {
-            qY = 0U;
-          }
-
-          a = (unsigned char)qY;
+        if (temp_dir == g_direction.West) {
+          temp_x--;
 
           /* disp("west_step") */
         }
-
-        current_x->contents = a;
-        current_y->contents = u4;
 
         /* disp("right") */
         break;
 
        case 2:
-        a = current_dir->contents;
-
         /* 入力 現在方向 */
         /* 出力 現在方向 */
-        /*  turn_180deg 180度ターンする関数 */
-        q0 = (int)(4U + a);
-        if ((unsigned int)q0 > 255U) {
-          q0 = 255;
+        /*     %% turn_180deg 180度ターンする関数 */
+        i53 = (int)(4U + temp_dir);
+        if ((unsigned int)i53 > 255U) {
+          i53 = 255;
         }
 
-        current_dir->contents = (unsigned char)((q0 - 2) % 4);
-        a = current_x->contents;
-        u4 = current_y->contents;
-        b_current_dir = current_dir->contents;
+        temp_dir = (unsigned char)((i53 - 2) % 4);
 
         /* 入力 現在位置x,y,現在方向 */
         /* 出力 現在位置x,y */
-        /*  move_step 一マス前進する関数 */
+        /*     %% move_step 一マス前進する関数 */
         /* 北に一マス */
-        if (b_current_dir == g_direction.North) {
-          q0 = (int)(u4 + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          u4 = (unsigned char)q0;
+        if (temp_dir == g_direction.North) {
+          temp_y++;
 
           /* disp("north_step") */
         }
 
         /* 東に一マス */
-        if (b_current_dir == g_direction.East) {
-          q0 = (int)(a + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          a = (unsigned char)q0;
+        if (temp_dir == g_direction.East) {
+          temp_x++;
 
           /* disp("east_step") */
         }
 
         /* 南に一マス */
-        if (b_current_dir == g_direction.South) {
-          qY = u4 - 1U;
-          if (qY > u4) {
-            qY = 0U;
-          }
-
-          u4 = (unsigned char)qY;
+        if (temp_dir == g_direction.South) {
+          temp_y--;
 
           /* disp("south_step") */
         }
 
         /* 西に一マス */
-        if (b_current_dir == g_direction.West) {
-          qY = a - 1U;
-          if (qY > a) {
-            qY = 0U;
-          }
-
-          a = (unsigned char)qY;
+        if (temp_dir == g_direction.West) {
+          temp_x--;
 
           /* disp("west_step") */
         }
-
-        current_x->contents = a;
-        current_y->contents = u4;
 
         /* disp("back") */
         break;
 
        case 3:
-        a = current_dir->contents;
-
         /* 入力　現在方向 */
         /* 出力　現在方向 */
-        /*  turn_conclk_90deg 反時計周りに90度回る関数  */
-        q0 = (int)(4U + a);
-        if ((unsigned int)q0 > 255U) {
-          q0 = 255;
+        /*     %% turn_conclk_90deg 反時計周りに90度回る関数 */
+        i53 = (int)(4U + temp_dir);
+        if ((unsigned int)i53 > 255U) {
+          i53 = 255;
         }
 
-        current_dir->contents = (unsigned char)((q0 - 1) % 4);
-        a = current_x->contents;
-        u4 = current_y->contents;
-        b_current_dir = current_dir->contents;
+        temp_dir = (unsigned char)((i53 - 1) % 4);
 
         /* 入力 現在位置x,y,現在方向 */
         /* 出力 現在位置x,y */
-        /*  move_step 一マス前進する関数 */
+        /*     %% move_step 一マス前進する関数 */
         /* 北に一マス */
-        if (b_current_dir == g_direction.North) {
-          q0 = (int)(u4 + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          u4 = (unsigned char)q0;
+        if (temp_dir == g_direction.North) {
+          temp_y++;
 
           /* disp("north_step") */
         }
 
         /* 東に一マス */
-        if (b_current_dir == g_direction.East) {
-          q0 = (int)(a + 1U);
-          if ((unsigned int)q0 > 255U) {
-            q0 = 255;
-          }
-
-          a = (unsigned char)q0;
+        if (temp_dir == g_direction.East) {
+          temp_x++;
 
           /* disp("east_step") */
         }
 
         /* 南に一マス */
-        if (b_current_dir == g_direction.South) {
-          qY = u4 - 1U;
-          if (qY > u4) {
-            qY = 0U;
-          }
-
-          u4 = (unsigned char)qY;
+        if (temp_dir == g_direction.South) {
+          temp_y--;
 
           /* disp("south_step") */
         }
 
         /* 西に一マス */
-        if (b_current_dir == g_direction.West) {
-          qY = a - 1U;
-          if (qY > a) {
-            qY = 0U;
-          }
-
-          a = (unsigned char)qY;
+        if (temp_dir == g_direction.West) {
+          temp_x--;
 
           /* disp("west_step") */
         }
-
-        current_x->contents = a;
-        current_y->contents = u4;
 
         /* disp("left") */
         break;
       }
 
       /* for code generation */
+      tempk++;
     }
-  } while (exitg1 == 0);
+  }
+
+  /*          pause(0.01) */
 }
 
 /*
@@ -5402,12 +6566,12 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   bool exitg1;
   unsigned short map_min;
   unsigned int qY;
-  int i182;
+  int i224;
   unsigned char temp;
-  int i183;
+  int i225;
   unsigned short u10;
 
-  /*  get_next_dir_diagonal 斜め有での進行方向,行先取得 */
+  /*     %% get_next_dir_diagonal 斜め有での進行方向,行先取得 */
   *next_dir = g_d_direction.North;
   next_node[0] = 1U;
   next_node[1] = 1U;
@@ -5478,59 +6642,59 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
     /* 現在のノードの方向から優先的に進行方向を確定 */
     for (k = 0; k < 8; k++) {
-      i182 = current_move_dir + k;
-      if (i182 > 255) {
-        i182 = 255;
+      i224 = current_move_dir + k;
+      if (i224 > 255) {
+        i224 = 255;
       }
 
-      temp = (unsigned char)(i182 % 8);
+      temp = (unsigned char)(i224 % 8);
 
       /* 現在のノードが行方向の時 */
       if (current_matrix_dir == matrix_dir.Row) {
         if (temp == g_d_direction.North) {
-          i182 = (int)(current_node[0] + 1U);
-          i183 = i182;
-          if ((unsigned int)i182 > 255U) {
-            i183 = 255;
+          i224 = (int)(current_node[0] + 1U);
+          i225 = i224;
+          if ((unsigned int)i224 > 255U) {
+            i225 = 255;
           }
 
-          if (row_num_node[(i183 + 33 * (current_node[1] - 1)) - 1] < map_min) {
+          if (row_num_node[(i225 + 33 * (current_node[1] - 1)) - 1] < map_min) {
             /* 最小値を更新 */
-            i183 = i182;
-            if ((unsigned int)i182 > 255U) {
-              i183 = 255;
+            i225 = i224;
+            if ((unsigned int)i224 > 255U) {
+              i225 = 255;
             }
 
-            map_min = row_num_node[(i183 + 33 * (current_node[1] - 1)) - 1];
+            map_min = row_num_node[(i225 + 33 * (current_node[1] - 1)) - 1];
 
             /* 現在ノードの進行方向を北向きに */
             *next_dir = g_d_direction.North;
 
             /* 進行方向先の座標、行列の方向を更新 */
             *next_node_property = matrix_dir.Row;
-            if ((unsigned int)i182 > 255U) {
-              i182 = 255;
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            next_node[0] = (unsigned char)i182;
+            next_node[0] = (unsigned char)i224;
             next_node[1] = current_node[1];
           }
         } else if (temp == g_d_direction.North_East) {
-          i182 = (int)(current_node[1] + 1U);
-          i183 = i182;
-          if ((unsigned int)i182 > 255U) {
-            i183 = 255;
+          i224 = (int)(current_node[1] + 1U);
+          i225 = i224;
+          if ((unsigned int)i224 > 255U) {
+            i225 = 255;
           }
 
-          if (col_num_node[(current_node[0] + ((i183 - 1) << 5)) - 1] < map_min)
+          if (col_num_node[(current_node[0] + ((i225 - 1) << 5)) - 1] < map_min)
           {
             /* 最小値を更新 */
-            i183 = i182;
-            if ((unsigned int)i182 > 255U) {
-              i183 = 255;
+            i225 = i224;
+            if ((unsigned int)i224 > 255U) {
+              i225 = 255;
             }
 
-            map_min = col_num_node[(current_node[0] + ((i183 - 1) << 5)) - 1];
+            map_min = col_num_node[(current_node[0] + ((i225 - 1) << 5)) - 1];
 
             /* 現在ノードの進行方向を東北向きに */
             *next_dir = g_d_direction.North_East;
@@ -5538,11 +6702,11 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
             /* 進行方向先の座標、行列の方向を更新 */
             *next_node_property = matrix_dir.Col;
             next_node[0] = current_node[0];
-            if ((unsigned int)i182 > 255U) {
-              i182 = 255;
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            next_node[1] = (unsigned char)i182;
+            next_node[1] = (unsigned char)i224;
           }
         } else if (temp != g_d_direction.East) {
           if (temp == g_d_direction.South_East) {
@@ -5551,24 +6715,24 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
               qY = 0U;
             }
 
-            i182 = (int)(current_node[1] + 1U);
-            if ((unsigned int)i182 > 255U) {
-              i182 = 255;
+            i224 = (int)(current_node[1] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            if (col_num_node[((int)qY + ((i182 - 1) << 5)) - 1] < map_min) {
+            if (col_num_node[((int)qY + ((i224 - 1) << 5)) - 1] < map_min) {
               /* 最小値を更新 */
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
                 qY = 0U;
               }
 
-              i182 = (int)(current_node[1] + 1U);
-              if ((unsigned int)i182 > 255U) {
-                i182 = 255;
+              i224 = (int)(current_node[1] + 1U);
+              if ((unsigned int)i224 > 255U) {
+                i224 = 255;
               }
 
-              map_min = col_num_node[((int)qY + ((i182 - 1) << 5)) - 1];
+              map_min = col_num_node[((int)qY + ((i224 - 1) << 5)) - 1];
 
               /* 現在ノードの進行方向を南東向きに */
               *next_dir = g_d_direction.South_East;
@@ -5581,12 +6745,12 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
               }
 
               next_node[0] = (unsigned char)qY;
-              i182 = (int)(current_node[1] + 1U);
-              if ((unsigned int)i182 > 255U) {
-                i182 = 255;
+              i224 = (int)(current_node[1] + 1U);
+              if ((unsigned int)i224 > 255U) {
+                i224 = 255;
               }
 
-              next_node[1] = (unsigned char)i182;
+              next_node[1] = (unsigned char)i224;
             }
           } else if (temp == g_d_direction.South) {
             qY = current_node[0] - 1U;
@@ -5670,51 +6834,51 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
           /* 柱 */
         }
 
-        /* 現在のノードが行方向の時         */
+        /* 現在のノードが行方向の時 */
       } else if (temp != g_d_direction.North) {
         if (temp == g_d_direction.North_East) {
-          i182 = (int)(current_node[0] + 1U);
-          if ((unsigned int)i182 > 255U) {
-            i182 = 255;
+          i224 = (int)(current_node[0] + 1U);
+          if ((unsigned int)i224 > 255U) {
+            i224 = 255;
           }
 
-          if (row_num_node[(i182 + 33 * (current_node[1] - 1)) - 1] < map_min) {
+          if (row_num_node[(i224 + 33 * (current_node[1] - 1)) - 1] < map_min) {
             /* 最小値を更新 */
-            i182 = (int)(current_node[0] + 1U);
-            if ((unsigned int)i182 > 255U) {
-              i182 = 255;
+            i224 = (int)(current_node[0] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            map_min = row_num_node[(i182 + 33 * (current_node[1] - 1)) - 1];
+            map_min = row_num_node[(i224 + 33 * (current_node[1] - 1)) - 1];
 
             /* 現在ノードの進行方向を北東向きに */
             *next_dir = g_d_direction.North_East;
 
             /* 進行方向先の座標、行列の方向を更新 */
             *next_node_property = matrix_dir.Row;
-            i182 = (int)(current_node[0] + 1U);
-            if ((unsigned int)i182 > 255U) {
-              i182 = 255;
+            i224 = (int)(current_node[0] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            next_node[0] = (unsigned char)i182;
+            next_node[0] = (unsigned char)i224;
             next_node[1] = current_node[1];
           }
         } else if (temp == g_d_direction.East) {
-          i182 = (int)(current_node[1] + 1U);
-          if ((unsigned int)i182 > 255U) {
-            i182 = 255;
+          i224 = (int)(current_node[1] + 1U);
+          if ((unsigned int)i224 > 255U) {
+            i224 = 255;
           }
 
-          if (col_num_node[(current_node[0] + ((i182 - 1) << 5)) - 1] < map_min)
+          if (col_num_node[(current_node[0] + ((i224 - 1) << 5)) - 1] < map_min)
           {
             /* 最小値を更新 */
-            i182 = (int)(current_node[1] + 1U);
-            if ((unsigned int)i182 > 255U) {
-              i182 = 255;
+            i224 = (int)(current_node[1] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            map_min = col_num_node[(current_node[0] + ((i182 - 1) << 5)) - 1];
+            map_min = col_num_node[(current_node[0] + ((i224 - 1) << 5)) - 1];
 
             /* 現在ノードの進行方向を東向きに */
             *next_dir = g_d_direction.East;
@@ -5722,12 +6886,12 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
             /* 進行方向先の座標、行列の方向を更新 */
             *next_node_property = matrix_dir.Col;
             next_node[0] = current_node[0];
-            i182 = (int)(current_node[1] + 1U);
-            if ((unsigned int)i182 > 255U) {
-              i182 = 255;
+            i224 = (int)(current_node[1] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            next_node[1] = (unsigned char)i182;
+            next_node[1] = (unsigned char)i224;
           }
         } else if (temp == g_d_direction.South_East) {
           u10 = row_num_node[(current_node[0] + 33 * (current_node[1] - 1)) - 1];
@@ -5826,9 +6990,9 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
               }
 
               if ((int)qY > 0) {
-                i182 = (int)(current_node[0] + 1U);
-                if ((unsigned int)i182 > 255U) {
-                  i182 = 255;
+                i224 = (int)(current_node[0] + 1U);
+                if ((unsigned int)i224 > 255U) {
+                  i224 = 255;
                 }
 
                 qY = current_node[1] - 1U;
@@ -5836,11 +7000,11 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                   qY = 0U;
                 }
 
-                if (row_num_node[(i182 + 33 * ((int)qY - 1)) - 1] < map_min) {
+                if (row_num_node[(i224 + 33 * ((int)qY - 1)) - 1] < map_min) {
                   /* 最小値を更新 */
-                  i182 = (int)(current_node[0] + 1U);
-                  if ((unsigned int)i182 > 255U) {
-                    i182 = 255;
+                  i224 = (int)(current_node[0] + 1U);
+                  if ((unsigned int)i224 > 255U) {
+                    i224 = 255;
                   }
 
                   qY = current_node[1] - 1U;
@@ -5848,19 +7012,19 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                     qY = 0U;
                   }
 
-                  map_min = row_num_node[(i182 + 33 * ((int)qY - 1)) - 1];
+                  map_min = row_num_node[(i224 + 33 * ((int)qY - 1)) - 1];
 
                   /* 現在ノードの進行方向を北西向きに */
                   *next_dir = g_d_direction.North_West;
 
                   /* 進行方向先の座標、行列の方向を更新 */
                   *next_node_property = matrix_dir.Row;
-                  i182 = (int)(current_node[0] + 1U);
-                  if ((unsigned int)i182 > 255U) {
-                    i182 = 255;
+                  i224 = (int)(current_node[0] + 1U);
+                  if ((unsigned int)i224 > 255U) {
+                    i224 = 255;
                   }
 
-                  next_node[0] = (unsigned char)i182;
+                  next_node[0] = (unsigned char)i224;
                   qY = current_node[1] - 1U;
                   if (qY > current_node[1]) {
                     qY = 0U;
@@ -5896,31 +7060,31 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
 {
   unsigned char next_dir;
   unsigned short little;
-  int i7;
-  int i8;
-  int i9;
-  int i10;
-  unsigned short u2;
   int i11;
   int i12;
+  int i13;
+  int i14;
+  unsigned short u0;
+  int i15;
+  int i16;
 
-  /*  get_nextdir2 等高線mapから次に向かう方向を選択 */
+  /*     %% get_nextdir2 等高線mapから次に向かう方向を選択 */
   /* 出力の初期化 */
   next_dir = 0U;
   little = MAX_uint16_T;
 
-  /*             %%進行方向選定 */
+  /*     %%進行方向選定 */
   /* 優先順位　北⇒東⇒南⇒西 */
   /* 北側の壁のありなし判定 */
-  i7 = current_y + ((current_x - 1) << 5);
-  i8 = maze_wall[i7 - 1];
+  i11 = current_y + ((current_x - 1) << 5);
+  i12 = maze_wall[i11 - 1];
   if (g_direction.North <= 7) {
-    i9 = (unsigned char)(1 << g_direction.North);
+    i13 = (unsigned char)(1 << g_direction.North);
   } else {
-    i9 = 0;
+    i13 = 0;
   }
 
-  if (((i8 & i9) == 0) && (contour_map[i7] < 65535)) {
+  if (((i12 & i13) == 0) && (contour_map[i11] < 65535)) {
     /* 北側の等高線mapが閾値より低ければ、 */
     /* 閾値を北側の等高map値に変更 */
     little = contour_map[current_y + ((current_x - 1) << 5)];
@@ -5931,43 +7095,43 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
 
   /* 東側 */
   if (g_direction.East <= 7) {
-    i10 = (unsigned char)(1 << g_direction.East);
+    i14 = (unsigned char)(1 << g_direction.East);
   } else {
-    i10 = 0;
+    i14 = 0;
   }
 
-  if ((i8 & i10) == 0) {
-    u2 = contour_map[(current_y + (current_x << 5)) - 1];
-    if (u2 < little) {
-      little = u2;
+  if ((i12 & i14) == 0) {
+    u0 = contour_map[(current_y + (current_x << 5)) - 1];
+    if (u0 < little) {
+      little = u0;
       next_dir = g_direction.East;
     }
   }
 
   /* 南側 */
   if (g_direction.South <= 7) {
-    i11 = (unsigned char)(1 << g_direction.South);
+    i15 = (unsigned char)(1 << g_direction.South);
   } else {
-    i11 = 0;
+    i15 = 0;
   }
 
-  if ((i8 & i11) == 0) {
-    u2 = contour_map[i7 - 2];
-    if (u2 < little) {
-      little = u2;
+  if ((i12 & i15) == 0) {
+    u0 = contour_map[i11 - 2];
+    if (u0 < little) {
+      little = u0;
       next_dir = g_direction.South;
     }
   }
 
   /* 西側 */
   if (g_direction.West <= 7) {
-    i12 = (unsigned char)(1 << g_direction.West);
+    i16 = (unsigned char)(1 << g_direction.West);
   } else {
-    i12 = 0;
+    i16 = 0;
   }
 
-  if (((i8 & i12) == 0) && (contour_map[(current_y + ((current_x - 2) << 5)) - 1]
-       < little)) {
+  if (((i12 & i16) == 0) && (contour_map[(current_y + ((current_x - 2) << 5)) -
+       1] < little)) {
     /*  little = contour_map(current_y,current_x-1); */
     next_dir = g_direction.West;
   }
@@ -6009,7 +7173,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
         }
       }
 
-      /* 次が-45度まがるとき(左折パターン)     */
+      /* 次が-45度まがるとき(左折パターン) */
     } else {
       if (move_dir_buffer[0] == 7.0) {
         if (move_dir_buffer[1] == 7.0) {
@@ -6045,7 +7209,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
           }
         }
 
-        /* 左折パターン     */
+        /* 左折パターン */
       } else if (move_dir_buffer[0] == 7.0) {
         turn_pattern_num = turn_pattern.l_45;
       } else {
@@ -6075,7 +7239,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
 static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
   unsigned char y)
 {
-  int i113;
+  int i153;
   unsigned char uv1[18];
   bool temp1[18];
   int ex;
@@ -6084,25 +7248,25 @@ static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
 
   /* ゴール判定関数 */
   /* ゴール座標と比較 */
-  for (i113 = 0; i113 < 9; i113++) {
-    uv1[i113] = x;
-    uv1[9 + i113] = y;
+  for (i153 = 0; i153 < 9; i153++) {
+    uv1[i153] = x;
+    uv1[9 + i153] = y;
   }
 
-  for (i113 = 0; i113 < 18; i113++) {
-    temp1[i113] = (maze_goal[i113] == uv1[i113]);
+  for (i153 = 0; i153 < 18; i153++) {
+    temp1[i153] = (maze_goal[i153] == uv1[i153]);
   }
 
   /* x,yともに一致するか確認、一致なら1を返す */
-  for (i113 = 0; i113 < 9; i113++) {
-    varargin_1[i113] = (signed char)(temp1[i113] * temp1[9 + i113]);
+  for (i153 = 0; i153 < 9; i153++) {
+    varargin_1[i153] = (signed char)(temp1[i153] * temp1[9 + i153]);
   }
 
   ex = varargin_1[0];
   for (k = 0; k < 8; k++) {
-    i113 = varargin_1[k + 1];
-    if (ex < i113) {
-      ex = i113;
+    i153 = varargin_1[k + 1];
+    if (ex < i153) {
+      ex = i153;
     }
   }
 
@@ -6112,40 +7276,53 @@ static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
 /*
  * 入力 迷路縦サイズ,迷路横サイズ,ゴール座標,迷路情報(16進数)
  * 出力 等高線map,最大経路長
- * Arguments    : coder_internal_ref_3 *num_temp
- *                const coder_internal_ref_5 *wall
+ * Arguments    : const coder_internal_ref_5 *wall
  *                const unsigned char maze_goal[18]
  *                unsigned char l_goal_size
  *                const unsigned char maze_wall[1024]
+ *                unsigned char current_x
+ *                unsigned char current_y
  *                unsigned short contour_map[1024]
  * Return Type  : void
  */
-static void make_map_find(coder_internal_ref_3 *num_temp, const
-  coder_internal_ref_5 *wall, const unsigned char maze_goal[18], unsigned char
-  l_goal_size, const unsigned char maze_wall[1024], unsigned short contour_map
+static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
+  maze_goal[18], unsigned char l_goal_size, const unsigned char maze_wall[1024],
+  unsigned char current_x, unsigned char current_y, unsigned short contour_map
   [1024])
 {
+  unsigned char contor_renew_square[2048];
+  unsigned char contor_renew_square_temp[2048];
+  unsigned char contor_renew_square_idx;
+  unsigned char contor_renew_square_idx_temp;
   int i2;
-  int idx;
-  emxArray_uint8_T *row;
-  emxArray_uint8_T *col;
-  emxArray_uint16_T *r0;
-  emxArray_uint16_T *b_num_temp;
-  unsigned char change_flag;
+  int temp;
   unsigned short tempi;
   bool exitg1;
-  int ii;
-  bool exitg2;
-  short ii_data[1024];
-  unsigned int qY;
-  unsigned short u0;
+  unsigned char change_flag;
   int i3;
   int i4;
   int i5;
   int i6;
+  int i7;
+  int i8;
+  int i9;
+  unsigned int qY;
+  int i10;
 
-  /*   make_map_find 壁情報から等高線MAPを生成 */
+  /*     %%  make_map_find 壁情報から等高線MAPを生成 */
   /*  迷路パラメータ設定 */
+  /* コンター更新マス保管用 */
+  /* 更新座標 */
+  memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
+
+  /* 更新座標更新用 */
+  contor_renew_square_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_square_idx_temp = 1U;
+
+  /* 更新座標更新用 */
   /* MAPの初期化(すべての要素にmax_lengthを入力) */
   /* 32マス分mapを保持 */
   /* 16bitにすべき */
@@ -6155,235 +7332,232 @@ static void make_map_find(coder_internal_ref_3 *num_temp, const
 
   /* ゴール座標に0を入力 */
   i2 = l_goal_size;
-  for (idx = 0; idx < i2; idx++) {
-    contour_map[(maze_goal[idx + 9] + ((maze_goal[idx] - 1) << 5)) - 1] = 0U;
+  for (temp = 0; temp < i2; temp++) {
+    contor_renew_square_idx = maze_goal[temp + 9];
+    contour_map[(contor_renew_square_idx + ((maze_goal[temp] - 1) << 5)) - 1] =
+      0U;
+
+    /* 初回の更新座標 = ゴール座標　を入力 */
+    contor_renew_square[temp] = contor_renew_square_idx;
+    contor_renew_square[1024 + temp] = maze_goal[temp];
+    contor_renew_square_idx = (unsigned char)(1 + temp);
   }
 
-  emxInit_uint8_T(&row, 1);
-  emxInit_uint8_T(&col, 1);
-  emxInit_uint16_T(&r0, 1);
-  emxInit_uint16_T(&b_num_temp, 1);
-  do {
+  tempi = 0U;
+  exitg1 = false;
+  while ((!exitg1) && (tempi < 65535)) {
+    /* 歩数カウントは0~max_length */
+    /* map更新確認用フラグ */
     change_flag = 0U;
 
-    /* map更新確認用フラグ */
-    tempi = 0U;
-    exitg1 = false;
-    while ((!exitg1) && (tempi < 65535)) {
-      /* 歩数カウントは0~max_length */
-      /* 歩数が確定している座標を検索 */
-      /* 最初は0,更新され、増加したマスを次々検索していく */
-      idx = 0;
-      ii = 0;
-      exitg2 = false;
-      while ((!exitg2) && (ii < 1024)) {
-        if (contour_map[ii] == tempi) {
-          idx++;
-          ii_data[idx - 1] = (short)(ii + 1);
-          if (idx >= 1024) {
-            exitg2 = true;
-          } else {
-            ii++;
+    /* 更新された座標に対し、歩数mapを更新 */
+    i2 = contor_renew_square_idx;
+    for (temp = 0; temp < i2; temp++) {
+      /* 北側 */
+      /* if (bitand(maze_wall(row(tempn),col(tempn)),bitshift(uint8(1),g_direction.North)) == wall.nowall) */
+      if (g_direction.North <= 7) {
+        i3 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i3 = 0;
+      }
+
+      if ((maze_wall[(contor_renew_square[temp] + ((contor_renew_square[temp +
+              1024] - 1) << 5)) - 1] & i3) == wall->contents.nowall) {
+        /* 北側のMAPが更新されているか判断、されていなければ書き込み */
+        i4 = (int)(contor_renew_square[temp] + 1U);
+        i5 = i4;
+        if ((unsigned int)i4 > 255U) {
+          i5 = 255;
+        }
+
+        if (contour_map[(i5 + ((contor_renew_square[temp + 1024] - 1) << 5)) - 1]
+            == 65535) {
+          i5 = i4;
+          if ((unsigned int)i4 > 255U) {
+            i5 = 255;
           }
-        } else {
-          ii++;
+
+          contour_map[(i5 + ((contor_renew_square[temp + 1024] - 1) << 5)) - 1] =
+            (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          if ((unsigned int)i4 > 255U) {
+            i4 = 255;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
+            char)i4;
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            contor_renew_square[temp + 1024];
+
+          /* 更新マス用インデックスを増加 */
+          i4 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i4 > 255U) {
+            i4 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i4;
         }
       }
 
-      if (1 > idx) {
-        idx = 0;
+      /* 東側 */
+      contor_renew_square_idx = contor_renew_square[temp + 1024];
+      i4 = (contor_renew_square_idx - 1) << 5;
+      i5 = maze_wall[(contor_renew_square[temp] + i4) - 1];
+      if (g_direction.East <= 7) {
+        i6 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i6 = 0;
       }
 
-      i2 = num_temp->contents->size[0];
-      num_temp->contents->size[0] = idx;
-      emxEnsureCapacity_uint16_T(num_temp->contents, i2);
-      for (i2 = 0; i2 < idx; i2++) {
-        num_temp->contents->data[i2] = (unsigned short)ii_data[i2];
+      if ((i5 & i6) == wall->contents.nowall) {
+        /* 東側のMAPが更新されているか判断、されていなければ書き込み */
+        i7 = (int)(contor_renew_square[temp + 1024] + 1U);
+        i8 = i7;
+        if ((unsigned int)i7 > 255U) {
+          i8 = 255;
+        }
+
+        if (contour_map[(contor_renew_square[temp] + ((i8 - 1) << 5)) - 1] ==
+            65535) {
+          i8 = i7;
+          if ((unsigned int)i7 > 255U) {
+            i8 = 255;
+          }
+
+          contour_map[(contor_renew_square[temp] + ((i8 - 1) << 5)) - 1] =
+            (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+            contor_renew_square[temp];
+          if ((unsigned int)i7 > 255U) {
+            i7 = 255;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            (unsigned char)i7;
+
+          /* 更新マス用インデックスを増加 */
+          i7 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i7 > 255U) {
+            i7 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i7;
+        }
       }
 
-      /* 32行なので、行番号:32で割ったあまり */
-      i2 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i2);
-      idx = num_temp->contents->size[0];
-      for (i2 = 0; i2 < idx; i2++) {
-        ii = num_temp->contents->data[i2];
-        qY = ii - 1U;
-        if (qY > (unsigned int)ii) {
+      /* 南側 */
+      if (g_direction.South <= 7) {
+        i9 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i9 = 0;
+      }
+
+      if ((i5 & i9) == wall->contents.nowall) {
+        /* 南側のMAPが更新されているか判断、されていなければ書き込み */
+        qY = contor_renew_square[temp] - 1U;
+        if (qY > contor_renew_square[temp]) {
           qY = 0U;
         }
 
-        b_num_temp->data[i2] = (unsigned short)qY;
+        if (contour_map[((int)qY + i4) - 1] == 65535) {
+          qY = contor_renew_square[temp] - 1U;
+          if (qY > contor_renew_square[temp]) {
+            qY = 0U;
+          }
+
+          contour_map[((int)qY + i4) - 1] = (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          qY = contor_renew_square[temp] - 1U;
+          if (qY > contor_renew_square[temp]) {
+            qY = 0U;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
+            char)qY;
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            contor_renew_square_idx;
+
+          /* 更新マス用インデックスを増加 */
+          i4 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i4 > 255U) {
+            i4 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i4;
+        }
       }
 
-      c_rem(b_num_temp, r0);
-      i2 = row->size[0];
-      row->size[0] = r0->size[0];
-      emxEnsureCapacity_uint8_T(row, i2);
-      idx = r0->size[0];
-      for (i2 = 0; i2 < idx; i2++) {
-        qY = r0->data[i2] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        u0 = (unsigned short)qY;
-        if ((unsigned short)qY > 255) {
-          u0 = 255U;
-        }
-
-        row->data[i2] = (unsigned char)u0;
+      /* 西側 */
+      if (g_direction.West <= 7) {
+        i10 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i10 = 0;
       }
 
-      /* 列番号:32で割ったときの商 */
-      i2 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i2);
-      idx = num_temp->contents->size[0];
-      for (i2 = 0; i2 < idx; i2++) {
-        ii = num_temp->contents->data[i2];
-        qY = ii - 1U;
-        if (qY > (unsigned int)ii) {
+      if ((i5 & i10) == wall->contents.nowall) {
+        /* 西側のMAPが更新されているか判断、されていなければ書き込み */
+        qY = contor_renew_square_idx - 1U;
+        if (qY > contor_renew_square_idx) {
           qY = 0U;
         }
 
-        b_num_temp->data[i2] = (unsigned short)qY;
-      }
+        if (contour_map[(contor_renew_square[temp] + (((int)qY - 1) << 5)) - 1] ==
+            65535) {
+          qY = contor_renew_square_idx - 1U;
+          if (qY > contor_renew_square_idx) {
+            qY = 0U;
+          }
 
-      idivide(b_num_temp, 32.0, r0);
-      i2 = col->size[0];
-      col->size[0] = r0->size[0];
-      emxEnsureCapacity_uint8_T(col, i2);
-      idx = r0->size[0];
-      for (i2 = 0; i2 < idx; i2++) {
-        qY = r0->data[i2] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
+          contour_map[(contor_renew_square[temp] + (((int)qY - 1) << 5)) - 1] =
+            (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+            contor_renew_square[temp];
+          qY = contor_renew_square_idx - 1U;
+          if (qY > contor_renew_square_idx) {
+            qY = 0U;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            (unsigned char)qY;
+
+          /* 更新マス用インデックスを増加 */
+          i4 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i4 > 255U) {
+            i4 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i4;
         }
-
-        u0 = (unsigned short)qY;
-        if ((unsigned short)qY > 255) {
-          u0 = 255U;
-        }
-
-        col->data[i2] = (unsigned char)u0;
-      }
-
-      /* 見つかったマスの数 */
-      i2 = row->size[0];
-      if (i2 < 0) {
-        i2 = 0;
-      } else {
-        if (i2 > 255) {
-          i2 = 255;
-        }
-      }
-
-      /* 更新マスが見つからなければ終了 */
-      if ((unsigned char)i2 == 0) {
-        exitg1 = true;
-      } else {
-        /* 検索した座標に対し、歩数mapを更新 */
-        i2 = (unsigned char)i2;
-        for (idx = 0; idx < i2; idx++) {
-          /* 北側 */
-          if (g_direction.North <= 7) {
-            i3 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i3 = 0;
-          }
-
-          if ((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-               i3) == wall->contents.nowall) {
-            /* 北側のMAPが更新されているか判断、されていなければ書き込み */
-            ii = (int)(row->data[idx] + 1U);
-            if ((unsigned int)ii > 255U) {
-              ii = 255;
-            }
-
-            if (contour_map[(ii + ((col->data[idx] - 1) << 5)) - 1] == 65535) {
-              ii = (int)(row->data[idx] + 1U);
-              if ((unsigned int)ii > 255U) {
-                ii = 255;
-              }
-
-              contour_map[(ii + ((col->data[idx] - 1) << 5)) - 1] = (unsigned
-                short)(tempi + 1);
-              change_flag = 1U;
-            }
-          }
-
-          /* 東側 */
-          if (g_direction.East <= 7) {
-            i4 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i4 = 0;
-          }
-
-          if ((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-               i4) == wall->contents.nowall) {
-            /* 東側のMAPが更新されているか判断、されていなければ書き込み */
-            ii = (int)(col->data[idx] + 1U);
-            if ((unsigned int)ii > 255U) {
-              ii = 255;
-            }
-
-            if (contour_map[(row->data[idx] + ((ii - 1) << 5)) - 1] == 65535) {
-              ii = (int)(col->data[idx] + 1U);
-              if ((unsigned int)ii > 255U) {
-                ii = 255;
-              }
-
-              contour_map[(row->data[idx] + ((ii - 1) << 5)) - 1] = (unsigned
-                short)(tempi + 1);
-              change_flag = 1U;
-            }
-          }
-
-          /* 南側 */
-          if (g_direction.South <= 7) {
-            i5 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i5 = 0;
-          }
-
-          if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-                i5) == wall->contents.nowall) && (contour_map[(row->data[idx] +
-                ((col->data[idx] - 1) << 5)) - 2] == 65535)) {
-            /* 南側のMAPが更新されているか判断、されていなければ書き込み */
-            contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2] =
-              (unsigned short)(tempi + 1);
-            change_flag = 1U;
-          }
-
-          /* 西側 */
-          if (g_direction.West <= 7) {
-            i6 = (unsigned char)(1 << g_direction.West);
-          } else {
-            i6 = 0;
-          }
-
-          if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-                i6) == wall->contents.nowall) && (contour_map[(row->data[idx] +
-                ((col->data[idx] - 2) << 5)) - 1] == 65535)) {
-            /* 西側のMAPが更新されているか判断、されていなければ書き込み */
-            contour_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1] =
-              (unsigned short)(tempi + 1);
-            change_flag = 1U;
-          }
-        }
-
-        tempi++;
       }
     }
 
-    /* 更新がなければ終了     */
-  } while (!(change_flag == 0));
+    /* ゴール更新マスの更新とインデックスのクリア */
+    for (i2 = 0; i2 < 2048; i2++) {
+      contor_renew_square[i2] = contor_renew_square_temp[i2];
+      contor_renew_square_temp[i2] = 0U;
+    }
 
-  emxFree_uint16_T(&b_num_temp);
-  emxFree_uint16_T(&r0);
-  emxFree_uint8_T(&col);
-  emxFree_uint8_T(&row);
+    contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
+    contor_renew_square_idx_temp = 1U;
+
+    /* 更新がない、もしくは現在位置が更新されていれば終了 */
+    if ((change_flag == 0) || (contour_map[(current_y + ((current_x - 1) << 5))
+         - 1] != 65535)) {
+      exitg1 = true;
+    } else {
+      tempi++;
+    }
+  }
 }
 
 /*
@@ -6391,788 +7565,845 @@ static void make_map_find(coder_internal_ref_3 *num_temp, const
  * 入力 迷路縦サイズ,迷路横サイズ,ゴール座標,迷路情報(16進数),迷路探索情報(16進数)
  * 出力 等高線map,最大経路長
  * Arguments    : const coder_internal_ref *goal_size
- *                coder_internal_ref_3 *num_temp
  *                const coder_internal_ref_5 *wall
  *                const coder_internal_ref_4 *search
  *                const unsigned char maze_goal[18]
  *                const unsigned char maze_wall[1024]
  *                const unsigned char maze_wall_search[1024]
+ *                unsigned char unknown_wall_flg
  *                unsigned short contour_map[1024]
  * Return Type  : void
  */
-static void make_map_fustrun(const coder_internal_ref *goal_size,
-  coder_internal_ref_3 *num_temp, const coder_internal_ref_5 *wall, const
-  coder_internal_ref_4 *search, const unsigned char maze_goal[18], const
-  unsigned char maze_wall[1024], const unsigned char maze_wall_search[1024],
-  unsigned short contour_map[1024])
+static void make_map_fustrun(const coder_internal_ref *goal_size, const
+  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+  char maze_goal[18], const unsigned char maze_wall[1024], const unsigned char
+  maze_wall_search[1024], unsigned char unknown_wall_flg, unsigned short
+  contour_map[1024])
 {
-  int i13;
+  unsigned char contor_renew_square[2048];
+  unsigned char contor_renew_square_temp[2048];
+  unsigned char contor_renew_square_idx;
+  unsigned char contor_renew_square_idx_temp;
+  int i33;
   unsigned char move_dir_map[1024];
-  unsigned char change_flag;
-  int idx;
-  int contour_map_tmp;
-  unsigned short contour_refine_map[1024];
-  emxArray_uint8_T *row;
-  emxArray_uint8_T *col;
-  int i14;
-  emxArray_uint16_T *r1;
-  emxArray_uint16_T *b_num_temp;
-  int i15;
-  int i16;
+  int tempn;
   unsigned short tempi;
-  int i17;
   bool exitg1;
-  int i18;
-  short ii_data[1024];
+  int contour_map_tmp;
+  int i34;
+  unsigned char change_flag;
+  int i35;
+  int i36;
+  int i37;
+  int i38;
+  int i39;
+  int i40;
+  int i41;
+  int i42;
+  int i43;
+  int i44;
+  int i45;
+  int i46;
+  int i47;
+  int i48;
+  unsigned int u2;
   unsigned int qY;
-  unsigned short u3;
-  int i19;
-  int i20;
-  int i21;
-  int i22;
-  int i23;
-  int i24;
-  int i25;
-  int i26;
-  int i27;
-  int i28;
-  int i29;
-  int i30;
+  int i49;
+  int i50;
+  int i51;
+  int i52;
 
-  /*  make_map_fustrun 最短走行用等高線MAPを生成 */
+  /*     %% make_map_fustrun 最短走行用等高線MAPを生成 */
+  /* コンター更新マス保管用 */
+  /* 更新座標 */
+  memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
+
+  /* 更新座標更新用 */
+  contor_renew_square_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_square_idx_temp = 1U;
+
+  /* 更新座標更新用 */
   /* ローカル変数設定 */
   /* パラメータ設定 */
   /*  迷路パラメータ設定 */
   /* MAPの初期化(すべての要素にmax_lengthを入力) */
   /* 32マス分mapを保持 */
   /* 進行方向補完用変数定義 */
-  for (i13 = 0; i13 < 1024; i13++) {
-    contour_map[i13] = MAX_uint16_T;
-    move_dir_map[i13] = 0U;
+  for (i33 = 0; i33 < 1024; i33++) {
+    contour_map[i33] = MAX_uint16_T;
+    move_dir_map[i33] = 0U;
   }
 
   /* ゴール座標に */
   /*  歩数マップ：0を入力 */
   /*  進行方向 : 1+2+4+8(東西南北すべて)=15 */
   /*  を入力 */
-  change_flag = goal_size->contents;
-  i13 = change_flag;
-  for (idx = 0; idx < i13; idx++) {
-    contour_map_tmp = (maze_goal[idx + 9] + ((maze_goal[idx] - 1) << 5)) - 1;
+  i33 = goal_size->contents;
+  for (tempn = 0; tempn < i33; tempn++) {
+    contor_renew_square_idx = maze_goal[tempn + 9];
+    contour_map_tmp = (contor_renew_square_idx + ((maze_goal[tempn] - 1) << 5))
+      - 1;
     contour_map[contour_map_tmp] = 0U;
     if (g_direction.North <= 7) {
-      i14 = (unsigned char)(1 << g_direction.North);
+      i34 = (unsigned char)(1 << g_direction.North);
     } else {
-      i14 = 0;
+      i34 = 0;
     }
 
     if (g_direction.East <= 7) {
-      i15 = (unsigned char)(1 << g_direction.East);
+      i35 = (unsigned char)(1 << g_direction.East);
     } else {
-      i15 = 0;
+      i35 = 0;
     }
 
-    i16 = (int)((unsigned int)i14 + i15);
-    if ((unsigned int)i16 > 255U) {
-      i16 = 255;
+    i36 = (int)((unsigned int)i34 + i35);
+    if ((unsigned int)i36 > 255U) {
+      i36 = 255;
     }
 
     if (g_direction.South <= 7) {
-      i17 = (unsigned char)(1 << g_direction.South);
+      i37 = (unsigned char)(1 << g_direction.South);
     } else {
-      i17 = 0;
+      i37 = 0;
     }
 
-    i16 = (int)((unsigned int)i16 + i17);
-    if ((unsigned int)i16 > 255U) {
-      i16 = 255;
+    i36 = (int)((unsigned int)i36 + i37);
+    if ((unsigned int)i36 > 255U) {
+      i36 = 255;
     }
 
     if (g_direction.West <= 7) {
-      i18 = (unsigned char)(1 << g_direction.West);
+      i40 = (unsigned char)(1 << g_direction.West);
     } else {
-      i18 = 0;
+      i40 = 0;
     }
 
-    i16 = (int)((unsigned int)i16 + i18);
-    if ((unsigned int)i16 > 255U) {
-      i16 = 255;
+    i36 = (int)((unsigned int)i36 + i40);
+    if ((unsigned int)i36 > 255U) {
+      i36 = 255;
     }
 
-    move_dir_map[contour_map_tmp] = (unsigned char)i16;
+    move_dir_map[contour_map_tmp] = (unsigned char)i36;
+
+    /* 初回の更新座標 = ゴール座標　を入力 */
+    contor_renew_square[tempn] = contor_renew_square_idx;
+    contor_renew_square[1024 + tempn] = maze_goal[tempn];
+    contor_renew_square_idx = (unsigned char)(1 + tempn);
   }
 
-  /* 更新判定用変数(重みづけなしの歩数マップ) */
-  memcpy(&contour_refine_map[0], &contour_map[0], sizeof(unsigned short) << 10);
-  emxInit_uint8_T(&row, 1);
-  emxInit_uint8_T(&col, 1);
-  emxInit_uint16_T(&r1, 1);
-  emxInit_uint16_T(&b_num_temp, 1);
-  do {
+  tempi = 0U;
+  exitg1 = false;
+  while ((!exitg1) && (tempi < 65535)) {
+    /* 更新確認用の歩数カウントは0~max_length */
     change_flag = 0U;
 
-    /* map更新確認用フラグ */
-    for (tempi = 0; tempi < MAX_uint16_T; tempi++) {
-      /* 更新確認用の歩数カウントは0~max_length */
-      /* 歩数が確定している座標を検索 */
-      /* 最初は0,更新され、増加したマスを次々検索していく */
-      idx = 0;
-      contour_map_tmp = 0;
-      exitg1 = false;
-      while ((!exitg1) && (contour_map_tmp < 1024)) {
-        if (contour_refine_map[contour_map_tmp] == tempi) {
-          idx++;
-          ii_data[idx - 1] = (short)(contour_map_tmp + 1);
-          if (idx >= 1024) {
-            exitg1 = true;
-          } else {
-            contour_map_tmp++;
-          }
-        } else {
-          contour_map_tmp++;
-        }
-      }
-
-      if (1 > idx) {
-        idx = 0;
-      }
-
-      i13 = num_temp->contents->size[0];
-      num_temp->contents->size[0] = idx;
-      emxEnsureCapacity_uint16_T(num_temp->contents, i13);
-      for (i13 = 0; i13 < idx; i13++) {
-        num_temp->contents->data[i13] = (unsigned short)ii_data[i13];
-      }
-
-      /* 32行なので、行番号:32で割ったあまり */
-      i13 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i13);
-      idx = num_temp->contents->size[0];
-      for (i13 = 0; i13 < idx; i13++) {
-        contour_map_tmp = num_temp->contents->data[i13];
-        qY = contour_map_tmp - 1U;
-        if (qY > (unsigned int)contour_map_tmp) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i13] = (unsigned short)qY;
-      }
-
-      c_rem(b_num_temp, r1);
-      i13 = row->size[0];
-      row->size[0] = r1->size[0];
-      emxEnsureCapacity_uint8_T(row, i13);
-      idx = r1->size[0];
-      for (i13 = 0; i13 < idx; i13++) {
-        qY = r1->data[i13] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        u3 = (unsigned short)qY;
-        if ((unsigned short)qY > 255) {
-          u3 = 255U;
-        }
-
-        row->data[i13] = (unsigned char)u3;
-      }
-
-      /* 列番号:32で割ったときの商 */
-      i13 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i13);
-      idx = num_temp->contents->size[0];
-      for (i13 = 0; i13 < idx; i13++) {
-        contour_map_tmp = num_temp->contents->data[i13];
-        qY = contour_map_tmp - 1U;
-        if (qY > (unsigned int)contour_map_tmp) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i13] = (unsigned short)qY;
-      }
-
-      idivide(b_num_temp, 32.0, r1);
-      i13 = col->size[0];
-      col->size[0] = r1->size[0];
-      emxEnsureCapacity_uint8_T(col, i13);
-      idx = r1->size[0];
-      for (i13 = 0; i13 < idx; i13++) {
-        qY = r1->data[i13] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        u3 = (unsigned short)qY;
-        if ((unsigned short)qY > 255) {
-          u3 = 255U;
-        }
-
-        col->data[i13] = (unsigned char)u3;
-      }
-
-      /* 見つかったマスの数 */
-      /* 検索した座標に対し、歩数mapを更新 */
-      i13 = row->size[0];
-      if (i13 < 0) {
-        i13 = 0;
+    /* 更新フラグのクリア */
+    /* 検索した座標に対し、歩数mapを更新 */
+    i33 = contor_renew_square_idx;
+    for (tempn = 0; tempn < i33; tempn++) {
+      /* 北側 */
+      /* 壁が無い & (探索済み || ~未知壁フラグ)であるとき */
+      if (g_direction.North <= 7) {
+        i38 = (unsigned char)(1 << g_direction.North);
       } else {
-        if (i13 > 65535) {
-          i13 = 65535;
+        i38 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
+               + 1024] - 1) << 5)) - 1] & i38) != 0) == wall->contents.nowall) {
+        if (g_direction.North <= 7) {
+          i39 = (unsigned char)(1 << g_direction.North);
+        } else {
+          i39 = 0;
+        }
+
+        if ((((maze_wall_search[(contor_renew_square[tempn] +
+                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i39) != 0)
+             == search->contents.known) || (unknown_wall_flg == 0)) {
+          /* かつ進行方向が北向きである時 */
+          contor_renew_square_idx = contor_renew_square[tempn + 1024];
+          i36 = (contor_renew_square_idx - 1) << 5;
+          contour_map_tmp = (contor_renew_square[tempn] + i36) - 1;
+          if (g_direction.North <= 7) {
+            i43 = (unsigned char)(1 << g_direction.North);
+          } else {
+            i43 = 0;
+          }
+
+          if ((move_dir_map[contour_map_tmp] & i43) != 0) {
+            /* かつ北のマスが更新予定値よりも大きな値の場合 */
+            contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
+            if ((unsigned int)contour_map_tmp > 255U) {
+              contour_map_tmp = 255;
+            }
+
+            u2 = contour_map[(contor_renew_square[tempn] +
+                              ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+              1] + 1U;
+            qY = u2;
+            if (u2 > 65535U) {
+              qY = 65535U;
+            }
+
+            if (contour_map[(contour_map_tmp + i36) - 1] > (int)qY) {
+              /* 歩数MAP更新 */
+              contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
+              if ((unsigned int)contour_map_tmp > 255U) {
+                contour_map_tmp = 255;
+              }
+
+              if (u2 > 65535U) {
+                u2 = 65535U;
+              }
+
+              contour_map[(contour_map_tmp + i36) - 1] = (unsigned short)u2;
+
+              /* 移動方向MAP更新 */
+              contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
+              if ((unsigned int)contour_map_tmp > 255U) {
+                contour_map_tmp = 255;
+              }
+
+              if (g_direction.North <= 7) {
+                move_dir_map[(contour_map_tmp + i36) - 1] = (unsigned char)(1 <<
+                  g_direction.North);
+              } else {
+                move_dir_map[(contour_map_tmp + i36) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新マスを更新 */
+              i36 = (int)(contor_renew_square[tempn] + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+                (unsigned char)i36;
+              contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+                contor_renew_square_idx;
+
+              /* 更新マス用インデックスを増加 */
+              i36 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_idx_temp = (unsigned char)i36;
+            }
+
+            /* かつ進行方向が北向きでないとき */
+          } else {
+            /* かつ北のマスの歩数MAP値が、更新予定値より大きい場合 */
+            i46 = (int)(contor_renew_square[tempn] + 1U);
+            i47 = i46;
+            if ((unsigned int)i46 > 255U) {
+              i47 = 255;
+            }
+
+            u2 = contour_map[contour_map_tmp] + 5U;
+            qY = u2;
+            if (u2 > 65535U) {
+              qY = 65535U;
+            }
+
+            if (contour_map[(i47 + i36) - 1] > (int)qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              contour_map_tmp = i46;
+              if ((unsigned int)i46 > 255U) {
+                contour_map_tmp = 255;
+              }
+
+              if (u2 > 65535U) {
+                u2 = 65535U;
+              }
+
+              contour_map[(contour_map_tmp + i36) - 1] = (unsigned short)u2;
+
+              /* 移動方向MAP更新 */
+              contour_map_tmp = i46;
+              if ((unsigned int)i46 > 255U) {
+                contour_map_tmp = 255;
+              }
+
+              if (g_direction.North <= 7) {
+                move_dir_map[(contour_map_tmp + i36) - 1] = (unsigned char)(1 <<
+                  g_direction.North);
+              } else {
+                move_dir_map[(contour_map_tmp + i36) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新マスを更新 */
+              if ((unsigned int)i46 > 255U) {
+                i46 = 255;
+              }
+
+              contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+                (unsigned char)i46;
+              contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+                contor_renew_square_idx;
+
+              /* 更新マス用インデックスを増加 */
+              i36 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_idx_temp = (unsigned char)i36;
+            }
+          }
         }
       }
 
-      for (idx = 0; idx < i13; idx++) {
-        /* 北側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.North <= 7) {
-          i19 = (unsigned char)(1 << g_direction.North);
-        } else {
-          i19 = 0;
-        }
+      /* 東側 */
+      /* 壁が無い & (探索済み|| ~未知壁フラグ)であるとき */
+      if (g_direction.East <= 7) {
+        i41 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i41 = 0;
+      }
 
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i19) != 0) == wall->contents.nowall) {
-          if (g_direction.North <= 7) {
-            i20 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i20 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i20) != 0) == search->contents.known) {
-            /* かつ進行方向が北向きである時 */
-            if (g_direction.North <= 7) {
-              i22 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i22 = 0;
-            }
-
-            if ((move_dir_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i22) != 0) {
-              /* かつ北のマスが更新予定値よりも大きな値の場合 */
-              i16 = (int)(row->data[idx] + 1U);
-              if ((unsigned int)i16 > 255U) {
-                i16 = 255;
-              }
-
-              qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (contour_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] > (int)qY)
-              {
-                /* 更新確認用のMAP更新 */
-                i16 = (int)(row->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                qY = contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_refine_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] =
-                  (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                i16 = (int)(row->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] = (unsigned
-                  short)qY;
-
-                /* 移動方向MAP更新 */
-                i16 = (int)(row->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                if (g_direction.North <= 7) {
-                  move_dir_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_direction.North);
-                } else {
-                  move_dir_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-              }
-
-              /* かつ進行方向が北向きでないとき     */
-            } else {
-              /* かつ北のマスの歩数MAP値が、更新予定値より大きい場合 */
-              i16 = (int)(row->data[idx] + 1U);
-              if ((unsigned int)i16 > 255U) {
-                i16 = 255;
-              }
-
-              qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 5U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (contour_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] > (int)qY)
-              {
-                /* 更新確認用のMAP更新 */
-                i16 = (int)(row->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                qY = contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_refine_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] =
-                  (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                i16 = (int)(row->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 5U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] = (unsigned
-                  short)qY;
-
-                /* 移動方向MAP更新 */
-                i16 = (int)(row->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                if (g_direction.North <= 7) {
-                  move_dir_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_direction.North);
-                } else {
-                  move_dir_map[(i16 + ((col->data[idx] - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-              }
-            }
-          }
-        }
-
-        /* 東側 */
-        /* 壁が無い & 探索済みであるとき */
+      if (((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
+               + 1024] - 1) << 5)) - 1] & i41) != 0) == wall->contents.nowall) {
         if (g_direction.East <= 7) {
-          i21 = (unsigned char)(1 << g_direction.East);
+          i42 = (unsigned char)(1 << g_direction.East);
         } else {
-          i21 = 0;
+          i42 = 0;
         }
 
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i21) != 0) == wall->contents.nowall) {
+        if ((((maze_wall_search[(contor_renew_square[tempn] +
+                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i42) != 0)
+             == search->contents.known) || (unknown_wall_flg == 0)) {
+          /* かつ進行方向が東向きである時 */
           if (g_direction.East <= 7) {
-            i23 = (unsigned char)(1 << g_direction.East);
+            i45 = (unsigned char)(1 << g_direction.East);
           } else {
-            i23 = 0;
+            i45 = 0;
           }
 
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i23) != 0) == search->contents.known) {
-            /* かつ進行方向が東向きである時 */
-            if (g_direction.East <= 7) {
-              i25 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i25 = 0;
+          if ((move_dir_map[(contor_renew_square[tempn] +
+                             ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
+               & i45) != 0) {
+            /* かつ東のマスが更新予定値よりも大きな値の場合 */
+            i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
+            if ((unsigned int)i36 > 255U) {
+              i36 = 255;
             }
 
-            if ((move_dir_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i25) != 0) {
-              /* かつ東のマスが更新予定値よりも大きな値の場合 */
-              i16 = (int)(col->data[idx] + 1U);
-              if ((unsigned int)i16 > 255U) {
-                i16 = 255;
+            u2 = contour_map[(contor_renew_square[tempn] +
+                              ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+              1] + 1U;
+            if (u2 > 65535U) {
+              u2 = 65535U;
+            }
+
+            if (contour_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1]
+                > (int)u2) {
+              /*                                  %更新確認用のMAP更新 */
+              /*                                  contour_refine_map(row(tempn),col(tempn)+1) = contour_refine_map(row(tempn),col(tempn))+uint16(1); */
+              /* 歩数MAP更新 */
+              i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
               }
 
-              qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              u2 = contour_map[(contor_renew_square[tempn] +
+                                ((contor_renew_square[tempn + 1024] - 1) << 5))
+                - 1] + 1U;
+              if (u2 > 65535U) {
+                u2 = 65535U;
               }
 
-              if (contour_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] > (int)qY)
-              {
-                /* 更新確認用のMAP更新 */
-                i16 = (int)(col->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
+              contour_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1] =
+                (unsigned short)u2;
 
-                qY = contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_refine_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] =
-                  (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                i16 = (int)(col->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] = (unsigned
-                  short)qY;
-
-                /* 移動方向MAP更新 */
-                i16 = (int)(col->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                if (g_direction.East <= 7) {
-                  move_dir_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_direction.East);
-                } else {
-                  move_dir_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+              /* 移動方向MAP更新 */
+              i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
               }
 
-              /* かつ進行方向が東向きでないとき     */
-            } else {
-              /* かつ東のマスの歩数MAP値が、更新予定値より大きい場合 */
-              i16 = (int)(col->data[idx] + 1U);
-              if ((unsigned int)i16 > 255U) {
-                i16 = 255;
+              if (g_direction.East <= 7) {
+                move_dir_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1]
+                  = (unsigned char)(1 << g_direction.East);
+              } else {
+                move_dir_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1]
+                  = 0U;
               }
 
-              qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 5U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新マスを更新 */
+              contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+                contor_renew_square[tempn];
+              i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
               }
 
-              if (contour_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] > (int)qY)
-              {
-                /* 更新確認用のMAP更新 */
-                i16 = (int)(col->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
+              contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+                (unsigned char)i36;
 
-                qY = contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_refine_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] =
-                  (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                i16 = (int)(col->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 5U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] = (unsigned
-                  short)qY;
-
-                /* 移動方向MAP更新 */
-                i16 = (int)(col->data[idx] + 1U);
-                if ((unsigned int)i16 > 255U) {
-                  i16 = 255;
-                }
-
-                if (g_direction.East <= 7) {
-                  move_dir_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_direction.East);
-                } else {
-                  move_dir_map[(row->data[idx] + ((i16 - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+              /* 更新マス用インデックスを増加 */
+              i36 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
               }
+
+              contor_renew_square_idx_temp = (unsigned char)i36;
+            }
+
+            /* かつ進行方向が東向きでないとき */
+          } else {
+            /* かつ東のマスの歩数MAP値が、更新予定値より大きい場合 */
+            i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
+            contour_map_tmp = i36;
+            if ((unsigned int)i36 > 255U) {
+              contour_map_tmp = 255;
+            }
+
+            u2 = contour_map[(contor_renew_square[tempn] +
+                              ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+              1] + 5U;
+            if (u2 > 65535U) {
+              u2 = 65535U;
+            }
+
+            if (contour_map[(contor_renew_square[tempn] + ((contour_map_tmp - 1)
+                  << 5)) - 1] > (int)u2) {
+              /*                                  %更新確認用のMAP更新 */
+              /*                                  contour_refine_map(contor_renew_square(tempn,1),contor_renew_square(tempn,2)+1) = contour_refine_map(contor_renew_square(tempn,1),contor_renew_square(tempn,2))+uint16(1); */
+              /* 歩数MAP更新(重みづけあり) */
+              contour_map_tmp = i36;
+              if ((unsigned int)i36 > 255U) {
+                contour_map_tmp = 255;
+              }
+
+              u2 = contour_map[(contor_renew_square[tempn] +
+                                ((contor_renew_square[tempn + 1024] - 1) << 5))
+                - 1] + 5U;
+              if (u2 > 65535U) {
+                u2 = 65535U;
+              }
+
+              contour_map[(contor_renew_square[tempn] + ((contour_map_tmp - 1) <<
+                5)) - 1] = (unsigned short)u2;
+
+              /* 移動方向MAP更新 */
+              contour_map_tmp = i36;
+              if ((unsigned int)i36 > 255U) {
+                contour_map_tmp = 255;
+              }
+
+              if (g_direction.East <= 7) {
+                move_dir_map[(contor_renew_square[tempn] + ((contour_map_tmp - 1)
+                  << 5)) - 1] = (unsigned char)(1 << g_direction.East);
+              } else {
+                move_dir_map[(contor_renew_square[tempn] + ((contour_map_tmp - 1)
+                  << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新マスを更新 */
+              contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+                contor_renew_square[tempn];
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+                (unsigned char)i36;
+
+              /* 更新マス用インデックスを増加 */
+              i36 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_idx_temp = (unsigned char)i36;
             }
           }
         }
+      }
 
-        /* 南側 */
-        /* 壁が無い & 探索済みであるとき */
+      /* 南側 */
+      /* 壁が無い &  (探索済み|| ~未知壁フラグ)であるとき */
+      if (g_direction.South <= 7) {
+        i44 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i44 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
+               + 1024] - 1) << 5)) - 1] & i44) != 0) == wall->contents.nowall) {
         if (g_direction.South <= 7) {
-          i24 = (unsigned char)(1 << g_direction.South);
+          i48 = (unsigned char)(1 << g_direction.South);
         } else {
-          i24 = 0;
+          i48 = 0;
         }
 
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i24) != 0) == wall->contents.nowall) {
+        if ((((maze_wall_search[(contor_renew_square[tempn] +
+                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i48) != 0)
+             == search->contents.known) || (unknown_wall_flg == 0)) {
+          /* かつ進行方向が南向きである時 */
           if (g_direction.South <= 7) {
-            i26 = (unsigned char)(1 << g_direction.South);
+            i50 = (unsigned char)(1 << g_direction.South);
           } else {
-            i26 = 0;
+            i50 = 0;
           }
 
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i26) != 0) == search->contents.known) {
-            /* かつ進行方向が南向きである時 */
-            if (g_direction.South <= 7) {
-              i28 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i28 = 0;
+          if ((move_dir_map[(contor_renew_square[tempn] +
+                             ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
+               & i50) != 0) {
+            /* かつ南のマスが更新予定値よりも大きな値の場合 */
+            qY = contor_renew_square[tempn] - 1U;
+            if (qY > contor_renew_square[tempn]) {
+              qY = 0U;
             }
 
-            if ((move_dir_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i28) != 0) {
-              /* かつ南のマスが更新予定値よりも大きな値の場合 */
-              qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            u2 = contour_map[(contor_renew_square[tempn] +
+                              ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+              1] + 1U;
+            if (u2 > 65535U) {
+              u2 = 65535U;
+            }
+
+            if (contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
+                  5)) - 1] > (int)u2) {
+              /*                                  %更新確認用のMAP更新 */
+              /*                                  contour_refine_map(row(tempn)-1,col(tempn)) = contour_refine_map(row(tempn),col(tempn))+uint16(1); */
+              /* 歩数MAP更新 */
+              qY = contor_renew_square[tempn] - 1U;
+              if (qY > contor_renew_square[tempn]) {
+                qY = 0U;
               }
 
-              if (contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 2] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_direction.South <= 7) {
-                  move_dir_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(1 << g_direction.South);
-                } else {
-                  move_dir_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+              u2 = contour_map[(contor_renew_square[tempn] +
+                                ((contor_renew_square[tempn + 1024] - 1) << 5))
+                - 1] + 1U;
+              if (u2 > 65535U) {
+                u2 = 65535U;
               }
 
-              /* かつ進行方向が南向きでないとき     */
-            } else {
-              /* かつ南のマスの歩数MAP値が、更新予定値より大きい場合 */
-              qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 5U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
+                5)) - 1] = (unsigned short)u2;
+
+              /* 移動方向MAP更新 */
+              qY = contor_renew_square[tempn] - 1U;
+              if (qY > contor_renew_square[tempn]) {
+                qY = 0U;
               }
 
-              if (contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 2] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 5U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_direction.South <= 7) {
-                  move_dir_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(1 << g_direction.South);
-                } else {
-                  move_dir_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+              if (g_direction.South <= 7) {
+                move_dir_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1)
+                  << 5)) - 1] = (unsigned char)(1 << g_direction.South);
+              } else {
+                move_dir_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1)
+                  << 5)) - 1] = 0U;
               }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新マスを更新 */
+              qY = contor_renew_square[tempn] - 1U;
+              if (qY > contor_renew_square[tempn]) {
+                qY = 0U;
+              }
+
+              contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+                (unsigned char)qY;
+              contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+                contor_renew_square[tempn + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i36 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_idx_temp = (unsigned char)i36;
+            }
+
+            /* かつ進行方向が南向きでないとき */
+          } else {
+            /* かつ南のマスの歩数MAP値が、更新予定値より大きい場合 */
+            qY = contor_renew_square[tempn] - 1U;
+            if (qY > contor_renew_square[tempn]) {
+              qY = 0U;
+            }
+
+            u2 = contour_map[(contor_renew_square[tempn] +
+                              ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+              1] + 5U;
+            if (u2 > 65535U) {
+              u2 = 65535U;
+            }
+
+            if (contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
+                  5)) - 1] > (int)u2) {
+              /* 歩数MAP更新(重みづけあり) */
+              qY = contor_renew_square[tempn] - 1U;
+              if (qY > contor_renew_square[tempn]) {
+                qY = 0U;
+              }
+
+              u2 = contour_map[(contor_renew_square[tempn] +
+                                ((contor_renew_square[tempn + 1024] - 1) << 5))
+                - 1] + 5U;
+              if (u2 > 65535U) {
+                u2 = 65535U;
+              }
+
+              contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
+                5)) - 1] = (unsigned short)u2;
+
+              /* 移動方向MAP更新 */
+              qY = contor_renew_square[tempn] - 1U;
+              if (qY > contor_renew_square[tempn]) {
+                qY = 0U;
+              }
+
+              if (g_direction.South <= 7) {
+                move_dir_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1)
+                  << 5)) - 1] = (unsigned char)(1 << g_direction.South);
+              } else {
+                move_dir_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1)
+                  << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新マスを更新 */
+              qY = contor_renew_square[tempn] - 1U;
+              if (qY > contor_renew_square[tempn]) {
+                qY = 0U;
+              }
+
+              contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+                (unsigned char)qY;
+              contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+                contor_renew_square[tempn + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i36 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_idx_temp = (unsigned char)i36;
             }
           }
         }
+      }
 
-        /* 西側 */
-        /* 壁が無い & 探索済みであるとき */
+      /* 西側 */
+      /* 壁が無い &  (探索済み|| ~未知壁フラグ)であるとき */
+      if (g_direction.West <= 7) {
+        i49 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i49 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
+               + 1024] - 1) << 5)) - 1] & i49) != 0) == wall->contents.nowall) {
         if (g_direction.West <= 7) {
-          i27 = (unsigned char)(1 << g_direction.West);
+          i51 = (unsigned char)(1 << g_direction.West);
         } else {
-          i27 = 0;
+          i51 = 0;
         }
 
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i27) != 0) == wall->contents.nowall) {
+        if ((((maze_wall_search[(contor_renew_square[tempn] +
+                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i51) != 0)
+             == search->contents.known) || (unknown_wall_flg == 0)) {
+          /* かつ進行方向が西向きである時 */
           if (g_direction.West <= 7) {
-            i29 = (unsigned char)(1 << g_direction.West);
+            i52 = (unsigned char)(1 << g_direction.West);
           } else {
-            i29 = 0;
+            i52 = 0;
           }
 
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i29) != 0) == search->contents.known) {
-            /* かつ進行方向が西向きである時 */
-            if (g_direction.West <= 7) {
-              i30 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i30 = 0;
+          if ((move_dir_map[(contor_renew_square[tempn] +
+                             ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
+               & i52) != 0) {
+            /* かつ北のマスが更新予定値よりも大きな値の場合 */
+            contour_map_tmp = contor_renew_square[tempn + 1024];
+            qY = contour_map_tmp - 1U;
+            if (qY > (unsigned int)contour_map_tmp) {
+              qY = 0U;
             }
 
-            if ((move_dir_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i30) != 0) {
-              /* かつ北のマスが更新予定値よりも大きな値の場合 */
-              qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            u2 = contour_map[(contor_renew_square[tempn] +
+                              ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+              1] + 1U;
+            if (u2 > 65535U) {
+              u2 = 65535U;
+            }
+
+            if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
+                - 1] > (int)u2) {
+              /* 歩数MAP更新 */
+              contour_map_tmp = contor_renew_square[tempn + 1024];
+              qY = contour_map_tmp - 1U;
+              if (qY > (unsigned int)contour_map_tmp) {
+                qY = 0U;
               }
 
-              if (contour_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_refine_map[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                  - 1] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_direction.West <= 7) {
-                  move_dir_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(1 << g_direction.West);
-                } else {
-                  move_dir_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+              u2 = contour_map[(contor_renew_square[tempn] +
+                                ((contor_renew_square[tempn + 1024] - 1) << 5))
+                - 1] + 1U;
+              if (u2 > 65535U) {
+                u2 = 65535U;
               }
 
-              /* かつ進行方向が西向きでないとき     */
-            } else {
-              /* かつ北のマスの歩数MAP値が、更新予定値より大きい場合 */
-              qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 5U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) -
+                1] = (unsigned short)u2;
+
+              /* 移動方向MAP更新 */
+              contour_map_tmp = contor_renew_square[tempn + 1024];
+              qY = contour_map_tmp - 1U;
+              if (qY > (unsigned int)contour_map_tmp) {
+                qY = 0U;
               }
 
-              if (contour_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = contour_refine_map[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_refine_map[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                  - 1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = contour_map[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 5U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                contour_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_direction.West <= 7) {
-                  move_dir_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(1 << g_direction.West);
-                } else {
-                  move_dir_map[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+              if (g_direction.West <= 7) {
+                move_dir_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
+                  - 1] = (unsigned char)(1 << g_direction.West);
+              } else {
+                move_dir_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
+                  - 1] = 0U;
               }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新マスを更新 */
+              contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+                contor_renew_square[tempn];
+              contour_map_tmp = contor_renew_square[tempn + 1024];
+              qY = contour_map_tmp - 1U;
+              if (qY > (unsigned int)contour_map_tmp) {
+                qY = 0U;
+              }
+
+              contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+                (unsigned char)qY;
+
+              /* 更新マス用インデックスを増加 */
+              i36 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_idx_temp = (unsigned char)i36;
+            }
+
+            /* かつ進行方向が西向きでないとき */
+          } else {
+            /* かつ北のマスの歩数MAP値が、更新予定値より大きい場合 */
+            contour_map_tmp = contor_renew_square[tempn + 1024];
+            qY = contour_map_tmp - 1U;
+            if (qY > (unsigned int)contour_map_tmp) {
+              qY = 0U;
+            }
+
+            u2 = contour_map[(contor_renew_square[tempn] +
+                              ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+              1] + 5U;
+            if (u2 > 65535U) {
+              u2 = 65535U;
+            }
+
+            if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
+                - 1] > (int)u2) {
+              /* 歩数MAP更新(重みづけあり) */
+              contour_map_tmp = contor_renew_square[tempn + 1024];
+              qY = contour_map_tmp - 1U;
+              if (qY > (unsigned int)contour_map_tmp) {
+                qY = 0U;
+              }
+
+              u2 = contour_map[(contor_renew_square[tempn] +
+                                ((contor_renew_square[tempn + 1024] - 1) << 5))
+                - 1] + 5U;
+              if (u2 > 65535U) {
+                u2 = 65535U;
+              }
+
+              contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) -
+                1] = (unsigned short)u2;
+
+              /* 移動方向MAP更新 */
+              contour_map_tmp = contor_renew_square[tempn + 1024];
+              qY = contour_map_tmp - 1U;
+              if (qY > (unsigned int)contour_map_tmp) {
+                qY = 0U;
+              }
+
+              if (g_direction.West <= 7) {
+                move_dir_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
+                  - 1] = (unsigned char)(1 << g_direction.West);
+              } else {
+                move_dir_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
+                  - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新マスを更新 */
+              contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+                contor_renew_square[tempn];
+              contour_map_tmp = contor_renew_square[tempn + 1024];
+              qY = contour_map_tmp - 1U;
+              if (qY > (unsigned int)contour_map_tmp) {
+                qY = 0U;
+              }
+
+              contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+                (unsigned char)qY;
+
+              /* 更新マス用インデックスを増加 */
+              i36 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i36 > 255U) {
+                i36 = 255;
+              }
+
+              contor_renew_square_idx_temp = (unsigned char)i36;
             }
           }
         }
       }
     }
 
-    /* 更新がなければ終了     */
-  } while (!(change_flag == 0));
+    /* ゴール更新マスの更新とインデックスのクリア */
+    for (i33 = 0; i33 < 2048; i33++) {
+      contor_renew_square[i33] = contor_renew_square_temp[i33];
+      contor_renew_square_temp[i33] = 0U;
+    }
 
-  emxFree_uint16_T(&b_num_temp);
-  emxFree_uint16_T(&r1);
-  emxFree_uint8_T(&col);
-  emxFree_uint8_T(&row);
+    contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
+    contor_renew_square_idx_temp = 1U;
+
+    /* 更新がなければ || スタート地点が更新されていれば終了 */
+    if ((change_flag == 0) || (contour_map[0] != 65535)) {
+      exitg1 = true;
+    } else {
+      tempi++;
+    }
+  }
 }
 
 /*
@@ -7180,7 +8411,6 @@ static void make_map_fustrun(const coder_internal_ref *goal_size,
  * 入力 迷路縦サイズ,迷路横サイズ,ゴール座標,迷路情報(16進数),迷路探索情報(16進数)
  * 出力 等高線map,最大経路長
  * Arguments    : coder_internal_ref_2 *max_length
- *                coder_internal_ref_3 *num_temp
  *                const coder_internal_ref_5 *wall
  *                const coder_internal_ref_4 *search
  *                const unsigned char maze_goal[18]
@@ -7192,81 +8422,40 @@ static void make_map_fustrun(const coder_internal_ref *goal_size,
  *                unsigned short *start_num
  * Return Type  : void
  */
-static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
-  coder_internal_ref_3 *num_temp, const coder_internal_ref_5 *wall, const
-  coder_internal_ref_4 *search, const unsigned char maze_goal[18], unsigned char
-  goal_size, const unsigned char maze_wall[1024], const unsigned char
-  maze_wall_search[1024], unsigned short row_num_node[1056], unsigned short
-  col_num_node[1056], unsigned short *start_num)
+static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
+  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+  char maze_goal[18], unsigned char goal_size, const unsigned char maze_wall
+  [1024], const unsigned char maze_wall_search[1024], unsigned short
+  row_num_node[1056], unsigned short col_num_node[1056], unsigned short
+  *start_num)
 {
-  int i35;
-  unsigned short row_num_node_temp[1056];
-  unsigned short col_num_node_temp[1056];
+  unsigned char contor_renew_node_row_idx;
+  unsigned char contor_renew_node_row_idx_temp;
+  unsigned char contor_renew_node_row[2048];
+  unsigned char contor_renew_node_row_temp[2048];
+  unsigned char contor_renew_node_col[2048];
+  unsigned char contor_renew_node_col_temp[2048];
+  unsigned char contor_renew_node_col_idx;
+  unsigned char contor_renew_node_col_idx_temp;
+  int q0;
   unsigned char row_dir_node[1056];
-  int ii;
   unsigned char col_dir_node[1056];
-  int idx;
-  int i36;
-  int i37;
-  int i38;
-  emxArray_uint16_T *row;
-  int i39;
-  emxArray_uint16_T *col;
-  int i40;
-  emxArray_uint16_T *b_num_temp;
-  int row_num_node_tmp;
-  unsigned char change_flag;
-  int i41;
-  int i42;
-  int i43;
-  unsigned int qY;
-  int i44;
-  unsigned short u5;
-  unsigned short i;
-  int i45;
-  int i46;
-  int i47;
-  bool exitg1;
-  int i48;
-  int i49;
-  short ii_data[1056];
-  int i50;
-  int i51;
-  int i52;
-  int i53;
-  int i54;
-  unsigned char a;
-  int i55;
-  int i56;
-  unsigned int u6;
-  int i57;
-  int i58;
-  int i59;
-  int i60;
-  int i61;
-  int i62;
-  int i63;
-  int i64;
-  int i65;
-  int i66;
-  int i67;
-  int i68;
-  int i69;
-  int i70;
-  int i71;
-  int i72;
-  int i73;
-  int i74;
-  int i75;
   int i76;
+  int n;
   int i77;
+  unsigned char u6;
   int i78;
   int i79;
   int i80;
+  unsigned int qY;
   int i81;
+  int row_num_node_tmp;
+  unsigned short i;
+  bool exitg1;
   int i82;
   int i83;
   int i84;
+  unsigned char change_flag;
   int i85;
   int i86;
   int i87;
@@ -7276,15 +8465,18 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
   int i91;
   int i92;
   int i93;
+  unsigned int b_qY;
   int i94;
   int i95;
   int i96;
   int i97;
   int i98;
+  unsigned int c_qY;
   int i99;
   int i100;
   int i101;
   int i102;
+  unsigned int u7;
   int i103;
   int i104;
   int i105;
@@ -7292,9 +8484,72 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
   int i107;
   int i108;
   int i109;
+  int i110;
+  int i111;
+  int i112;
+  int i113;
+  int i114;
+  int i115;
+  int i116;
+  int i117;
+  int i118;
+  int i119;
+  int i120;
+  int i121;
+  int i122;
+  int i123;
+  int i124;
+  int i125;
+  int i126;
+  int i127;
+  int i128;
+  int i129;
+  int i130;
+  int i131;
+  int i132;
+  int i133;
+  int i134;
+  int i135;
+  int i136;
+  int i137;
+  int i138;
+  int i139;
+  int i140;
+  int i141;
+  int i142;
+  int i143;
+  int i144;
+  int i145;
+  int i146;
+  int i147;
+  int i148;
+  int i149;
 
-  /*  make_map_fustrun_diagonal 最短走行用等高線MAPを生成 */
+  /*     %% make_map_fustrun_diagonal 最短走行用等高線MAPを生成 */
   /* ローカル変数設定 */
+  /* コンター更新ノード(行)保管用 */
+  /* 更新座標 */
+  /* 更新座標更新用 */
+  contor_renew_node_row_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_node_row_idx_temp = 1U;
+
+  /* 更新座標更新用 */
+  /* コンター更新ノード（列）保管用 */
+  /* 更新座標 */
+  memset(&contor_renew_node_row[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_node_row_temp[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_node_col[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_node_col_temp[0], 0, sizeof(unsigned char) << 11);
+
+  /* 更新座標更新用 */
+  contor_renew_node_col_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_node_col_idx_temp = 1U;
+
+  /* 更新座標更新用 */
   /* パラメータ設定 */
   /*  迷路パラメータ設定 */
   max_length->contents = 1024U;
@@ -7302,2809 +8557,1787 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
   /*  ルートの重み設定 */
   /* MAPの初期化(すべてのノードにmax_lengthを入力) */
   /* 歩数MAP */
-  /* 更新用MAP */
+  /*  %更新用MAP */
+  /*  row_num_node_temp = ones(33,32,'uint16')*uint16(65535); */
+  /*  col_num_node_temp = ones(32,33,'uint16')*uint16(65535); */
   /* 進行方向保持用ノード作成 */
-  for (i35 = 0; i35 < 1056; i35++) {
-    row_num_node[i35] = MAX_uint16_T;
-    col_num_node[i35] = MAX_uint16_T;
-    row_num_node_temp[i35] = MAX_uint16_T;
-    col_num_node_temp[i35] = MAX_uint16_T;
-    row_dir_node[i35] = 0U;
-    col_dir_node[i35] = 0U;
+  for (q0 = 0; q0 < 1056; q0++) {
+    row_num_node[q0] = MAX_uint16_T;
+    col_num_node[q0] = MAX_uint16_T;
+    row_dir_node[q0] = 0U;
+    col_dir_node[q0] = 0U;
   }
 
   /* ゴールセクションが確定している場合 */
+  *start_num = MAX_uint16_T;
   if (goal_size == 1) {
     /* ゴールマスから、東西南北にマップを展開 */
     /* 北壁 */
-    i35 = maze_goal[0] - 1;
-    ii = (maze_goal[9] + (i35 << 5)) - 1;
+    q0 = maze_goal[0] - 1;
+    i76 = (maze_goal[9] + (q0 << 5)) - 1;
     if (g_direction.North <= 7) {
-      i36 = (unsigned char)(1 << g_direction.North);
+      i77 = (unsigned char)(1 << g_direction.North);
     } else {
-      i36 = 0;
+      i77 = 0;
     }
 
-    if ((maze_wall[ii] & i36) == 0) {
+    if ((maze_wall[i76] & i77) == 0) {
       /* 歩数更新 */
-      i37 = (int)(maze_goal[9] + 1U);
-      i38 = i37;
-      if ((unsigned int)i37 > 255U) {
-        i38 = 255;
+      i78 = (int)(maze_goal[9] + 1U);
+      i79 = i78;
+      if ((unsigned int)i78 > 255U) {
+        i79 = 255;
       }
 
-      row_num_node_tmp = 33 * i35;
-      row_num_node[(i38 + row_num_node_tmp) - 1] = 3U;
+      row_num_node_tmp = 33 * q0;
+      row_num_node[(i79 + row_num_node_tmp) - 1] = 3U;
 
       /* 方向追加 */
-      i35 = i37;
-      if ((unsigned int)i37 > 255U) {
-        i35 = 255;
+      q0 = i78;
+      if ((unsigned int)i78 > 255U) {
+        q0 = 255;
       }
 
       if (g_d_direction.North <= 7) {
-        row_dir_node[(i35 + row_num_node_tmp) - 1] = (unsigned char)(1 <<
+        row_dir_node[(q0 + row_num_node_tmp) - 1] = (unsigned char)(1 <<
           g_d_direction.North);
       } else {
-        row_dir_node[(i35 + row_num_node_tmp) - 1] = 0U;
+        row_dir_node[(q0 + row_num_node_tmp) - 1] = 0U;
       }
 
-      /* 更新用MAP更新 */
-      if ((unsigned int)i37 > 255U) {
-        i37 = 255;
+      /* 更新ノードを更新 */
+      if ((unsigned int)i78 > 255U) {
+        i78 = 255;
       }
 
-      row_num_node_temp[(i37 + row_num_node_tmp) - 1] = 0U;
+      contor_renew_node_row[0] = (unsigned char)i78;
+      contor_renew_node_row[1024] = maze_goal[0];
+
+      /* 更新マス用インデックスを増加 */
+      contor_renew_node_row_idx = 2U;
     }
 
     /* 東壁 */
     if (g_direction.East <= 7) {
-      i39 = (unsigned char)(1 << g_direction.East);
+      i80 = (unsigned char)(1 << g_direction.East);
     } else {
-      i39 = 0;
+      i80 = 0;
     }
 
-    if ((maze_wall[ii] & i39) == 0) {
+    if ((maze_wall[i76] & i80) == 0) {
       /* 歩数更新 */
-      i35 = (int)(maze_goal[0] + 1U);
-      i37 = i35;
-      if ((unsigned int)i35 > 255U) {
-        i37 = 255;
+      q0 = (int)(maze_goal[0] + 1U);
+      i78 = q0;
+      if ((unsigned int)q0 > 255U) {
+        i78 = 255;
       }
 
-      col_num_node[(maze_goal[9] + ((i37 - 1) << 5)) - 1] = 3U;
+      col_num_node[(maze_goal[9] + ((i78 - 1) << 5)) - 1] = 3U;
 
       /* 方向追加 */
-      i37 = i35;
-      if ((unsigned int)i35 > 255U) {
-        i37 = 255;
+      i78 = q0;
+      if ((unsigned int)q0 > 255U) {
+        i78 = 255;
       }
 
       if (g_d_direction.East <= 7) {
-        col_dir_node[(maze_goal[9] + ((i37 - 1) << 5)) - 1] = (unsigned char)(1 <<
+        col_dir_node[(maze_goal[9] + ((i78 - 1) << 5)) - 1] = (unsigned char)(1 <<
           g_d_direction.East);
       } else {
-        col_dir_node[(maze_goal[9] + ((i37 - 1) << 5)) - 1] = 0U;
+        col_dir_node[(maze_goal[9] + ((i78 - 1) << 5)) - 1] = 0U;
       }
 
-      /* 更新用MAP更新 */
-      if ((unsigned int)i35 > 255U) {
-        i35 = 255;
+      /* 更新ノードを更新 */
+      contor_renew_node_col[0] = maze_goal[9];
+      if ((unsigned int)q0 > 255U) {
+        q0 = 255;
       }
 
-      col_num_node_temp[(maze_goal[9] + ((i35 - 1) << 5)) - 1] = 0U;
+      contor_renew_node_col[1024] = (unsigned char)q0;
+
+      /* 更新マス用インデックスを増加 */
+      contor_renew_node_col_idx = 2U;
     }
 
     /* 南壁 */
     if (g_direction.South <= 7) {
-      i43 = (unsigned char)(1 << g_direction.South);
+      i83 = (unsigned char)(1 << g_direction.South);
     } else {
-      i43 = 0;
+      i83 = 0;
     }
 
-    if ((maze_wall[ii] & i43) == 0) {
+    if ((maze_wall[i76] & i83) == 0) {
       /* 歩数更新 */
       row_num_node_tmp = (maze_goal[9] + 33 * (maze_goal[0] - 1)) - 1;
       row_num_node[row_num_node_tmp] = 3U;
 
       /* 方向追加 */
       if (g_d_direction.South <= 7) {
-        i47 = (unsigned char)(1 << g_d_direction.South);
+        i87 = (unsigned char)(1 << g_d_direction.South);
       } else {
-        i47 = 0;
+        i87 = 0;
       }
 
       row_dir_node[row_num_node_tmp] = (unsigned char)
-        (row_dir_node[row_num_node_tmp] | i47);
+        (row_dir_node[row_num_node_tmp] | i87);
 
-      /* 更新用MAP更新 */
-      row_num_node_temp[row_num_node_tmp] = 0U;
+      /* 更新ノードを更新 */
+      contor_renew_node_row[contor_renew_node_row_idx - 1] = maze_goal[9];
+      contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[0];
+
+      /* 更新マス用インデックスを増加 */
+      contor_renew_node_row_idx++;
     }
 
     /* 西壁 */
     if (g_direction.West <= 7) {
-      i45 = (unsigned char)(1 << g_direction.West);
+      i85 = (unsigned char)(1 << g_direction.West);
     } else {
-      i45 = 0;
+      i85 = 0;
     }
 
-    if ((maze_wall[ii] & i45) == 0) {
+    if ((maze_wall[i76] & i85) == 0) {
       /* 歩数更新 */
-      col_num_node[ii] = 3U;
+      col_num_node[i76] = 3U;
 
       /* 方向追加 */
       if (g_d_direction.West <= 7) {
-        i49 = (unsigned char)(1 << g_d_direction.West);
+        i89 = (unsigned char)(1 << g_d_direction.West);
       } else {
-        i49 = 0;
+        i89 = 0;
       }
 
-      col_dir_node[ii] = (unsigned char)(col_dir_node[ii] | i49);
+      col_dir_node[i76] = (unsigned char)(col_dir_node[i76] | i89);
 
-      /* 更新用MAP更新 */
-      col_num_node_temp[ii] = 0U;
+      /* 更新ノードを更新 */
+      contor_renew_node_col[contor_renew_node_col_idx - 1] = maze_goal[9];
+      contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[0];
+
+      /* 更新マス用インデックスを増加 */
+      contor_renew_node_col_idx++;
     }
 
-    /* ゴールセクションが確定していない場合     */
+    /* ゴールセクションが確定していない場合 */
   } else {
     /* ゴールノードに */
     /*  歩数：0を入力 */
     /*  進行方向 : 壁がなければ全方向=0b11111111=255 */
     /*  を入力 */
-    i35 = goal_size;
-    for (idx = 0; idx < i35; idx++) {
+    q0 = goal_size;
+    for (n = 0; n < q0; n++) {
       /* 北壁 */
-      ii = maze_goal[idx] - 1;
-      i37 = maze_goal[idx + 9];
-      i38 = (i37 + (ii << 5)) - 1;
+      i76 = maze_goal[n] - 1;
+      u6 = maze_goal[n + 9];
+      i78 = (u6 + (i76 << 5)) - 1;
       if (g_direction.North <= 7) {
-        i40 = (unsigned char)(1 << g_direction.North);
+        i81 = (unsigned char)(1 << g_direction.North);
       } else {
-        i40 = 0;
+        i81 = 0;
       }
 
-      if ((maze_wall[i38] & i40) == 0) {
+      if ((maze_wall[i78] & i81) == 0) {
         /* 歩数更新 */
-        i41 = (int)(maze_goal[idx + 9] + 1U);
-        i42 = i41;
-        if ((unsigned int)i41 > 255U) {
-          i42 = 255;
+        i79 = (int)(maze_goal[n + 9] + 1U);
+        i82 = i79;
+        if ((unsigned int)i79 > 255U) {
+          i82 = 255;
         }
 
-        row_num_node_tmp = 33 * ii;
-        row_num_node[(i42 + row_num_node_tmp) - 1] = 0U;
+        row_num_node_tmp = 33 * i76;
+        row_num_node[(i82 + row_num_node_tmp) - 1] = 0U;
 
         /* 方向更新 */
-        if ((unsigned int)i41 > 255U) {
-          i41 = 255;
+        i76 = i79;
+        if ((unsigned int)i79 > 255U) {
+          i76 = 255;
         }
 
-        row_dir_node[(i41 + row_num_node_tmp) - 1] = MAX_uint8_T;
+        row_dir_node[(i76 + row_num_node_tmp) - 1] = MAX_uint8_T;
+
+        /* 更新ノードを更新 */
+        if ((unsigned int)i79 > 255U) {
+          i79 = 255;
+        }
+
+        contor_renew_node_row[contor_renew_node_row_idx - 1] = (unsigned char)
+          i79;
+        contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[n];
+
+        /* 更新マス用インデックスを増加 */
+        i76 = (int)(contor_renew_node_row_idx + 1U);
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
+        }
+
+        contor_renew_node_row_idx = (unsigned char)i76;
       }
 
       /* 東壁 */
       if (g_direction.East <= 7) {
-        i44 = (unsigned char)(1 << g_direction.East);
+        i84 = (unsigned char)(1 << g_direction.East);
       } else {
-        i44 = 0;
+        i84 = 0;
       }
 
-      if ((maze_wall[i38] & i44) == 0) {
+      if ((maze_wall[i78] & i84) == 0) {
         /* 歩数更新 */
-        ii = (int)(maze_goal[idx] + 1U);
-        i41 = ii;
-        if ((unsigned int)ii > 255U) {
-          i41 = 255;
+        i76 = (int)(maze_goal[n] + 1U);
+        i79 = i76;
+        if ((unsigned int)i76 > 255U) {
+          i79 = 255;
         }
 
-        col_num_node[(i37 + ((i41 - 1) << 5)) - 1] = 0U;
+        col_num_node[(u6 + ((i79 - 1) << 5)) - 1] = 0U;
 
         /* 方向更新 */
-        if ((unsigned int)ii > 255U) {
-          ii = 255;
+        i79 = i76;
+        if ((unsigned int)i76 > 255U) {
+          i79 = 255;
         }
 
-        col_dir_node[(i37 + ((ii - 1) << 5)) - 1] = MAX_uint8_T;
+        col_dir_node[(u6 + ((i79 - 1) << 5)) - 1] = MAX_uint8_T;
+
+        /* 更新ノードを更新 */
+        contor_renew_node_col[contor_renew_node_col_idx - 1] = u6;
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
+        }
+
+        contor_renew_node_col[contor_renew_node_col_idx + 1023] = (unsigned char)
+          i76;
+
+        /* 更新マス用インデックスを増加 */
+        i76 = (int)(contor_renew_node_col_idx + 1U);
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
+        }
+
+        contor_renew_node_col_idx = (unsigned char)i76;
       }
 
       /* 南壁 */
       if (g_direction.South <= 7) {
-        i46 = (unsigned char)(1 << g_direction.South);
+        i86 = (unsigned char)(1 << g_direction.South);
       } else {
-        i46 = 0;
+        i86 = 0;
       }
 
-      if ((maze_wall[i38] & i46) == 0) {
+      if ((maze_wall[i78] & i86) == 0) {
         /* 歩数更新 */
-        row_num_node_tmp = (i37 + 33 * (maze_goal[idx] - 1)) - 1;
+        row_num_node_tmp = (u6 + 33 * (maze_goal[n] - 1)) - 1;
         row_num_node[row_num_node_tmp] = 0U;
 
         /* 方向更新 */
         row_dir_node[row_num_node_tmp] = MAX_uint8_T;
+
+        /* 更新ノードを更新 */
+        contor_renew_node_row[contor_renew_node_row_idx - 1] = u6;
+        contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[n];
+
+        /* 更新マス用インデックスを増加 */
+        i76 = (int)(contor_renew_node_row_idx + 1U);
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
+        }
+
+        contor_renew_node_row_idx = (unsigned char)i76;
       }
 
       /* 西壁 */
       if (g_direction.West <= 7) {
-        i48 = (unsigned char)(1 << g_direction.West);
+        i88 = (unsigned char)(1 << g_direction.West);
       } else {
-        i48 = 0;
+        i88 = 0;
       }
 
-      if ((maze_wall[i38] & i48) == 0) {
+      if ((maze_wall[i78] & i88) == 0) {
         /* 歩数更新 */
-        col_num_node[i38] = 0U;
+        col_num_node[i78] = 0U;
 
         /* 方向更新 */
-        col_dir_node[i38] = MAX_uint8_T;
+        col_dir_node[i78] = MAX_uint8_T;
+
+        /* 更新ノードを更新 */
+        contor_renew_node_col[contor_renew_node_col_idx - 1] = u6;
+        contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[n];
+
+        /* 更新マス用インデックスを増加 */
+        i76 = (int)(contor_renew_node_col_idx + 1U);
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
+        }
+
+        contor_renew_node_col_idx = (unsigned char)i76;
       }
     }
 
-    /* 更新判定用変数(重みづけなしの歩数マップ) */
-    memcpy(&row_num_node_temp[0], &row_num_node[0], 1056U * sizeof(unsigned
-            short));
-    memcpy(&col_num_node_temp[0], &col_num_node[0], 1056U * sizeof(unsigned
-            short));
+    /*      %更新判定用変数(重みづけなしの歩数マップ) */
+    /*      row_num_node_temp = row_num_node; */
+    /*      col_num_node_temp = col_num_node; */
   }
 
-  emxInit_uint16_T(&row, 1);
-  emxInit_uint16_T(&col, 1);
-  emxInit_uint16_T(&b_num_temp, 1);
-  do {
+  q0 = max_length->contents;
+  qY = q0 - 1U;
+  if (qY > (unsigned int)q0) {
+    qY = 0U;
+  }
+
+  i = 0U;
+  exitg1 = false;
+  while ((!exitg1) && (i <= (unsigned short)qY)) {
+    /* 更新確認用の歩数カウントは0~max_length */
     change_flag = 0U;
 
     /* map更新確認用フラグ */
-    idx = max_length->contents;
-    qY = idx - 1U;
-    if (qY > (unsigned int)idx) {
-      qY = 0U;
-    }
-
-    u5 = (unsigned short)qY;
-    for (i = 0; i <= u5; i++) {
-      /* 更新確認用の歩数カウントは0~max_length */
-      /* Row_Edgeの処理[33行,32列] */
-      /* 歩数が確定している座標を検索 */
-      /* 最初は0,更新され、増加したマスを次々検索していく */
-      idx = 0;
-      ii = 0;
-      exitg1 = false;
-      while ((!exitg1) && (ii < 1056)) {
-        if (row_num_node_temp[ii] == i) {
-          idx++;
-          ii_data[idx - 1] = (short)(ii + 1);
-          if (idx >= 1056) {
-            exitg1 = true;
-          } else {
-            ii++;
-          }
-        } else {
-          ii++;
-        }
-      }
-
-      if (1 > idx) {
-        ii = 0;
+    /* Row_Edgeの処理[33行,32列] */
+    /* 検索した座標に対し、歩数mapを更新 */
+    q0 = contor_renew_node_row_idx;
+    for (n = 0; n <= q0 - 2; n++) {
+      /* 北側 */
+      /* 壁が無い & 探索済みであるとき */
+      i76 = contor_renew_node_row[n + 1024] - 1;
+      i78 = (contor_renew_node_row[n] + (i76 << 5)) - 1;
+      if (g_direction.North <= 7) {
+        i90 = (unsigned char)(1 << g_direction.North);
       } else {
-        ii = idx;
+        i90 = 0;
       }
 
-      i35 = num_temp->contents->size[0];
-      num_temp->contents->size[0] = ii;
-      emxEnsureCapacity_uint16_T(num_temp->contents, i35);
-      for (i35 = 0; i35 < ii; i35++) {
-        num_temp->contents->data[i35] = (unsigned short)ii_data[i35];
-      }
-
-      /* 33行なので、行番号:33で割ったあまり */
-      i35 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i35);
-      ii = num_temp->contents->size[0];
-      for (i35 = 0; i35 < ii; i35++) {
-        idx = num_temp->contents->data[i35];
-        qY = idx - 1U;
-        if (qY > (unsigned int)idx) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i35] = (unsigned short)qY;
-      }
-
-      d_rem(b_num_temp, row);
-      i35 = row->size[0];
-      emxEnsureCapacity_uint16_T(row, i35);
-      ii = row->size[0];
-      for (i35 = 0; i35 < ii; i35++) {
-        qY = row->data[i35] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        row->data[i35] = (unsigned short)qY;
-      }
-
-      /* 列番号:33で割ったときの商 */
-      i35 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i35);
-      ii = num_temp->contents->size[0];
-      for (i35 = 0; i35 < ii; i35++) {
-        idx = num_temp->contents->data[i35];
-        qY = idx - 1U;
-        if (qY > (unsigned int)idx) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i35] = (unsigned short)qY;
-      }
-
-      idivide(b_num_temp, 33.0, col);
-      i35 = col->size[0];
-      emxEnsureCapacity_uint16_T(col, i35);
-      ii = col->size[0];
-      for (i35 = 0; i35 < ii; i35++) {
-        qY = col->data[i35] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        col->data[i35] = (unsigned short)qY;
-      }
-
-      /* 見つかったマスの数 */
-      /* 検索した座標に対し、歩数mapを更新 */
-      i35 = row->size[0];
-      if (i35 < 0) {
-        i35 = 0;
-      } else {
-        if (i35 > 65535) {
-          i35 = 65535;
-        }
-      }
-
-      for (idx = 0; idx < i35; idx++) {
-        /* 北側 */
-        /* 壁が無い & 探索済みであるとき */
+      if (((maze_wall[i78] & i90) != 0) == wall->contents.nowall) {
         if (g_direction.North <= 7) {
-          i50 = (unsigned char)(1 << g_direction.North);
-        } else {
-          i50 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i50) != 0) == wall->contents.nowall) {
-          if (g_direction.North <= 7) {
-            i51 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i51 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i51) != 0) == search->contents.known) {
-            /* かつ進行方向が北向きである時 */
-            if (g_d_direction.North <= 7) {
-              i53 = (unsigned char)(1 << g_d_direction.North);
-            } else {
-              i53 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i53) != 0) {
-              /* かつ北のノードが更新予定値よりも大きな値の場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 6U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] > (int)
-                  u6) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 6U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North);
-                } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 6U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North <= 7) {
-                    i64 = (unsigned char)(1 << g_d_direction.North);
-                  } else {
-                    i64 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(a | i64);
-                }
-              }
-
-              /* かつ進行方向が北向きでないとき     */
-            } else {
-              /* かつ北のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] > (int)
-                  u6) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North);
-                } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North <= 7) {
-                    i63 = (unsigned char)(1 << g_d_direction.North);
-                  } else {
-                    i63 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(a | i63);
-                }
-              }
-            }
-          }
-        }
-
-        /* 北東側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.East <= 7) {
-          i52 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i52 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i52) != 0) == wall->contents.nowall) {
-          if (g_direction.East <= 7) {
-            i54 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i54 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i54) != 0) == search->contents.known) {
-            /* かつ進行方向が北東向きである時 */
-            if (g_d_direction.North_East <= 7) {
-              i56 = (unsigned char)(1 << g_d_direction.North_East);
-            } else {
-              i56 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i56) != 0) {
-              /* かつ北東のノードが更新予定値よりも大きな値の場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 4U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] >
-                  (int)u6) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_East <= 7) {
-                    i70 = (unsigned char)(1 << g_d_direction.North_East);
-                  } else {
-                    i70 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(a | i70);
-                }
-              }
-
-              /* かつ進行方向が北東向きでないとき     */
-            } else {
-              /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] >
-                  (int)u6) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_East <= 7) {
-                    i69 = (unsigned char)(1 << g_d_direction.North_East);
-                  } else {
-                    i69 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(a | i69);
-                }
-              }
-            }
-          }
-        }
-
-        /* 東側は柱 */
-        /* 南東側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2];
-        if (g_direction.East <= 7) {
-          i55 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i55 = 0;
-        }
-
-        if (((a & i55) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-            2];
-          if (g_direction.East <= 7) {
-            i57 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i57 = 0;
-          }
-
-          if (((a & i57) != 0) == search->contents.known) {
-            /* かつ進行方向が南東向きである時 */
-            if (g_d_direction.South_East <= 7) {
-              i59 = (unsigned char)(1 << g_d_direction.South_East);
-            } else {
-              i59 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i59) != 0) {
-              /* かつ南東のノードが更新予定値よりも大きな値の場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 4U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] >
-                  (int)u6) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.South_East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                    (unsigned char)(1 << g_d_direction.South_East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.South_East <= 7) {
-                    i76 = (unsigned char)(1 << g_d_direction.South_East);
-                  } else {
-                    i76 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                    (unsigned char)(a | i76);
-                }
-              }
-
-              /* かつ進行方向が南東向きでないとき     */
-            } else {
-              /* かつ南東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] >
-                  (int)u6) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.South_East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                    (unsigned char)(1 << g_d_direction.South_East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.South_East <= 7) {
-                    i75 = (unsigned char)(1 << g_d_direction.South_East);
-                  } else {
-                    i75 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 2] =
-                    (unsigned char)(a | i75);
-                }
-              }
-            }
-          }
-        }
-
-        /* 南側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2];
-        if (g_direction.South <= 7) {
-          i58 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i58 = 0;
-        }
-
-        if (((a & i58) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-            2];
-          if (g_direction.South <= 7) {
-            i60 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i60 = 0;
-          }
-
-          if (((a & i60) != 0) == search->contents.known) {
-            /* かつ進行方向が南向きである時 */
-            if (g_d_direction.South <= 7) {
-              i62 = (unsigned char)(1 << g_d_direction.South);
-            } else {
-              i62 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i62) != 0) {
-              /* かつ南のノードが更新予定値よりも大きな値の場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 6U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  2] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 6U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = (unsigned char)(1 << g_d_direction.South);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 6U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                    2] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1))
-                    - 2];
-                  if (g_d_direction.South <= 7) {
-                    i73 = (unsigned char)(1 << g_d_direction.South);
-                  } else {
-                    i73 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = (unsigned char)(a | i73);
-                }
-              }
-
-              /* かつ進行方向が南向きでないとき     */
-            } else {
-              /* かつ南のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  2] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = (unsigned char)(1 << g_d_direction.South);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                    2] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1))
-                    - 2];
-                  if (g_d_direction.South <= 7) {
-                    i72 = (unsigned char)(1 << g_d_direction.South);
-                  } else {
-                    i72 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 2]
-                    = (unsigned char)(a | i72);
-                }
-              }
-            }
-          }
-        }
-
-        /* 南西側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2];
-        if (g_direction.West <= 7) {
-          i61 = (unsigned char)(1 << g_direction.West);
-        } else {
-          i61 = 0;
-        }
-
-        if (((a & i61) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-            2];
-          if (g_direction.West <= 7) {
-            i65 = (unsigned char)(1 << g_direction.West);
-          } else {
-            i65 = 0;
-          }
-
-          if (((a & i65) != 0) == search->contents.known) {
-            /* かつ進行方向が南西向きである時 */
-            if (g_d_direction.South_West <= 7) {
-              i67 = (unsigned char)(1 << g_d_direction.South_West);
-            } else {
-              i67 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i67) != 0) {
-              /* かつ南西のノードが更新予定値よりも大きな値の場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 4U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                  2] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 2] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(1 << g_d_direction.South_West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 2] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 2];
-                  if (g_d_direction.South_West <= 7) {
-                    i79 = (unsigned char)(1 << g_d_direction.South_West);
-                  } else {
-                    i79 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(a | i79);
-                }
-              }
-
-              /* かつ進行方向が南西向きでないとき     */
-            } else {
-              /* かつ南西のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                  2] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 2] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 2]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(1 << g_d_direction.South_West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 2] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 2];
-                  if (g_d_direction.South_West <= 7) {
-                    i78 = (unsigned char)(1 << g_d_direction.South_West);
-                  } else {
-                    i78 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    2] = (unsigned char)(a | i78);
-                }
-              }
-            }
-          }
-        }
-
-        /* 北西側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.West <= 7) {
-          i66 = (unsigned char)(1 << g_direction.West);
-        } else {
-          i66 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i66) != 0) == wall->contents.nowall) {
-          if (g_direction.West <= 7) {
-            i68 = (unsigned char)(1 << g_direction.West);
-          } else {
-            i68 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i68) != 0) == search->contents.known) {
-            /* かつ進行方向が北西向きである時 */
-            if (g_d_direction.North_West <= 7) {
-              i71 = (unsigned char)(1 << g_d_direction.North_West);
-            } else {
-              i71 = 0;
-            }
-
-            if ((row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                 & i71) != 0) {
-              /* かつ北西のノードが更新予定値よりも大きな値の場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 4U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                  1] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.North_West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = (unsigned char)(1 << g_d_direction.North_West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  if (g_d_direction.North_West <= 7) {
-                    i84 = (unsigned char)(1 << g_d_direction.North_West);
-                  } else {
-                    i84 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = (unsigned char)(col_dir_node[(row->data[idx] +
-                    ((col->data[idx] - 1) << 5)) - 1] | i84);
-                }
-              }
-
-              /* かつ進行方向が北西向きでないとき     */
-            } else {
-              /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                  1] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] -
-                  1)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.North_West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = (unsigned char)(1 << g_d_direction.North_West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                    - 1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  if (g_d_direction.North_West <= 7) {
-                    i83 = (unsigned char)(1 << g_d_direction.North_West);
-                  } else {
-                    i83 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                    1] = (unsigned char)(col_dir_node[(row->data[idx] +
-                    ((col->data[idx] - 1) << 5)) - 1] | i83);
-                }
-              }
-            }
-          }
-        }
-      }
-
-      /* Col_Edgeの処理[32行,33列] */
-      /* 歩数が確定している座標を検索 */
-      /* 最初は0,更新され、増加したマスを次々検索していく */
-      idx = 0;
-      ii = 0;
-      exitg1 = false;
-      while ((!exitg1) && (ii < 1056)) {
-        if (col_num_node_temp[ii] == i) {
-          idx++;
-          ii_data[idx - 1] = (short)(ii + 1);
-          if (idx >= 1056) {
-            exitg1 = true;
-          } else {
-            ii++;
-          }
-        } else {
-          ii++;
-        }
-      }
-
-      if (1 > idx) {
-        ii = 0;
-      } else {
-        ii = idx;
-      }
-
-      i35 = num_temp->contents->size[0];
-      num_temp->contents->size[0] = ii;
-      emxEnsureCapacity_uint16_T(num_temp->contents, i35);
-      for (i35 = 0; i35 < ii; i35++) {
-        num_temp->contents->data[i35] = (unsigned short)ii_data[i35];
-      }
-
-      /* 32行なので、行番号:32で割ったあまり */
-      i35 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i35);
-      ii = num_temp->contents->size[0];
-      for (i35 = 0; i35 < ii; i35++) {
-        idx = num_temp->contents->data[i35];
-        qY = idx - 1U;
-        if (qY > (unsigned int)idx) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i35] = (unsigned short)qY;
-      }
-
-      c_rem(b_num_temp, row);
-      i35 = row->size[0];
-      emxEnsureCapacity_uint16_T(row, i35);
-      ii = row->size[0];
-      for (i35 = 0; i35 < ii; i35++) {
-        qY = row->data[i35] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        row->data[i35] = (unsigned short)qY;
-      }
-
-      /* 列番号:32で割ったときの商 */
-      i35 = b_num_temp->size[0];
-      b_num_temp->size[0] = num_temp->contents->size[0];
-      emxEnsureCapacity_uint16_T(b_num_temp, i35);
-      ii = num_temp->contents->size[0];
-      for (i35 = 0; i35 < ii; i35++) {
-        idx = num_temp->contents->data[i35];
-        qY = idx - 1U;
-        if (qY > (unsigned int)idx) {
-          qY = 0U;
-        }
-
-        b_num_temp->data[i35] = (unsigned short)qY;
-      }
-
-      idivide(b_num_temp, 32.0, col);
-      i35 = col->size[0];
-      emxEnsureCapacity_uint16_T(col, i35);
-      ii = col->size[0];
-      for (i35 = 0; i35 < ii; i35++) {
-        qY = col->data[i35] + 1U;
-        if (qY > 65535U) {
-          qY = 65535U;
-        }
-
-        col->data[i35] = (unsigned short)qY;
-      }
-
-      /* 見つかったマスの数 */
-      /* 検索した座標に対し、歩数mapを更新 */
-      i35 = row->size[0];
-      if (i35 < 0) {
-        i35 = 0;
-      } else {
-        if (i35 > 65535) {
-          i35 = 65535;
-        }
-      }
-
-      for (idx = 0; idx < i35; idx++) {
-        /* 北側は壁 */
-        /* 北東側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.North <= 7) {
-          i74 = (unsigned char)(1 << g_direction.North);
-        } else {
-          i74 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i74) != 0) == wall->contents.nowall) {
-          if (g_direction.North <= 7) {
-            i77 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i77 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i77) != 0) == search->contents.known) {
-            /* かつ進行方向が北東向きである時 */
-            if (g_d_direction.North_East <= 7) {
-              i81 = (unsigned char)(1 << g_d_direction.North_East);
-            } else {
-              i81 = 0;
-            }
-
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i81) != 0) {
-              /* かつ北東のノードが更新予定値よりも大きな値の場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 4U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] > (int)
-                  u6) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_East <= 7) {
-                    i95 = (unsigned char)(1 << g_d_direction.North_East);
-                  } else {
-                    i95 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(a | i95);
-                }
-              }
-
-              /* かつ進行方向が北東向きでないとき     */
-            } else {
-              /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] > (int)
-                  u6) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_East <= 7) {
-                    i94 = (unsigned char)(1 << g_d_direction.North_East);
-                  } else {
-                    i94 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 1)) - 1] =
-                    (unsigned char)(a | i94);
-                }
-              }
-            }
-          }
-        }
-
-        /* 東側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.East <= 7) {
-          i80 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i80 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i80) != 0) == wall->contents.nowall) {
-          if (g_direction.East <= 7) {
-            i82 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i82 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i82) != 0) == search->contents.known) {
-            /* かつ進行方向が東向きである時 */
-            if (g_d_direction.East <= 7) {
-              i86 = (unsigned char)(1 << g_d_direction.East);
-            } else {
-              i86 = 0;
-            }
-
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i86) != 0) {
-              /* かつ東のノードが更新予定値よりも大きな値の場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 6U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] >
-                  (int)u6) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 6U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_d_direction.East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 6U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.East <= 7) {
-                    i101 = (unsigned char)(1 << g_d_direction.East);
-                  } else {
-                    i101 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(a | i101);
-                }
-              }
-
-              /* かつ進行方向が東向きでないとき     */
-            } else {
-              /* かつ東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
-              }
-
-              if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] >
-                  (int)u6) {
-                /* 更新確認用のMAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node_temp[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.East <= 7) {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(1 << g_d_direction.East);
-                } else {
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1];
-                  qY = col->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.East <= 7) {
-                    i100 = (unsigned char)(1 << g_d_direction.East);
-                  } else {
-                    i100 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + (((int)qY - 1) << 5)) - 1] =
-                    (unsigned char)(a | i100);
-                }
-              }
-            }
-          }
-        }
-
-        /* 南東側 */
-        /* 壁が無い & 探索済みであるとき */
-        if (g_direction.South <= 7) {
-          i85 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i85 = 0;
-        }
-
-        if (((maze_wall[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1] &
-              i85) != 0) == wall->contents.nowall) {
-          if (g_direction.South <= 7) {
-            i87 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i87 = 0;
-          }
-
-          if (((maze_wall_search[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                - 1] & i87) != 0) == search->contents.known) {
-            /* かつ進行方向が南東向きである時 */
-            if (g_d_direction.South_East <= 7) {
-              i89 = (unsigned char)(1 << g_d_direction.South_East);
-            } else {
-              i89 = 0;
-            }
-
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i89) != 0) {
-              /* かつ南東のノードが更新予定値よりも大きな値の場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 4U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_East <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = (unsigned char)(1 << g_d_direction.South_East);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                    1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  if (g_d_direction.South_East <= 7) {
-                    i97 = (unsigned char)(1 << g_d_direction.South_East);
-                  } else {
-                    i97 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = (unsigned char)(row_dir_node[(row->data[idx] + 33 *
-                    (col->data[idx] - 1)) - 1] | i97);
-                }
-              }
-
-              /* かつ進行方向が南東向きでないとき     */
-            } else {
-              /* かつ南東のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                  1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_East <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = (unsigned char)(1 << g_d_direction.South_East);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南東のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 1)) -
-                    1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  if (g_d_direction.South_East <= 7) {
-                    i96 = (unsigned char)(1 << g_d_direction.South_East);
-                  } else {
-                    i96 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 1)) - 1]
-                    = (unsigned char)(row_dir_node[(row->data[idx] + 33 *
-                    (col->data[idx] - 1)) - 1] | i96);
-                }
-              }
-            }
-          }
-        }
-
-        /* 南側は柱 */
-        /* 南西側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1];
-        if (g_direction.South <= 7) {
-          i88 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i88 = 0;
-        }
-
-        if (((a & i88) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-            1];
-          if (g_direction.South <= 7) {
-            i90 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i90 = 0;
-          }
-
-          if (((a & i90) != 0) == search->contents.known) {
-            /* かつ進行方向が南西向きである時 */
-            if (g_d_direction.South_West <= 7) {
-              i92 = (unsigned char)(1 << g_d_direction.South_West);
-            } else {
-              i92 = 0;
-            }
-
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i92) != 0) {
-              /* かつ南西のノードが更新予定値よりも大きな値の場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 4U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 2)) -
-                  1] = (unsigned short)qY;
-
-                /* 歩数MAP更新 */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_West <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = (unsigned char)(1 << g_d_direction.South_West);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) -
-                    1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2))
-                    - 1];
-                  if (g_d_direction.South_West <= 7) {
-                    i104 = (unsigned char)(1 << g_d_direction.South_West);
-                  } else {
-                    i104 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = (unsigned char)(a | i104);
-                }
-              }
-
-              /* かつ進行方向が南西向きでないとき     */
-            } else {
-              /* かつ南西のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
-              }
-
-              if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                  > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node_temp[(row->data[idx] + 33 * (col->data[idx] - 2)) -
-                  1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.South_West <= 7) {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = (unsigned char)(1 << g_d_direction.South_West);
-                } else {
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ南西のノードが更新予定値と同じ場合 */
-              } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (row_num_node[(row->data[idx] + 33 * (col->data[idx] - 2)) -
-                    1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2))
-                    - 1];
-                  if (g_d_direction.South_West <= 7) {
-                    i103 = (unsigned char)(1 << g_d_direction.South_West);
-                  } else {
-                    i103 = 0;
-                  }
-
-                  row_dir_node[(row->data[idx] + 33 * (col->data[idx] - 2)) - 1]
-                    = (unsigned char)(a | i103);
-                }
-              }
-            }
-          }
-        }
-
-        /* 西側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1];
-        if (g_direction.West <= 7) {
-          i91 = (unsigned char)(1 << g_direction.West);
+          i91 = (unsigned char)(1 << g_direction.North);
         } else {
           i91 = 0;
         }
 
-        if (((a & i91) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-            1];
-          if (g_direction.West <= 7) {
-            i93 = (unsigned char)(1 << g_direction.West);
+        if (((maze_wall_search[i78] & i91) != 0) == search->contents.known) {
+          /* かつ進行方向が北向きである時 */
+          i76 *= 33;
+          i78 = (contor_renew_node_row[n] + i76) - 1;
+          if (g_d_direction.North <= 7) {
+            i96 = (unsigned char)(1 << g_d_direction.North);
           } else {
-            i93 = 0;
+            i96 = 0;
           }
 
-          if (((a & i93) != 0) == search->contents.known) {
-            /* かつ進行方向が西向きである時 */
-            if (g_d_direction.West <= 7) {
-              i99 = (unsigned char)(1 << g_d_direction.West);
-            } else {
-              i99 = 0;
+          if ((row_dir_node[i78] & i96) != 0) {
+            /* かつ北のノードが更新予定値よりも大きな値の場合 */
+            i78 = (int)(contor_renew_node_row[n] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
             }
 
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i99) != 0) {
-              /* かつ西のノードが更新予定値よりも大きな値の場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 6U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              6U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(i78 + i76) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                  1] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
 
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                  - 1] = (unsigned short)qY;
+              row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1)) -
+                1] = (unsigned short)b_qY;
 
-                /* 歩数MAP更新 */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 6U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
+              /* 移動方向MAP更新 */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
 
-                col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(1 << g_d_direction.West);
-                } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ西のノードが更新予定値と同じ場合 */
+              if (g_d_direction.North <= 7) {
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = (unsigned char)(1 << g_d_direction.North);
               } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 6U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                    - 1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                    - 1];
-                  if (g_d_direction.West <= 7) {
-                    i107 = (unsigned char)(1 << g_d_direction.West);
-                  } else {
-                    i107 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(a | i107);
-                }
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = 0U;
               }
 
-              /* かつ進行方向が西向きでないとき     */
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i76;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
+
+              /* かつ北のノードが更新予定値と同じ場合 */
             } else {
-              /* かつ西のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              if (col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                  1] > (int)qY) {
-                /* 更新確認用のMAP更新 */
-                qY = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i76 = (int)(contor_renew_node_row[n] + 1U);
+                if ((unsigned int)i76 > 255U) {
+                  i76 = 255;
                 }
 
-                col_num_node_temp[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                  - 1] = (unsigned short)qY;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                i78 = (int)(contor_renew_node_row[n] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
-                col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1]
-                  = (unsigned short)qY;
-
-                /* 移動方向MAP更新 */
-                if (g_d_direction.West <= 7) {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(1 << g_d_direction.West);
+                if (g_d_direction.North <= 7) {
+                  i112 = (unsigned char)(1 << g_d_direction.North);
                 } else {
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = 0U;
+                  i112 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = (unsigned char)(row_dir_node[(i78 + 33 *
+                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i112);
+              }
+            }
 
-                /* かつ西のノードが更新予定値と同じ場合 */
+            /* かつ進行方向が北向きでないとき */
+          } else {
+            /* かつ北のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i79 = (int)(contor_renew_node_row[n] + 1U);
+            if ((unsigned int)i79 > 255U) {
+              i79 = 255;
+            }
+
+            b_qY = row_num_node[i78] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(i79 + i76) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1)) -
+                1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              if (g_d_direction.North <= 7) {
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = (unsigned char)(1 << g_d_direction.North);
               } else {
-                qY = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i76;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
+
+              /* かつ北のノードが更新予定値と同じ場合 */
+            } else {
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              i78 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i78 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i78 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i78 = i76;
+                if ((unsigned int)i76 > 255U) {
+                  i78 = 255;
+                  i76 = 255;
                 }
 
-                if (col_num_node[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                    - 1] == (int)qY) {
-                  /* 移動方向を追加 */
-                  a = col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5))
-                    - 1];
-                  if (g_d_direction.West <= 7) {
-                    i106 = (unsigned char)(1 << g_d_direction.West);
-                  } else {
-                    i106 = 0;
-                  }
-
-                  col_dir_node[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-                    1] = (unsigned char)(a | i106);
+                if (g_d_direction.North <= 7) {
+                  i110 = (unsigned char)(1 << g_d_direction.North);
+                } else {
+                  i110 = 0;
                 }
+
+                row_dir_node[(i78 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = (unsigned char)(row_dir_node[(i76 + 33 *
+                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i110);
               }
             }
           }
         }
+      }
 
-        /* 北西側 */
-        /* 壁が無い & 探索済みであるとき */
-        a = maze_wall[(row->data[idx] + ((col->data[idx] - 2) << 5)) - 1];
-        if (g_direction.North <= 7) {
-          i98 = (unsigned char)(1 << g_direction.North);
+      /* 北東側 */
+      /* 壁が無い & 探索済みであるとき */
+      if (g_direction.East <= 7) {
+        i93 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i93 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_row[n] + ((contor_renew_node_row[n +
+               1024] - 1) << 5)) - 1] & i93) != 0) == wall->contents.nowall) {
+        if (g_direction.East <= 7) {
+          i95 = (unsigned char)(1 << g_direction.East);
         } else {
-          i98 = 0;
+          i95 = 0;
         }
 
-        if (((a & i98) != 0) == wall->contents.nowall) {
-          a = maze_wall_search[(row->data[idx] + ((col->data[idx] - 2) << 5)) -
-            1];
-          if (g_direction.North <= 7) {
-            i102 = (unsigned char)(1 << g_direction.North);
+        if (((maze_wall_search[(contor_renew_node_row[n] +
+                                ((contor_renew_node_row[n + 1024] - 1) << 5)) -
+              1] & i95) != 0) == search->contents.known) {
+          /* かつ進行方向が北東向きである時 */
+          if (g_d_direction.North_East <= 7) {
+            i99 = (unsigned char)(1 << g_d_direction.North_East);
           } else {
-            i102 = 0;
+            i99 = 0;
           }
 
-          if (((a & i102) != 0) == search->contents.known) {
-            /* かつ進行方向が北西向きである時 */
-            if (g_d_direction.North_West <= 7) {
-              i105 = (unsigned char)(1 << g_d_direction.North_West);
-            } else {
-              i105 = 0;
+          if ((row_dir_node[(contor_renew_node_row[n] + 33 *
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i99)
+              != 0) {
+            /* かつ北東のノードが更新予定値よりも大きな値の場合 */
+            i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+            if ((unsigned int)i76 > 255U) {
+              i76 = 255;
             }
 
-            if ((col_dir_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) - 1]
-                 & i105) != 0) {
-              /* かつ北西のノードが更新予定値よりも大きな値の場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] >
+                (int)b_qY) {
+              /* 歩数MAP更新 */
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 4U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
               }
 
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] > (int)
-                  u6) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
+              col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                (unsigned short)b_qY;
 
-                u6 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
+              /* 移動方向MAP更新 */
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
 
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_West <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_West);
-                } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] = 0U;
-                }
-
-                /* 更新フラグを立てる */
-                change_flag = 1U;
-
-                /* かつ北西のノードが更新予定値と同じ場合 */
+              if (g_d_direction.North_East <= 7) {
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  (unsigned char)(1 << g_d_direction.North_East);
               } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 4U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
-
-                  if (g_d_direction.North_West <= 7) {
-                    i109 = (unsigned char)(1 << g_d_direction.North_West);
-                  } else {
-                    i109 = 0;
-                  }
-
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                    (unsigned char)(a | i109);
-                }
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  0U;
               }
 
-              /* かつ進行方向が北西向きでないとき     */
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[n];
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i76;
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i76;
+
+              /* かつ北東のノードが更新予定値と同じ場合 */
             } else {
-              /* かつ北西のノードの歩数MAP値が、更新予定値より大きい場合 */
-              qY = row->data[idx] + 1U;
-              if (qY > 65535U) {
-                qY = 65535U;
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5)) -
-                1] + 18U;
-              if (u6 > 65535U) {
-                u6 = 65535U;
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
               }
 
-              if (row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] > (int)
-                  u6) {
-                /* 更新確認用のMAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+              if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1]
+                  == (int)b_qY) {
+                /* 移動方向を追加 */
+                i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i76 > 255U) {
+                  i76 = 255;
                 }
 
-                u6 = col_num_node_temp[(row->data[idx] + ((col->data[idx] - 1) <<
-                  5)) - 1] + 1U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
+                i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
-                row_num_node_temp[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)u6;
-
-                /* 歩数MAP更新(重みづけあり) */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
-                }
-
-                row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                  (unsigned short)u6;
-
-                /* 移動方向MAP更新 */
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
-                }
-
-                if (g_d_direction.North_West <= 7) {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                    (unsigned char)(1 << g_d_direction.North_West);
+                if (g_d_direction.North_East <= 7) {
+                  i120 = (unsigned char)(1 << g_d_direction.North_East);
                 } else {
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] = 0U;
+                  i120 = 0;
                 }
 
-                /* 更新フラグを立てる */
-                change_flag = 1U;
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  (unsigned char)(col_dir_node[(contor_renew_node_row[n] + ((i78
+                  - 1) << 5)) - 1] | i120);
+              }
+            }
 
-                /* かつ北西のノードが更新予定値と同じ場合 */
+            /* かつ進行方向が北東向きでないとき */
+          } else {
+            /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+            if ((unsigned int)i76 > 255U) {
+              i76 = 255;
+            }
+
+            i78 = (contor_renew_node_row[n] + 33 * (contor_renew_node_row[n +
+                    1024] - 1)) - 1;
+            b_qY = row_num_node[i78] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] >
+                (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  (unsigned char)(1 << g_d_direction.North_East);
               } else {
-                qY = row->data[idx] + 1U;
-                if (qY > 65535U) {
-                  qY = 65535U;
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[n];
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i76;
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i76;
+
+              /* かつ北東のノードが更新予定値と同じ場合 */
+            } else {
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              i79 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i79 = 255;
+              }
+
+              b_qY = row_num_node[i78] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_row[n] + ((i79 - 1) << 5)) - 1]
+                  == (int)b_qY) {
+                /* 移動方向を追加 */
+                i78 = i76;
+                if ((unsigned int)i76 > 255U) {
+                  i78 = 255;
+                  i76 = 255;
                 }
 
-                u6 = col_num_node[(row->data[idx] + ((col->data[idx] - 1) << 5))
-                  - 1] + 18U;
-                if (u6 > 65535U) {
-                  u6 = 65535U;
+                if (g_d_direction.North_East <= 7) {
+                  i118 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i118 = 0;
                 }
 
-                if (row_num_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] ==
-                    (int)u6) {
-                  /* 移動方向を追加 */
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
+                col_dir_node[(contor_renew_node_row[n] + ((i78 - 1) << 5)) - 1] =
+                  (unsigned char)(col_dir_node[(contor_renew_node_row[n] + ((i76
+                  - 1) << 5)) - 1] | i118);
+              }
+            }
+          }
+        }
+      }
 
-                  a = row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1];
-                  qY = row->data[idx] + 1U;
-                  if (qY > 65535U) {
-                    qY = 65535U;
-                  }
+      /* 東側は柱 */
+      /* 南東側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row[n] - 1U;
+      if (c_qY > contor_renew_node_row[n]) {
+        c_qY = 0U;
+      }
 
-                  if (g_d_direction.North_West <= 7) {
-                    i108 = (unsigned char)(1 << g_d_direction.North_West);
-                  } else {
-                    i108 = 0;
-                  }
+      i76 = (contor_renew_node_row[n + 1024] - 1) << 5;
+      if (g_direction.East <= 7) {
+        i101 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i101 = 0;
+      }
 
-                  row_dir_node[((int)qY + 33 * (col->data[idx] - 2)) - 1] =
-                    (unsigned char)(a | i108);
+      if (((maze_wall[((int)c_qY + i76) - 1] & i101) != 0) ==
+          wall->contents.nowall) {
+        c_qY = contor_renew_node_row[n] - 1U;
+        if (c_qY > contor_renew_node_row[n]) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.East <= 7) {
+          i105 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i105 = 0;
+        }
+
+        if (((maze_wall_search[((int)c_qY + i76) - 1] & i105) != 0) ==
+            search->contents.known) {
+          /* かつ進行方向が南東向きである時 */
+          if (g_d_direction.South_East <= 7) {
+            i108 = (unsigned char)(1 << g_d_direction.South_East);
+          } else {
+            i108 = 0;
+          }
+
+          if ((row_dir_node[(contor_renew_node_row[n] + 33 *
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i108)
+              != 0) {
+            /* かつ南東のノードが更新予定値よりも大きな値の場合 */
+            c_qY = contor_renew_node_row[n] - 1U;
+            if (c_qY > contor_renew_node_row[n]) {
+              c_qY = 0U;
+            }
+
+            i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              4U;
+            u7 = b_qY;
+            if (b_qY > 65535U) {
+              u7 = 65535U;
+            }
+
+            if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] > (int)u7) {
+              /* 歩数MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned short)
+                b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              if (g_d_direction.South_East <= 7) {
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned
+                  char)(1 << g_d_direction.South_East);
+              } else {
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                (unsigned char)c_qY;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i78;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
+
+              /* かつ南東のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] == (int)b_qY)
+              {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[n] - 1U;
+                if (c_qY > contor_renew_node_row[n]) {
+                  c_qY = 0U;
                 }
+
+                i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
+                }
+
+                b_qY = contor_renew_node_row[n] - 1U;
+                if (b_qY > contor_renew_node_row[n]) {
+                  b_qY = 0U;
+                }
+
+                i79 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i79 > 255U) {
+                  i79 = 255;
+                }
+
+                if (g_d_direction.South_East <= 7) {
+                  i139 = (unsigned char)(1 << g_d_direction.South_East);
+                } else {
+                  i139 = 0;
+                }
+
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned
+                  char)(col_dir_node[((int)b_qY + ((i79 - 1) << 5)) - 1] | i139);
+              }
+            }
+
+            /* かつ進行方向が南東向きでないとき */
+          } else {
+            /* かつ南東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = contor_renew_node_row[n] - 1U;
+            if (c_qY > contor_renew_node_row[n]) {
+              c_qY = 0U;
+            }
+
+            i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              18U;
+            u7 = b_qY;
+            if (b_qY > 65535U) {
+              u7 = 65535U;
+            }
+
+            if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] > (int)u7) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned short)
+                b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              if (g_d_direction.South_East <= 7) {
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned
+                  char)(1 << g_d_direction.South_East);
+              } else {
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                (unsigned char)c_qY;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i78;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
+
+              /* かつ南東のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] == (int)b_qY)
+              {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[n] - 1U;
+                if (c_qY > contor_renew_node_row[n]) {
+                  c_qY = 0U;
+                }
+
+                i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
+                }
+
+                b_qY = contor_renew_node_row[n] - 1U;
+                if (b_qY > contor_renew_node_row[n]) {
+                  b_qY = 0U;
+                }
+
+                i79 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i79 > 255U) {
+                  i79 = 255;
+                }
+
+                if (g_d_direction.South_East <= 7) {
+                  i138 = (unsigned char)(1 << g_d_direction.South_East);
+                } else {
+                  i138 = 0;
+                }
+
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned
+                  char)(col_dir_node[((int)b_qY + ((i79 - 1) << 5)) - 1] | i138);
+              }
+            }
+          }
+        }
+      }
+
+      /* 南側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row[n] - 1U;
+      if (c_qY > contor_renew_node_row[n]) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.South <= 7) {
+        i106 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i106 = 0;
+      }
+
+      if (((maze_wall[((int)c_qY + i76) - 1] & i106) != 0) ==
+          wall->contents.nowall) {
+        c_qY = contor_renew_node_row[n] - 1U;
+        if (c_qY > contor_renew_node_row[n]) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.South <= 7) {
+          i111 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i111 = 0;
+        }
+
+        if (((maze_wall_search[((int)c_qY + i76) - 1] & i111) != 0) ==
+            search->contents.known) {
+          /* かつ進行方向が南向きである時 */
+          if (g_d_direction.South <= 7) {
+            i117 = (unsigned char)(1 << g_d_direction.South);
+          } else {
+            i117 = 0;
+          }
+
+          if ((row_dir_node[(contor_renew_node_row[n] + 33 *
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i117)
+              != 0) {
+            /* かつ南のノードが更新予定値よりも大きな値の場合 */
+            c_qY = contor_renew_node_row[n] - 1U;
+            if (c_qY > contor_renew_node_row[n]) {
+              c_qY = 0U;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              6U;
+            u7 = b_qY;
+            if (b_qY > 65535U) {
+              u7 = 65535U;
+            }
+
+            if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                  - 1)) - 1] > (int)u7) {
+              /* 歩数MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024] -
+                1)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South <= 7) {
+                row_dir_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                  - 1)) - 1] = (unsigned char)(1 << g_d_direction.South);
+              } else {
+                row_dir_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                  - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)c_qY;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
+
+              /* かつ南のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                    - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[n] - 1U;
+                if (c_qY > contor_renew_node_row[n]) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row[n] - 1U;
+                if (b_qY > contor_renew_node_row[n]) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South <= 7) {
+                  i137 = (unsigned char)(1 << g_d_direction.South);
+                } else {
+                  i137 = 0;
+                }
+
+                row_dir_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                  - 1)) - 1] = (unsigned char)(row_dir_node[((int)b_qY + 33 *
+                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i137);
+              }
+            }
+
+            /* かつ進行方向が南向きでないとき */
+          } else {
+            /* かつ南のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = contor_renew_node_row[n] - 1U;
+            if (c_qY > contor_renew_node_row[n]) {
+              c_qY = 0U;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                  - 1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024] -
+                1)) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South <= 7) {
+                row_dir_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                  - 1)) - 1] = (unsigned char)(1 << g_d_direction.South);
+              } else {
+                row_dir_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                  - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)c_qY;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
+
+              /* かつ南のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                    - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[n] - 1U;
+                if (c_qY > contor_renew_node_row[n]) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row[n] - 1U;
+                if (b_qY > contor_renew_node_row[n]) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South <= 7) {
+                  i136 = (unsigned char)(1 << g_d_direction.South);
+                } else {
+                  i136 = 0;
+                }
+
+                row_dir_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
+                  - 1)) - 1] = (unsigned char)(row_dir_node[((int)b_qY + 33 *
+                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i136);
+              }
+            }
+          }
+        }
+      }
+
+      /* 南西側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = contor_renew_node_row[n] - 1U;
+      if (c_qY > contor_renew_node_row[n]) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.West <= 7) {
+        i115 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i115 = 0;
+      }
+
+      if (((maze_wall[((int)c_qY + i76) - 1] & i115) != 0) ==
+          wall->contents.nowall) {
+        c_qY = contor_renew_node_row[n] - 1U;
+        if (c_qY > contor_renew_node_row[n]) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.West <= 7) {
+          i124 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i124 = 0;
+        }
+
+        if (((maze_wall_search[((int)c_qY + i76) - 1] & i124) != 0) ==
+            search->contents.known) {
+          /* かつ進行方向が南西向きである時 */
+          if (g_d_direction.South_West <= 7) {
+            i130 = (unsigned char)(1 << g_d_direction.South_West);
+          } else {
+            i130 = 0;
+          }
+
+          if ((row_dir_node[(contor_renew_node_row[n] + 33 *
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i130)
+              != 0) {
+            /* かつ南西のノードが更新予定値よりも大きな値の場合 */
+            c_qY = contor_renew_node_row[n] - 1U;
+            if (c_qY > contor_renew_node_row[n]) {
+              c_qY = 0U;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[((int)c_qY + i76) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[((int)c_qY + i76) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South_West <= 7) {
+                col_dir_node[((int)c_qY + i76) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South_West);
+              } else {
+                col_dir_node[((int)c_qY + i76) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                (unsigned char)c_qY;
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
+
+              /* かつ南西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[((int)c_qY + i76) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[n] - 1U;
+                if (c_qY > contor_renew_node_row[n]) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row[n] - 1U;
+                if (b_qY > contor_renew_node_row[n]) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South_West <= 7) {
+                  i145 = (unsigned char)(1 << g_d_direction.South_West);
+                } else {
+                  i145 = 0;
+                }
+
+                col_dir_node[((int)c_qY + i76) - 1] = (unsigned char)
+                  (col_dir_node[((int)b_qY + i76) - 1] | i145);
+              }
+            }
+
+            /* かつ進行方向が南西向きでないとき */
+          } else {
+            /* かつ南西のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = contor_renew_node_row[n] - 1U;
+            if (c_qY > contor_renew_node_row[n]) {
+              c_qY = 0U;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[((int)c_qY + i76) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[((int)c_qY + i76) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South_West <= 7) {
+                col_dir_node[((int)c_qY + i76) - 1] = (unsigned char)(1 <<
+                  g_d_direction.South_West);
+              } else {
+                col_dir_node[((int)c_qY + i76) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                (unsigned char)c_qY;
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
+
+              /* かつ南西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = contor_renew_node_row[n] - 1U;
+              if (c_qY > contor_renew_node_row[n]) {
+                c_qY = 0U;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[((int)c_qY + i76) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = contor_renew_node_row[n] - 1U;
+                if (c_qY > contor_renew_node_row[n]) {
+                  c_qY = 0U;
+                }
+
+                b_qY = contor_renew_node_row[n] - 1U;
+                if (b_qY > contor_renew_node_row[n]) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South_West <= 7) {
+                  i144 = (unsigned char)(1 << g_d_direction.South_West);
+                } else {
+                  i144 = 0;
+                }
+
+                col_dir_node[((int)c_qY + i76) - 1] = (unsigned char)
+                  (col_dir_node[((int)b_qY + i76) - 1] | i144);
+              }
+            }
+          }
+        }
+      }
+
+      /* 北西側 */
+      /* 壁が無い & 探索済みであるとき */
+      i76 = (contor_renew_node_row[n] + i76) - 1;
+      if (g_direction.West <= 7) {
+        i126 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i126 = 0;
+      }
+
+      if (((maze_wall[i76] & i126) != 0) == wall->contents.nowall) {
+        if (g_direction.West <= 7) {
+          i129 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i129 = 0;
+        }
+
+        if (((maze_wall_search[i76] & i129) != 0) == search->contents.known) {
+          /* かつ進行方向が北西向きである時 */
+          if (g_d_direction.North_West <= 7) {
+            i133 = (unsigned char)(1 << g_d_direction.North_West);
+          } else {
+            i133 = 0;
+          }
+
+          if ((row_dir_node[(contor_renew_node_row[n] + 33 *
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i133)
+              != 0) {
+            /* かつ北西のノードが更新予定値よりも大きな値の場合 */
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[n] +
+                              ((contor_renew_node_row[n + 1024] - 1) << 5)) - 1]
+                > (int)b_qY) {
+              /* 歩数MAP更新 */
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[i76] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              if (g_d_direction.North_West <= 7) {
+                col_dir_node[i76] = (unsigned char)(1 <<
+                  g_d_direction.North_West);
+              } else {
+                col_dir_node[i76] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[n];
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i76;
+
+              /* かつ北西のノードが更新予定値と同じ場合 */
+            } else {
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_row[n] +
+                                ((contor_renew_node_row[n + 1024] - 1) << 5)) -
+                  1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                if (g_d_direction.North_West <= 7) {
+                  i143 = (unsigned char)(1 << g_d_direction.North_West);
+                } else {
+                  i143 = 0;
+                }
+
+                col_dir_node[i76] = (unsigned char)(col_dir_node[i76] | i143);
+              }
+            }
+
+            /* かつ進行方向が北西向きでないとき */
+          } else {
+            /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[i76] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[i76] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              if (g_d_direction.North_West <= 7) {
+                col_dir_node[i76] = (unsigned char)(1 <<
+                  g_d_direction.North_West);
+              } else {
+                col_dir_node[i76] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[n];
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i76;
+
+              /* かつ北西のノードが更新予定値と同じ場合 */
+            } else {
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[i76] == (int)b_qY) {
+                /* 移動方向を追加 */
+                if (g_d_direction.North_West <= 7) {
+                  i142 = (unsigned char)(1 << g_d_direction.North_West);
+                } else {
+                  i142 = 0;
+                }
+
+                col_dir_node[i76] = (unsigned char)(col_dir_node[i76] | i142);
               }
             }
           }
@@ -10112,18 +10345,2331 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length,
       }
     }
 
-    /* 更新がなければ終了(スタート地点の歩数マップを更新)     */
-  } while (!(change_flag == 0));
+    /* Col_Edgeの処理[32行,33列] */
+    /* 検索した座標に対し、歩数mapを更新 */
+    q0 = contor_renew_node_col_idx;
+    for (n = 0; n <= q0 - 2; n++) {
+      /* 北側は壁 */
+      /* 北東側 */
+      /* 壁が無い & 探索済みであるとき */
+      i76 = (contor_renew_node_col[n] + ((contor_renew_node_col[n + 1024] - 1) <<
+              5)) - 1;
+      if (g_direction.North <= 7) {
+        i92 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i92 = 0;
+      }
 
-  emxFree_uint16_T(&b_num_temp);
-  emxFree_uint16_T(&col);
-  emxFree_uint16_T(&row);
-  qY = row_num_node[1] + 3U;
-  if (qY > 65535U) {
-    qY = 65535U;
+      if (((maze_wall[i76] & i92) != 0) == wall->contents.nowall) {
+        if (g_direction.North <= 7) {
+          i94 = (unsigned char)(1 << g_direction.North);
+        } else {
+          i94 = 0;
+        }
+
+        if (((maze_wall_search[i76] & i94) != 0) == search->contents.known) {
+          /* かつ進行方向が北東向きである時 */
+          if (g_d_direction.North_East <= 7) {
+            i98 = (unsigned char)(1 << g_d_direction.North_East);
+          } else {
+            i98 = 0;
+          }
+
+          if ((col_dir_node[i76] & i98) != 0) {
+            /* かつ北東のノードが更新予定値よりも大きな値の場合 */
+            i76 = (int)(contor_renew_node_col[n] + 1U);
+            if ((unsigned int)i76 > 255U) {
+              i76 = 255;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 4U;
+            u7 = b_qY;
+            if (b_qY > 65535U) {
+              u7 = 65535U;
+            }
+
+            if (row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
+                - 1] > (int)u7) {
+              /* 歩数MAP更新 */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1)) -
+                1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                row_dir_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
+                  - 1] = (unsigned char)(1 << g_d_direction.North_East);
+              } else {
+                row_dir_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
+                  - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i76;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_col[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
+
+              /* かつ北東のノードが更新予定値と同じ場合 */
+            } else {
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
+                  - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i76 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i76 > 255U) {
+                  i76 = 255;
+                }
+
+                i78 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
+                }
+
+                if (g_d_direction.North_East <= 7) {
+                  i116 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i116 = 0;
+                }
+
+                row_dir_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
+                  - 1] = (unsigned char)(row_dir_node[(i78 + 33 *
+                  (contor_renew_node_col[n + 1024] - 1)) - 1] | i116);
+              }
+            }
+
+            /* かつ進行方向が北東向きでないとき */
+          } else {
+            /* かつ北東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i76 = (int)(contor_renew_node_col[n] + 1U);
+            i78 = i76;
+            if ((unsigned int)i76 > 255U) {
+              i78 = 255;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 18U;
+            u7 = b_qY;
+            if (b_qY > 65535U) {
+              u7 = 65535U;
+            }
+
+            i79 = 33 * (contor_renew_node_col[n + 1024] - 1);
+            if (row_num_node[(i78 + i79) - 1] > (int)u7) {
+              /* 歩数MAP更新(重みづけあり) */
+              i78 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i78 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i78 + i79) - 1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i78 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i78 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                row_dir_node[(i78 + i79) - 1] = (unsigned char)(1 <<
+                  g_d_direction.North_East);
+              } else {
+                row_dir_node[(i78 + i79) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i76;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_col[n + 1024];
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
+
+              /* かつ北東のノードが更新予定値と同じ場合 */
+            } else {
+              i78 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i78 = 255;
+              }
+
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i78 + i79) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i78 = i76;
+                if ((unsigned int)i76 > 255U) {
+                  i78 = 255;
+                  i76 = 255;
+                }
+
+                if (g_d_direction.North_East <= 7) {
+                  i114 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i114 = 0;
+                }
+
+                row_dir_node[(i78 + i79) - 1] = (unsigned char)(row_dir_node
+                  [(i76 + i79) - 1] | i114);
+              }
+            }
+          }
+        }
+      }
+
+      /* 東側 */
+      /* 壁が無い & 探索済みであるとき */
+      u6 = contor_renew_node_col[n + 1024];
+      i76 = (contor_renew_node_col[n] + ((u6 - 1) << 5)) - 1;
+      if (g_direction.East <= 7) {
+        i97 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i97 = 0;
+      }
+
+      if (((maze_wall[i76] & i97) != 0) == wall->contents.nowall) {
+        if (g_direction.East <= 7) {
+          i100 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i100 = 0;
+        }
+
+        if (((maze_wall_search[i76] & i100) != 0) == search->contents.known) {
+          /* かつ進行方向が東向きである時 */
+          if (g_d_direction.East <= 7) {
+            i103 = (unsigned char)(1 << g_d_direction.East);
+          } else {
+            i103 = 0;
+          }
+
+          if ((col_dir_node[i76] & i103) != 0) {
+            /* かつ東のノードが更新予定値よりも大きな値の場合 */
+            i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 6U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] >
+                (int)b_qY) {
+              /* 歩数MAP更新 */
+              i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
+                (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              if (g_d_direction.East <= 7) {
+                col_dir_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
+                  (unsigned char)(1 << g_d_direction.East);
+              } else {
+                col_dir_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
+                  0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_col[n];
+              i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i78;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
+
+              /* かつ東のノードが更新予定値と同じ場合 */
+            } else {
+              i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1]
+                  == (int)b_qY) {
+                /* 移動方向を追加 */
+                i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
+                }
+
+                i79 = (int)(contor_renew_node_col[n + 1024] + 1U);
+                if ((unsigned int)i79 > 255U) {
+                  i79 = 255;
+                }
+
+                if (g_d_direction.East <= 7) {
+                  i128 = (unsigned char)(1 << g_d_direction.East);
+                } else {
+                  i128 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
+                  (unsigned char)(col_dir_node[(contor_renew_node_col[n] + ((i79
+                  - 1) << 5)) - 1] | i128);
+              }
+            }
+
+            /* かつ進行方向が東向きでないとき */
+          } else {
+            /* かつ東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+            i79 = i78;
+            if ((unsigned int)i78 > 255U) {
+              i79 = 255;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] >
+                (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              i79 = i78;
+              if ((unsigned int)i78 > 255U) {
+                i79 = 255;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
+                (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              i79 = i78;
+              if ((unsigned int)i78 > 255U) {
+                i79 = 255;
+              }
+
+              if (g_d_direction.East <= 7) {
+                col_dir_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
+                  (unsigned char)(1 << g_d_direction.East);
+              } else {
+                col_dir_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
+                  0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_col[n];
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i78;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
+
+              /* かつ東のノードが更新予定値と同じ場合 */
+            } else {
+              i79 = i78;
+              if ((unsigned int)i78 > 255U) {
+                i79 = 255;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1]
+                  == (int)b_qY) {
+                /* 移動方向を追加 */
+                i79 = i78;
+                if ((unsigned int)i78 > 255U) {
+                  i79 = 255;
+                  i78 = 255;
+                }
+
+                if (g_d_direction.East <= 7) {
+                  i125 = (unsigned char)(1 << g_d_direction.East);
+                } else {
+                  i125 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
+                  (unsigned char)(col_dir_node[(contor_renew_node_col[n] + ((i78
+                  - 1) << 5)) - 1] | i125);
+              }
+            }
+          }
+        }
+      }
+
+      /* 南東側 */
+      /* 壁が無い & 探索済みであるとき */
+      if (g_direction.South <= 7) {
+        i102 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i102 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_col[n] + ((contor_renew_node_col[n +
+               1024] - 1) << 5)) - 1] & i102) != 0) == wall->contents.nowall) {
+        if (g_direction.South <= 7) {
+          i104 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i104 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_col[n] +
+                                ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] & i104) != 0) == search->contents.known) {
+          /* かつ進行方向が南東向きである時 */
+          if (g_d_direction.South_East <= 7) {
+            i107 = (unsigned char)(1 << g_d_direction.South_East);
+          } else {
+            i107 = 0;
+          }
+
+          if ((col_dir_node[(contor_renew_node_col[n] +
+                             ((contor_renew_node_col[n + 1024] - 1) << 5)) - 1]
+               & i107) != 0) {
+            /* かつ南東のノードが更新予定値よりも大きな値の場合 */
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(contor_renew_node_col[n] + 33 *
+                              (contor_renew_node_col[n + 1024] - 1)) - 1] > (int)
+                b_qY) {
+              /* 歩数MAP更新 */
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(contor_renew_node_col[n] + 33 *
+                            (contor_renew_node_col[n + 1024] - 1)) - 1] =
+                (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              if (g_d_direction.South_East <= 7) {
+                row_dir_node[(contor_renew_node_col[n] + 33 *
+                              (contor_renew_node_col[n + 1024] - 1)) - 1] =
+                  (unsigned char)(1 << g_d_direction.South_East);
+              } else {
+                row_dir_node[(contor_renew_node_col[n] + 33 *
+                              (contor_renew_node_col[n + 1024] - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                contor_renew_node_col[n];
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                u6;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
+
+              /* かつ南東のノードが更新予定値と同じ場合 */
+            } else {
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(contor_renew_node_col[n] + 33 *
+                                (contor_renew_node_col[n + 1024] - 1)) - 1] ==
+                  (int)b_qY) {
+                /* 移動方向を追加 */
+                if (g_d_direction.South_East <= 7) {
+                  i122 = (unsigned char)(1 << g_d_direction.South_East);
+                } else {
+                  i122 = 0;
+                }
+
+                row_dir_node[(contor_renew_node_col[n] + 33 *
+                              (contor_renew_node_col[n + 1024] - 1)) - 1] =
+                  (unsigned char)(row_dir_node[(contor_renew_node_col[n] + 33 *
+                  (contor_renew_node_col[n + 1024] - 1)) - 1] | i122);
+              }
+            }
+
+            /* かつ進行方向が南東向きでないとき */
+          } else {
+            /* かつ南東のノードの歩数MAP値が、更新予定値より大きい場合 */
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            i78 = (contor_renew_node_col[n] + 33 * (contor_renew_node_col[n +
+                    1024] - 1)) - 1;
+            if (row_num_node[i78] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[i78] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              if (g_d_direction.South_East <= 7) {
+                row_dir_node[i78] = (unsigned char)(1 <<
+                  g_d_direction.South_East);
+              } else {
+                row_dir_node[i78] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                contor_renew_node_col[n];
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                u6;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
+
+              /* かつ南東のノードが更新予定値と同じ場合 */
+            } else {
+              b_qY = col_num_node[i76] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[i78] == (int)b_qY) {
+                /* 移動方向を追加 */
+                if (g_d_direction.South_East <= 7) {
+                  i123 = (unsigned char)(1 << g_d_direction.South_East);
+                } else {
+                  i123 = 0;
+                }
+
+                row_dir_node[i78] = (unsigned char)(row_dir_node[i78] | i123);
+              }
+            }
+          }
+        }
+      }
+
+      /* 南側は柱 */
+      /* 南西側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = u6 - 1U;
+      if (c_qY > u6) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.South <= 7) {
+        i109 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i109 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) - 1] &
+            i109) != 0) == wall->contents.nowall) {
+        c_qY = u6 - 1U;
+        if (c_qY > u6) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.South <= 7) {
+          i113 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i113 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+              - 1] & i113) != 0) == search->contents.known) {
+          /* かつ進行方向が南西向きである時 */
+          if (g_d_direction.South_West <= 7) {
+            i121 = (unsigned char)(1 << g_d_direction.South_West);
+          } else {
+            i121 = 0;
+          }
+
+          if ((col_dir_node[i76] & i121) != 0) {
+            /* かつ南西のノードが更新予定値よりも大きな値の場合 */
+            c_qY = u6 - 1U;
+            if (c_qY > u6) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
+                1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) - 1]
+                = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South_West <= 7) {
+                row_dir_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
+                  1] = (unsigned char)(1 << g_d_direction.South_West);
+              } else {
+                row_dir_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
+                  1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                contor_renew_node_col[n];
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
+
+              /* かつ南西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1))
+                  - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = u6 - 1U;
+                if (c_qY > u6) {
+                  c_qY = 0U;
+                }
+
+                b_qY = u6 - 1U;
+                if (b_qY > u6) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South_West <= 7) {
+                  i141 = (unsigned char)(1 << g_d_direction.South_West);
+                } else {
+                  i141 = 0;
+                }
+
+                row_dir_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
+                  1] = (unsigned char)(row_dir_node[(contor_renew_node_col[n] +
+                  33 * ((int)b_qY - 1)) - 1] | i141);
+              }
+            }
+
+            /* かつ進行方向が南西向きでないとき */
+          } else {
+            /* かつ南西のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = u6 - 1U;
+            if (c_qY > u6) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[i76] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
+                1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) - 1]
+                = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.South_West <= 7) {
+                row_dir_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
+                  1] = (unsigned char)(1 << g_d_direction.South_West);
+              } else {
+                row_dir_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
+                  1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                contor_renew_node_col[n];
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
+
+              /* かつ南西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[i76] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1))
+                  - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = u6 - 1U;
+                if (c_qY > u6) {
+                  c_qY = 0U;
+                }
+
+                b_qY = u6 - 1U;
+                if (b_qY > u6) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.South_West <= 7) {
+                  i140 = (unsigned char)(1 << g_d_direction.South_West);
+                } else {
+                  i140 = 0;
+                }
+
+                row_dir_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
+                  1] = (unsigned char)(row_dir_node[(contor_renew_node_col[n] +
+                  33 * ((int)b_qY - 1)) - 1] | i140);
+              }
+            }
+          }
+        }
+      }
+
+      /* 西側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = u6 - 1U;
+      if (c_qY > u6) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.West <= 7) {
+        i119 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i119 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) - 1] &
+            i119) != 0) == wall->contents.nowall) {
+        c_qY = u6 - 1U;
+        if (c_qY > u6) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.West <= 7) {
+          i127 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i127 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+              - 1] & i127) != 0) == search->contents.known) {
+          /* かつ進行方向が西向きである時 */
+          if (g_d_direction.West <= 7) {
+            i132 = (unsigned char)(1 << g_d_direction.West);
+          } else {
+            i132 = 0;
+          }
+
+          if ((col_dir_node[i76] & i132) != 0) {
+            /* かつ西のノードが更新予定値よりも大きな値の場合 */
+            c_qY = u6 - 1U;
+            if (c_qY > u6) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 6U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) -
+                1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.West <= 7) {
+                col_dir_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                  - 1] = (unsigned char)(1 << g_d_direction.West);
+              } else {
+                col_dir_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                  - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_col[n];
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
+
+              /* かつ西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 6U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                  - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = u6 - 1U;
+                if (c_qY > u6) {
+                  c_qY = 0U;
+                }
+
+                b_qY = u6 - 1U;
+                if (b_qY > u6) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.West <= 7) {
+                  i147 = (unsigned char)(1 << g_d_direction.West);
+                } else {
+                  i147 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                  - 1] = (unsigned char)(col_dir_node[(contor_renew_node_col[n]
+                  + (((int)b_qY - 1) << 5)) - 1] | i147);
+              }
+            }
+
+            /* かつ進行方向が西向きでないとき */
+          } else {
+            /* かつ西のノードの歩数MAP値が、更新予定値より大きい場合 */
+            c_qY = u6 - 1U;
+            if (c_qY > u6) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) -
+                1] = (unsigned short)b_qY;
+
+              /* 移動方向MAP更新 */
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.West <= 7) {
+                col_dir_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                  - 1] = (unsigned char)(1 << g_d_direction.West);
+              } else {
+                col_dir_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                  - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_col[n];
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
+
+              /* かつ西のノードが更新予定値と同じ場合 */
+            } else {
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[i76] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                  - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                c_qY = u6 - 1U;
+                if (c_qY > u6) {
+                  c_qY = 0U;
+                }
+
+                b_qY = u6 - 1U;
+                if (b_qY > u6) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.West <= 7) {
+                  i146 = (unsigned char)(1 << g_d_direction.West);
+                } else {
+                  i146 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+                  - 1] = (unsigned char)(col_dir_node[(contor_renew_node_col[n]
+                  + (((int)b_qY - 1) << 5)) - 1] | i146);
+              }
+            }
+          }
+        }
+      }
+
+      /* 北西側 */
+      /* 壁が無い & 探索済みであるとき */
+      c_qY = u6 - 1U;
+      if (c_qY > u6) {
+        c_qY = 0U;
+      }
+
+      if (g_direction.North <= 7) {
+        i131 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i131 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) - 1] &
+            i131) != 0) == wall->contents.nowall) {
+        c_qY = u6 - 1U;
+        if (c_qY > u6) {
+          c_qY = 0U;
+        }
+
+        if (g_direction.North <= 7) {
+          i134 = (unsigned char)(1 << g_direction.North);
+        } else {
+          i134 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
+              - 1] & i134) != 0) == search->contents.known) {
+          /* かつ進行方向が北西向きである時 */
+          if (g_d_direction.North_West <= 7) {
+            i135 = (unsigned char)(1 << g_d_direction.North_West);
+          } else {
+            i135 = 0;
+          }
+
+          if ((col_dir_node[(contor_renew_node_col[n] +
+                             ((contor_renew_node_col[n + 1024] - 1) << 5)) - 1]
+               & i135) != 0) {
+            /* かつ北西のノードが更新予定値よりも大きな値の場合 */
+            i76 = (int)(contor_renew_node_col[n] + 1U);
+            if ((unsigned int)i76 > 255U) {
+              i76 = 255;
+            }
+
+            c_qY = u6 - 1U;
+            if (c_qY > u6) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[(contor_renew_node_col[n] +
+                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
+              1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新 */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
+                b_qY;
+
+              /* 移動方向MAP更新 */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.North_West <= 7) {
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (1 << g_d_direction.North_West);
+              } else {
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i76;
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
+
+              /* かつ北西のノードが更新予定値と同じ場合 */
+            } else {
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i76 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i76 > 255U) {
+                  i76 = 255;
+                }
+
+                c_qY = u6 - 1U;
+                if (c_qY > u6) {
+                  c_qY = 0U;
+                }
+
+                i78 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
+                }
+
+                b_qY = u6 - 1U;
+                if (b_qY > u6) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.North_West <= 7) {
+                  i149 = (unsigned char)(1 << g_d_direction.North_West);
+                } else {
+                  i149 = 0;
+                }
+
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(i78 + 33 * ((int)b_qY - 1)) - 1] | i149);
+              }
+            }
+
+            /* かつ進行方向が北西向きでないとき */
+          } else {
+            /* かつ北西のノードの歩数MAP値が、更新予定値より大きい場合 */
+            i78 = (int)(contor_renew_node_col[n] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
+            }
+
+            c_qY = u6 - 1U;
+            if (c_qY > u6) {
+              c_qY = 0U;
+            }
+
+            b_qY = col_num_node[i76] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (row_num_node[(i78 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* 歩数MAP更新(重みづけあり) */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[(contor_renew_node_col[n] +
+                                   ((contor_renew_node_col[n + 1024] - 1) << 5))
+                - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
+                b_qY;
+
+              /* 移動方向MAP更新 */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              if (g_d_direction.North_West <= 7) {
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (1 << g_d_direction.North_West);
+              } else {
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = 0U;
+              }
+
+              /* 更新フラグを立てる */
+              change_flag = 1U;
+
+              /* 更新ノードを更新 */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i76;
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* 更新マス用インデックスを増加 */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
+
+              /* かつ北西のノードが更新予定値と同じ場合 */
+            } else {
+              i78 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[i76] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (row_num_node[(i78 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY) {
+                /* 移動方向を追加 */
+                i76 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i76 > 255U) {
+                  i76 = 255;
+                }
+
+                c_qY = u6 - 1U;
+                if (c_qY > u6) {
+                  c_qY = 0U;
+                }
+
+                i78 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
+                }
+
+                b_qY = u6 - 1U;
+                if (b_qY > u6) {
+                  b_qY = 0U;
+                }
+
+                if (g_d_direction.North_West <= 7) {
+                  i148 = (unsigned char)(1 << g_d_direction.North_West);
+                } else {
+                  i148 = 0;
+                }
+
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(i78 + 33 * ((int)b_qY - 1)) - 1] | i148);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /* ゴール更新ノードの更新とインデックスのクリア */
+    contor_renew_node_col_idx = contor_renew_node_col_idx_temp;
+    contor_renew_node_col_idx_temp = 1U;
+    for (q0 = 0; q0 < 2048; q0++) {
+      contor_renew_node_col[q0] = contor_renew_node_col_temp[q0];
+      contor_renew_node_col_temp[q0] = 0U;
+      contor_renew_node_row[q0] = contor_renew_node_row_temp[q0];
+      contor_renew_node_row_temp[q0] = 0U;
+    }
+
+    contor_renew_node_row_idx = contor_renew_node_row_idx_temp;
+    contor_renew_node_row_idx_temp = 1U;
+
+    /* 更新がなければ終了(スタート地点の歩数マップを更新) */
+    if (change_flag == 0) {
+      b_qY = row_num_node[1] + 3U;
+      if (b_qY > 65535U) {
+        b_qY = 65535U;
+      }
+
+      *start_num = (unsigned short)b_qY;
+      exitg1 = true;
+    } else {
+      i++;
+    }
+  }
+}
+
+/*
+ * 迷路パラメータ設定
+ * Arguments    : const coder_internal_ref_5 *wall
+ *                const unsigned char maze_wall[1024]
+ *                const unsigned char maze_wall_search[1024]
+ *                unsigned char current_x
+ *                unsigned char current_y
+ *                unsigned short contour_map[1024]
+ *                unsigned char new_goal[2]
+ * Return Type  : void
+ */
+static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
+  char maze_wall[1024], const unsigned char maze_wall_search[1024], unsigned
+  char current_x, unsigned char current_y, unsigned short contour_map[1024],
+  unsigned char new_goal[2])
+{
+  unsigned char contor_renew_square[2048];
+  unsigned char contor_renew_square_temp[2048];
+  unsigned char contor_renew_square_idx;
+  unsigned char contor_renew_square_idx_temp;
+  int q0;
+  unsigned short tempi;
+  bool exitg1;
+  unsigned char change_flag;
+  int tempn;
+  bool exitg2;
+  int i26;
+  bool guard1 = false;
+  bool guard2 = false;
+  bool guard3 = false;
+  int i27;
+  int i28;
+  int i29;
+  int i30;
+  int i31;
+  int i32;
+  unsigned int u1;
+  unsigned int qY;
+
+  /*     %% make_new_goal_all 現在位置から新規のゴールを作る。(全面探索用) */
+  /* 新規ゴール座標格納用変数 */
+  new_goal[0] = 0U;
+  new_goal[1] = 0U;
+
+  /* コンター更新マス保管用 */
+  /* 更新座標 */
+  memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
+
+  /* 更新座標更新用 */
+  contor_renew_square_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_square_idx_temp = 1U;
+
+  /* 更新座標更新用 */
+  /* MAPの初期化(すべての要素にmax_lengthを入力) */
+  /* 32マス分mapを保持 */
+  /* 16bitにすべき */
+  for (q0 = 0; q0 < 1024; q0++) {
+    contour_map[q0] = MAX_uint16_T;
   }
 
-  *start_num = (unsigned short)qY;
+  /* スタート地点の歩数を1だけ減らし、判別可能な状態にする。 */
+  contour_map[(current_y + ((current_x - 1) << 5)) - 1] = 65534U;
+
+  /* 初回の更新座標 = 現在位置　を入力 */
+  contor_renew_square[0] = current_y;
+  contor_renew_square[1024] = current_x;
+
+  /* 現在の位置からコンターを展開。 */
+  /* 未探索位置にコンターが展開されればそこを新規ゴールとし、終了する。 */
+  tempi = 0U;
+  exitg1 = false;
+  while ((!exitg1) && (tempi < 65535)) {
+    /* 歩数カウントは0~max_length */
+    /* map更新確認用フラグ */
+    change_flag = 0U;
+
+    /* 更新された座標に対し、コンターマップを展開 */
+    tempn = 0;
+    exitg2 = false;
+    while ((!exitg2) && (tempn <= contor_renew_square_idx - 1)) {
+      /* 北側 */
+      q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
+        1024] - 1) << 5)) - 1];
+      if (g_direction.North <= 7) {
+        i26 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i26 = 0;
+      }
+
+      guard1 = false;
+      guard2 = false;
+      guard3 = false;
+      if ((q0 & i26) == wall->contents.nowall) {
+        /* 北側のMAPが更新されているか判断、されていなければ書き込み */
+        i27 = (int)(contor_renew_square[tempn] + 1U);
+        if ((unsigned int)i27 > 255U) {
+          i27 = 255;
+        }
+
+        i28 = (contor_renew_square[tempn + 1024] - 1) << 5;
+        if (contour_map[(i27 + i28) - 1] == 65535) {
+          i27 = (int)(contor_renew_square[tempn] + 1U);
+          i30 = i27;
+          if ((unsigned int)i27 > 255U) {
+            i30 = 255;
+          }
+
+          u1 = tempi + 2U;
+          if (u1 > 65535U) {
+            u1 = 65535U;
+          }
+
+          contour_map[(i30 + i28) - 1] = (unsigned short)(65535 - (int)u1);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          i30 = i27;
+          if ((unsigned int)i27 > 255U) {
+            i30 = 255;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
+            char)i30;
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            contor_renew_square[tempn + 1024];
+
+          /* 更新マス用インデックスを増加 */
+          i30 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i30 > 255U) {
+            i30 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i30;
+
+          /* 更新した地点が未探索領域であれば、そこを新規ゴール点とし、コンター展開を終了する。 */
+          i30 = i27;
+          if ((unsigned int)i27 > 255U) {
+            i30 = 255;
+          }
+
+          if (maze_wall_search[(i30 + i28) - 1] != 15) {
+            new_goal[0] = contor_renew_square[tempn + 1024];
+            if ((unsigned int)i27 > 255U) {
+              i27 = 255;
+            }
+
+            new_goal[1] = (unsigned char)i27;
+            exitg2 = true;
+          } else {
+            guard3 = true;
+          }
+        } else {
+          guard3 = true;
+        }
+      } else {
+        guard3 = true;
+      }
+
+      if (guard3) {
+        /* 東側 */
+        if (g_direction.East <= 7) {
+          i29 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i29 = 0;
+        }
+
+        if ((q0 & i29) == wall->contents.nowall) {
+          /* 東側のMAPが更新されているか判断、されていなければ書き込み */
+          q0 = (int)(contor_renew_square[tempn + 1024] + 1U);
+          i27 = q0;
+          if ((unsigned int)q0 > 255U) {
+            i27 = 255;
+          }
+
+          if (contour_map[(contor_renew_square[tempn] + ((i27 - 1) << 5)) - 1] ==
+              65535) {
+            i27 = q0;
+            if ((unsigned int)q0 > 255U) {
+              i27 = 255;
+            }
+
+            u1 = tempi + 2U;
+            if (u1 > 65535U) {
+              u1 = 65535U;
+            }
+
+            contour_map[(contor_renew_square[tempn] + ((i27 - 1) << 5)) - 1] =
+              (unsigned short)(65535 - (int)u1);
+            change_flag = 1U;
+
+            /* 更新マスを更新 */
+            contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+              contor_renew_square[tempn];
+            i27 = q0;
+            if ((unsigned int)q0 > 255U) {
+              i27 = 255;
+            }
+
+            contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+              (unsigned char)i27;
+
+            /* 更新マス用インデックスを増加 */
+            i27 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)i27 > 255U) {
+              i27 = 255;
+            }
+
+            contor_renew_square_idx_temp = (unsigned char)i27;
+
+            /* 更新した地点が未探索領域であれば、そこを新規ゴール点とし、コンター展開を終了する。 */
+            i27 = q0;
+            if ((unsigned int)q0 > 255U) {
+              i27 = 255;
+            }
+
+            if (maze_wall_search[(contor_renew_square[tempn] + ((i27 - 1) << 5))
+                - 1] != 15) {
+              if ((unsigned int)q0 > 255U) {
+                q0 = 255;
+              }
+
+              new_goal[0] = (unsigned char)q0;
+              new_goal[1] = contor_renew_square[tempn];
+              exitg2 = true;
+            } else {
+              guard2 = true;
+            }
+          } else {
+            guard2 = true;
+          }
+        } else {
+          guard2 = true;
+        }
+      }
+
+      if (guard2) {
+        /* 南側 */
+        q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
+          + 1024] - 1) << 5)) - 1];
+        if (g_direction.South <= 7) {
+          i31 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i31 = 0;
+        }
+
+        if ((q0 & i31) == wall->contents.nowall) {
+          /* 南側のMAPが更新されているか判断、されていなければ書き込み */
+          qY = contor_renew_square[tempn] - 1U;
+          if (qY > contor_renew_square[tempn]) {
+            qY = 0U;
+          }
+
+          if (contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
+                5)) - 1] == 65535) {
+            qY = contor_renew_square[tempn] - 1U;
+            if (qY > contor_renew_square[tempn]) {
+              qY = 0U;
+            }
+
+            u1 = tempi + 2U;
+            if (u1 > 65535U) {
+              u1 = 65535U;
+            }
+
+            contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) << 5))
+              - 1] = (unsigned short)(65535 - (int)u1);
+            change_flag = 1U;
+
+            /* 更新マスを更新 */
+            qY = contor_renew_square[tempn] - 1U;
+            if (qY > contor_renew_square[tempn]) {
+              qY = 0U;
+            }
+
+            contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+              (unsigned char)qY;
+            contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+              contor_renew_square[tempn + 1024];
+
+            /* 更新マス用インデックスを増加 */
+            i27 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)i27 > 255U) {
+              i27 = 255;
+            }
+
+            contor_renew_square_idx_temp = (unsigned char)i27;
+
+            /* 更新した地点が未探索領域であれば、そこを新規ゴール点とし、コンター展開を終了する。 */
+            qY = contor_renew_square[tempn] - 1U;
+            if (qY > contor_renew_square[tempn]) {
+              qY = 0U;
+            }
+
+            if (maze_wall_search[((int)qY + ((contor_renew_square[tempn + 1024]
+                   - 1) << 5)) - 1] != 15) {
+              new_goal[0] = contor_renew_square[tempn + 1024];
+              qY = contor_renew_square[tempn] - 1U;
+              if (qY > contor_renew_square[tempn]) {
+                qY = 0U;
+              }
+
+              new_goal[1] = (unsigned char)qY;
+              exitg2 = true;
+            } else {
+              guard1 = true;
+            }
+          } else {
+            guard1 = true;
+          }
+        } else {
+          guard1 = true;
+        }
+      }
+
+      if (guard1) {
+        /* 西側 */
+        if (g_direction.West <= 7) {
+          i32 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i32 = 0;
+        }
+
+        if ((q0 & i32) == wall->contents.nowall) {
+          /* 西側のMAPが更新されているか判断、されていなければ書き込み */
+          q0 = contor_renew_square[tempn + 1024];
+          qY = q0 - 1U;
+          if (qY > (unsigned int)q0) {
+            qY = 0U;
+          }
+
+          if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) -
+              1] == 65535) {
+            q0 = contor_renew_square[tempn + 1024];
+            qY = q0 - 1U;
+            if (qY > (unsigned int)q0) {
+              qY = 0U;
+            }
+
+            u1 = tempi + 2U;
+            if (u1 > 65535U) {
+              u1 = 65535U;
+            }
+
+            contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) - 1]
+              = (unsigned short)(65535 - (int)u1);
+            change_flag = 1U;
+
+            /* 更新マスを更新 */
+            contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+              contor_renew_square[tempn];
+            q0 = contor_renew_square[tempn + 1024];
+            qY = q0 - 1U;
+            if (qY > (unsigned int)q0) {
+              qY = 0U;
+            }
+
+            contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+              (unsigned char)qY;
+
+            /* 更新マス用インデックスを増加 */
+            q0 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)q0 > 255U) {
+              q0 = 255;
+            }
+
+            contor_renew_square_idx_temp = (unsigned char)q0;
+
+            /* 更新した地点が未探索領域であれば、そこを新規ゴール点とし、コンター展開を終了する。 */
+            q0 = contor_renew_square[tempn + 1024];
+            qY = q0 - 1U;
+            if (qY > (unsigned int)q0) {
+              qY = 0U;
+            }
+
+            if (maze_wall_search[(contor_renew_square[tempn] + (((int)qY - 1) <<
+                  5)) - 1] != 15) {
+              q0 = contor_renew_square[tempn + 1024];
+              qY = q0 - 1U;
+              if (qY > (unsigned int)q0) {
+                qY = 0U;
+              }
+
+              new_goal[0] = (unsigned char)qY;
+              new_goal[1] = contor_renew_square[tempn];
+              exitg2 = true;
+            } else {
+              tempn++;
+            }
+          } else {
+            tempn++;
+          }
+        } else {
+          tempn++;
+        }
+      }
+    }
+
+    /* ゴール更新マスの更新とインデックスのクリア */
+    for (q0 = 0; q0 < 2048; q0++) {
+      contor_renew_square[q0] = contor_renew_square_temp[q0];
+      contor_renew_square_temp[q0] = 0U;
+    }
+
+    contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
+    contor_renew_square_idx_temp = 1U;
+
+    /* 更新がない、もしくはゴールが設定されていれば終了 */
+    if ((change_flag == 0) || (new_goal[0] != 0)) {
+      /* disp(tempi) */
+      exitg1 = true;
+    } else {
+      tempi++;
+    }
+  }
+}
+
+/*
+ * 迷路パラメータ設定
+ * Arguments    : const coder_internal_ref_5 *wall
+ *                const unsigned char maze_wall[1024]
+ *                unsigned char current_x
+ *                unsigned char current_y
+ *                const unsigned char unexp_square[1024]
+ *                unsigned char unexp_square_idx
+ *                unsigned short contour_map[1024]
+ *                unsigned char new_goal[2]
+ * Return Type  : void
+ */
+static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
+  char maze_wall[1024], unsigned char current_x, unsigned char current_y, const
+  unsigned char unexp_square[1024], unsigned char unexp_square_idx, unsigned
+  short contour_map[1024], unsigned char new_goal[2])
+{
+  unsigned char contor_renew_square[2048];
+  unsigned char contor_renew_square_temp[2048];
+  unsigned char contor_renew_square_idx;
+  unsigned char contor_renew_square_idx_temp;
+  int q0;
+  unsigned short tempi;
+  bool exitg1;
+  unsigned char change_flag;
+  int tempn;
+  bool exitg2;
+  int i62;
+  bool guard1 = false;
+  bool guard2 = false;
+  bool guard3 = false;
+  int i63;
+  int i64;
+  int i65;
+  int i66;
+  int i67;
+  int i68;
+  unsigned int u4;
+  unsigned int qY;
+
+  /*     %% make_new_goal_sh 現在位置から新規のゴール生成する。(最短経路探索用) */
+  /* 新規ゴール座標格納用変数 */
+  new_goal[0] = 0U;
+  new_goal[1] = 0U;
+
+  /* コンター更新マス保管用 */
+  /* 更新座標 */
+  memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
+  memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
+
+  /* 更新座標更新用 */
+  contor_renew_square_idx = 1U;
+
+  /* 更新座標 */
+  contor_renew_square_idx_temp = 1U;
+
+  /* 更新座標更新用 */
+  /* MAPの初期化(すべての要素にmax_lengthを入力) */
+  /* 32マス分mapを保持 */
+  /* 16bitにすべき */
+  for (q0 = 0; q0 < 1024; q0++) {
+    contour_map[q0] = MAX_uint16_T;
+  }
+
+  /* スタート地点の歩数を1だけ減らし、判別可能な状態にする。 */
+  contour_map[(current_y + ((current_x - 1) << 5)) - 1] = 65534U;
+
+  /* 初回の更新座標 = 現在位置　を入力 */
+  contor_renew_square[0] = current_y;
+  contor_renew_square[1024] = current_x;
+
+  /* 現在の位置からコンターを展開。 */
+  /* 最短経路にコンターが展開されればそこを新規ゴールとし、終了する。 */
+  tempi = 0U;
+  exitg1 = false;
+  while ((!exitg1) && (tempi < 65535)) {
+    /* 歩数カウントは0~max_length */
+    /* map更新確認用フラグ */
+    change_flag = 0U;
+
+    /* 更新された座標に対し、コンターマップを展開 */
+    tempn = 0;
+    exitg2 = false;
+    while ((!exitg2) && (tempn <= contor_renew_square_idx - 1)) {
+      /* 北側 */
+      q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
+        1024] - 1) << 5)) - 1];
+      if (g_direction.North <= 7) {
+        i62 = (unsigned char)(1 << g_direction.North);
+      } else {
+        i62 = 0;
+      }
+
+      guard1 = false;
+      guard2 = false;
+      guard3 = false;
+      if ((q0 & i62) == wall->contents.nowall) {
+        /* 北側のMAPが更新されているか判断、されていなければ書き込み */
+        i63 = (int)(contor_renew_square[tempn] + 1U);
+        if ((unsigned int)i63 > 255U) {
+          i63 = 255;
+        }
+
+        i64 = (contor_renew_square[tempn + 1024] - 1) << 5;
+        if (contour_map[(i63 + i64) - 1] == 65535) {
+          i63 = (int)(contor_renew_square[tempn] + 1U);
+          i66 = i63;
+          if ((unsigned int)i63 > 255U) {
+            i66 = 255;
+          }
+
+          u4 = tempi + 2U;
+          if (u4 > 65535U) {
+            u4 = 65535U;
+          }
+
+          contour_map[(i66 + i64) - 1] = (unsigned short)(65535 - (int)u4);
+          change_flag = 1U;
+
+          /* 更新マスを更新 */
+          i64 = i63;
+          if ((unsigned int)i63 > 255U) {
+            i64 = 255;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
+            char)i64;
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            contor_renew_square[tempn + 1024];
+
+          /* 更新マス用インデックスを増加 */
+          i64 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i64 > 255U) {
+            i64 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i64;
+
+          /* 更新した地点が最短経路未探索領域であれば、そこを新規ゴール点とし、コンター展開を終了する。 */
+          i64 = i63;
+          if ((unsigned int)i63 > 255U) {
+            i64 = 255;
+          }
+
+          if (sh_route_unexp_sq_jud(unexp_square, unexp_square_idx, (unsigned
+                char)i64, contor_renew_square[tempn + 1024]) == 1) {
+            new_goal[0] = contor_renew_square[tempn + 1024];
+            if ((unsigned int)i63 > 255U) {
+              i63 = 255;
+            }
+
+            new_goal[1] = (unsigned char)i63;
+            exitg2 = true;
+          } else {
+            guard3 = true;
+          }
+        } else {
+          guard3 = true;
+        }
+      } else {
+        guard3 = true;
+      }
+
+      if (guard3) {
+        /* 東側 */
+        if (g_direction.East <= 7) {
+          i65 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i65 = 0;
+        }
+
+        if ((q0 & i65) == wall->contents.nowall) {
+          /* 東側のMAPが更新されているか判断、されていなければ書き込み */
+          q0 = (int)(contor_renew_square[tempn + 1024] + 1U);
+          i63 = q0;
+          if ((unsigned int)q0 > 255U) {
+            i63 = 255;
+          }
+
+          if (contour_map[(contor_renew_square[tempn] + ((i63 - 1) << 5)) - 1] ==
+              65535) {
+            i63 = q0;
+            if ((unsigned int)q0 > 255U) {
+              i63 = 255;
+            }
+
+            u4 = tempi + 2U;
+            if (u4 > 65535U) {
+              u4 = 65535U;
+            }
+
+            contour_map[(contor_renew_square[tempn] + ((i63 - 1) << 5)) - 1] =
+              (unsigned short)(65535 - (int)u4);
+            change_flag = 1U;
+
+            /* 更新マスを更新 */
+            contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+              contor_renew_square[tempn];
+            i63 = q0;
+            if ((unsigned int)q0 > 255U) {
+              i63 = 255;
+            }
+
+            contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+              (unsigned char)i63;
+
+            /* 更新マス用インデックスを増加 */
+            i63 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)i63 > 255U) {
+              i63 = 255;
+            }
+
+            contor_renew_square_idx_temp = (unsigned char)i63;
+
+            /* 更新した地点が未探索領域であれば、そこを新規ゴール点とし、コンター展開を終了する。 */
+            i63 = q0;
+            if ((unsigned int)q0 > 255U) {
+              i63 = 255;
+            }
+
+            if (sh_route_unexp_sq_jud(unexp_square, unexp_square_idx,
+                 contor_renew_square[tempn], (unsigned char)i63) == 1) {
+              if ((unsigned int)q0 > 255U) {
+                q0 = 255;
+              }
+
+              new_goal[0] = (unsigned char)q0;
+              new_goal[1] = contor_renew_square[tempn];
+              exitg2 = true;
+            } else {
+              guard2 = true;
+            }
+          } else {
+            guard2 = true;
+          }
+        } else {
+          guard2 = true;
+        }
+      }
+
+      if (guard2) {
+        /* 南側 */
+        q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
+          + 1024] - 1) << 5)) - 1];
+        if (g_direction.South <= 7) {
+          i67 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i67 = 0;
+        }
+
+        if ((q0 & i67) == wall->contents.nowall) {
+          /* 南側のMAPが更新されているか判断、されていなければ書き込み */
+          qY = contor_renew_square[tempn] - 1U;
+          if (qY > contor_renew_square[tempn]) {
+            qY = 0U;
+          }
+
+          if (contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
+                5)) - 1] == 65535) {
+            qY = contor_renew_square[tempn] - 1U;
+            if (qY > contor_renew_square[tempn]) {
+              qY = 0U;
+            }
+
+            u4 = tempi + 2U;
+            if (u4 > 65535U) {
+              u4 = 65535U;
+            }
+
+            contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) << 5))
+              - 1] = (unsigned short)(65535 - (int)u4);
+            change_flag = 1U;
+
+            /* 更新マスを更新 */
+            qY = contor_renew_square[tempn] - 1U;
+            if (qY > contor_renew_square[tempn]) {
+              qY = 0U;
+            }
+
+            contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+              (unsigned char)qY;
+            contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+              contor_renew_square[tempn + 1024];
+
+            /* 更新マス用インデックスを増加 */
+            i63 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)i63 > 255U) {
+              i63 = 255;
+            }
+
+            contor_renew_square_idx_temp = (unsigned char)i63;
+
+            /* 更新した地点が未探索領域であれば、そこを新規ゴール点とし、コンター展開を終了する。 */
+            qY = contor_renew_square[tempn] - 1U;
+            if (qY > contor_renew_square[tempn]) {
+              qY = 0U;
+            }
+
+            if (sh_route_unexp_sq_jud(unexp_square, unexp_square_idx, (unsigned
+                  char)qY, contor_renew_square[tempn + 1024]) == 1) {
+              new_goal[0] = contor_renew_square[tempn + 1024];
+              qY = contor_renew_square[tempn] - 1U;
+              if (qY > contor_renew_square[tempn]) {
+                qY = 0U;
+              }
+
+              new_goal[1] = (unsigned char)qY;
+              exitg2 = true;
+            } else {
+              guard1 = true;
+            }
+          } else {
+            guard1 = true;
+          }
+        } else {
+          guard1 = true;
+        }
+      }
+
+      if (guard1) {
+        /* 西側 */
+        if (g_direction.West <= 7) {
+          i68 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i68 = 0;
+        }
+
+        if ((q0 & i68) == wall->contents.nowall) {
+          /* 西側のMAPが更新されているか判断、されていなければ書き込み */
+          q0 = contor_renew_square[tempn + 1024];
+          qY = q0 - 1U;
+          if (qY > (unsigned int)q0) {
+            qY = 0U;
+          }
+
+          if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) -
+              1] == 65535) {
+            q0 = contor_renew_square[tempn + 1024];
+            qY = q0 - 1U;
+            if (qY > (unsigned int)q0) {
+              qY = 0U;
+            }
+
+            u4 = tempi + 2U;
+            if (u4 > 65535U) {
+              u4 = 65535U;
+            }
+
+            contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) - 1]
+              = (unsigned short)(65535 - (int)u4);
+            change_flag = 1U;
+
+            /* 更新マスを更新 */
+            contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+              contor_renew_square[tempn];
+            q0 = contor_renew_square[tempn + 1024];
+            qY = q0 - 1U;
+            if (qY > (unsigned int)q0) {
+              qY = 0U;
+            }
+
+            contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+              (unsigned char)qY;
+
+            /* 更新マス用インデックスを増加 */
+            q0 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)q0 > 255U) {
+              q0 = 255;
+            }
+
+            contor_renew_square_idx_temp = (unsigned char)q0;
+
+            /* 更新した地点が未探索領域であれば、そこを新規ゴール点とし、コンター展開を終了する。 */
+            q0 = contor_renew_square[tempn + 1024];
+            qY = q0 - 1U;
+            if (qY > (unsigned int)q0) {
+              qY = 0U;
+            }
+
+            if (sh_route_unexp_sq_jud(unexp_square, unexp_square_idx,
+                 contor_renew_square[tempn], (unsigned char)qY) == 1) {
+              q0 = contor_renew_square[tempn + 1024];
+              qY = q0 - 1U;
+              if (qY > (unsigned int)q0) {
+                qY = 0U;
+              }
+
+              new_goal[0] = (unsigned char)qY;
+              new_goal[1] = contor_renew_square[tempn];
+              exitg2 = true;
+            } else {
+              tempn++;
+            }
+          } else {
+            tempn++;
+          }
+        } else {
+          tempn++;
+        }
+      }
+    }
+
+    /* ゴール更新マスの更新とインデックスのクリア */
+    for (q0 = 0; q0 < 2048; q0++) {
+      contor_renew_square[q0] = contor_renew_square_temp[q0];
+      contor_renew_square_temp[q0] = 0U;
+    }
+
+    contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
+    contor_renew_square_idx_temp = 1U;
+
+    /* 更新がない、もしくはゴールが設定されていれば終了 */
+    if ((change_flag == 0) || (new_goal[0] != 0)) {
+      /* disp(tempi) */
+      exitg1 = true;
+    } else {
+      tempi++;
+    }
+  }
 }
 
 /*
@@ -10164,7 +12710,7 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
   unsigned int qY;
   unsigned char b_next_move_dir;
 
-  /*  make_route_diagonal 斜め有での最短ルート生成、走行 */
+  /*     %% make_route_diagonal 斜め有での最短ルート生成、走行 */
   current_node[0] = 1U;
   current_node[1] = 1U;
 
@@ -10466,19 +13012,19 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
               }
 
               current_node[0] = (unsigned char)i;
-              i = (int)(current_node[1] + 2U);
-              if ((unsigned int)i > 255U) {
-                i = 255;
+              qY = current_node[1] - 2U;
+              if (qY > current_node[1]) {
+                qY = 0U;
               }
 
-              current_node[1] = (unsigned char)i;
+              current_node[1] = (unsigned char)qY;
               current_node_property = matrix_dir.Row;
               current_move_dir = g_d_direction.North;
               current_move_mode = move_dir_property.straight;
             }
           }
 
-          /* 斜めパターンの時（V90）     */
+          /* 斜めパターンの時（V90） */
         } else {
           if (current_move_mode == move_dir_property.diagonal) {
             if (current_move_dir == g_d_direction.North_East) {
@@ -10607,7 +13153,7 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
             }
           }
 
-          /* 斜めパターンの時     */
+          /* 斜めパターンの時 */
         }
       } else {
         if (turn_pattern_num == turn_pattern.l_180) {
@@ -10653,64 +13199,64 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 /*
  * 入力 現在位置x,y,現在方向
  * 出力 現在位置x,y
- * Arguments    : unsigned char *current_x
- *                unsigned char *current_y
- *                unsigned char current_dir
+ * Arguments    : unsigned char *temp_x
+ *                unsigned char *temp_y
+ *                unsigned char temp_dir
  * Return Type  : void
  */
-static void move_step(unsigned char *current_x, unsigned char *current_y,
-                      unsigned char current_dir)
+static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
+                      char temp_dir)
 {
   int q0;
   unsigned int qY;
 
-  /*  move_step 一マス前進する関数 */
+  /*     %% move_step 一マス前進する関数 */
   /* 北に一マス */
-  if (current_dir == g_direction.North) {
-    q0 = (int)(*current_y + 1U);
+  if (temp_dir == g_direction.North) {
+    q0 = (int)(*temp_y + 1U);
     if ((unsigned int)q0 > 255U) {
       q0 = 255;
     }
 
-    *current_y = (unsigned char)q0;
+    *temp_y = (unsigned char)q0;
 
     /* disp("north_step") */
   }
 
   /* 東に一マス */
-  if (current_dir == g_direction.East) {
-    q0 = (int)(*current_x + 1U);
+  if (temp_dir == g_direction.East) {
+    q0 = (int)(*temp_x + 1U);
     if ((unsigned int)q0 > 255U) {
       q0 = 255;
     }
 
-    *current_x = (unsigned char)q0;
+    *temp_x = (unsigned char)q0;
 
     /* disp("east_step") */
   }
 
   /* 南に一マス */
-  if (current_dir == g_direction.South) {
-    q0 = *current_y;
+  if (temp_dir == g_direction.South) {
+    q0 = *temp_y;
     qY = q0 - 1U;
     if (qY > (unsigned int)q0) {
       qY = 0U;
     }
 
-    *current_y = (unsigned char)qY;
+    *temp_y = (unsigned char)qY;
 
     /* disp("south_step") */
   }
 
   /* 西に一マス */
-  if (current_dir == g_direction.West) {
-    q0 = *current_x;
+  if (temp_dir == g_direction.West) {
+    q0 = *temp_x;
     qY = q0 - 1U;
     if (qY > (unsigned int)q0) {
       qY = 0U;
     }
 
-    *current_x = (unsigned char)qY;
+    *temp_x = (unsigned char)qY;
 
     /* disp("west_step") */
   }
@@ -10729,25 +13275,25 @@ static void move_straight(unsigned char current_node[2], unsigned char
   *current_node_property, unsigned char *current_move_dir, unsigned char
   *current_move_mode, unsigned char straight_count)
 {
-  unsigned char u12;
+  unsigned char u11;
   int q0;
   unsigned char temp_quotient;
   unsigned char temp_remainder;
   unsigned char temp_qr;
   unsigned int qY;
 
-  /*  移動用関数 */
+  /*     %% 移動用関数 */
   /*  直進 */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
-      u12 = current_node[1];
+      u11 = current_node[1];
       q0 = (int)((unsigned int)current_node[0] + straight_count);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      current_node[1] = u12;
+      current_node[1] = u11;
       *current_node_property = matrix_dir.Row;
       *current_move_dir = g_d_direction.North;
       *current_move_mode = move_dir_property.straight;
@@ -10762,7 +13308,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.East;
       *current_move_mode = move_dir_property.straight;
     } else if (*current_move_dir == g_d_direction.South) {
-      u12 = current_node[1];
+      u11 = current_node[1];
       q0 = current_node[0];
       qY = (unsigned int)q0 - straight_count;
       if (qY > (unsigned int)q0) {
@@ -10770,15 +13316,15 @@ static void move_straight(unsigned char current_node[2], unsigned char
       }
 
       current_node[0] = (unsigned char)qY;
-      current_node[1] = u12;
+      current_node[1] = u11;
       *current_node_property = matrix_dir.Row;
       *current_move_dir = g_d_direction.South;
       *current_move_mode = move_dir_property.straight;
     } else {
       if (*current_move_dir == g_d_direction.West) {
-        u12 = current_node[1];
-        qY = (unsigned int)u12 - straight_count;
-        if (qY > u12) {
+        u11 = current_node[1];
+        qY = (unsigned int)u11 - straight_count;
+        if (qY > u11) {
           qY = 0U;
         }
 
@@ -10789,7 +13335,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* 斜め直進のとき     */
+    /* 斜め直進のとき */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       /* 直進カウンタを2で割った商とあまり、その合計を計算 */
@@ -10799,14 +13345,14 @@ static void move_straight(unsigned char current_node[2], unsigned char
       temp_qr = (unsigned char)(temp_quotient + temp_remainder);
       if (*current_move_dir == g_d_direction.North_East) {
         if (*current_node_property == matrix_dir.Row) {
-          u12 = current_node[1];
+          u11 = current_node[1];
           q0 = (int)((unsigned int)current_node[0] + temp_quotient);
           if ((unsigned int)q0 > 255U) {
             q0 = 255;
           }
 
           current_node[0] = (unsigned char)q0;
-          q0 = (int)((unsigned int)u12 + temp_qr);
+          q0 = (int)((unsigned int)u11 + temp_qr);
           if ((unsigned int)q0 > 255U) {
             q0 = 255;
           }
@@ -10822,14 +13368,14 @@ static void move_straight(unsigned char current_node[2], unsigned char
           *current_move_mode = move_dir_property.diagonal;
         } else {
           if (*current_node_property == matrix_dir.Col) {
-            u12 = current_node[1];
+            u11 = current_node[1];
             q0 = (int)((unsigned int)current_node[0] + temp_qr);
             if ((unsigned int)q0 > 255U) {
               q0 = 255;
             }
 
             current_node[0] = (unsigned char)q0;
-            q0 = (int)((unsigned int)u12 + temp_quotient);
+            q0 = (int)((unsigned int)u11 + temp_quotient);
             if ((unsigned int)q0 > 255U) {
               q0 = 255;
             }
@@ -10848,7 +13394,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
         }
       } else if (*current_move_dir == g_d_direction.South_East) {
         if (*current_node_property == matrix_dir.Row) {
-          u12 = current_node[1];
+          u11 = current_node[1];
           q0 = current_node[0];
           qY = (unsigned int)q0 - temp_qr;
           if (qY > (unsigned int)q0) {
@@ -10856,7 +13402,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
           }
 
           current_node[0] = (unsigned char)qY;
-          q0 = (int)((unsigned int)u12 + temp_qr);
+          q0 = (int)((unsigned int)u11 + temp_qr);
           if ((unsigned int)q0 > 255U) {
             q0 = 255;
           }
@@ -10872,7 +13418,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
           *current_move_mode = move_dir_property.diagonal;
         } else {
           if (*current_node_property == matrix_dir.Col) {
-            u12 = current_node[1];
+            u11 = current_node[1];
             q0 = current_node[0];
             qY = (unsigned int)q0 - temp_quotient;
             if (qY > (unsigned int)q0) {
@@ -10880,7 +13426,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
             }
 
             current_node[0] = (unsigned char)qY;
-            q0 = (int)((unsigned int)u12 + temp_quotient);
+            q0 = (int)((unsigned int)u11 + temp_quotient);
             if ((unsigned int)q0 > 255U) {
               q0 = 255;
             }
@@ -10899,7 +13445,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
         }
       } else if (*current_move_dir == g_d_direction.South_West) {
         if (*current_node_property == matrix_dir.Row) {
-          u12 = current_node[1];
+          u11 = current_node[1];
           q0 = current_node[0];
           qY = (unsigned int)q0 - temp_qr;
           if (qY > (unsigned int)q0) {
@@ -10907,8 +13453,8 @@ static void move_straight(unsigned char current_node[2], unsigned char
           }
 
           current_node[0] = (unsigned char)qY;
-          qY = (unsigned int)u12 - temp_quotient;
-          if (qY > u12) {
+          qY = (unsigned int)u11 - temp_quotient;
+          if (qY > u11) {
             qY = 0U;
           }
 
@@ -10923,7 +13469,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
           *current_move_mode = move_dir_property.diagonal;
         } else {
           if (*current_node_property == matrix_dir.Col) {
-            u12 = current_node[1];
+            u11 = current_node[1];
             q0 = current_node[0];
             qY = (unsigned int)q0 - temp_quotient;
             if (qY > (unsigned int)q0) {
@@ -10931,8 +13477,8 @@ static void move_straight(unsigned char current_node[2], unsigned char
             }
 
             current_node[0] = (unsigned char)qY;
-            qY = (unsigned int)u12 - temp_qr;
-            if (qY > u12) {
+            qY = (unsigned int)u11 - temp_qr;
+            if (qY > u11) {
               qY = 0U;
             }
 
@@ -10951,15 +13497,15 @@ static void move_straight(unsigned char current_node[2], unsigned char
       } else {
         if (*current_move_dir == g_d_direction.North_West) {
           if (*current_node_property == matrix_dir.Row) {
-            u12 = current_node[1];
+            u11 = current_node[1];
             q0 = (int)((unsigned int)current_node[0] + temp_quotient);
             if ((unsigned int)q0 > 255U) {
               q0 = 255;
             }
 
             current_node[0] = (unsigned char)q0;
-            qY = (unsigned int)u12 - temp_quotient;
-            if (qY > u12) {
+            qY = (unsigned int)u11 - temp_quotient;
+            if (qY > u11) {
               qY = 0U;
             }
 
@@ -10974,15 +13520,15 @@ static void move_straight(unsigned char current_node[2], unsigned char
             *current_move_mode = move_dir_property.diagonal;
           } else {
             if (*current_node_property == matrix_dir.Col) {
-              u12 = current_node[1];
+              u11 = current_node[1];
               q0 = (int)((unsigned int)current_node[0] + temp_qr);
               if ((unsigned int)q0 > 255U) {
                 q0 = 255;
               }
 
               current_node[0] = (unsigned char)q0;
-              qY = (unsigned int)u12 - temp_qr;
-              if (qY > u12) {
+              qY = (unsigned int)u11 - temp_qr;
+              if (qY > u11) {
                 qY = 0U;
               }
 
@@ -11013,7 +13559,7 @@ static void move_straight(unsigned char current_node[2], unsigned char
  *                coder_internal_ref *wall_flg
  *                const coder_internal_ref_4 *search
  *                const coder_internal_ref_1 *maze_goal
- *                coder_internal_ref_3 *num_temp
+ *                const coder_internal_ref_3 *adachi_search_mode
  *                unsigned char *current_x
  *                unsigned char *current_y
  *                unsigned char *current_dir
@@ -11024,59 +13570,86 @@ static void move_straight(unsigned char current_node[2], unsigned char
  *                const unsigned char exploration_goal[18]
  *                unsigned char l_goal_size
  *                unsigned char *start_flg
- *                unsigned char goal_after_flg
+ *                unsigned char adachi_s_mode
  *                unsigned short contour_map[1024]
  * Return Type  : void
  */
 static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   *wall_flg, const coder_internal_ref_4 *search, const coder_internal_ref_1
-  *maze_goal, coder_internal_ref_3 *num_temp, unsigned char *current_x, unsigned
-  char *current_y, unsigned char *current_dir, unsigned char maze_row_size,
-  unsigned char maze_col_size, unsigned char maze_wall[1024], unsigned char
-  maze_wall_search[1024], const unsigned char exploration_goal[18], unsigned
-  char l_goal_size, unsigned char *start_flg, unsigned char goal_after_flg,
-  unsigned short contour_map[1024])
+  *maze_goal, const coder_internal_ref_3 *adachi_search_mode, unsigned char
+  *current_x, unsigned char *current_y, unsigned char *current_dir, unsigned
+  char maze_row_size, unsigned char maze_col_size, unsigned char maze_wall[1024],
+  unsigned char maze_wall_search[1024], const unsigned char exploration_goal[18],
+  unsigned char l_goal_size, unsigned char *start_flg, unsigned char
+  adachi_s_mode, unsigned short contour_map[1024])
 {
   unsigned char goal_flg;
-  int i277;
+  unsigned char contour_flg;
+  int i226;
   int exitg1;
-  int i;
   unsigned char next_dir;
+  int i;
+  bool exitg2;
   unsigned int qY;
+  *start_flg = 0U;
 
-  /*  search_adachi 足立法での探索 */
+  /*     %% search_adachi 足立法での探索 */
   /* local変数宣言 */
   goal_flg = 0U;
 
   /* ゴール判定フラグ */
+  /* 壁情報更新確認用変数 */
+  contour_flg = 0U;
+
   /*      search_start_x = current_x %探索開始時x */
   /*      search_start_y = current_y %探索開始時y */
-  i277 = l_goal_size;
+  /* 初回のコンターマップ作製 */
+  make_map_find(wall, exploration_goal, l_goal_size, maze_wall, *current_x,
+                *current_y, contour_map);
+  i226 = l_goal_size;
   do {
     exitg1 = 0;
 
     /* 壁情報取得 */
     /* ゴール直後は壁情報を更新しない */
-    if (goal_after_flg != 1) {
-      wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size, *
-               current_x, *current_y, *current_dir, maze_wall, maze_wall_search);
-    } else {
-      /* ゴール直後のとき */
-      goal_after_flg = 0U;
+    next_dir = maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
+    wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size,
+             *current_x, *current_y, *current_dir, maze_wall, maze_wall_search);
 
-      /* ゴール直後フラグをクリア */
+    /* 壁情報が更新されれば、コンター更新のフラグを立てる。 */
+    if (next_dir != maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1]) {
+      contour_flg = 1U;
     }
 
     /*  等高線MAP生成 */
-    /*  [contour_map,max_length] = make_map2(maze_row_size,maze_col_size,maze_goal,maze_wall); */
-    make_map_find(num_temp, wall, exploration_goal, l_goal_size, maze_wall,
-                  contour_map);
+    /* 壁情報に変更があった場合のみ */
+    if (contour_flg != 0) {
+      make_map_find(wall, exploration_goal, l_goal_size, maze_wall, *current_x, *
+                    current_y, contour_map);
+    }
 
     /* 現在位置がゴールか判定 */
-    for (i = 0; i < i277; i++) {
+    for (i = 0; i < i226; i++) {
       if ((*current_x == exploration_goal[i]) && (*current_y ==
            exploration_goal[i + 9])) {
         goal_flg = 1U;
+      }
+    }
+
+    /* 探索モードの場合、対象のマスがすべて探索済みのとき、ゴールフラグを立てる */
+    if (adachi_s_mode == adachi_search_mode->contents.search) {
+      goal_flg = 1U;
+      i = 0;
+      exitg2 = false;
+      while ((!exitg2) && (i <= l_goal_size - 1)) {
+        /* ゴール座標が未探索であれば、フラグをおろし、ブレイク */
+        if (maze_wall_search[(exploration_goal[i + 9] + ((exploration_goal[i] -
+               1) << 5)) - 1] != 15) {
+          goal_flg = 0U;
+          exitg2 = true;
+        } else {
+          i++;
+        }
       }
     }
 
@@ -11117,7 +13690,7 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         move_step(current_x, current_y, *current_dir);
 
         /* disp("front") */
-        m_move_front(*start_flg, wall_flg->contents, move_dir_property.straight);
+        m_move_front(0, wall_flg->contents, move_dir_property.straight);
 
         /* スタート直後フラグをクリア */
         *start_flg = 0U;
@@ -11131,7 +13704,7 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         move_step(current_x, current_y, *current_dir);
 
         /* disp("right") */
-        m_move_right(*start_flg, wall_flg->contents, move_dir_property.straight);
+        m_move_right(0, wall_flg->contents, move_dir_property.straight);
 
         /* スタート直後フラグをクリア */
         *start_flg = 0U;
@@ -11145,7 +13718,7 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         move_step(current_x, current_y, *current_dir);
 
         /* disp("back") */
-        m_move_back(*start_flg, wall_flg->contents, move_dir_property.straight);
+        m_move_back(0, wall_flg->contents, move_dir_property.straight);
 
         /* スタート直後フラグをクリア */
         *start_flg = 0U;
@@ -11159,7 +13732,7 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         move_step(current_x, current_y, *current_dir);
 
         /* disp("left") */
-        m_move_left(*start_flg, wall_flg->contents, move_dir_property.straight);
+        m_move_left(0, wall_flg->contents, move_dir_property.straight);
 
         /* スタート直後フラグをクリア */
         *start_flg = 0U;
@@ -11175,25 +13748,43 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
 
   /* ゴール時停止フラグが立っているとき */
   /* 停止動作を実施 */
-  m_goal_movement(*start_flg, wall_flg->contents, move_dir_property.straight);
+  m_goal_movement(0, wall_flg->contents, move_dir_property.straight);
 
   /* ゴール時停止フラグが立っていなければ、動作させたまま終了 */
-  /*           */
-  /*      if coder.target('MATLAB') */
-  /*          %for MATLAB     */
-  /*          %探索終了時,マーカーをどこか遠くに */
-  /*          %m = makehgtform('translate',50*9,50*9,0); */
-  /*          %h.Matrix = m; */
-  /*          %別の種類のマーカーを仮置き */
-  /*          hold on */
-  /*          plot(current_x * 9 -4.5,current_y * 9 -4.5,'-ob'); */
-  /*          hold off */
-  /*          %探索状況プロットを透明化 */
-  /*          serface_transparency(search_surf); */
-  /*          drawnow */
-  /*      else */
-  /*          %for code generation */
-  /*      end */
+}
+
+/*
+ * Arguments    : const unsigned char temp_unexp_square[1024]
+ *                unsigned char temp_unexp_square_idx
+ *                unsigned char temp_y
+ *                unsigned char temp_x
+ * Return Type  : unsigned char
+ */
+static unsigned char sh_route_unexp_sq_jud(const unsigned char
+  temp_unexp_square[1024], unsigned char temp_unexp_square_idx, unsigned char
+  temp_y, unsigned char temp_x)
+{
+  unsigned char result;
+  int i;
+  bool exitg1;
+
+  /* 最短経路未探索マス合致判定関数(入れ子) */
+  /* 出力:判定結果　0,合致なし　1,合致あり */
+  result = 0U;
+  i = 0;
+  exitg1 = false;
+  while ((!exitg1) && (i <= temp_unexp_square_idx - 1)) {
+    /* 最短経路の未探索のマスと入力座標が一致すればフラグを立ててブレイク */
+    if ((temp_unexp_square[i] == temp_y) && (temp_unexp_square[i + 512] ==
+         temp_x)) {
+      result = 1U;
+      exitg1 = true;
+    } else {
+      i++;
+    }
+  }
+
+  return result;
 }
 
 /*
@@ -11204,15 +13795,15 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
  */
 static void turn_180deg(unsigned char *current_dir)
 {
-  int i279;
+  int i322;
 
-  /*  turn_180deg 180度ターンする関数 */
-  i279 = (int)(4U + *current_dir);
-  if ((unsigned int)i279 > 255U) {
-    i279 = 255;
+  /*     %% turn_180deg 180度ターンする関数 */
+  i322 = (int)(4U + *current_dir);
+  if ((unsigned int)i322 > 255U) {
+    i322 = 255;
   }
 
-  *current_dir = (unsigned char)((i279 - 2) % 4);
+  *current_dir = (unsigned char)((i322 - 2) % 4);
 }
 
 /*
@@ -11223,20 +13814,20 @@ static void turn_180deg(unsigned char *current_dir)
  */
 static void turn_clk_90deg(unsigned char *current_dir)
 {
-  int i278;
+  int i321;
 
-  /*  turn_clk_90deg 時計周りに90度ターンする関数  */
-  i278 = (int)(4U + *current_dir);
-  if ((unsigned int)i278 > 255U) {
-    i278 = 255;
+  /*     %% turn_clk_90deg 時計周りに90度ターンする関数 */
+  i321 = (int)(4U + *current_dir);
+  if ((unsigned int)i321 > 255U) {
+    i321 = 255;
   }
 
-  i278++;
-  if ((unsigned int)i278 > 255U) {
-    i278 = 255;
+  i321++;
+  if ((unsigned int)i321 > 255U) {
+    i321 = 255;
   }
 
-  *current_dir = (unsigned char)(i278 % 4);
+  *current_dir = (unsigned char)(i321 % 4);
 }
 
 /*
@@ -11247,15 +13838,15 @@ static void turn_clk_90deg(unsigned char *current_dir)
  */
 static void turn_conclk_90deg(unsigned char *current_dir)
 {
-  int i280;
+  int i323;
 
-  /*  turn_conclk_90deg 反時計周りに90度回る関数  */
-  i280 = (int)(4U + *current_dir);
-  if ((unsigned int)i280 > 255U) {
-    i280 = 255;
+  /*     %% turn_conclk_90deg 反時計周りに90度回る関数 */
+  i323 = (int)(4U + *current_dir);
+  if ((unsigned int)i323 > 255U) {
+    i323 = 255;
   }
 
-  *current_dir = (unsigned char)((i280 - 1) % 4);
+  *current_dir = (unsigned char)((i323 - 1) % 4);
 }
 
 /*
@@ -11270,22 +13861,22 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
   *current_node_property, unsigned char *current_move_dir, unsigned char
   *current_move_mode)
 {
-  unsigned char u17;
+  unsigned char u16;
   int q0;
   unsigned int qY;
 
   /*  左135度 */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
-      u17 = current_node[1];
+      u16 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      qY = u17 - 1U;
-      if (qY > u17) {
+      qY = u16 - 1U;
+      if (qY > u16) {
         qY = 0U;
       }
 
@@ -11294,14 +13885,14 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.South_West;
       *current_move_mode = move_dir_property.diagonal;
     } else if (*current_move_dir == g_d_direction.East) {
-      u17 = current_node[1];
+      u16 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      q0 = (int)(u17 + 1U);
+      q0 = (int)(u16 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11311,7 +13902,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.North_West;
       *current_move_mode = move_dir_property.diagonal;
     } else if (*current_move_dir == g_d_direction.South) {
-      u17 = current_node[1];
+      u16 = current_node[1];
       q0 = current_node[0];
       qY = q0 - 1U;
       if (qY > (unsigned int)q0) {
@@ -11319,7 +13910,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
       }
 
       current_node[0] = (unsigned char)qY;
-      q0 = (int)(u17 + 1U);
+      q0 = (int)(u16 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11330,7 +13921,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
       *current_move_mode = move_dir_property.diagonal;
     } else {
       if (*current_move_dir == g_d_direction.West) {
-        u17 = current_node[1];
+        u16 = current_node[1];
         q0 = current_node[0];
         qY = q0 - 1U;
         if (qY > (unsigned int)q0) {
@@ -11338,8 +13929,8 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
         }
 
         current_node[0] = (unsigned char)qY;
-        qY = u17 - 1U;
-        if (qY > u17) {
+        qY = u16 - 1U;
+        if (qY > u16) {
           qY = 0U;
         }
 
@@ -11350,18 +13941,18 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* 斜めパターンの時  */
+    /* 斜めパターンの時 */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
-        u17 = current_node[1];
+        u16 = current_node[1];
         q0 = (int)(current_node[0] + 1U);
         if ((unsigned int)q0 > 255U) {
           q0 = 255;
         }
 
         current_node[0] = (unsigned char)q0;
-        current_node[1] = u17;
+        current_node[1] = u16;
         *current_node_property = matrix_dir.Col;
         *current_move_dir = g_d_direction.West;
         *current_move_mode = move_dir_property.straight;
@@ -11376,7 +13967,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
         *current_move_dir = g_d_direction.North;
         *current_move_mode = move_dir_property.straight;
       } else if (*current_move_dir == g_d_direction.South_West) {
-        u17 = current_node[1];
+        u16 = current_node[1];
         q0 = current_node[0];
         qY = q0 - 1U;
         if (qY > (unsigned int)q0) {
@@ -11384,15 +13975,15 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
         }
 
         current_node[0] = (unsigned char)qY;
-        current_node[1] = u17;
+        current_node[1] = u16;
         *current_node_property = matrix_dir.Col;
         *current_move_dir = g_d_direction.East;
         *current_move_mode = move_dir_property.straight;
       } else {
         if (*current_move_dir == g_d_direction.North_West) {
-          u17 = current_node[1];
-          qY = u17 - 1U;
-          if (qY > u17) {
+          u16 = current_node[1];
+          qY = u16 - 1U;
+          if (qY > u16) {
             qY = 0U;
           }
 
@@ -11418,22 +14009,22 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
   *current_node_property, unsigned char *current_move_dir, unsigned char
   *current_move_mode)
 {
-  unsigned char u18;
+  unsigned char u17;
   int q0;
   unsigned int qY;
 
   /*  左180度 */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
-      u18 = current_node[1];
+      u17 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      qY = u18 - 1U;
-      if (qY > u18) {
+      qY = u17 - 1U;
+      if (qY > u17) {
         qY = 0U;
       }
 
@@ -11442,14 +14033,14 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.South;
       *current_move_mode = move_dir_property.straight;
     } else if (*current_move_dir == g_d_direction.East) {
-      u18 = current_node[1];
+      u17 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      q0 = (int)(u18 + 1U);
+      q0 = (int)(u17 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11459,7 +14050,7 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.West;
       *current_move_mode = move_dir_property.straight;
     } else if (*current_move_dir == g_d_direction.South) {
-      u18 = current_node[1];
+      u17 = current_node[1];
       q0 = current_node[0];
       qY = q0 - 1U;
       if (qY > (unsigned int)q0) {
@@ -11467,7 +14058,7 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
       }
 
       current_node[0] = (unsigned char)qY;
-      q0 = (int)(u18 + 1U);
+      q0 = (int)(u17 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11478,7 +14069,7 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
       *current_move_mode = move_dir_property.straight;
     } else {
       if (*current_move_dir == g_d_direction.West) {
-        u18 = current_node[1];
+        u17 = current_node[1];
         q0 = current_node[0];
         qY = q0 - 1U;
         if (qY > (unsigned int)q0) {
@@ -11486,8 +14077,8 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
         }
 
         current_node[0] = (unsigned char)qY;
-        qY = u18 - 1U;
-        if (qY > u18) {
+        qY = u17 - 1U;
+        if (qY > u17) {
           qY = 0U;
         }
 
@@ -11498,7 +14089,7 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* 斜めパターンの時  */
+    /* 斜めパターンの時 */
   }
 }
 
@@ -11514,33 +14105,33 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
                       *current_node_property, unsigned char *current_move_dir,
                       unsigned char *current_move_mode)
 {
-  unsigned char u14;
+  unsigned char u13;
   int q0;
   unsigned int qY;
 
   /*  左45度 */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
-      u14 = current_node[1];
+      u13 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      current_node[1] = u14;
+      current_node[1] = u13;
       *current_node_property = matrix_dir.Col;
       *current_move_dir = g_d_direction.North_West;
       *current_move_mode = move_dir_property.diagonal;
     } else if (*current_move_dir == g_d_direction.East) {
-      u14 = current_node[1];
+      u13 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      q0 = (int)(u14 + 1U);
+      q0 = (int)(u13 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11550,7 +14141,7 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.North_East;
       *current_move_mode = move_dir_property.diagonal;
     } else if (*current_move_dir == g_d_direction.South) {
-      u14 = current_node[1];
+      u13 = current_node[1];
       q0 = current_node[0];
       qY = q0 - 2U;
       if (qY > (unsigned int)q0) {
@@ -11558,7 +14149,7 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
       }
 
       current_node[0] = (unsigned char)qY;
-      q0 = (int)(u14 + 1U);
+      q0 = (int)(u13 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11569,9 +14160,9 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
       *current_move_mode = move_dir_property.diagonal;
     } else {
       if (*current_move_dir == g_d_direction.West) {
-        u14 = current_node[1];
-        qY = u14 - 2U;
-        if (qY > u14) {
+        u13 = current_node[1];
+        qY = u13 - 2U;
+        if (qY > u13) {
           qY = 0U;
         }
 
@@ -11584,19 +14175,19 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
-        u14 = current_node[1];
+        u13 = current_node[1];
         q0 = (int)(current_node[0] + 1U);
         if ((unsigned int)q0 > 255U) {
           q0 = 255;
         }
 
         current_node[0] = (unsigned char)q0;
-        current_node[1] = u14;
+        current_node[1] = u13;
         *current_node_property = matrix_dir.Row;
         *current_move_dir = g_d_direction.North;
         *current_move_mode = move_dir_property.straight;
       } else if (*current_move_dir == g_d_direction.South_East) {
-        u14 = current_node[1];
+        u13 = current_node[1];
         q0 = current_node[0];
         qY = q0 - 1U;
         if (qY > (unsigned int)q0) {
@@ -11604,7 +14195,7 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
         }
 
         current_node[0] = (unsigned char)qY;
-        q0 = (int)(u14 + 1U);
+        q0 = (int)(u13 + 1U);
         if ((unsigned int)q0 > 255U) {
           q0 = 255;
         }
@@ -11614,9 +14205,9 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
         *current_move_dir = g_d_direction.East;
         *current_move_mode = move_dir_property.straight;
       } else if (*current_move_dir == g_d_direction.South_West) {
-        u14 = current_node[1];
-        qY = u14 - 1U;
-        if (qY > u14) {
+        u13 = current_node[1];
+        qY = u13 - 1U;
+        if (qY > u13) {
           qY = 0U;
         }
 
@@ -11647,33 +14238,33 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
                       *current_node_property, unsigned char *current_move_dir,
                       unsigned char *current_move_mode)
 {
-  unsigned char u15;
+  unsigned char u14;
   int q0;
   unsigned int qY;
 
   /*  左90度 */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
-      u15 = current_node[1];
+      u14 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      current_node[1] = u15;
+      current_node[1] = u14;
       *current_node_property = matrix_dir.Col;
       *current_move_dir = g_d_direction.West;
       *current_move_mode = move_dir_property.straight;
     } else if (*current_move_dir == g_d_direction.East) {
-      u15 = current_node[1];
+      u14 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      q0 = (int)(u15 + 1U);
+      q0 = (int)(u14 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11683,7 +14274,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.North;
       *current_move_mode = move_dir_property.straight;
     } else if (*current_move_dir == g_d_direction.South) {
-      u15 = current_node[1];
+      u14 = current_node[1];
       q0 = current_node[0];
       qY = q0 - 2U;
       if (qY > (unsigned int)q0) {
@@ -11691,7 +14282,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
       }
 
       current_node[0] = (unsigned char)qY;
-      q0 = (int)(u15 + 1U);
+      q0 = (int)(u14 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11702,9 +14293,9 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
       *current_move_mode = move_dir_property.straight;
     } else {
       if (*current_move_dir == g_d_direction.West) {
-        u15 = current_node[1];
-        qY = u15 - 2U;
-        if (qY > u15) {
+        u14 = current_node[1];
+        qY = u14 - 2U;
+        if (qY > u14) {
           qY = 0U;
         }
 
@@ -11715,18 +14306,18 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* 斜めパターンの時（V90）     */
+    /* 斜めパターンの時（V90） */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
-        u15 = current_node[1];
+        u14 = current_node[1];
         q0 = (int)(current_node[0] + 1U);
         if ((unsigned int)q0 > 255U) {
           q0 = 255;
         }
 
         current_node[0] = (unsigned char)q0;
-        current_node[1] = u15;
+        current_node[1] = u14;
         *current_node_property = matrix_dir.Col;
         *current_move_dir = g_d_direction.North_West;
         *current_move_mode = move_dir_property.diagonal;
@@ -11741,7 +14332,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
         *current_move_dir = g_d_direction.North_East;
         *current_move_mode = move_dir_property.diagonal;
       } else if (*current_move_dir == g_d_direction.South_West) {
-        u15 = current_node[1];
+        u14 = current_node[1];
         q0 = current_node[0];
         qY = q0 - 1U;
         if (qY > (unsigned int)q0) {
@@ -11749,15 +14340,15 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
         }
 
         current_node[0] = (unsigned char)qY;
-        current_node[1] = u15;
+        current_node[1] = u14;
         *current_node_property = matrix_dir.Col;
         *current_move_dir = g_d_direction.South_East;
         *current_move_mode = move_dir_property.diagonal;
       } else {
         if (*current_move_dir == g_d_direction.North_West) {
-          u15 = current_node[1];
-          qY = u15 - 1U;
-          if (qY > u15) {
+          u14 = current_node[1];
+          qY = u14 - 1U;
+          if (qY > u14) {
             qY = 0U;
           }
 
@@ -11783,21 +14374,21 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
   *current_node_property, unsigned char *current_move_dir, unsigned char
   *current_move_mode)
 {
-  unsigned char u16;
+  unsigned char u15;
   int q0;
   unsigned int qY;
 
   /*  右135度 */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
-      u16 = current_node[1];
+      u15 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      q0 = (int)(u16 + 1U);
+      q0 = (int)(u15 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11807,7 +14398,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.South_East;
       *current_move_mode = move_dir_property.diagonal;
     } else if (*current_move_dir == g_d_direction.East) {
-      u16 = current_node[1];
+      u15 = current_node[1];
       q0 = current_node[0];
       qY = q0 - 1U;
       if (qY > (unsigned int)q0) {
@@ -11815,7 +14406,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
       }
 
       current_node[0] = (unsigned char)qY;
-      q0 = (int)(u16 + 1U);
+      q0 = (int)(u15 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11825,7 +14416,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.South_West;
       *current_move_mode = move_dir_property.diagonal;
     } else if (*current_move_dir == g_d_direction.South) {
-      u16 = current_node[1];
+      u15 = current_node[1];
       q0 = current_node[0];
       qY = q0 - 1U;
       if (qY > (unsigned int)q0) {
@@ -11833,8 +14424,8 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
       }
 
       current_node[0] = (unsigned char)qY;
-      qY = u16 - 1U;
-      if (qY > u16) {
+      qY = u15 - 1U;
+      if (qY > u15) {
         qY = 0U;
       }
 
@@ -11844,15 +14435,15 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
       *current_move_mode = move_dir_property.diagonal;
     } else {
       if (*current_move_dir == g_d_direction.West) {
-        u16 = current_node[1];
+        u15 = current_node[1];
         q0 = (int)(current_node[0] + 1U);
         if ((unsigned int)q0 > 255U) {
           q0 = 255;
         }
 
         current_node[0] = (unsigned char)q0;
-        qY = u16 - 1U;
-        if (qY > u16) {
+        qY = u15 - 1U;
+        if (qY > u15) {
           qY = 0U;
         }
 
@@ -11863,7 +14454,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* 斜めパターンの時     */
+    /* 斜めパターンの時 */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
@@ -11877,7 +14468,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
         *current_move_dir = g_d_direction.South;
         *current_move_mode = move_dir_property.straight;
       } else if (*current_move_dir == g_d_direction.South_East) {
-        u16 = current_node[1];
+        u15 = current_node[1];
         q0 = current_node[0];
         qY = q0 - 1U;
         if (qY > (unsigned int)q0) {
@@ -11885,14 +14476,14 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
         }
 
         current_node[0] = (unsigned char)qY;
-        current_node[1] = u16;
+        current_node[1] = u15;
         *current_node_property = matrix_dir.Col;
         *current_move_dir = g_d_direction.West;
         *current_move_mode = move_dir_property.straight;
       } else if (*current_move_dir == g_d_direction.South_West) {
-        u16 = current_node[1];
-        qY = u16 - 1U;
-        if (qY > u16) {
+        u15 = current_node[1];
+        qY = u15 - 1U;
+        if (qY > u15) {
           qY = 0U;
         }
 
@@ -11902,14 +14493,14 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
         *current_move_mode = move_dir_property.straight;
       } else {
         if (*current_move_dir == g_d_direction.North_West) {
-          u16 = current_node[1];
+          u15 = current_node[1];
           q0 = (int)(current_node[0] + 1U);
           if ((unsigned int)q0 > 255U) {
             q0 = 255;
           }
 
           current_node[0] = (unsigned char)q0;
-          current_node[1] = u16;
+          current_node[1] = u15;
           *current_node_property = matrix_dir.Col;
           *current_move_dir = g_d_direction.East;
           *current_move_mode = move_dir_property.straight;
@@ -11931,21 +14522,21 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
                       *current_node_property, unsigned char *current_move_dir,
                       unsigned char *current_move_mode)
 {
-  unsigned char u13;
+  unsigned char u12;
   int q0;
   unsigned int qY;
 
   /*  右45度 */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
-      u13 = current_node[1];
+      u12 = current_node[1];
       q0 = (int)(current_node[0] + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
 
       current_node[0] = (unsigned char)q0;
-      q0 = (int)(u13 + 1U);
+      q0 = (int)(u12 + 1U);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -11965,7 +14556,7 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
       *current_move_dir = g_d_direction.South_East;
       *current_move_mode = move_dir_property.diagonal;
     } else if (*current_move_dir == g_d_direction.South) {
-      u13 = current_node[1];
+      u12 = current_node[1];
       q0 = current_node[0];
       qY = q0 - 2U;
       if (qY > (unsigned int)q0) {
@@ -11973,21 +14564,21 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
       }
 
       current_node[0] = (unsigned char)qY;
-      current_node[1] = u13;
+      current_node[1] = u12;
       *current_node_property = matrix_dir.Col;
       *current_move_dir = g_d_direction.South_West;
       *current_move_mode = move_dir_property.diagonal;
     } else {
       if (*current_move_dir == g_d_direction.West) {
-        u13 = current_node[1];
+        u12 = current_node[1];
         q0 = (int)(current_node[0] + 1U);
         if ((unsigned int)q0 > 255U) {
           q0 = 255;
         }
 
         current_node[0] = (unsigned char)q0;
-        qY = u13 - 2U;
-        if (qY > u13) {
+        qY = u12 - 2U;
+        if (qY > u12) {
           qY = 0U;
         }
 
@@ -12014,7 +14605,7 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
         *current_move_dir = g_d_direction.South;
         *current_move_mode = move_dir_property.straight;
       } else if (*current_move_dir == g_d_direction.South_West) {
-        u13 = current_node[1];
+        u12 = current_node[1];
         q0 = current_node[0];
         qY = q0 - 1U;
         if (qY > (unsigned int)q0) {
@@ -12022,21 +14613,21 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
         }
 
         current_node[0] = (unsigned char)qY;
-        current_node[1] = u13;
+        current_node[1] = u12;
         *current_node_property = matrix_dir.Col;
         *current_move_dir = g_d_direction.West;
         *current_move_mode = move_dir_property.straight;
       } else {
         if (*current_move_dir == g_d_direction.North_West) {
-          u13 = current_node[1];
+          u12 = current_node[1];
           q0 = (int)(current_node[0] + 1U);
           if ((unsigned int)q0 > 255U) {
             q0 = 255;
           }
 
           current_node[0] = (unsigned char)q0;
-          qY = u13 - 1U;
-          if (qY > u13) {
+          qY = u12 - 1U;
+          if (qY > u12) {
             qY = 0U;
           }
 
@@ -12079,59 +14670,11 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   unsigned char wall_write[4];
   unsigned char serch_write[4];
   short wall_sensor_front;
-  int i184;
-  unsigned char a;
-  int i;
-  int i185;
-  int i186;
-  int i187;
-  int i188;
-  int k;
-  int i189;
-  int i190;
-  int i191;
-  int i192;
-  int i193;
-  int i194;
-  int i195;
-  int i196;
-  unsigned int qY;
-  int i197;
-  int i198;
-  int i199;
-  int i200;
-  bool tempx[9];
-  int i201;
-  bool tempy[9];
-  signed char varargin_1[9];
-  int i202;
-  int i203;
-  int i204;
-  int i205;
-  int i206;
-  int i207;
-  int i208;
-  int i209;
-  int i210;
-  int i211;
-  int i212;
-  int i213;
-  int i214;
-  int i215;
-  int i216;
-  int i217;
-  int i218;
-  int i219;
-  int i220;
-  int i221;
-  int i222;
-  int i223;
-  int i224;
-  int i225;
-  int i226;
   int i227;
+  int ex;
   int i228;
   int i229;
+  int k;
   int i230;
   int i231;
   int i232;
@@ -12143,10 +14686,12 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   int i238;
   int i239;
   int i240;
+  unsigned int qY;
   int i241;
   int i242;
   int i243;
   int i244;
+  signed char varargin_1[9];
   int i245;
   int i246;
   int i247;
@@ -12179,8 +14724,55 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   int i274;
   int i275;
   int i276;
+  int i277;
+  int i278;
+  unsigned int b_qY;
+  int i279;
+  int i280;
+  int i281;
+  int i282;
+  int i283;
+  int i284;
+  int i285;
+  int i286;
+  int i287;
+  int i288;
+  int i289;
+  int i290;
+  int i291;
+  int i292;
+  int i293;
+  int i294;
+  int i295;
+  int i296;
+  int i297;
+  int i298;
+  int i299;
+  int i300;
+  int i301;
+  int i302;
+  int i303;
+  int i304;
+  int i305;
+  int i306;
+  int i307;
+  int i308;
+  int i309;
+  int i310;
+  unsigned int c_qY;
+  unsigned int d_qY;
+  int i311;
+  int i312;
+  int i313;
+  int i314;
+  int i315;
+  int i316;
+  int i317;
+  int i318;
+  int i319;
+  int i320;
 
-  /*   wall_set 壁情報取得 */
+  /*     %%  wall_set 壁情報取得 */
   /* グローバル変数(matlabでは迷路データを、Cでは壁センサ値を参照) */
   /* for matlab */
   /* for C gen */
@@ -12209,25 +14801,24 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   /* センサ値をもとに、壁の有無を判定 */
   if (wall_sensor_front > wall_sensor_front_th) {
     /* 壁情報取得 */
-    i184 = (int)(b_rem(current_dir) + 1U);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)(b_rem(current_dir) + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    wall_write[i184 - 1] = wall->contents.wall;
+    wall_write[i227 - 1] = wall->contents.wall;
 
     /* 壁フラグセット */
-    a = wall_flg->contents;
-    wall_flg->contents = (unsigned char)(a | 1);
+    wall_flg->contents |= 1;
   }
 
   /* 探索情報取更新 */
-  i184 = (int)(b_rem(current_dir) + 1U);
-  if ((unsigned int)i184 > 255U) {
-    i184 = 255;
+  i227 = (int)(b_rem(current_dir) + 1U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  serch_write[i184 - 1] = search->contents.known;
+  serch_write[i227 - 1] = search->contents.known;
 
   /* 右壁判定 */
   /* for Cgen */
@@ -12237,35 +14828,34 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   /* センサ値をもとに、壁の有無を判定 */
   if (wall_sensor_front > wall_sensor_right_th) {
     /* 壁情報取得 */
-    i184 = (int)(current_dir + 1U);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)(current_dir + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    i184 = (int)(b_rem((unsigned char)i184) + 1U);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)(b_rem((unsigned char)i227) + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    wall_write[i184 - 1] = wall->contents.wall;
+    wall_write[i227 - 1] = wall->contents.wall;
 
     /* 壁フラグセット */
-    a = wall_flg->contents;
-    wall_flg->contents = (unsigned char)(a | 2);
+    wall_flg->contents = (unsigned char)(wall_flg->contents | 2);
   }
 
   /* 探索情報取更新 */
-  i184 = (int)(current_dir + 1U);
-  if ((unsigned int)i184 > 255U) {
-    i184 = 255;
+  i227 = (int)(current_dir + 1U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  i184 = (int)(b_rem((unsigned char)i184) + 1U);
-  if ((unsigned int)i184 > 255U) {
-    i184 = 255;
+  i227 = (int)(b_rem((unsigned char)i227) + 1U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  serch_write[i184 - 1] = search->contents.known;
+  serch_write[i227 - 1] = search->contents.known;
 
   /* 後方は情報を得ることができないので処理しない。 */
   /* 左壁判定 */
@@ -12276,187 +14866,187 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   /* センサ値をもとに、壁の有無を判定 */
   if (wall_sensor_front > wall_sensor_left_th) {
     /* 壁情報取得 */
-    i184 = (int)(current_dir + 3U);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)(current_dir + 3U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    i184 = (int)(b_rem((unsigned char)i184) + 1U);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)(b_rem((unsigned char)i227) + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    wall_write[i184 - 1] = wall->contents.wall;
+    wall_write[i227 - 1] = wall->contents.wall;
 
     /* 壁フラグセット */
-    a = wall_flg->contents;
-    wall_flg->contents = (unsigned char)(a | 8);
+    wall_flg->contents = (unsigned char)(wall_flg->contents | 8);
   }
 
   /* 探索情報取更新 */
-  i184 = (int)(current_dir + 3U);
-  if ((unsigned int)i184 > 255U) {
-    i184 = 255;
+  i227 = (int)(current_dir + 3U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  i184 = (int)(b_rem((unsigned char)i184) + 1U);
-  if ((unsigned int)i184 > 255U) {
-    i184 = 255;
+  i227 = (int)(b_rem((unsigned char)i227) + 1U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  serch_write[i184 - 1] = search->contents.known;
+  serch_write[i227 - 1] = search->contents.known;
 
   /* ここまで */
   /* 壁情報,探索情報を入力 */
   /* 北側 */
-  i184 = (int)(g_direction.North + 1U);
-  i = i184;
-  if ((unsigned int)i184 > 255U) {
-    i = 255;
+  i227 = (int)(g_direction.North + 1U);
+  ex = i227;
+  if ((unsigned int)i227 > 255U) {
+    ex = 255;
   }
 
   if (g_direction.North <= 7) {
-    i185 = (unsigned char)(1 << g_direction.North);
+    i228 = (unsigned char)(1 << g_direction.North);
   } else {
-    i185 = 0;
+    i228 = 0;
   }
 
-  i = (int)((unsigned int)i185 * wall_write[i - 1]);
-  if ((unsigned int)i > 255U) {
-    i = 255;
+  ex = (int)((unsigned int)i228 * wall_write[ex - 1]);
+  if ((unsigned int)ex > 255U) {
+    ex = 255;
   }
 
-  i186 = current_y + ((current_x - 1) << 5);
-  i187 = i186 - 1;
-  maze_wall[i187] = (unsigned char)(maze_wall[i187] | i);
-  i = i184;
-  if ((unsigned int)i184 > 255U) {
-    i = 255;
+  i229 = (current_x - 1) << 5;
+  k = current_y + i229;
+  i230 = k - 1;
+  maze_wall[i230] = (unsigned char)(maze_wall[i230] | ex);
+  ex = i227;
+  if ((unsigned int)i227 > 255U) {
+    ex = 255;
   }
 
   if (g_direction.North <= 7) {
-    i188 = (unsigned char)(1 << g_direction.North);
+    i231 = (unsigned char)(1 << g_direction.North);
   } else {
-    i188 = 0;
+    i231 = 0;
   }
 
-  i = (int)((unsigned int)i188 * serch_write[i - 1]);
-  if ((unsigned int)i > 255U) {
-    i = 255;
+  ex = (int)((unsigned int)i231 * serch_write[ex - 1]);
+  if ((unsigned int)ex > 255U) {
+    ex = 255;
   }
 
-  maze_wall_search[i187] = (unsigned char)(maze_wall_search[i187] | i);
+  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | ex);
 
   /* 東側 */
-  i = (int)(g_direction.East + 1U);
-  k = i;
-  if ((unsigned int)i > 255U) {
-    k = 255;
+  ex = (int)(g_direction.East + 1U);
+  i232 = ex;
+  if ((unsigned int)ex > 255U) {
+    i232 = 255;
   }
 
   if (g_direction.East <= 7) {
-    i189 = (unsigned char)(1 << g_direction.East);
+    i233 = (unsigned char)(1 << g_direction.East);
   } else {
-    i189 = 0;
+    i233 = 0;
   }
 
-  k = (int)((unsigned int)i189 * wall_write[k - 1]);
-  if ((unsigned int)k > 255U) {
-    k = 255;
+  i232 = (int)((unsigned int)i233 * wall_write[i232 - 1]);
+  if ((unsigned int)i232 > 255U) {
+    i232 = 255;
   }
 
-  maze_wall[i187] = (unsigned char)(maze_wall[i187] | k);
-  k = i;
-  if ((unsigned int)i > 255U) {
-    k = 255;
+  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i232);
+  i232 = ex;
+  if ((unsigned int)ex > 255U) {
+    i232 = 255;
   }
 
   if (g_direction.East <= 7) {
-    i190 = (unsigned char)(1 << g_direction.East);
+    i234 = (unsigned char)(1 << g_direction.East);
   } else {
-    i190 = 0;
+    i234 = 0;
   }
 
-  k = (int)((unsigned int)i190 * serch_write[k - 1]);
-  if ((unsigned int)k > 255U) {
-    k = 255;
+  i232 = (int)((unsigned int)i234 * serch_write[i232 - 1]);
+  if ((unsigned int)i232 > 255U) {
+    i232 = 255;
   }
 
-  maze_wall_search[i187] = (unsigned char)(maze_wall_search[i187] | k);
+  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i232);
 
   /* 南側 */
-  k = (int)(g_direction.South + 1U);
-  i191 = k;
-  if ((unsigned int)k > 255U) {
-    i191 = 255;
+  i232 = (int)(g_direction.South + 1U);
+  i235 = i232;
+  if ((unsigned int)i232 > 255U) {
+    i235 = 255;
   }
 
   if (g_direction.South <= 7) {
-    i192 = (unsigned char)(1 << g_direction.South);
+    i236 = (unsigned char)(1 << g_direction.South);
   } else {
-    i192 = 0;
+    i236 = 0;
   }
 
-  i191 = (int)((unsigned int)i192 * wall_write[i191 - 1]);
-  if ((unsigned int)i191 > 255U) {
-    i191 = 255;
+  i235 = (int)((unsigned int)i236 * wall_write[i235 - 1]);
+  if ((unsigned int)i235 > 255U) {
+    i235 = 255;
   }
 
-  maze_wall[i187] = (unsigned char)(maze_wall[i187] | i191);
-  i191 = k;
-  if ((unsigned int)k > 255U) {
-    i191 = 255;
+  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i235);
+  i235 = i232;
+  if ((unsigned int)i232 > 255U) {
+    i235 = 255;
   }
 
   if (g_direction.South <= 7) {
-    i193 = (unsigned char)(1 << g_direction.South);
+    i237 = (unsigned char)(1 << g_direction.South);
   } else {
-    i193 = 0;
+    i237 = 0;
   }
 
-  i191 = (int)((unsigned int)i193 * serch_write[i191 - 1]);
-  if ((unsigned int)i191 > 255U) {
-    i191 = 255;
+  i235 = (int)((unsigned int)i237 * serch_write[i235 - 1]);
+  if ((unsigned int)i235 > 255U) {
+    i235 = 255;
   }
 
-  maze_wall_search[i187] = (unsigned char)(maze_wall_search[i187] | i191);
+  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i235);
 
   /* 西側 */
-  i191 = (int)(g_direction.West + 1U);
-  i194 = i191;
-  if ((unsigned int)i191 > 255U) {
-    i194 = 255;
+  i235 = (int)(g_direction.West + 1U);
+  i238 = i235;
+  if ((unsigned int)i235 > 255U) {
+    i238 = 255;
   }
 
   if (g_direction.West <= 7) {
-    i195 = (unsigned char)(1 << g_direction.West);
+    i239 = (unsigned char)(1 << g_direction.West);
   } else {
-    i195 = 0;
+    i239 = 0;
   }
 
-  i194 = (int)((unsigned int)i195 * wall_write[i194 - 1]);
-  if ((unsigned int)i194 > 255U) {
-    i194 = 255;
+  i238 = (int)((unsigned int)i239 * wall_write[i238 - 1]);
+  if ((unsigned int)i238 > 255U) {
+    i238 = 255;
   }
 
-  maze_wall[i187] = (unsigned char)(maze_wall[i187] | i194);
-  i194 = i191;
-  if ((unsigned int)i191 > 255U) {
-    i194 = 255;
+  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i238);
+  i238 = i235;
+  if ((unsigned int)i235 > 255U) {
+    i238 = 255;
   }
 
   if (g_direction.West <= 7) {
-    i196 = (unsigned char)(1 << g_direction.West);
+    i240 = (unsigned char)(1 << g_direction.West);
   } else {
-    i196 = 0;
+    i240 = 0;
   }
 
-  i194 = (int)((unsigned int)i196 * serch_write[i194 - 1]);
-  if ((unsigned int)i194 > 255U) {
-    i194 = 255;
+  i238 = (int)((unsigned int)i240 * serch_write[i238 - 1]);
+  if ((unsigned int)i238 > 255U) {
+    i238 = 255;
   }
 
-  maze_wall_search[i187] = (unsigned char)(maze_wall_search[i187] | i194);
+  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i238);
 
   /* 隣り合うマスの情報にも入力 */
   /* 北側のマスの南側の壁情報 */
@@ -12466,39 +15056,39 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   }
 
   if (current_y < (int)qY) {
-    i194 = i184;
-    if ((unsigned int)i184 > 255U) {
-      i194 = 255;
+    i238 = i227;
+    if ((unsigned int)i227 > 255U) {
+      i238 = 255;
     }
 
     if (g_direction.South <= 7) {
-      i197 = (unsigned char)(1 << g_direction.South);
+      i241 = (unsigned char)(1 << g_direction.South);
     } else {
-      i197 = 0;
+      i241 = 0;
     }
 
-    i194 = (int)((unsigned int)i197 * wall_write[i194 - 1]);
-    if ((unsigned int)i194 > 255U) {
-      i194 = 255;
+    i238 = (int)((unsigned int)i241 * wall_write[i238 - 1]);
+    if ((unsigned int)i238 > 255U) {
+      i238 = 255;
     }
 
-    maze_wall[i186] = (unsigned char)(maze_wall[i186] | i194);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    maze_wall[k] = (unsigned char)(maze_wall[k] | i238);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
     if (g_direction.South <= 7) {
-      i200 = (unsigned char)(1 << g_direction.South);
+      i244 = (unsigned char)(1 << g_direction.South);
     } else {
-      i200 = 0;
+      i244 = 0;
     }
 
-    i184 = (int)((unsigned int)i200 * serch_write[i184 - 1]);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)((unsigned int)i244 * serch_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    maze_wall_search[i186] = (unsigned char)(maze_wall_search[i186] | i184);
+    maze_wall_search[k] = (unsigned char)(maze_wall_search[k] | i227);
   }
 
   /* 東側のマスの西側の壁情報 */
@@ -12508,284 +15098,417 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   }
 
   if (current_x < (int)qY) {
-    i184 = i;
-    if ((unsigned int)i > 255U) {
-      i184 = 255;
+    i227 = ex;
+    if ((unsigned int)ex > 255U) {
+      i227 = 255;
     }
 
     if (g_direction.West <= 7) {
-      i198 = (unsigned char)(1 << g_direction.West);
+      i242 = (unsigned char)(1 << g_direction.West);
     } else {
-      i198 = 0;
+      i242 = 0;
     }
 
-    i184 = (int)((unsigned int)i198 * wall_write[i184 - 1]);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)((unsigned int)i242 * wall_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    i194 = (current_y + (current_x << 5)) - 1;
-    maze_wall[i194] = (unsigned char)(maze_wall[i194] | i184);
-    if ((unsigned int)i > 255U) {
-      i = 255;
+    i238 = (current_y + (current_x << 5)) - 1;
+    maze_wall[i238] = (unsigned char)(maze_wall[i238] | i227);
+    if ((unsigned int)ex > 255U) {
+      ex = 255;
     }
 
     if (g_direction.West <= 7) {
-      i202 = (unsigned char)(1 << g_direction.West);
+      i246 = (unsigned char)(1 << g_direction.West);
     } else {
-      i202 = 0;
+      i246 = 0;
     }
 
-    i184 = (int)((unsigned int)i202 * serch_write[i - 1]);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)((unsigned int)i246 * serch_write[ex - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    maze_wall_search[i194] = (unsigned char)(maze_wall_search[i194] | i184);
+    maze_wall_search[i238] = (unsigned char)(maze_wall_search[i238] | i227);
   }
 
   /* 南側のマスの北側の壁情報 */
   if (current_y > 1) {
-    i184 = k;
-    if ((unsigned int)k > 255U) {
-      i184 = 255;
+    i227 = i232;
+    if ((unsigned int)i232 > 255U) {
+      i227 = 255;
     }
 
     if (g_direction.North <= 7) {
-      i199 = (unsigned char)(1 << g_direction.North);
+      i243 = (unsigned char)(1 << g_direction.North);
     } else {
-      i199 = 0;
+      i243 = 0;
     }
 
-    i184 = (int)((unsigned int)i199 * wall_write[i184 - 1]);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)((unsigned int)i243 * wall_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    i = i186 - 2;
-    maze_wall[i] = (unsigned char)(maze_wall[i] | i184);
-    if ((unsigned int)k > 255U) {
-      k = 255;
+    ex = k - 2;
+    maze_wall[ex] = (unsigned char)(maze_wall[ex] | i227);
+    if ((unsigned int)i232 > 255U) {
+      i232 = 255;
     }
 
     if (g_direction.North <= 7) {
-      i203 = (unsigned char)(1 << g_direction.North);
+      i248 = (unsigned char)(1 << g_direction.North);
     } else {
-      i203 = 0;
+      i248 = 0;
     }
 
-    i184 = (int)((unsigned int)i203 * serch_write[k - 1]);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)((unsigned int)i248 * serch_write[i232 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    maze_wall_search[i] = (unsigned char)(maze_wall_search[i] | i184);
+    maze_wall_search[ex] = (unsigned char)(maze_wall_search[ex] | i227);
   }
 
   /* 西側のマスの東側の壁情報 */
   if (current_x > 1) {
-    i184 = i191;
-    if ((unsigned int)i191 > 255U) {
-      i184 = 255;
+    i227 = i235;
+    if ((unsigned int)i235 > 255U) {
+      i227 = 255;
     }
 
     if (g_direction.East <= 7) {
-      i201 = (unsigned char)(1 << g_direction.East);
+      i245 = (unsigned char)(1 << g_direction.East);
     } else {
-      i201 = 0;
+      i245 = 0;
     }
 
-    i184 = (int)((unsigned int)i201 * wall_write[i184 - 1]);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)((unsigned int)i245 * wall_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    i = (current_y + ((current_x - 2) << 5)) - 1;
-    maze_wall[i] = (unsigned char)(maze_wall[i] | i184);
-    if ((unsigned int)i191 > 255U) {
-      i191 = 255;
+    ex = (current_y + ((current_x - 2) << 5)) - 1;
+    maze_wall[ex] = (unsigned char)(maze_wall[ex] | i227);
+    if ((unsigned int)i235 > 255U) {
+      i235 = 255;
     }
 
     if (g_direction.East <= 7) {
-      i204 = (unsigned char)(1 << g_direction.East);
+      i250 = (unsigned char)(1 << g_direction.East);
     } else {
-      i204 = 0;
+      i250 = 0;
     }
 
-    i184 = (int)((unsigned int)i204 * serch_write[i191 - 1]);
-    if ((unsigned int)i184 > 255U) {
-      i184 = 255;
+    i227 = (int)((unsigned int)i250 * serch_write[i235 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    maze_wall_search[i] = (unsigned char)(maze_wall_search[i] | i184);
+    maze_wall_search[ex] = (unsigned char)(maze_wall_search[ex] | i227);
   }
 
   /* 現在地がゴールでない場合 */
-  for (i184 = 0; i184 < 9; i184++) {
-    tempx[i184] = (maze_goal->contents[i184] == current_x);
+  for (i227 = 0; i227 < 9; i227++) {
+    varargin_1[i227] = (signed char)((maze_goal->contents[i227] == current_x) *
+      (maze_goal->contents[9 + i227] == current_y));
   }
 
-  for (i184 = 0; i184 < 9; i184++) {
-    tempy[i184] = (maze_goal->contents[9 + i184] == current_y);
-  }
-
-  for (i = 0; i < 9; i++) {
-    varargin_1[i] = (signed char)(tempx[i] * tempy[i]);
-  }
-
-  i = varargin_1[0];
+  ex = varargin_1[0];
   for (k = 0; k < 8; k++) {
-    i184 = varargin_1[k + 1];
-    if (i < i184) {
-      i = i184;
+    i227 = varargin_1[k + 1];
+    if (ex < i227) {
+      ex = i227;
     }
   }
 
-  if (i == 0) {
+  if (ex == 0) {
     /* 柱に対し、3方向探索済みかつ、すべて壁がない場合、もう一方向の壁を確定させる。 */
     /* 北,東に壁がない場合 */
     if (g_direction.North <= 7) {
-      i205 = (unsigned char)(1 << g_direction.North);
+      i247 = (unsigned char)(1 << g_direction.North);
     } else {
-      i205 = 0;
+      i247 = 0;
     }
 
     if (g_direction.North <= 7) {
-      i206 = (unsigned char)(1 << g_direction.North);
+      i249 = (unsigned char)(1 << g_direction.North);
     } else {
-      i206 = 0;
+      i249 = 0;
     }
 
-    if ((maze_wall[i187] & i205) != i206) {
+    if ((maze_wall[i230] & i247) != i249) {
       if (g_direction.East <= 7) {
-        i207 = (unsigned char)(1 << g_direction.East);
+        i251 = (unsigned char)(1 << g_direction.East);
       } else {
-        i207 = 0;
+        i251 = 0;
       }
 
       if (g_direction.East <= 7) {
-        i209 = (unsigned char)(1 << g_direction.East);
+        i253 = (unsigned char)(1 << g_direction.East);
       } else {
-        i209 = 0;
+        i253 = 0;
       }
 
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i207) != i209)
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i251) != i253)
       {
         /* 北のマスの東が探索済み　かつ　壁がないとき */
-        if (g_direction.East <= 7) {
-          i211 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i211 = 0;
+        i227 = (int)(current_y + 1U);
+        ex = i227;
+        if ((unsigned int)i227 > 255U) {
+          ex = 255;
         }
 
-        if ((maze_wall_search[i186] & i211) != 0) {
-          if (g_direction.East <= 7) {
-            i215 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i215 = 0;
+        if (g_direction.East <= 7) {
+          i258 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i258 = 0;
+        }
+
+        if ((maze_wall_search[(ex + i229) - 1] & i258) != 0) {
+          ex = i227;
+          if ((unsigned int)i227 > 255U) {
+            ex = 255;
           }
 
           if (g_direction.East <= 7) {
-            i218 = (unsigned char)(1 << g_direction.East);
+            i261 = (unsigned char)(1 << g_direction.East);
           } else {
-            i218 = 0;
+            i261 = 0;
           }
 
-          if ((maze_wall[i186] & i215) != i218) {
+          if (g_direction.East <= 7) {
+            i266 = (unsigned char)(1 << g_direction.East);
+          } else {
+            i266 = 0;
+          }
+
+          if ((maze_wall[(ex + i229) - 1] & i261) != i266) {
             /* 東のマスの北の壁が確定、探索済みとする。 */
-            if (g_direction.North <= 7) {
-              i223 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i223 = 0;
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
             }
 
-            maze_wall[(current_y + (current_x << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + (current_x << 5)) - 1] | i223);
-            if (g_direction.North <= 7) {
-              i230 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i230 = 0;
+            k = (int)(current_x + 1U);
+            if ((unsigned int)k > 255U) {
+              k = 255;
             }
 
-            maze_wall_search[(current_y + (current_x << 5)) - 1] = (unsigned
-              char)(maze_wall_search[(current_y + (current_x << 5)) - 1] | i230);
+            if (g_direction.North <= 7) {
+              i276 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i276 = 0;
+            }
+
+            maze_wall[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(current_y + ((k - 1) << 5)) - 1] | i276);
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            k = (int)(current_x + 1U);
+            if ((unsigned int)k > 255U) {
+              k = 255;
+            }
+
+            if (g_direction.North <= 7) {
+              i285 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i285 = 0;
+            }
+
+            maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(current_y + ((k - 1) << 5)) - 1] | i285);
 
             /* 隣り合うマス（東北マス）の南の壁も確定 */
-            if (g_direction.South <= 7) {
-              i236 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i236 = 0;
+            ex = i227;
+            if ((unsigned int)i227 > 255U) {
+              ex = 255;
             }
 
-            maze_wall[current_y + (current_x << 5)] = (unsigned char)
-              (maze_wall[current_y + (current_x << 5)] | i236);
-            if (g_direction.South <= 7) {
-              i244 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i244 = 0;
+            k = (int)(current_x + 1U);
+            if ((unsigned int)k > 255U) {
+              k = 255;
             }
 
-            maze_wall_search[current_y + (current_x << 5)] = (unsigned char)
-              (maze_wall_search[current_y + (current_x << 5)] | i244);
+            i230 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i230 = 255;
+            }
+
+            i232 = (int)(current_x + 1U);
+            if ((unsigned int)i232 > 255U) {
+              i232 = 255;
+            }
+
+            if (g_direction.South <= 7) {
+              i301 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i301 = 0;
+            }
+
+            maze_wall[(ex + ((k - 1) << 5)) - 1] = (unsigned char)(maze_wall
+              [(i230 + ((i232 - 1) << 5)) - 1] | i301);
+            ex = i227;
+            if ((unsigned int)i227 > 255U) {
+              ex = 255;
+            }
+
+            k = (int)(current_x + 1U);
+            if ((unsigned int)k > 255U) {
+              k = 255;
+            }
+
+            i230 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i230 = 255;
+            }
+
+            i232 = (int)(current_x + 1U);
+            if ((unsigned int)i232 > 255U) {
+              i232 = 255;
+            }
+
+            if (g_direction.South <= 7) {
+              i307 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i307 = 0;
+            }
+
+            maze_wall_search[(ex + ((k - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(i230 + ((i232 - 1) << 5)) - 1] | i307);
           }
         }
 
         /* 東のマスの北が探索済み　かつ　壁がないとき */
-        if (g_direction.North <= 7) {
-          i217 = (unsigned char)(1 << g_direction.North);
-        } else {
-          i217 = 0;
+        ex = (int)(current_x + 1U);
+        k = ex;
+        if ((unsigned int)ex > 255U) {
+          k = 255;
         }
 
-        if ((maze_wall_search[(current_y + (current_x << 5)) - 1] & i217) != 0)
-        {
-          if (g_direction.North <= 7) {
-            i221 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i221 = 0;
+        if (g_direction.North <= 7) {
+          i265 = (unsigned char)(1 << g_direction.North);
+        } else {
+          i265 = 0;
+        }
+
+        if ((maze_wall_search[(current_y + ((k - 1) << 5)) - 1] & i265) != 0) {
+          k = ex;
+          if ((unsigned int)ex > 255U) {
+            k = 255;
           }
 
           if (g_direction.North <= 7) {
-            i226 = (unsigned char)(1 << g_direction.North);
+            i272 = (unsigned char)(1 << g_direction.North);
           } else {
-            i226 = 0;
+            i272 = 0;
           }
 
-          if ((maze_wall[(current_y + (current_x << 5)) - 1] & i221) != i226) {
+          if (g_direction.North <= 7) {
+            i275 = (unsigned char)(1 << g_direction.North);
+          } else {
+            i275 = 0;
+          }
+
+          if ((maze_wall[(current_y + ((k - 1) << 5)) - 1] & i272) != i275) {
             /* 北のマスの東の壁が確定、探索済みとする。 */
-            if (g_direction.East <= 7) {
-              i232 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i232 = 0;
+            k = i227;
+            if ((unsigned int)i227 > 255U) {
+              k = 255;
             }
 
-            maze_wall[i186] = (unsigned char)(maze_wall[i186] | i232);
-            if (g_direction.East <= 7) {
-              i240 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i240 = 0;
+            i230 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i230 = 255;
             }
 
-            maze_wall_search[i186] = (unsigned char)(maze_wall_search[i186] |
-              i240);
+            if (g_direction.East <= 7) {
+              i284 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i284 = 0;
+            }
+
+            maze_wall[(k + i229) - 1] = (unsigned char)(maze_wall[(i230 + i229)
+              - 1] | i284);
+            k = i227;
+            if ((unsigned int)i227 > 255U) {
+              k = 255;
+            }
+
+            i230 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i230 = 255;
+            }
+
+            if (g_direction.East <= 7) {
+              i294 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i294 = 0;
+            }
+
+            maze_wall_search[(k + i229) - 1] = (unsigned char)(maze_wall_search
+              [(i230 + i229) - 1] | i294);
 
             /* 隣り合うマス（東北マス）の西の壁も確定 */
-            if (g_direction.West <= 7) {
-              i247 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i247 = 0;
+            k = i227;
+            if ((unsigned int)i227 > 255U) {
+              k = 255;
             }
 
-            maze_wall[current_y + (current_x << 5)] = (unsigned char)
-              (maze_wall[current_y + (current_x << 5)] | i247);
-            if (g_direction.West <= 7) {
-              i254 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i254 = 0;
+            i230 = ex;
+            if ((unsigned int)ex > 255U) {
+              i230 = 255;
             }
 
-            maze_wall_search[current_y + (current_x << 5)] = (unsigned char)
-              (maze_wall_search[current_y + (current_x << 5)] | i254);
+            i232 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i232 = 255;
+            }
+
+            i235 = ex;
+            if ((unsigned int)ex > 255U) {
+              i235 = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i306 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i306 = 0;
+            }
+
+            maze_wall[(k + ((i230 - 1) << 5)) - 1] = (unsigned char)(maze_wall
+              [(i232 + ((i235 - 1) << 5)) - 1] | i306);
+            k = i227;
+            if ((unsigned int)i227 > 255U) {
+              k = 255;
+            }
+
+            i230 = ex;
+            if ((unsigned int)ex > 255U) {
+              i230 = 255;
+            }
+
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i312 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i312 = 0;
+            }
+
+            maze_wall_search[(k + ((i230 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(i227 + ((ex - 1) << 5)) - 1] | i312);
           }
         }
       }
@@ -12793,150 +15516,290 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
     /* 北,西に壁がない場合 */
     if (g_direction.North <= 7) {
-      i208 = (unsigned char)(1 << g_direction.North);
+      i252 = (unsigned char)(1 << g_direction.North);
     } else {
-      i208 = 0;
+      i252 = 0;
     }
 
     if (g_direction.North <= 7) {
-      i210 = (unsigned char)(1 << g_direction.North);
+      i254 = (unsigned char)(1 << g_direction.North);
     } else {
-      i210 = 0;
+      i254 = 0;
     }
 
-    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i208) != i210) {
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i252) != i254) {
       if (g_direction.West <= 7) {
-        i212 = (unsigned char)(1 << g_direction.West);
+        i255 = (unsigned char)(1 << g_direction.West);
       } else {
-        i212 = 0;
+        i255 = 0;
       }
 
       if (g_direction.West <= 7) {
-        i214 = (unsigned char)(1 << g_direction.West);
+        i257 = (unsigned char)(1 << g_direction.West);
       } else {
-        i214 = 0;
+        i257 = 0;
       }
 
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i212) != i214)
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i255) != i257)
       {
         /* 北のマスの西が探索済み　かつ　壁がないとき */
-        if (g_direction.West <= 7) {
-          i219 = (unsigned char)(1 << g_direction.West);
-        } else {
-          i219 = 0;
+        i227 = (int)(current_y + 1U);
+        if ((unsigned int)i227 > 255U) {
+          i227 = 255;
         }
 
-        if ((maze_wall_search[current_y + ((current_x - 1) << 5)] & i219) != 0)
-        {
-          if (g_direction.West <= 7) {
-            i225 = (unsigned char)(1 << g_direction.West);
-          } else {
-            i225 = 0;
+        if (g_direction.West <= 7) {
+          i263 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i263 = 0;
+        }
+
+        if ((maze_wall_search[(i227 + i229) - 1] & i263) != 0) {
+          i227 = (int)(current_y + 1U);
+          if ((unsigned int)i227 > 255U) {
+            i227 = 255;
           }
 
           if (g_direction.West <= 7) {
-            i229 = (unsigned char)(1 << g_direction.West);
+            i269 = (unsigned char)(1 << g_direction.West);
           } else {
-            i229 = 0;
+            i269 = 0;
           }
 
-          if ((maze_wall[i186] & i225) != i229) {
+          if (g_direction.West <= 7) {
+            i274 = (unsigned char)(1 << g_direction.West);
+          } else {
+            i274 = 0;
+          }
+
+          if ((maze_wall[(i227 + i229) - 1] & i269) != i274) {
             /* 西のマスの北の壁が確定、探索済みとする。 */
-            if (g_direction.North <= 7) {
-              i235 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i235 = 0;
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
             }
 
-            maze_wall[(current_y + ((current_x - 2) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + ((current_x - 2) << 5)) - 1] | i235);
-            if (g_direction.North <= 7) {
-              i243 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i243 = 0;
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
             }
 
-            maze_wall_search[(current_y + ((current_x - 2) << 5)) - 1] =
-              (unsigned char)(maze_wall_search[(current_y + ((current_x - 2) <<
-              5)) - 1] | i243);
+            if (g_direction.North <= 7) {
+              i283 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i283 = 0;
+            }
+
+            maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i283);
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.North <= 7) {
+              i293 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i293 = 0;
+            }
+
+            maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
+                    i293);
 
             /* 隣り合うマス（北西マス）の南の壁も確定 */
-            if (g_direction.South <= 7) {
-              i250 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i250 = 0;
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
             }
 
-            maze_wall[current_y + ((current_x - 2) << 5)] = (unsigned char)
-              (maze_wall[current_y + ((current_x - 2) << 5)] | i250);
-            if (g_direction.South <= 7) {
-              i258 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i258 = 0;
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
             }
 
-            maze_wall_search[current_y + ((current_x - 2) << 5)] = (unsigned
-              char)(maze_wall_search[current_y + ((current_x - 2) << 5)] | i258);
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.South <= 7) {
+              i303 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i303 = 0;
+            }
+
+            maze_wall[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i303);
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.South <= 7) {
+              i311 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i311 = 0;
+            }
+
+            maze_wall_search[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i311);
           }
         }
 
         /* 西のマスの北が探索済み　かつ　壁がないとき */
-        if (g_direction.North <= 7) {
-          i228 = (unsigned char)(1 << g_direction.North);
-        } else {
-          i228 = 0;
+        qY = current_x - 1U;
+        if (qY > current_x) {
+          qY = 0U;
         }
 
-        if ((maze_wall_search[(current_y + ((current_x - 2) << 5)) - 1] & i228)
-            != 0) {
-          if (g_direction.North <= 7) {
-            i234 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i234 = 0;
+        if (g_direction.North <= 7) {
+          i271 = (unsigned char)(1 << g_direction.North);
+        } else {
+          i271 = 0;
+        }
+
+        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i271) !=
+            0) {
+          qY = current_x - 1U;
+          if (qY > current_x) {
+            qY = 0U;
           }
 
           if (g_direction.North <= 7) {
-            i239 = (unsigned char)(1 << g_direction.North);
+            i278 = (unsigned char)(1 << g_direction.North);
           } else {
-            i239 = 0;
+            i278 = 0;
           }
 
-          if ((maze_wall[(current_y + ((current_x - 2) << 5)) - 1] & i234) !=
-              i239) {
+          if (g_direction.North <= 7) {
+            i282 = (unsigned char)(1 << g_direction.North);
+          } else {
+            i282 = 0;
+          }
+
+          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i278) != i282)
+          {
             /* 北のマスの西の壁が確定、探索済みとする。 */
-            if (g_direction.West <= 7) {
-              i246 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i246 = 0;
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
             }
 
-            maze_wall[i186] = (unsigned char)(maze_wall[i186] | i246);
-            if (g_direction.West <= 7) {
-              i253 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i253 = 0;
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
             }
 
-            maze_wall_search[i186] = (unsigned char)(maze_wall_search[i186] |
-              i253);
+            if (g_direction.West <= 7) {
+              i292 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i292 = 0;
+            }
+
+            maze_wall[(i227 + i229) - 1] = (unsigned char)(maze_wall[(ex + i229)
+              - 1] | i292);
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i300 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i300 = 0;
+            }
+
+            maze_wall_search[(i227 + i229) - 1] = (unsigned char)
+              (maze_wall_search[(ex + i229) - 1] | i300);
 
             /* 隣り合うマス（北西マス）の東の壁も確定 */
-            if (g_direction.East <= 7) {
-              i260 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i260 = 0;
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
             }
 
-            maze_wall[current_y + ((current_x - 2) << 5)] = (unsigned char)
-              (maze_wall[current_y + ((current_x - 2) << 5)] | i260);
-            if (g_direction.East <= 7) {
-              i266 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i266 = 0;
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
             }
 
-            maze_wall_search[current_y + ((current_x - 2) << 5)] = (unsigned
-              char)(maze_wall_search[current_y + ((current_x - 2) << 5)] | i266);
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i309 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i309 = 0;
+            }
+
+            maze_wall[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i309);
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i316 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i316 = 0;
+            }
+
+            maze_wall_search[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i316);
           }
         }
       }
@@ -12944,150 +15807,288 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
     /* 南,東に壁がない場合 */
     if (g_direction.East <= 7) {
-      i213 = (unsigned char)(1 << g_direction.East);
+      i256 = (unsigned char)(1 << g_direction.East);
     } else {
-      i213 = 0;
+      i256 = 0;
     }
 
     if (g_direction.East <= 7) {
-      i216 = (unsigned char)(1 << g_direction.East);
+      i259 = (unsigned char)(1 << g_direction.East);
     } else {
-      i216 = 0;
+      i259 = 0;
     }
 
-    if ((maze_wall[i187] & i213) != i216) {
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i256) != i259) {
       if (g_direction.South <= 7) {
-        i220 = (unsigned char)(1 << g_direction.South);
+        i260 = (unsigned char)(1 << g_direction.South);
       } else {
-        i220 = 0;
+        i260 = 0;
       }
 
       if (g_direction.South <= 7) {
-        i224 = (unsigned char)(1 << g_direction.South);
+        i264 = (unsigned char)(1 << g_direction.South);
       } else {
-        i224 = 0;
+        i264 = 0;
       }
 
-      if ((maze_wall[i187] & i220) != i224) {
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i260) != i264)
+      {
         /* 南のマスの東が探索済み　かつ　壁がないとき */
-        if (g_direction.East <= 7) {
-          i231 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i231 = 0;
+        qY = current_y - 1U;
+        if (qY > current_y) {
+          qY = 0U;
         }
 
-        if ((maze_wall_search[(current_y + ((current_x - 1) << 5)) - 2] & i231)
-            != 0) {
-          if (g_direction.East <= 7) {
-            i238 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i238 = 0;
+        if (g_direction.East <= 7) {
+          i270 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i270 = 0;
+        }
+
+        if ((maze_wall_search[((int)qY + i229) - 1] & i270) != 0) {
+          qY = current_y - 1U;
+          if (qY > current_y) {
+            qY = 0U;
           }
 
           if (g_direction.East <= 7) {
-            i242 = (unsigned char)(1 << g_direction.East);
+            i277 = (unsigned char)(1 << g_direction.East);
           } else {
-            i242 = 0;
+            i277 = 0;
           }
 
-          if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 2] & i238) !=
-              i242) {
+          if (g_direction.East <= 7) {
+            i281 = (unsigned char)(1 << g_direction.East);
+          } else {
+            i281 = 0;
+          }
+
+          if ((maze_wall[((int)qY + i229) - 1] & i277) != i281) {
             /* 東のマスの南の壁が確定、探索済みとする。 */
-            if (g_direction.South <= 7) {
-              i249 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i249 = 0;
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
             }
 
-            maze_wall[(current_y + (current_x << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + (current_x << 5)) - 1] | i249);
-            if (g_direction.South <= 7) {
-              i257 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i257 = 0;
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
             }
 
-            maze_wall_search[(current_y + (current_x << 5)) - 1] = (unsigned
-              char)(maze_wall_search[(current_y + (current_x << 5)) - 1] | i257);
+            if (g_direction.South <= 7) {
+              i291 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i291 = 0;
+            }
+
+            maze_wall[(current_y + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(current_y + ((ex - 1) << 5)) - 1] | i291);
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.South <= 7) {
+              i299 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i299 = 0;
+            }
+
+            maze_wall_search[(current_y + ((i227 - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] | i299);
 
             /* 隣り合うマス（南東マス）の北の壁も確定 */
-            i184 = (current_y + (current_x << 5)) - 2;
-            if (g_direction.North <= 7) {
-              i265 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i265 = 0;
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
             }
 
-            maze_wall[i184] = (unsigned char)(maze_wall[i184] | i265);
-            if (g_direction.North <= 7) {
-              i268 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i268 = 0;
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
             }
 
-            maze_wall_search[i184] = (unsigned char)(maze_wall_search[i184] |
-              i268);
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.North <= 7) {
+              i308 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i308 = 0;
+            }
+
+            maze_wall[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i308);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.North <= 7) {
+              i315 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i315 = 0;
+            }
+
+            maze_wall_search[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i315);
           }
         }
 
         /* 東のマスの南が探索済み　かつ　壁がないとき */
-        if (g_direction.South <= 7) {
-          i241 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i241 = 0;
+        i227 = (int)(current_x + 1U);
+        if ((unsigned int)i227 > 255U) {
+          i227 = 255;
         }
 
-        if ((maze_wall_search[(current_y + (current_x << 5)) - 1] & i241) != 0)
+        if (g_direction.South <= 7) {
+          i280 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i280 = 0;
+        }
+
+        if ((maze_wall_search[(current_y + ((i227 - 1) << 5)) - 1] & i280) != 0)
         {
-          if (g_direction.South <= 7) {
-            i248 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i248 = 0;
+          i227 = (int)(current_x + 1U);
+          if ((unsigned int)i227 > 255U) {
+            i227 = 255;
           }
 
           if (g_direction.South <= 7) {
-            i252 = (unsigned char)(1 << g_direction.South);
+            i287 = (unsigned char)(1 << g_direction.South);
           } else {
-            i252 = 0;
+            i287 = 0;
           }
 
-          if ((maze_wall[(current_y + (current_x << 5)) - 1] & i248) != i252) {
+          if (g_direction.South <= 7) {
+            i290 = (unsigned char)(1 << g_direction.South);
+          } else {
+            i290 = 0;
+          }
+
+          if ((maze_wall[(current_y + ((i227 - 1) << 5)) - 1] & i287) != i290) {
             /* 南のマスの東の壁が確定、探索済みとする。 */
-            if (g_direction.East <= 7) {
-              i259 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i259 = 0;
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
             }
 
-            maze_wall[(current_y + ((current_x - 1) << 5)) - 2] = (unsigned char)
-              (maze_wall[(current_y + ((current_x - 1) << 5)) - 2] | i259);
-            if (g_direction.East <= 7) {
-              i264 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i264 = 0;
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
             }
 
-            maze_wall_search[(current_y + ((current_x - 1) << 5)) - 2] =
-              (unsigned char)(maze_wall_search[(current_y + ((current_x - 1) <<
-              5)) - 2] | i264);
+            if (g_direction.East <= 7) {
+              i298 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i298 = 0;
+            }
+
+            maze_wall[((int)qY + i229) - 1] = (unsigned char)(maze_wall[((int)
+              b_qY + i229) - 1] | i298);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i305 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i305 = 0;
+            }
+
+            maze_wall_search[((int)qY + i229) - 1] = (unsigned char)
+              (maze_wall_search[((int)b_qY + i229) - 1] | i305);
 
             /* 隣り合うマス（南東マス）の西の壁が確定。探索済みとする */
-            if (g_direction.West <= 7) {
-              i270 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i270 = 0;
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
             }
 
-            maze_wall[(current_y + (current_x << 5)) - 2] = (unsigned char)
-              (maze_wall[(current_y + (current_x << 5)) - 2] | i270);
-            if (g_direction.West <= 7) {
-              i273 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i273 = 0;
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
             }
 
-            maze_wall_search[(current_y + (current_x << 5)) - 2] = (unsigned
-              char)(maze_wall_search[(current_y + (current_x << 5)) - 2] | i273);
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i314 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i314 = 0;
+            }
+
+            maze_wall[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i314);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i319 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i319 = 0;
+            }
+
+            maze_wall_search[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i319);
           }
         }
       }
@@ -13095,153 +16096,292 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
     /* 南,西に壁がない場合 */
     if (g_direction.West <= 7) {
-      i222 = (unsigned char)(1 << g_direction.West);
+      i262 = (unsigned char)(1 << g_direction.West);
     } else {
-      i222 = 0;
+      i262 = 0;
     }
 
     if (g_direction.West <= 7) {
-      i227 = (unsigned char)(1 << g_direction.West);
+      i267 = (unsigned char)(1 << g_direction.West);
     } else {
-      i227 = 0;
+      i267 = 0;
     }
 
-    if ((maze_wall[i187] & i222) != i227) {
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i262) != i267) {
       if (g_direction.South <= 7) {
-        i233 = (unsigned char)(1 << g_direction.South);
+        i268 = (unsigned char)(1 << g_direction.South);
       } else {
-        i233 = 0;
+        i268 = 0;
       }
 
       if (g_direction.South <= 7) {
-        i237 = (unsigned char)(1 << g_direction.South);
+        i273 = (unsigned char)(1 << g_direction.South);
       } else {
-        i237 = 0;
+        i273 = 0;
       }
 
-      if ((maze_wall[i187] & i233) != i237) {
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i268) != i273)
+      {
         /* 南のマスの西が探索済み　かつ　壁がないとき */
-        if (g_direction.West <= 7) {
-          i245 = (unsigned char)(1 << g_direction.West);
-        } else {
-          i245 = 0;
+        qY = current_y - 1U;
+        if (qY > current_y) {
+          qY = 0U;
         }
 
-        if ((maze_wall_search[(current_y + ((current_x - 1) << 5)) - 2] & i245)
-            != 0) {
-          if (g_direction.West <= 7) {
-            i251 = (unsigned char)(1 << g_direction.West);
-          } else {
-            i251 = 0;
+        if (g_direction.West <= 7) {
+          i279 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i279 = 0;
+        }
+
+        if ((maze_wall_search[((int)qY + i229) - 1] & i279) != 0) {
+          qY = current_y - 1U;
+          if (qY > current_y) {
+            qY = 0U;
           }
 
           if (g_direction.West <= 7) {
-            i256 = (unsigned char)(1 << g_direction.West);
+            i286 = (unsigned char)(1 << g_direction.West);
           } else {
-            i256 = 0;
+            i286 = 0;
           }
 
-          if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 2] & i251) !=
-              i256) {
+          if (g_direction.West <= 7) {
+            i289 = (unsigned char)(1 << g_direction.West);
+          } else {
+            i289 = 0;
+          }
+
+          if ((maze_wall[((int)qY + i229) - 1] & i286) != i289) {
             /* 西のマスの南の壁が確定、探索済みとする。 */
-            if (g_direction.South <= 7) {
-              i262 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i262 = 0;
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
             }
 
-            maze_wall[(current_y + ((current_x - 2) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + ((current_x - 2) << 5)) - 1] | i262);
-            if (g_direction.South <= 7) {
-              i267 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i267 = 0;
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
             }
 
-            maze_wall_search[(current_y + ((current_x - 2) << 5)) - 1] =
-              (unsigned char)(maze_wall_search[(current_y + ((current_x - 2) <<
-              5)) - 1] | i267);
+            if (g_direction.South <= 7) {
+              i297 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i297 = 0;
+            }
+
+            maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i297);
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.South <= 7) {
+              i304 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i304 = 0;
+            }
+
+            maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
+                    i304);
 
             /* 隣り合うマス（南西マス）の北の壁が確定。探索済みとする */
-            i184 = (current_y + ((current_x - 2) << 5)) - 2;
-            if (g_direction.North <= 7) {
-              i272 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i272 = 0;
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
             }
 
-            maze_wall[i184] = (unsigned char)(maze_wall[i184] | i272);
-            if (g_direction.North <= 7) {
-              i274 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i274 = 0;
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
             }
 
-            maze_wall_search[i184] = (unsigned char)(maze_wall_search[i184] |
-              i274);
+            c_qY = current_y - 1U;
+            if (c_qY > current_y) {
+              c_qY = 0U;
+            }
+
+            d_qY = current_x - 1U;
+            if (d_qY > current_x) {
+              d_qY = 0U;
+            }
+
+            if (g_direction.North <= 7) {
+              i313 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i313 = 0;
+            }
+
+            maze_wall[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i313);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            c_qY = current_y - 1U;
+            if (c_qY > current_y) {
+              c_qY = 0U;
+            }
+
+            d_qY = current_x - 1U;
+            if (d_qY > current_x) {
+              d_qY = 0U;
+            }
+
+            if (g_direction.North <= 7) {
+              i318 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i318 = 0;
+            }
+
+            maze_wall_search[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] |
+                    i318);
           }
         }
 
         /* 西のマスの南が探索済み　かつ　壁がないとき */
-        if (g_direction.South <= 7) {
-          i255 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i255 = 0;
+        qY = current_x - 1U;
+        if (qY > current_x) {
+          qY = 0U;
         }
 
-        if ((maze_wall_search[(current_y + ((current_x - 2) << 5)) - 1] & i255)
-            != 0) {
-          if (g_direction.South <= 7) {
-            i261 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i261 = 0;
+        if (g_direction.South <= 7) {
+          i288 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i288 = 0;
+        }
+
+        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i288) !=
+            0) {
+          qY = current_x - 1U;
+          if (qY > current_x) {
+            qY = 0U;
           }
 
           if (g_direction.South <= 7) {
-            i263 = (unsigned char)(1 << g_direction.South);
+            i295 = (unsigned char)(1 << g_direction.South);
           } else {
-            i263 = 0;
+            i295 = 0;
           }
 
-          if ((maze_wall[(current_y + ((current_x - 2) << 5)) - 1] & i261) !=
-              i263) {
+          if (g_direction.South <= 7) {
+            i296 = (unsigned char)(1 << g_direction.South);
+          } else {
+            i296 = 0;
+          }
+
+          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i295) != i296)
+          {
             /* 南のマスの西の壁が確定、探索済みとする。 */
-            if (g_direction.West <= 7) {
-              i269 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i269 = 0;
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
             }
 
-            maze_wall[(current_y + ((current_x - 1) << 5)) - 2] = (unsigned char)
-              (maze_wall[(current_y + ((current_x - 1) << 5)) - 2] | i269);
-            if (g_direction.West <= 7) {
-              i271 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i271 = 0;
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
             }
 
-            maze_wall_search[(current_y + ((current_x - 1) << 5)) - 2] =
-              (unsigned char)(maze_wall_search[(current_y + ((current_x - 1) <<
-              5)) - 2] | i271);
+            if (g_direction.West <= 7) {
+              i302 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i302 = 0;
+            }
+
+            maze_wall[((int)qY + i229) - 1] = (unsigned char)(maze_wall[((int)
+              b_qY + i229) - 1] | i302);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.West <= 7) {
+              i310 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i310 = 0;
+            }
+
+            maze_wall_search[((int)qY + i229) - 1] = (unsigned char)
+              (maze_wall_search[((int)b_qY + i229) - 1] | i310);
 
             /* 隣り合うマス（南西マス）の東の壁が確定。探索済みとする */
-            if (g_direction.East <= 7) {
-              i275 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i275 = 0;
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
             }
 
-            maze_wall[(current_y + ((current_x - 2) << 5)) - 2] = (unsigned char)
-              (maze_wall[(current_y + ((current_x - 2) << 5)) - 2] | i275);
-            if (g_direction.East <= 7) {
-              i276 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i276 = 0;
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
             }
 
-            maze_wall_search[(current_y + ((current_x - 2) << 5)) - 2] =
-              (unsigned char)(maze_wall_search[(current_y + ((current_x - 2) <<
-              5)) - 2] | i276);
+            c_qY = current_y - 1U;
+            if (c_qY > current_y) {
+              c_qY = 0U;
+            }
+
+            d_qY = current_x - 1U;
+            if (d_qY > current_x) {
+              d_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i317 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i317 = 0;
+            }
+
+            maze_wall[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i317);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            c_qY = current_y - 1U;
+            if (c_qY > current_y) {
+              c_qY = 0U;
+            }
+
+            d_qY = current_x - 1U;
+            if (d_qY > current_x) {
+              d_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i320 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i320 = 0;
+            }
+
+            maze_wall_search[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] |
+                    i320);
           }
         }
       }
@@ -13259,7 +16399,8 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
  *                unsigned char maze_col_size
  *                unsigned char goal_size
  *                const unsigned char maze_goal[18]
- *                unsigned char run_mode
+ *                unsigned char run_mode_1
+ *                unsigned char run_mode_2
  *                unsigned short contour_map[1024]
  *                unsigned short row_num_node[1056]
  *                unsigned short col_num_node[1056]
@@ -13268,42 +16409,42 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
                 [1024], unsigned char maze_row_size, unsigned char maze_col_size,
                 unsigned char goal_size, const unsigned char maze_goal[18],
-                unsigned char run_mode, unsigned short contour_map[1024],
-                unsigned short row_num_node[1056], unsigned short col_num_node
-                [1056])
+                unsigned char run_mode_1, unsigned char run_mode_2, unsigned
+                short contour_map[1024], unsigned short row_num_node[1056],
+                unsigned short col_num_node[1056])
 {
   coder_internal_ref b_goal_size;
-  coder_internal_ref wall_flg;
-  int idx;
+  int N;
   coder_internal_ref_1 b_maze_goal;
-  unsigned char new_goal[18];
+  coder_internal_ref wall_flg;
+  unsigned char new_goal[2];
   coder_internal_ref_5 wall;
   coder_internal_ref_4 search;
-  coder_internal_ref_3 num_temp;
+  coder_internal_ref_3 adachi_search_mode;
   coder_internal_ref_2 max_length;
-  unsigned char col_temp;
-  unsigned short minval;
-  coder_internal_ref current_x;
-  coder_internal_ref current_y;
-  coder_internal_ref current_dir;
-  unsigned char goal_section[2];
+  unsigned short start_num;
+  unsigned char current_x;
   unsigned char search_flag;
-  unsigned char b_goal_section[2];
+  unsigned char goal_dir;
+  unsigned char current_y;
+  unsigned char goal_section[2];
   unsigned char goal_node2[2];
   unsigned char start_flg;
+  unsigned char current_dir;
+  unsigned short unusedExpr[1024];
   int exitg1;
   bool exitg2;
-  bool b0;
-  unsigned short contour_map_temp[1024];
-  unsigned short u11;
-  int ii_size_idx_0;
-  int ii;
-  short ii_data[1];
-  unsigned short tmp_data[1];
+  unsigned short b_unusedExpr[1024];
+  unsigned char unexp_square[1024];
+  unsigned short c_unusedExpr[1024];
+  unsigned short d_unusedExpr[1024];
   b_goal_size.contents = goal_size;
+  for (N = 0; N < 18; N++) {
+    b_maze_goal.contents[N] = maze_goal[N];
+  }
 
   /* C言語関数インクルード */
-  /* ローカル変数定義  */
+  /* ローカル変数定義 */
   /*  ゴール時ストップフラグ(0:移動継続　1:ストップ) */
   /*  スタートフラグ(0:動作中　1:停止からの移動開始) */
   /* ゴール直後フラグ(0:ゴール直後でない, 1:ゴール直後) */
@@ -13311,17 +16452,19 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
 
   /* 壁フラグ(1:前、2:右、（4:後ろ)、8:左) */
   /*  グローバル変数宣言 */
+  /* メインfigure */
+  /* メインaxes */
+  /* プロット用変数 */
+  /* 最短経路ラインオブジェクト保持用 */
+  /* ゴールラインオブジェクト保持用 */
   /*  global maze_goal; */
   /* ローカル変数宣言 */
-  for (idx = 0; idx < 18; idx++) {
-    b_maze_goal.contents[idx] = maze_goal[idx];
-    new_goal[idx] = 0U;
-  }
-
+  new_goal[0] = 0U;
+  new_goal[1] = 0U;
   memset(&contour_map[0], 0, sizeof(unsigned short) << 10);
-  for (idx = 0; idx < 1056; idx++) {
-    row_num_node[idx] = MAX_uint16_T;
-    col_num_node[idx] = MAX_uint16_T;
+  for (N = 0; N < 1056; N++) {
+    row_num_node[N] = MAX_uint16_T;
+    col_num_node[N] = MAX_uint16_T;
   }
 
   /* ノードの属性定義 */
@@ -13377,9 +16520,15 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   search.contents.known = 1U;
 
   /* 走行モード定義 */
+  /* 探索モード */
+  /* 未探索壁扱いモード定義 */
+  /* 最短経路導出モード */
+  /* 足立法による探索モード　ゴールor探索 */
+  adachi_search_mode.contents.goal = 0U;
+  adachi_search_mode.contents.search = 1U;
+
   /*  探索 */
-  c_emxInitStruct_coder_internal_(&num_temp);
-  if (run_mode == 0) {
+  if (run_mode_1 == 0) {
     /* マウスの初期位置設定 */
     /* for C gen */
     /* 各フラグを定義 */
@@ -13387,35 +16536,9 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     /* 停止処理を実施する */
     /* ゴール直後フラグはクリア */
     /* 一マス前進 */
-    col_temp = 1U;
-
-    /* 入力 現在位置x,y,現在方向 */
-    /* 出力 現在位置x,y */
-    /*  move_step 一マス前進する関数 */
-    /* 北に一マス */
-    search_flag = 2U;
-
-    /* disp("north_step") */
-    /* 東に一マス */
-    if (g_direction.North == g_direction.East) {
-      col_temp = 2U;
-
-      /* disp("east_step") */
-    }
-
-    /* 南に一マス */
-    if (g_direction.North == g_direction.South) {
-      search_flag = 1U;
-
-      /* disp("south_step") */
-    }
-
-    /* 西に一マス */
-    if (g_direction.North == g_direction.West) {
-      col_temp--;
-
-      /* disp("west_step") */
-    }
+    current_x = 1U;
+    current_y = 1U;
+    move_step(&current_x, &current_y, g_direction.North);
 
     /* C言語でのスタート処理 */
     m_start_movement(1, 0, move_dir_property.straight);
@@ -13423,15 +16546,12 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     /* 停止直後フラグをクリア */
     /* ゴールをプロット */
     /* 足立法による探索 */
-    current_x.contents = col_temp;
-    current_y.contents = search_flag;
-    current_dir.contents = g_direction.North;
-    start_flg = 0U;
-    search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &num_temp,
-                  &current_x.contents, &current_y.contents,
-                  &current_dir.contents, maze_row_size, maze_col_size, maze_wall,
-                  maze_wall_search, maze_goal, goal_size, &start_flg, 0U,
-                  contour_map);
+    current_dir = g_direction.North;
+    search_flag = 0U;
+    search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &adachi_search_mode,
+                  &current_x, &current_y, &current_dir, maze_row_size,
+                  maze_col_size, maze_wall, maze_wall_search, maze_goal,
+                  goal_size, &search_flag, 0U, unusedExpr);
 
     /* ひとまづゴール(停止) */
     /* 各フラグを定義 */
@@ -13444,27 +16564,27 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     do {
       exitg1 = 0;
       search_flag = 0U;
-      idx = 0;
+      N = 0;
       exitg2 = false;
-      while ((!exitg2) && (idx <= goal_size - 1)) {
-        col_temp = b_maze_goal.contents[idx + 9];
-        if (maze_wall_search[(col_temp + ((b_maze_goal.contents[idx] - 1) << 5))
-            - 1] != 15) {
-          new_goal[0] = b_maze_goal.contents[idx];
-          new_goal[9] = col_temp;
+      while ((!exitg2) && (N <= goal_size - 1)) {
+        goal_dir = b_maze_goal.contents[N + 9];
+        if (maze_wall_search[(goal_dir + ((b_maze_goal.contents[N] - 1) << 5)) -
+            1] != 15) {
+          new_goal[0] = b_maze_goal.contents[N];
+          new_goal[1] = goal_dir;
           search_flag = 1U;
           exitg2 = true;
         } else {
-          idx++;
+          N++;
         }
       }
 
       if (search_flag == 1) {
-        b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &num_temp,
-                        &current_x.contents, &current_y.contents,
-                        &current_dir.contents, maze_row_size, maze_col_size,
-                        maze_wall, maze_wall_search, new_goal, &start_flg, 1U,
-                        contour_map);
+        b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal,
+                        &adachi_search_mode, &current_x, &current_y,
+                        &current_dir, maze_row_size, maze_col_size, maze_wall,
+                        maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
+                        b_unusedExpr);
 
         /* ゴール直後フラグをたてる */
       } else {
@@ -13472,177 +16592,179 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
       }
     } while (exitg1 == 0);
 
+    /* 帰路探索 */
+    /* 全面探索 */
     /* 未探索マスがなくなるまで。 */
-    /*  現地点から一番近い未探索マスを探索 */
-    do {
-      exitg1 = 0;
-
-      /* 未探索のマスを抽出 */
-      /* 未探索マスの現在地（ゴール）からの距離を抽出 */
-      /* 探索完了部をuint16の上限に(新しいゴールをminで決定したいので。) */
-      for (idx = 0; idx < 1024; idx++) {
-        b0 = (maze_wall_search[idx] != 15);
-        contour_map_temp[idx] = (unsigned short)((unsigned int)b0 *
-          contour_map[idx]);
-        if (b0 * contour_map[idx] == 0) {
-          contour_map_temp[idx] = MAX_uint16_T;
-        }
-      }
-
-      /* 未探索マスのうち、現在地から一番近いマスの要素番号を抽出 */
-      minval = contour_map_temp[0];
-      for (idx = 0; idx < 1023; idx++) {
-        u11 = contour_map_temp[idx + 1];
-        if (minval > u11) {
-          minval = u11;
-        }
-      }
-
-      idx = 0;
-      ii_size_idx_0 = 1;
-      ii = 0;
-      exitg2 = false;
-      while ((!exitg2) && (ii < 1024)) {
-        if (contour_map_temp[ii] == minval) {
-          idx = 1;
-          ii_data[0] = (short)(ii + 1);
-          exitg2 = true;
+    /* 現地点から一番近い未探索マスを探索 */
+    /* 現在地からコンターマップを展開、探索済みでないマスが見つかれば、そこをゴールとする。 */
+    switch (run_mode_2) {
+     case 1:
+      do {
+        exitg1 = 0;
+        make_new_goal_all(&wall, maze_wall, maze_wall_search, current_x,
+                          current_y, contour_map, new_goal);
+        if (new_goal[0] == 0) {
+          exitg1 = 1;
         } else {
-          ii++;
+          /* ゴールをプロット */
+          /* 既存のコンターを使用し、探索。 */
+          b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal,
+                          &adachi_search_mode, &current_x, &current_y,
+                          &current_dir, maze_row_size, maze_col_size, maze_wall,
+                          maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
+                          c_unusedExpr);
+
+          /* ゴール直後フラグをたてる */
         }
-      }
+      } while (exitg1 == 0);
 
-      if (idx == 0) {
-        ii_size_idx_0 = 0;
-      }
+      /* 新規ゴールが見つからないとき、停止処理を実施 */
+      m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
 
-      for (idx = 0; idx < ii_size_idx_0; idx++) {
-        tmp_data[0] = (unsigned short)ii_data[0];
-      }
+      /* 探索終了時、停止させているため、フラグをたてる。 */
+      start_flg = 1U;
 
-      idx = num_temp.contents->size[0];
-      num_temp.contents->size[0] = ii_size_idx_0;
-      emxEnsureCapacity_uint16_T(num_temp.contents, idx);
-      for (idx = 0; idx < ii_size_idx_0; idx++) {
-        num_temp.contents->data[0] = (unsigned short)ii_data[0];
-      }
+      /* 停止直後 */
+      /* 最短経路探索 */
+      /* 最短となりうるマスの未探索のみ探索 */
+      break;
 
-      /* 行番号を抽出(32行なので、行番号:32で割ったあまり) */
-      search_flag = (unsigned char)((tmp_data[0] - 1) % 32 + 1);
+     case 2:
+      do {
+        exitg1 = 0;
 
-      /* 列番号を抽出(32で割ったときの商) */
-      col_temp = (unsigned char)((int)trunc(((double)num_temp.contents->data[0]
-        - 1.0) / 32.0) + 1);
-      if (contour_map_temp[(search_flag + ((col_temp - 1) << 5)) - 1] == 65535)
-      {
-        exitg1 = 1;
-      } else {
-        new_goal[0] = col_temp;
-        new_goal[9] = search_flag;
+        /* 未探索壁はないものとして、ゴールからスタートまで、コンターマップを展開（直線の重みあり） */
+        make_map_fustrun(&b_goal_size, &wall, &search, b_maze_goal.contents,
+                         maze_wall, maze_wall_search, 0U, contour_map);
 
-        /* ゴールをプロット              */
-        b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &num_temp,
-                        &current_x.contents, &current_y.contents,
-                        &current_dir.contents, maze_row_size, maze_col_size,
-                        maze_wall, maze_wall_search, new_goal, &start_flg, 1U,
-                        contour_map);
+        /* マップをもとに、最短経路を導出。経路上の未探索マスとその数を出力 */
+        fust_run(&b_goal_size, &wall_flg, &wall, maze_wall, maze_wall_search,
+                 contour_map, b_maze_goal.contents, MAX_uint16_T, start_flg,
+                 unexp_square, &search_flag);
 
-        /* ゴール直後フラグをたてる */
-      }
-    } while (exitg1 == 0);
+        /* 未探索マスがなければ、ブレイク */
+        if (search_flag == 0) {
+          exitg1 = 1;
+        } else {
+          /* 未探索マスがある場合、探索する。 */
+          /* 現在地点からコンターを展開し、該当の未探索が更新されれば、そこを新規ゴールとして出力 */
+          make_new_goal_sh(&wall, maze_wall, current_x, current_y, unexp_square,
+                           search_flag, contour_map, new_goal);
 
-    /* 未探索マスが見つからないとき、停止処理を実施 */
-    m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
+          /* ゴールをプロット */
+          /* 新規ゴールに向け、探索 */
+          b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal,
+                          &adachi_search_mode, &current_x, &current_y,
+                          &current_dir, maze_row_size, maze_col_size, maze_wall,
+                          maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
+                          d_unusedExpr);
+
+          /* ゴール直後フラグをたてる */
+        }
+      } while (exitg1 == 0);
+
+      /* 新規ゴールが見つからないとき、停止処理を実施 */
+      m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
+
+      /* 探索終了時、停止させているため、停止フラグを立てる。 */
+      start_flg = 1U;
+
+      /* 停止直後 */
+      /* その他の場合無視 */
+      break;
+
+     default:
+      /* 停止させない */
+      start_flg = 0U;
+
+      /* 停止直後でない */
+      break;
+    }
 
     /* スタートを目的地として足立法で再探索 */
     /* 各フラグを定義 */
-    /* 停止直後 */
     /* 停止処理を実施する */
     /* ゴール直後フラグをたてる */
-    new_goal[0] = 1U;
-    new_goal[9] = 1U;
-    start_flg = 1U;
-    search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &num_temp,
-                  &current_x.contents, &current_y.contents,
-                  &current_dir.contents, maze_row_size, maze_col_size, maze_wall,
-                  maze_wall_search, new_goal, 1U, &start_flg, 1U, contour_map);
+    /* スタートをゴールに設定 */
+    /* ゴールをプロット */
+    /* 足立法で帰宅 */
+    goal_section[0] = 1U;
+    goal_section[1] = 1U;
+    b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &adachi_search_mode,
+                    &current_x, &current_y, &current_dir, maze_row_size,
+                    maze_col_size, maze_wall, maze_wall_search, goal_section,
+                    &start_flg, 1U, 1U, 0U, contour_map);
 
     /* for code generation */
+    /* 終了時、ゴールプロットを消す。 */
+    /*     %% 最短走行 */
+  } else {
+    if (run_mode_1 == 1) {
+      if (run_mode_2 == 0) {
+        /* 探索情報をもとに等高線MAPを生成 */
+        /* 未知壁は仮想壁を設置する。(w_mode.wall) */
+        make_map_fustrun(&b_goal_size, &wall, &search, maze_goal, maze_wall,
+                         maze_wall_search, 1U, contour_map);
+
+        /* ゴールの描画 */
+        /*      %コンターマップの描画 */
+        /*      if coder.target('MATLAB') */
+        /*          for l = 1:32 */
+        /*              for j = 1:32 */
+        /*                  text((j-1)*9+4.5,(l-1)*9+4.5,string(contour_map(l,j)),'HorizontalAlignment','center'); */
+        /*              end */
+        /*          end */
+        /*      end */
+        /* 各走行フラグを定義 */
+        /* 停止直後 */
+        /* 停止処理を実施する */
+        /* ゴール直後フラグはクリア */
+        /* 一マス前進 */
+        current_x = 1U;
+        current_y = 1U;
+        move_step(&current_x, &current_y, g_d_direction.North);
+
+        /* C言語でのスタート処理 */
+        m_start_movement(1, 0, move_dir_property.straight);
+
+        /* 停止直後フラグをクリア */
+        /* 最短距離走行 */
+        b_fust_run(&b_goal_size, &wall_flg, &wall, maze_wall, contour_map,
+                   maze_goal, MAX_uint16_T, current_x, current_y);
+
+        /*  斜めでの最短走行 */
+      } else {
+        if (run_mode_2 == 1) {
+          /* 最短経路生成 */
+          /* ゴールマスのノードをすべてゴールノードとし、マップ生成 */
+          make_map_fustrun_diagonal(&max_length, &wall, &search, maze_goal,
+            goal_size, maze_wall, maze_wall_search, row_num_node, col_num_node,
+            &start_num);
+
+          /* ゴール付近のルート最適化のため、マップ再生成 */
+          /* スタートからゴールノードまで、ルート生成し、ゴールノード、方向を確定 */
+          decide_goal_node_dir(maze_goal, goal_size, row_num_node, col_num_node,
+                               new_goal, &search_flag, &goal_dir);
+
+          /* 確定されたゴールノード、方向からゴールマス、ノードを再定義 */
+          decide_goal_section(maze_goal, new_goal, search_flag, goal_dir,
+                              goal_section, goal_node2, &start_flg);
+
+          /* 確定されたゴールマスから、再度マップを生成 */
+          new_goal[0] = goal_section[1];
+          new_goal[1] = goal_section[0];
+
+          /* x,yに変換 */
+          b_make_map_fustrun_diagonal(&max_length, &wall, &search, new_goal,
+            maze_wall, maze_wall_search, row_num_node, col_num_node, &start_num);
+
+          /* 生成されたMAPをもとに最短走行 */
+          make_route_diagonal(row_num_node, col_num_node, new_goal, goal_node2,
+                              start_flg);
+        }
+      }
+    }
   }
-
-  /*  最短走行 */
-  if (run_mode == 1) {
-    /* 探索情報をもとに等高線MAPを生成 */
-    make_map_fustrun(&b_goal_size, &num_temp, &wall, &search,
-                     b_maze_goal.contents, maze_wall, maze_wall_search,
-                     contour_map);
-    max_length.contents = MAX_uint16_T;
-
-    /* コンターマップの描画 */
-    /* 最短距離走行 */
-    fust_run(&current_x, &current_y, &current_dir, &b_goal_size, &wall,
-             maze_wall, contour_map, b_maze_goal.contents, MAX_uint16_T);
-  }
-
-  /*  斜めでの最短走行 */
-  if (run_mode == 2) {
-    /* 最短経路生成 */
-    /* ゴールマスのノードをすべてゴールノードとし、マップ生成 */
-    make_map_fustrun_diagonal(&max_length, &num_temp, &wall, &search,
-      b_maze_goal.contents, b_goal_size.contents, maze_wall, maze_wall_search,
-      row_num_node, col_num_node, &minval);
-
-    /* ゴール付近のルート最適化のため、マップ再生成 */
-    /* スタートからゴールノードまで、ルート生成し、ゴールノード、方向を確定 */
-    decide_goal_node_dir(b_maze_goal.contents, b_goal_size.contents,
-                         row_num_node, col_num_node, goal_section, &search_flag,
-                         &col_temp);
-
-    /* 確定されたゴールノード、方向からゴールマス、ノードを再定義 */
-    decide_goal_section(b_maze_goal.contents, goal_section, search_flag,
-                        col_temp, b_goal_section, goal_node2, &start_flg);
-
-    /* 確定されたゴールマスから、再度マップを生成 */
-    goal_section[0] = b_goal_section[1];
-    goal_section[1] = b_goal_section[0];
-
-    /* x,yに変換 */
-    b_make_map_fustrun_diagonal(&max_length, &num_temp, &wall, &search,
-      goal_section, maze_wall, maze_wall_search, row_num_node, col_num_node,
-      &minval);
-
-    /*      if coder.target('MATLAB')    */
-    /*          %歩数マッププロット(壁の部分はなし) */
-    /*          hold on */
-    /*          %セクション中央(ゴール、スタートのみ) */
-    /*          text((goal_section(1)-1)*9+4.5,(goal_section(2)-1)*9+4.5,string(goal_num),'HorizontalAlignment','center'); */
-    /*          text(4.5,4.5,string(start_num),'HorizontalAlignment','center'); */
-    /*          %エッジ部分 */
-    /*          %row_node */
-    /*          for l = 1:33 */
-    /*              for j = 1:32 */
-    /*                  if row_num_node(l,j) ~= 65535 */
-    /*                      text((j-1)*9+4.5,(l-1)*9,string(row_num_node(l,j)),'HorizontalAlignment','center'); */
-    /*                  end */
-    /*              end */
-    /*          end  */
-    /*   */
-    /*          %col_node */
-    /*          for l = 1:32 */
-    /*              for j = 1:33 */
-    /*                  if col_num_node(l,j) ~= 65535 */
-    /*                      text((j-1)*9,(l-1)*9+4.5,string(col_num_node(l,j)),'HorizontalAlignment','center'); */
-    /*                  end */
-    /*              end */
-    /*          end     */
-    /*          hold off */
-    /*      end */
-    /* 生成されたMAPをもとに最短走行 */
-    make_route_diagonal(row_num_node, col_num_node, goal_section, goal_node2,
-                        start_flg);
-  }
-
-  c_emxFreeStruct_coder_internal_(&num_temp);
 }
 
 /*

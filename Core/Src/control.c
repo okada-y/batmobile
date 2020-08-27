@@ -40,8 +40,11 @@ void calc_motor_vol_ctrl(void)
 
     static float post_target_rotation_speed = 0; //前回の回転速度目標値
     float target_rotation_accel = 0;        //目標回転角加速度
-    float rotate_FF = 0;   //FFコントローラによる電圧差出力
+    static float post_target_move_speed = 0; //前回の速度目標値
+    float target_move_accel = 0;        //目標加速度
 
+    float rotate_FF = 0;   //FFコントローラによる電圧差出力（回転方向）
+    float move_FF = 0;   //FFコントローラによる電圧差出力（並進方向）
     /*FB制御*/
     /*偏差取得*/
     move_speed_err = get_target_move_speed() - get_move_speed_ave();//フィルタ速度を使用
@@ -55,18 +58,23 @@ void calc_motor_vol_ctrl(void)
     move_speed_err_PI = move_speed_P * move_speed_err + move_speed_err_I;
     rotate_speed_err_PI = rotate_speed_P * rotate_speed_err + rotate_speed_err_I;
     
-
     /*FF制御*/
-    target_rotation_accel = (get_target_rotation_speed() - post_target_rotation_speed) * Sampling_cycle; //目標回転角加速度更新
+    //並進方向
+    target_move_accel = (get_target_move_speed() - post_target_move_speed) *1000; //目標加速度更新
+    move_FF = ff_gain_a * target_move_accel + ff_gain_v * get_target_move_speed();
+
+    //回転方向
+    target_rotation_accel = (get_target_rotation_speed() - post_target_rotation_speed) *1000; //目標回転角加速度更新
     rotate_FF = ff_gain_a_w * target_rotation_accel + ff_gain_v_w * get_target_rotation_speed();
 
+
     /*モータ印加電圧計算*/
-    target_vol_sum_ctrl = move_speed_err_PI;
-    target_vol_diff_ctrl = ff_rate_w * rotate_FF  +  (1.0 - ff_rate_w) * rotate_speed_err_PI;
+    target_vol_sum_ctrl =  ff_rate_m * move_FF + (1.0) *move_speed_err_PI;
+    target_vol_diff_ctrl = ff_rate_w * rotate_FF  +  (1.0) * rotate_speed_err_PI;
 
     /*パラメータ更新*/
     post_target_rotation_speed = get_target_rotation_speed();
-
+    post_target_move_speed = get_target_move_speed();
 }
 
 //機能	: 軌跡制御の操作履歴クリア

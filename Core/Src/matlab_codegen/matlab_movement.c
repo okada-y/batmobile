@@ -37,7 +37,6 @@ void m_move_back(unsigned char start_flg,unsigned char wall_flg,unsigned char mo
 //スタート時の動作（停止処理）
 void m_start_movement(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property){  
 //     c側で記述した動作関数を記述すること
-	start_acceleration();
 	move_front(start_flg,wall_flg,move_dir_property);
 }
 

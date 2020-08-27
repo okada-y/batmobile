@@ -16,6 +16,10 @@ static uint8_t mode_number = 0;   //mode番号
 static MODE_DECIDE ready_mode = before;
 static MODE_STATE mode_state = preparation;
 
+uint8_t run_mode_1 = 0;
+uint8_t run_mode_2 = 0;
+uint8_t run_mode_3 = 0;
+
 //機能 	:メインモード処理
 //引数 	:なし
 //返り値:なし
@@ -34,6 +38,10 @@ void mode_main(void)
 		ready_mode = mode_decide_jud();
 	}
 	
+	if (get_mode_number() == 14){
+		maze_run_mode_decide();
+	}
+
 	//モード開始可能状態に遷移したとき、2回LEDを点滅させる。
 	for(int i=0; i<2; i++)
 	{ 
@@ -158,3 +166,65 @@ void mode_start(void)
 		}
 	}
 }
+
+//機能:迷路走行時のモードを選択する
+//引数	:なし
+//返り値	:なし
+void maze_run_mode_decide(void)
+{
+
+
+	uint8_t l_run_mode_1 = 0;//探索or最短
+	uint8_t l_run_mode_2 = 0;//走行モード詳細（足立？全面？ななめ？直進？）
+	uint8_t l_run_mode_3 = 0;//速度設定
+
+
+	//走行モード１（探索or最短）の選択
+	while(!button_state) //モード選択モードのとき
+	{
+		l_run_mode_1 = select_num_r_tire(l_run_mode_1);
+		Indicator_number(l_run_mode_1);
+	}
+	//ブザーを1回鳴らす
+	set_buzzer_flg(2);
+	//ボタンを離されるまで停止
+	while(button_state){
+
+	}
+
+	//走行モード２（探索or最短の詳細モード）の選択
+	while(!button_state) //モード選択モードのとき
+	{
+		l_run_mode_2 = select_num_r_tire(l_run_mode_2);
+		Indicator_number(l_run_mode_2);
+	}
+	//ブザーを2回鳴らす
+	set_buzzer_flg(2);
+	HAL_Delay(200);
+	set_buzzer_flg(2);
+	//ボタンを離されるまで停止
+	while(button_state){}
+
+	//走行モード3（速度）の選択
+	while(!button_state) //モード選択モードのとき
+	{
+		l_run_mode_3 = select_num_r_tire(l_run_mode_3);
+		Indicator_number(l_run_mode_3);
+	}
+	//ブザーを3回鳴らす
+	set_buzzer_flg(2);
+	HAL_Delay(200);
+	set_buzzer_flg(2);
+	HAL_Delay(200);
+	set_buzzer_flg(2);
+	//ボタンを離されるまで停止
+	while(button_state){}
+
+		//グローバル変数へ展開
+	run_mode_1 = l_run_mode_1;
+	run_mode_2 = l_run_mode_2;
+	run_mode_3 = l_run_mode_3;
+
+
+}
+

@@ -34,7 +34,7 @@ static uint16_t left_count = 0;
 void mouse_state_1ms ( void )
 {
 //	calc_move_speed();		//速度計算 //速度計算のみ別枠にて処理
-	IMU_Receive();				//IMUからヨー方向角速度、ｘ方向加速度を取得
+	IMU_Receive();				//IMUからヨー方向角速度、ｘ方向加速度を取得 割り込み10%
 	calc_rotation_speed();	//角速度計算
 	filter_move_speed();	//速度をフィルタ処理
 // speed_estimate_kalman();//速度をカルマンフィルタにて推定

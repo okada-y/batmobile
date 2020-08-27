@@ -68,7 +68,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint8_t temp[2];
-uint16_t temp1;
+int16_t temp1;
 /* USER CODE END 0 */
 
 /**
@@ -87,7 +87,7 @@ int main(void)
 //	  static uint8_t m_wall_tmp[1024];//迷路情報格納用配列
 //	  static uint8_t m_search_tmp[1024];//探索情報格納用配列
 
-	static uint8_t run_mode = search_mode;
+	//static uint8_t run_mode = search_mode;
 	uint8_t maze_data_mode = 0;
   /* USER CODE END 1 */
 
@@ -97,7 +97,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-uint16_t i = 0;
+int16_t i = 0;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -126,7 +126,7 @@ uint16_t i = 0;
   Interrupt_Initialize();
 
 
-
+  printf("while_start\r\n" );
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -136,6 +136,7 @@ uint16_t i = 0;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
 //	  	  while(1){
 //	  		  	  IMU_Receive();
 //	  		  	  IMU_GetGyro_Z();
@@ -157,37 +158,27 @@ uint16_t i = 0;
 
 		    case 1:
 		    	log_init();
-		    	for(i = 0;i<700;i++){
-
-		    		if(i%2 == 0){
 		    			set_duty_l(100);
 		    			set_duty_r(100);
-		    			HAL_Delay(3);
-		    		}
-		    		else{
-		    			set_duty_l(0);
-		    			set_duty_r(0);
-		    			HAL_Delay(3);
-		    			}
-		    		}
+		    			HAL_Delay(1100);
 
 		    	break;
 
 		    case 2:
 		        log_init();
-		 	    set_mode_ctrl(trace);
-		 	    set_target_turn_param(search, 0.72, 0);
-		 	    HAL_Delay(4000);
+//		 	    set_mode_ctrl(trace);
+//		 	    set_target_turn_param(search, 0.72, 0);
+//		 	   HAL_Delay(2000);
 //		        start_acceleration();
-//		        half_acceleration();
-//		        constant_speed();
-//		        slalom_clock_90();
-//		        constant_speed();
-//		        for(uint8_t i = 0;i<5;i++){
-//					constant_speed();
-//		        }
-//				half_deceleration();
-//				HAL_Delay(2000);
+		        half_acceleration();
+		        constant_speed();
+		        slalom_clock_90(1);
+		        constant_speed();
+		        for(uint8_t i = 0;i<2;i++){
+					constant_speed();
+		        }
+				half_deceleration();
+				HAL_Delay(2000);
 		    	break;
 
 		  case 3:
@@ -195,7 +186,7 @@ uint16_t i = 0;
 				/*回転方向設定*/
 			  	set_target_turn_param(search, 0, 0);
 				set_rotation_mode(clockwise);
-			    set_target_angle(-2*PI*2);
+			    set_target_angle(-10*PI*2);
 
 			    /*360度回転するまで待機*/
 			    while (1)
@@ -205,6 +196,7 @@ uint16_t i = 0;
 			    		break;
 			    	}
 			    }
+			    HAL_Delay(4000);
 			  break;
 
 		  case 4:
@@ -233,19 +225,44 @@ uint16_t i = 0;
 		       }
 			  break;
 
-		  case 7:
+		  case 7://モジュールテスト
 			  module_test();
 			  break;
 
-		  case 14:	//探索モードで走行
-			  //迷路データの初期化
+		  case 8://FF用テスト
+			  log_init();
+			  temp1 = 100;//最高duty
+			  		    	for(i = 0.5*temp1;i<temp1;i++){
+			  		    			set_duty_l(i);
+			  		    			set_duty_r(i);
+			  		    			HAL_Delay(10);
+			  		    	}
+			  		    	HAL_Delay(1000);
+			  		    	for(i = temp1;i>0.5*temp1;i--){
+			  		    			set_duty_l(i);
+			  		    			set_duty_r(i);
+			  		    			HAL_Delay(10);
+			  		    	}
+			  		    	HAL_Delay(1000);
+			  		    	for(i = 0.5*temp1;i>0;i--){
+			  		    			set_duty_l(i);
+			  		    			set_duty_r(i);
+			  		    			HAL_Delay(10);
+			  		    	}
+			  		    	HAL_Delay(3000);
+			  break;
+
+		  case 13: //迷路データ初期化
 			  maze_init(maze_data.maze_y_size, maze_data.maze_x_size, maze_data.m_wall_tmp, maze_data.m_search_tmp);
+			  break;
+
+		  case 14:	//迷路走行
+
 			  //フェイルセーフ有効化
-			  //set_failsafe_flg(1);
-			  //探索モードで走行
-			  run_mode = search_mode;
+			  set_failsafe_flg(1);
+			  //決定されたモードで走行
 			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size,
-					  	  maze_data.goal_size,maze_data.maze_goal, run_mode,maze_data.contour_map,maze_data.row_num_node,maze_data.col_num_node);
+					  	  maze_data.goal_size,maze_data.maze_goal, run_mode_1,run_mode_2,maze_data.contour_map,maze_data.row_num_node,maze_data.col_num_node);
 			  break;
 
 		  case 15:	//迷路データの書き込み、読み込み、消去

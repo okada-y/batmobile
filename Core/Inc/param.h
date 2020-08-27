@@ -43,10 +43,10 @@
 #define x_size              (10)     //x軸方向の壁(縦壁)の枚数+1
 #define y_size              (10)     //y軸方向の壁(横壁)の枚数+1
 #define g_size              (4)     //ゴールのマスの数
-#define goal_cordinate      {1, 1, 2, 2, 3, 3, 4, 4, 4,\
-                             9, 8, 9, 8, 2, 3, 1, 2, 3}
-                              //一行目、ゴールのx座標
-                              //二行目、ゴールのy座標
+#define goal_cordinate      {4, 4, 5, 5, 3, 3, 4, 4, 4,\
+                             	 	 	 	  4, 5, 4, 5, 2, 3, 1, 2, 3}
+										//一行目、ゴールのx座標
+										//二行目、ゴールのy座標
 //ir
 #define front_th            (100) //前壁有無判定の閾値
 #define right_th            (200) //右壁有無判定の閾値
@@ -74,18 +74,23 @@
 #define search_move_speed_max      (0.2f)      //最大移動速度[m/s]
 #define search_rotate_speed_max     (3*PI)      //最大角速度[rad/s]
 #define search_move_speed_slow     (0.03)      //スロー走行時の速度[m/s]
-
+#define move_speed_slow (0.01)						//停止前速度
 //control
 //FF制御
-#define ff_rate_w             (0.1)       //角速度FF制御の割合
-#define ff_gain_a_w           (4000)      //角加速度に対するゲイン
-#define ff_gain_v_w           (0.04)     //角速度に対するゲイン
+#define ff_rate_w             (1.0)       //角速度FF制御の割合
+#define ff_gain_a_w           (0.005)      //角加速度に対するゲイン
+#define ff_gain_v_w           (0.043)     //角速度に対するゲイン
+
+#define ff_rate_m (1.0)
+#define ff_gain_a (0.35)
+#define ff_gain_v (2.2)
+#define ff_gain_f (0.0)
 
 //FB制御
 #define move_speed_P		(10.0f)	//移動速度制御のPゲイン
-#define move_speed_I		(100.0f)	//移動速度制御のIゲイン
+#define move_speed_I		(120.0f)	//移動速度制御のIゲイン
 #define rotate_speed_P		(0.5f)	//角速度制御のPゲイン
-#define rotate_speed_I		(10.0f)	//角速度制御のIゲイン
+#define rotate_speed_I		(20.0f)	//角速度制御のIゲイン
 
 //movement
 #define move_comp_th        (0.001f)   //移動完了の閾値
@@ -103,14 +108,17 @@
 #define slalom_conclk_90_offset    (0.0573)          //ターン中の並進距離
 
 //adjust
-#define front_sensor_r_ref      (0.013f)	        //前壁補正時の右前距離目標値(1cm)
-#define front_sensor_l_ref      (0.0135f)	        //前壁補正時の左前距離目標値(1cm)
+#define front_sensor_r_ref      (0.016f)	        //前壁補正時の右前距離目標値(1cm)
+#define front_sensor_l_ref      (0.0165f)	        //前壁補正時の左前距離目標値(1cm)
 #define chassis_width           (0.036787f)         //シャシー幅
 #define front_sensor_move_KP	(50.412292054546f)	//前壁距離のPゲイン
 #define front_sensor_move_KI	(26.2444668681538f)	//前壁距離のIゲイン
+//#define front_sensor_move_KI	(1000.0f)	//前壁距離のIゲイン
 #define front_sensor_move_KD	(3.28431998107001f)	//前壁距離のDゲイン
 #define front_sensor_move_fil	(23.9567963129851f)	//前壁距離フィルタ係数
-#define front_sensor_rotate_KP	(6.40482660641506f)	//前壁角度のPゲイン
+//#define front_sensor_rotate_KP	(6.40482660641506f)	//前壁角度のPゲイン
+#define front_sensor_rotate_KP	(3.0f)	//前壁角度のPゲイン
+
 #define front_sensor_rotate_KI	(2.52037335129739f)	//前壁角度のIゲイン
 #define front_sensor_rotate_KD	(0.206728439324594f)//前壁補正のDゲイン
 #define front_sensor_rotate_fil	(44.5570260812328f)	//前壁角度フィルタ係数
@@ -153,7 +161,7 @@
 #define MOT_DUTY_MAX	(800)						//モータの最大Duty
 
 //failsafe
-#define speed_m_err_th (0.05f)					//速度偏差の閾値(m/s)
+#define speed_m_err_th (0.025f)					//速度偏差の閾値(m/s)
 #define theta_err_th (0.1f)							//角度偏差の閾値(rad)
 #define mouse_state_err_count_th 	(50)		//速度、角度偏差によるエラー検出のカウンタ値(ms)
 #define front_wall_err_count_th 	(1000)		//前壁制御時のエラー検出のカウンタ値(ms)

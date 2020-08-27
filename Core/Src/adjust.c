@@ -46,12 +46,14 @@ float wall_break_calib_ref = 0; 	//壁切れ推定距離
 void adjust_1ms (void)
 {
 	set_target_side_sensor();		//初期位置のセンサ値を横壁制御目標値にセット
-	calc_side_wall_ctrl_mode();		//横壁補正のモードを決定
+	calc_side_wall_ctrl_mode();		//横壁補正のモードを決定 割り込み4%
 //	side_wall_ctrl_mode = both_side;
-	adjust_theta_side_wall();		//横壁補正のモードに応じ、軌跡制御における角度を調整する（未実装）
+//	adjust_theta_side_wall();		//横壁補正のモードに応じ、軌跡制御における角度を調整する（未実装）
 	calc_motor_vol_side_wall();		//横壁補正における印加電圧計算
-	calc_motor_vol_front_wall();	//前壁制御における印加電圧計算
-	calibrate_tim();							//前壁制御用タイマ
+	if(front_wall==get_mode_ctrl()){
+		calc_motor_vol_front_wall();	//前壁制御における印加電圧計算//割り込み4%
+		calibrate_tim();							//前壁制御用タイマ
+	}
 	wall_break_calibrate();			//壁切れ補正
 }
 

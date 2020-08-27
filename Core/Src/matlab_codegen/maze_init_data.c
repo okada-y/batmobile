@@ -5,7 +5,7 @@
  * File: maze_init_data.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 14-Aug-2020 15:40:02
+ * C/C++ source code generated on  : 27-Aug-2020 19:25:52
  */
 
 /* Include Files */
@@ -19,7 +19,7 @@ struct_T g_direction;
 c_struct_T g_d_direction;
 d_struct_T l_direction;
 e_struct_T move_dir_property;
-h_struct_T turn_pattern;
+i_struct_T turn_pattern;
 short wall_sensor_front_th;
 short wall_sensor_right_th;
 short wall_sensor_left_th;

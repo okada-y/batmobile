@@ -7,7 +7,7 @@
 #include "button.h"
 #include "indicator.h"
 
-#define  cnt_max (10) //チャタリング防止用ウェイト時間
+#define  cnt_max (300) //チャタリング防止用ウェイト時間
 
 uint8_t button_state;//0:押していない　1:押している
 
@@ -17,7 +17,7 @@ uint8_t button_state;//0:押していない　1:押している
 //備考 	: 1msタスク
 uint8_t read_button()
 {
-	static uint8_t cnt; //チャタリング防止用カウンタ
+	static uint16_t cnt; //チャタリング防止用カウンタ
 	static uint8_t button_state; //ボタンの状態 0:low 1:High
 	static uint8_t button_read_mode; //ボタンの読み込みモード 0:standby 1:wait
 	uint8_t tmp_button_state;
@@ -33,7 +33,7 @@ uint8_t read_button()
 			button_read_mode = 1;
 		}
 	}
-	//スタンバイモードの時
+	//ウェイトモードの時
 	else
 	{
 		cnt = 1+cnt;

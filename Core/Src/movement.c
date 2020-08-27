@@ -100,6 +100,8 @@ void half_deceleration (void)
 	/*移動方向、加速モード設定*/
 	/*加速度等パラメータ、移動距離、終端速度設定*/
 	set_target_turn_param(search, 0.045, 0);
+	/*停止時動作設定*/
+	set_speed_under_lim_flg(slow);
 
 
     /*半区画進むまで待機*/
@@ -107,6 +109,9 @@ void half_deceleration (void)
     {
     	if(move_comp_jud())
     	{
+    		//停止処理
+    		set_speed_under_lim_flg(zero);
+    		HAL_Delay(100);
     		/*理想移動距離、実移動距離をクリア*/
     		set_ideal_length(0.0);
     		set_move_length(0.0);

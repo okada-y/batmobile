@@ -13,6 +13,10 @@ typedef enum{
 	process	//モード実行中
 }MODE_STATE;
 
+extern uint8_t run_mode_1;
+extern uint8_t run_mode_2;
+extern uint8_t run_mode_3;
+
 void mode_main(void);
 uint8_t get_mode_state(void);
 void clr_mode_state(void);
@@ -22,6 +26,7 @@ void mode_select (void);
 uint8_t mode_decide_jud(void);
 void mode_start(void);
 uint8_t select_num_r_tire (uint8_t);
+void maze_run_mode_decide(void);
 
 
 #endif /* MODE_H_ */

@@ -5,7 +5,7 @@
  * File: maze_init_data.h
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 14-Aug-2020 15:40:02
+ * C/C++ source code generated on  : 27-Aug-2020 19:25:52
  */
 
 #ifndef MAZE_INIT_DATA_H
@@ -23,7 +23,7 @@ extern struct_T g_direction;
 extern c_struct_T g_d_direction;
 extern d_struct_T l_direction;
 extern e_struct_T move_dir_property;
-extern h_struct_T turn_pattern;
+extern i_struct_T turn_pattern;
 extern short wall_sensor_front_th;
 extern short wall_sensor_right_th;
 extern short wall_sensor_left_th;

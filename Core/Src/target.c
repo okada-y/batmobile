@@ -25,7 +25,7 @@ static float target_move_speed_max = 0;//目標移動速度[m/s]
 static float target_rotation_speed_max = 0;//目標移動速度[rad/s]
 
 static rotation_mode rotation_dir_flg = counter_clockwise;	//回転方向フラグ　0:反時計周り 1:時計周り
-
+static speed_under_lim_mode speed_under_lim_flg = zero;		//下限速度フラグ
 
 //機能	: traget.cの1msタスクのまとめ
 //引数	: なし
@@ -135,13 +135,13 @@ void set_rotation_mode ( rotation_mode rmode )
 //	accel_dir_flg = amode;
 //}
 
-////機能	: 下限速度モードをセットする
-////引数	: 下限速度モード(zero,slow)
-////返り値	: なし
-//void set_speed_under_lim_flg ( speed_under_lim_mode smode  )
-//{
-//	speed_under_lim_flg = smode;
-//}
+//機能	: 下限速度モードをセットする
+//引数	: 下限速度モード(zero,slow)
+//返り値	: なし
+void set_speed_under_lim_flg ( speed_under_lim_mode smode  )
+{
+	speed_under_lim_flg = smode;
+}
 
 //機能	: 目標移動速度[m/s]取得
 //引数	: なし
@@ -288,10 +288,19 @@ void calc_target_move_speed(void)
 			else{
 				//減速処理
 				target_move_speed -= target_move_accel * 0.001; //1ms分の減速加算
-				//リミット処理(終端速度で底打ち)
-				if (target_move_speed < target_move_speed_fin)
+				//下限処理
+				switch(speed_under_lim_flg)
 				{
-					target_move_speed = target_move_speed_fin;
+					case zero :
+						if (target_move_speed < target_move_speed_fin){
+							target_move_speed = target_move_speed_fin;
+							}
+						break;
+					case slow :
+						if (target_move_speed < move_speed_slow){
+							target_move_speed = move_speed_slow;
+							}
+						break;
 				}
 			}
 		}

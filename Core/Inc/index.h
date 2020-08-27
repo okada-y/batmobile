@@ -36,12 +36,10 @@
 #include "failsafe.h"
 
 //以下matlab
-#include "idivide.h"
 #include "isequal.h"
 #include "matlab_IR_sensor.h"
 #include	"matlab_movement.h"
 #include	"maze_init.h"
-#include	"maze_init_emxutil.h"
 #include "maze_init_terminate.h"
 #include "maze_init_types.h"
 #include "maze_init.h"
