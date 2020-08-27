@@ -155,6 +155,8 @@ uint8_t mode_decide_jud(void)
 //返り値	:なし
 void mode_start(void)
 {
+	//IRセンサ値稼働から少し待つ
+	HAL_Delay(500);
 	while(1)/*m右前センサをモード開始のスイッチとする。*/
 	{
 		if( Sensor_GetValue(front_right) >= 500)
