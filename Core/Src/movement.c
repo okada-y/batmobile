@@ -123,13 +123,13 @@ void half_deceleration (void)
 }
 
 //機能	: 一区画定速
-//引数	: なし
+//引数	: 距離、パラメータセット番号
 //返り値	: なし
-void constant_speed (void)
+void constant_speed (float length, turn_lib turn_num,float fin_speed)
 {
 
 	/*加速度等パラメータ、移動距離、終端速度設定*/
-	set_target_turn_param(search, 0.09, search_move_speed_max);
+	set_target_turn_param(turn_num, length, fin_speed);
 
 
     /*一区画進むまで待機*/
@@ -141,7 +141,7 @@ void constant_speed (void)
     		set_ideal_length(0.0);
     		set_move_length(0.0);
     		//終端速度をキープするよう設定
-    		set_target_turn_param(search, 1.0, search_move_speed_max);
+    		set_target_turn_param(turn_num, 3.0, fin_speed);
     		break;
     	}
     }
@@ -383,7 +383,6 @@ void slalom_conclock_90 (unsigned char wall_flg)
 /* 軌跡生成関数						   */
 ////////////////////////////////////////
 
-
 //機能	: 前進
 //引数	: なし
 //返り値	: なし
@@ -405,10 +404,32 @@ void move_front (unsigned char start_flg,unsigned char wall_flg,unsigned char mo
 		en_wall_break_calibrate();
 
 		set_mode_ctrl(side_wall);
-		constant_speed();//定速で一マス前進
+		constant_speed(0.09,search,search_move_speed_max);//定速で一マス前進
 		set_mode_ctrl(trace);
 	}
 }
+
+//機能：直線加速
+//引数：直線区画数
+//返り値：なし
+void move_front_long(unsigned char straight_count,unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property)
+{
+	//停止直後の動作
+	if(start_flg == start)
+	{
+		set_mode_ctrl(side_wall);
+		constant_speed((straight_count -1)*0.09+0.045, straight, search_move_speed_max);//定速でnマス前進
+		set_mode_ctrl(trace);
+	}
+	//走行中の動作
+	if(start_flg == already)
+	{
+		set_mode_ctrl(side_wall);
+		constant_speed(straight_count * 0.09,straight,search_move_speed_max);//定速でnマス前進
+		set_mode_ctrl(trace);
+	}
+}
+
 
 //機能	: 右折
 //引数	: なし

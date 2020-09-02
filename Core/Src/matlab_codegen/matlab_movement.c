@@ -16,6 +16,13 @@ void m_move_front(unsigned char start_flg,unsigned char wall_flg,unsigned char m
 	move_front (start_flg,wall_flg,move_dir_property);
 }
 
+//前進_ロング
+void m_move_front_long(unsigned char straight_count,unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property){
+//     c側で記述した動作関数を記述すること
+	move_front_long(straight_count,start_flg,wall_flg,move_dir_property);
+}
+
+
 //右折
 void m_move_right(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property){  
 //     c側で記述した動作関数を記述すること

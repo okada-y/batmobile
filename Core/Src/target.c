@@ -97,6 +97,15 @@ void set_target_turn_param ( turn_lib turnlibnum,float t_length, float t_m_speed
 		break;
 
 		//その他ターン作成時、追記する。
+	case straight:
+		set_target_move_speed_max(straight_move_speed_max);
+		set_target_move_accel(straight_move_accel);
+		set_target_rotate_speed_max(straight_rotate_speed_max);
+		set_target_rotate_accel(straight_rotate_accel);
+		set_target_length(t_length);
+		set_target_move_speed_fin(t_m_speed_fin);
+		break;
+
 
 	default:
 		set_target_move_speed_max(0);
@@ -253,10 +262,10 @@ void calc_target_move_speed(void)
 	float tm_deccel_length = 0;
 	float tm_target_delta_v =0;
 
-	tm_target_delta_v = target_move_speed - target_move_speed_fin;
+//	tm_target_delta_v = target_move_speed - target_move_speed_fin;
 
 		/* 加減速に必要な距離算出*/
-		tm_deccel_length = 0.5 * (tm_target_delta_v * tm_target_delta_v) / (target_move_accel);
+		tm_deccel_length = ( (target_move_speed * target_move_speed)  - (target_move_speed_fin*target_move_speed_fin))/ (2 * target_move_accel);
 
 		//目標距離が加減速距離外のとき
 		if(ideal_length  < (target_length - tm_deccel_length))

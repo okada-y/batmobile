@@ -1,6 +1,7 @@
 #ifndef MOVEMENT_H_
 #define MOVEMENT_H_
 
+#include "target.h"
 
 typedef enum {
 	 already = 0, //走行中
@@ -18,7 +19,7 @@ uint8_t rotate_comp_jud ( void );
 void start_acceleration (void);
 void half_acceleration (void);
 void half_deceleration (void);
-void constant_speed (void);
+void constant_speed (float length, turn_lib turn_num,float fin_speed);
 void constant_speed_offset (float);
 void turn_clk_90 (void);
 void turn_conclk_90 (void);
@@ -29,6 +30,7 @@ void set_front_wall_flg ( void );
 void set_rigth_wall_flg ( void );
 void set_left_wall_flg ( void );
 void  move_front (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+void move_front_long(unsigned char straight_count,unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 void move_right  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 void move_left  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 void move_back  (unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);

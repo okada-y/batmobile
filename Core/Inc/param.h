@@ -32,8 +32,8 @@
 #define Sampling_cycle      (0.001)  //サンプリング周期
 
 /*module_test*/
-#define log_count_lim		(4000)	//データ取得する期間[ms]
-#define log_count_step		(4)	    //データを取得する時間間隔[ms]
+#define log_count_lim		(15000)	//データ取得する期間[ms]
+#define log_count_step		(15)	    //データを取得する時間間隔[ms]
 
 #define DATA_DEFAULT              //測定モード１
 //#define DATA_SIDE                 //測定モード２
@@ -70,11 +70,23 @@
 //target
 //探索パラメータ
 #define search_move_accel          (1.5f)      //移動加速度[m/ss]
-#define search_rotate_accel         (25*PI)      //角加速度[rad/ss]
-#define search_move_speed_max      (0.2f)      //最大移動速度[m/s]
-#define search_rotate_speed_max     (3*PI)      //最大角速度[rad/s]
+//#define search_rotate_accel         (25*PI)      //角加速度[rad/ss]
+//#define search_move_speed_max      (0.2f)      //最大移動速度[m/s]
+//#define search_rotate_speed_max     (3*PI)      //最大角速度[rad/s]
+#define search_rotate_accel         (80*PI)      //角加速度[rad/ss]
+#define search_move_speed_max      (0.3f)      //最大移動速度[m/s]
+#define search_rotate_speed_max     (4*PI)      //最大角速度[rad/s]
 #define search_move_speed_slow     (0.03)      //スロー走行時の速度[m/s]
 #define move_speed_slow (0.01)						//停止前速度
+
+//直進
+#define straight_move_accel          (9.0f)      //移動加速度[m/ss]
+#define straight_rotate_accel         (80*PI)      //角加速度[rad/ss]
+#define straight_move_speed_max      (3.0f)      //最大移動速度[m/s]
+#define straight_rotate_speed_max     (4*PI)      //最大角速度[rad/s]
+#define straight_move_speed_slow     (0.03)      //スロー走行時の速度[m/s]
+
+
 //control
 //FF制御
 #define ff_rate_w             (1.0)       //角速度FF制御の割合
@@ -97,7 +109,10 @@
 #define rotate_comp_th      (0.001f)    //回転完了の閾値
 
 ///slalom
-#define slalom_front_wall_adj (0.0545) //探索90における前距離補正時の前壁距離
+//#define slalom_front_wall_adj (0.0545) //探索90における前距離補正時の前壁距離
+#define slalom_front_wall_adj (0.0525) //探索90における前距離補正時の前壁距離
+
+
 //90度時計周り
 #define slalom_clk_90_before_offset (0.011)      //前オフセット距離
 #define slalom_clk_90_after_offset (0.011)       //後オフセット距離

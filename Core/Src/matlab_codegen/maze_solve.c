@@ -5,7 +5,7 @@
  * File: maze_solve.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 27-Aug-2020 23:54:33
+ * C/C++ source code generated on  : 01-Sep-2020 21:38:28
  */
 
 /* Include Files */
@@ -16,8 +16,8 @@
 #include "rem.h"
 #include "isequal.h"
 #include "maze_init_data.h"
-#include "C:\work\matlab\maze_sim_git\src\C_src\matlab_movement.h"
-#include "C:\work\matlab\maze_sim_git\src\C_src\matlab_IR_sensor.h"
+#include "matlab_movement.h"
+#include "matlab_IR_sensor.h"
 
 /* Type Definitions */
 #ifndef typedef_coder_internal_ref
@@ -104,6 +104,15 @@ typedef struct {
 
 #endif                                 /*typedef_coder_internal_ref_5*/
 
+#ifndef typedef_coder_internal_ref_6
+#define typedef_coder_internal_ref_6
+
+typedef struct {
+  unsigned char contents[1024];
+} coder_internal_ref_6;
+
+#endif                                 /*typedef_coder_internal_ref_6*/
+
 /* Function Declarations */
 static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
   *wall_flg, const coder_internal_ref_5 *wall, const unsigned char maze_wall
@@ -133,12 +142,15 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   unsigned char goal_node[2], unsigned char goal_matrix_dir, unsigned char
   goal_dir, unsigned char goal_section[2], unsigned char goal_node2[2], unsigned
   char *goal_matrix_dir2);
-static void fust_run(const coder_internal_ref *goal_size, const
-                     coder_internal_ref_5 *wall, const unsigned char maze_wall
-                     [1024], const unsigned char maze_wall_search[1024], const
-                     unsigned short contour_map[1024], const unsigned char
-                     maze_goal[18], unsigned short max_length, unsigned char
-                     unexp_square[1024], unsigned char *unexp_square_idx);
+static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
+                     *wall_flg, const coder_internal_ref_5 *wall, const unsigned
+                     char maze_wall[1024], const unsigned char maze_wall_search
+                     [1024], const unsigned short contour_map[1024], const
+                     unsigned char maze_goal[18], unsigned short max_length,
+                     unsigned char unexp_square[1024], unsigned char
+                     *unexp_square_idx);
+static unsigned char fust_run_wallset(const coder_internal_ref_6 *maze_wall,
+  unsigned char temp_y, unsigned char temp_x, unsigned char temp_dir);
 static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   unsigned short col_num_node[1056], unsigned char current_move_dir, const
   unsigned char current_node[2], unsigned char current_matrix_dir, const
@@ -226,8 +238,8 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 /* Function Definitions */
 
 /*
- * “ü—Í@•Çî•ñ,•Ç’Tõî•ñ,“™‚üMAP,ƒS[ƒ‹À•W,Å‘åŒo˜H’·
- * o—Í   Å’ZŒo˜Hã‚Ì–¢’Tõƒ}ƒX‚ÌÀ•WA–¢’Tõƒ}ƒX‚Ì”
+ * ï¿½ï¿½ï¿½Í@ï¿½Çï¿½ï¿½,ï¿½Ç’Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAP,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
+ * ï¿½oï¿½ï¿½   ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½ï¿½Wï¿½Aï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½
  * Arguments    : const coder_internal_ref *goal_size
  *                coder_internal_ref *wall_flg
  *                const coder_internal_ref_5 *wall
@@ -244,100 +256,115 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
   [1024], const unsigned short contour_map[1024], const unsigned char maze_goal
   [18], unsigned short max_length, unsigned char start_x, unsigned char start_y)
 {
+  coder_internal_ref_6 b_maze_wall;
   unsigned char goal_flag;
   unsigned short little;
+  unsigned char straight_count;
   unsigned char temp_x;
   unsigned char temp_y;
   unsigned char temp_dir;
   unsigned char next_dir;
   int tempk;
   bool exitg1;
-  int i67;
-  int tempi;
-  int i68;
-  int i69;
-  unsigned short u5;
-  int i70;
   int i71;
-  int b_temp_dir;
+  int tempi;
   int i72;
   int i73;
+  unsigned short u5;
+  int i74;
+  int i75;
   unsigned int qY;
   unsigned char switch_expression;
+  memcpy(&b_maze_wall.contents[0], &maze_wall[0], sizeof(unsigned char) << 10);
 
-  /*     %% fust_run Å’ZŒo˜H‘–s */
-  /* Å’ZŒo˜H•\¦—pax */
+  /*     %% fust_run ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½s */
+  /* ï¿½Å’Zï¿½oï¿½Hï¿½\ï¿½ï¿½ï¿½pax */
   /*          global sh_route_ax */
-  /* local•Ï”éŒ¾ */
+  /* localï¿½Ïï¿½ï¿½éŒ¾ */
   goal_flag = 0U;
 
-  /* ƒS[ƒ‹”»’èƒtƒ‰ƒO */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O */
   little = max_length;
 
-  /* is•ûŒü‘I’è—pè‡’l */
-  /*          %ƒ}ƒEƒXˆÊ’u•\¦—pƒIƒuƒWƒFƒNƒg */
+  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½pè‡’l */
+  straight_count = 0U;
+
+  /*          %ï¿½}ï¿½Eï¿½Xï¿½Ê’uï¿½\ï¿½ï¿½ï¿½pï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g */
   /*          if coder.target('MATLAB') */
   /*              ax = gca; */
   /*              h = hgtransform('Parent',ax); */
   /*          end */
-  /* ƒ}ƒEƒX‚Ì‰ŠúˆÊ’uİ’è */
+  /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½İ’ï¿½ */
   temp_x = start_x;
   temp_y = start_y;
 
-  /* ƒ}ƒEƒX‚Ì‰Šú•ûŒü’è‹` */
+  /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
   temp_dir = g_direction.North;
   next_dir = g_direction.North;
 
-  /* ’TõŠJnx */
-  /* ’TõŠJny */
-  /* ÀsAŠù‘¶‚ÌÅ’Zƒ‹[ƒg•\¦‚ğíœ‚·‚é(MATLAB‚Ì‚İ) */
+  /* ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½x */
+  /* ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½y */
+  /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ÌÅ’Zï¿½ï¿½ï¿½[ï¿½gï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½(MATLABï¿½Ì‚ï¿½) */
   tempk = 0;
   exitg1 = false;
   while ((!exitg1) && (tempk <= max_length - 1)) {
-    /* Œ»İˆÊ’u‚ª–¢’Tõƒ}ƒX‚©”»’è */
-    /* Œ»İˆÊ’u‚ªƒS[ƒ‹‚©”»’è */
-    i67 = goal_size->contents;
-    for (tempi = 0; tempi < i67; tempi++) {
+    /* ï¿½ñ‘–sï¿½ï¿½ï¿½[ï¿½hï¿½Ì‚Æ‚ï¿½ï¿½Aï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½Lï¿½^ï¿½ï¿½ï¿½ï¿½ */
+    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    i71 = goal_size->contents;
+    for (tempi = 0; tempi < i71; tempi++) {
       if ((temp_x == maze_goal[tempi]) && (temp_y == maze_goal[tempi + 9])) {
         goal_flag = 1U;
       }
     }
 
     if (goal_flag == 1) {
-      /* ƒS[ƒ‹‚©‚Â‘–sA’â~ˆ—‚ğÀ{ */
-      /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
+      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Â‘ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
+      if (straight_count > 0) {
+        /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
+        /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        m_move_front_long(straight_count, 0, wall_flg->contents,
+                          move_dir_property.straight);
+
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        wall_flg->contents = 0U;
+
+        /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Xï¿½gï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+      }
+
+      /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
       m_goal_movement(0, wall_flg->contents, move_dir_property.straight);
       exitg1 = true;
     } else {
-      /*         %%is•ûŒü‘I’è */
-      /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
-      /* –k‘¤‚Ì•Ç‚Ì‚ ‚è‚È‚µ */
-      i67 = temp_y + ((temp_x - 1) << 5);
-      tempi = maze_wall[i67 - 1];
+      /*         %%ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
+      /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
+      /* ï¿½kï¿½ï¿½ï¿½Ì•Ç‚Ì‚ï¿½ï¿½ï¿½È‚ï¿½ */
+      i71 = temp_y + ((temp_x - 1) << 5);
+      tempi = b_maze_wall.contents[i71 - 1];
       if (g_direction.North <= 7) {
-        i68 = (unsigned char)(1 << g_direction.North);
+        i72 = (unsigned char)(1 << g_direction.North);
       } else {
-        i68 = 0;
+        i72 = 0;
       }
 
-      if (((tempi & i68) == wall->contents.nowall) && (contour_map[i67] < little))
+      if (((tempi & i72) == wall->contents.nowall) && (contour_map[i71] < little))
       {
-        /* –k‘¤‚Ì“™‚ümap‚ªè‡’l‚æ‚è’á‚¯‚ê‚ÎA */
-        /* è‡’l‚ğ–k‘¤‚Ì“™‚map’l‚É•ÏX */
+        /* ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½è‡’lï¿½ï¿½ï¿½á‚¯ï¿½ï¿½ÎA */
+        /* è‡’lï¿½ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½mapï¿½lï¿½É•ÏX */
         little = contour_map[temp_y + ((temp_x - 1) << 5)];
 
-        /* –k‘¤‚ğis•ûŒü‚É•ÏXy */
+        /* ï¿½kï¿½ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É•ÏXy */
         next_dir = g_direction.North;
       }
 
-      /* “Œ‘¤ */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       if (g_direction.East <= 7) {
-        i69 = (unsigned char)(1 << g_direction.East);
+        i73 = (unsigned char)(1 << g_direction.East);
       } else {
-        i69 = 0;
+        i73 = 0;
       }
 
-      if ((tempi & i69) == wall->contents.nowall) {
+      if ((tempi & i73) == wall->contents.nowall) {
         u5 = contour_map[(temp_y + (temp_x << 5)) - 1];
         if (u5 < little) {
           little = u5;
@@ -345,29 +372,29 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
       }
 
-      /* “ì‘¤ */
+      /* ï¿½ì‘¤ */
       if (g_direction.South <= 7) {
-        i70 = (unsigned char)(1 << g_direction.South);
+        i74 = (unsigned char)(1 << g_direction.South);
       } else {
-        i70 = 0;
+        i74 = 0;
       }
 
-      if ((tempi & i70) == wall->contents.nowall) {
-        u5 = contour_map[i67 - 2];
+      if ((tempi & i74) == wall->contents.nowall) {
+        u5 = contour_map[i71 - 2];
         if (u5 < little) {
           little = u5;
           next_dir = g_direction.South;
         }
       }
 
-      /* ¼‘¤ */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       if (g_direction.West <= 7) {
-        i71 = (unsigned char)(1 << g_direction.West);
+        i75 = (unsigned char)(1 << g_direction.West);
       } else {
-        i71 = 0;
+        i75 = 0;
       }
 
-      if ((tempi & i71) == wall->contents.nowall) {
+      if ((tempi & i75) == wall->contents.nowall) {
         u5 = contour_map[(temp_y + ((temp_x - 2) << 5)) - 1];
         if (u5 < little) {
           little = u5;
@@ -375,51 +402,22 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
       }
 
-      /* ‘–sA’Tõ•Çî•ñ‚É‰‚¶‚ÄA•Çƒtƒ‰ƒO‚ğƒZƒbƒg */
-      /* ‘O */
-      if (temp_dir <= 7) {
-        b_temp_dir = (unsigned char)(1 << temp_dir);
-      } else {
-        b_temp_dir = 0;
-      }
-
-      if ((tempi & (b_temp_dir % 15)) != 0) {
-        wall_flg->contents |= 1;
-      }
-
-      /* ‰E */
-      i67 = (int)(temp_dir + 1U);
-      if ((unsigned int)i67 > 255U) {
-        i67 = 255;
-      }
-
-      if ((unsigned char)i67 <= 7) {
-        i72 = (unsigned char)(1 << (unsigned char)i67);
-      } else {
-        i72 = 0;
-      }
-
-      if ((tempi & (i72 % 15)) != 0) {
-        wall_flg->contents = (unsigned char)(wall_flg->contents | 2);
-      }
-
-      /* ¶ */
-      i67 = (int)(temp_dir + 3U);
-      if ((unsigned int)i67 > 255U) {
-        i67 = 255;
-      }
-
-      if ((unsigned char)i67 <= 7) {
-        i73 = (unsigned char)(1 << (unsigned char)i67);
-      } else {
-        i73 = 0;
-      }
-
-      if ((tempi & (i73 % 15)) != 0) {
-        wall_flg->contents = (unsigned char)(wall_flg->contents | 8);
-      }
-
-      /*         %%Œ»İ•ûŒü‚Æis•ûŒü‚É‰‚¶‚½ˆ— */
+      /*          %ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Çï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ÄAï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Zï¿½bï¿½g */
+      /*          if (Sh_r_mode) */
+      /*              %ï¿½O */
+      /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir),15)) */
+      /*                  wall_flg = bitor(wall_flg,1,'uint8'); */
+      /*              end */
+      /*              %ï¿½E */
+      /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir+1),15)) */
+      /*                  wall_flg = bitor(wall_flg,2,'uint8'); */
+      /*              end */
+      /*              %ï¿½ï¿½ */
+      /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir+3),15)) */
+      /*                  wall_flg = bitor(wall_flg,8,'uint8'); */
+      /*              end */
+      /*          end */
+      /*         %%ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ï¿½Æiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
       tempi = (int)(4U + next_dir);
       if ((unsigned int)tempi > 255U) {
         tempi = 255;
@@ -445,186 +443,253 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 
       switch (tempi) {
        case 0:
-        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
-        /* o—Í Œ»İˆÊ’ux,y */
-        /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-        /* –k‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½iï¿½Ìê‡ï¿½Aï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½g */
+        i71 = (int)(straight_count + 1U);
+        if ((unsigned int)i71 > 255U) {
+          i71 = 255;
+        }
+
+        straight_count = (unsigned char)i71;
+        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+          temp_dir);
+
+        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
+        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* “Œ‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* “ì‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ¼‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
 
-        /* disp("front") */
-        /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
-        m_move_front(0, wall_flg->contents, move_dir_property.straight);
-
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
-        wall_flg->contents = 0U;
+        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½ï¿½ï¿½Ú“ï¿½ */
+        /*                  %disp("front") */
+        /*                  if (Sh_r_mode) %ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        /*                      if ~coder.target('MATLAB') */
+        /*                          coder.ceval('m_move_front',start_flg,wall_flg,uint8(move_dir_property.straight)); */
+        /*                      end */
+        /*                      %ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /*                      start_flg = uint8(0); */
+        /*                      wall_flg = uint8(0); */
+        /*                  end */
         break;
 
        case 1:
-        /* “ü—Í Œ»İ•ûŒü */
-        /* o—Í Œ»İ•ûŒü */
-        /*     %% turn_clk_90deg Œvü‚è‚É90“xƒ^[ƒ“‚·‚éŠÖ” */
-        i67 = (int)(4U + temp_dir);
-        if ((unsigned int)i67 > 255U) {
-          i67 = 255;
+        if (straight_count > 0) {
+          /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
+          /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+          m_move_front_long(straight_count, 0, wall_flg->contents,
+                            move_dir_property.straight);
+
+          /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          wall_flg->contents = 0U;
+
+          /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Xï¿½gï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          straight_count = 0U;
         }
 
-        i67++;
-        if ((unsigned int)i67 > 255U) {
-          i67 = 255;
+        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+          temp_dir);
+
+        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
+        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /*     %% turn_clk_90deg ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        i71 = (int)(4U + temp_dir);
+        if ((unsigned int)i71 > 255U) {
+          i71 = 255;
         }
 
-        temp_dir = (unsigned char)(i67 % 4);
+        i71++;
+        if ((unsigned int)i71 > 255U) {
+          i71 = 255;
+        }
 
-        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
-        /* o—Í Œ»İˆÊ’ux,y */
-        /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-        /* –k‚Éˆêƒ}ƒX */
+        temp_dir = (unsigned char)(i71 % 4);
+
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
+        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* “Œ‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* “ì‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ¼‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
 
-        /* disp("right") */
-        /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
+        /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
         m_move_right(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
 
        case 2:
-        /* “ü—Í Œ»İ•ûŒü */
-        /* o—Í Œ»İ•ûŒü */
-        /*     %% turn_180deg 180“xƒ^[ƒ“‚·‚éŠÖ” */
-        i67 = (int)(4U + temp_dir);
-        if ((unsigned int)i67 > 255U) {
-          i67 = 255;
+        if (straight_count > 0) {
+          /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
+          /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+          m_move_front_long(straight_count, 0, wall_flg->contents,
+                            move_dir_property.straight);
+
+          /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          wall_flg->contents = 0U;
+
+          /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Xï¿½gï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          straight_count = 0U;
         }
 
-        temp_dir = (unsigned char)((i67 - 2) % 4);
+        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+          temp_dir);
 
-        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
-        /* o—Í Œ»İˆÊ’ux,y */
-        /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-        /* –k‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
+        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /*     %% turn_180deg 180ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        i71 = (int)(4U + temp_dir);
+        if ((unsigned int)i71 > 255U) {
+          i71 = 255;
+        }
+
+        temp_dir = (unsigned char)((i71 - 2) % 4);
+
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
+        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* “Œ‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* “ì‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ¼‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
 
-        /* disp("back") */
-        /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
+        /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
         m_move_back(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
 
        case 3:
-        /* “ü—Í@Œ»İ•ûŒü */
-        /* o—Í@Œ»İ•ûŒü */
-        /*     %% turn_conclk_90deg ”½Œvü‚è‚É90“x‰ñ‚éŠÖ” */
-        i67 = (int)(4U + temp_dir);
-        if ((unsigned int)i67 > 255U) {
-          i67 = 255;
+        if (straight_count > 0) {
+          /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
+          /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+          m_move_front_long(straight_count, 0, wall_flg->contents,
+                            move_dir_property.straight);
+
+          /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          wall_flg->contents = 0U;
+
+          /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Xï¿½gï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          straight_count = 0U;
         }
 
-        temp_dir = (unsigned char)((i67 - 1) % 4);
+        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+          temp_dir);
 
-        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
-        /* o—Í Œ»İˆÊ’ux,y */
-        /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-        /* –k‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
+        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /*     %% turn_conclk_90deg ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½ï¿½ï¿½Öï¿½ */
+        i71 = (int)(4U + temp_dir);
+        if ((unsigned int)i71 > 255U) {
+          i71 = 255;
+        }
+
+        temp_dir = (unsigned char)((i71 - 1) % 4);
+
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
+        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* “Œ‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* “ì‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ¼‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
@@ -632,10 +697,10 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
 
         /* disp("left") */
-        /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
+        /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
         m_move_left(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
       }
@@ -646,11 +711,13 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
   }
 
   /*          pause(0.01) */
+  /*      writeVideo(vidObj, getframe(gcf)); */
+  /* limitrate nocallbacks */
 }
 
 /*
- * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”)
- * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
+ * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
  * Arguments    : const coder_internal_ref_5 *wall
  *                const unsigned char maze_goal[2]
  *                const unsigned char maze_wall[1024]
@@ -682,42 +749,42 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
   unsigned int qY;
   int i25;
 
-  /*     %%  make_map_find •Çî•ñ‚©‚ç“™‚üMAP‚ğ¶¬ */
-  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
-  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
-  /* XVÀ•W */
+  /*     %%  make_map_find ï¿½Çï¿½ñ‚©‚ç“™ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
+  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* XVÀ•WXV—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_square_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_square_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
-  /* 32ƒ}ƒX•ªmap‚ğ•Û */
-  /* 16bit‚É‚·‚×‚« */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
+  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
+  /* 16bitï¿½É‚ï¿½ï¿½×‚ï¿½ */
   for (i17 = 0; i17 < 1024; i17++) {
     contour_map[i17] = MAX_uint16_T;
   }
 
-  /* ƒS[ƒ‹À•W‚É0‚ğ“ü—Í */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½0ï¿½ï¿½ï¿½ï¿½ï¿½ */
   contour_map[(maze_goal[1] + ((maze_goal[0] - 1) << 5)) - 1] = 0U;
   contor_renew_square[0] = maze_goal[1];
   contor_renew_square[1024] = maze_goal[0];
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* •à”ƒJƒEƒ“ƒg‚Í0~max_length */
-    /* mapXVŠm”F—pƒtƒ‰ƒO */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
+    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
     change_flag = 0U;
 
-    /* XV‚³‚ê‚½À•W‚É‘Î‚µA•à”map‚ğXV */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
     i17 = contor_renew_square_idx;
     for (tempn = 0; tempn < i17; tempn++) {
-      /* –k‘¤ */
+      /* ï¿½kï¿½ï¿½ */
       /* if (bitand(maze_wall(row(tempn),col(tempn)),bitshift(uint8(1),g_direction.North)) == wall.nowall) */
       if (g_direction.North <= 7) {
         i18 = (unsigned char)(1 << g_direction.North);
@@ -727,7 +794,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
 
       if ((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
               1024] - 1) << 5)) - 1] & i18) == wall->contents.nowall) {
-        /* –k‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½kï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         i19 = (int)(contor_renew_square[tempn] + 1U);
         i20 = i19;
         if ((unsigned int)i19 > 255U) {
@@ -745,7 +812,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
             = (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           if ((unsigned int)i19 > 255U) {
             i19 = 255;
           }
@@ -755,7 +822,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square[tempn + 1024];
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i19 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i19 > 255U) {
             i19 = 255;
@@ -765,7 +832,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
         }
       }
 
-      /* “Œ‘¤ */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       contor_renew_square_idx = contor_renew_square[tempn + 1024];
       i19 = (contor_renew_square_idx - 1) << 5;
       i20 = maze_wall[(contor_renew_square[tempn] + i19) - 1];
@@ -776,7 +843,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if ((i20 & i21) == wall->contents.nowall) {
-        /* “Œ‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         i22 = (int)(contor_renew_square[tempn + 1024] + 1U);
         i23 = i22;
         if ((unsigned int)i22 > 255U) {
@@ -794,7 +861,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
             contor_renew_square[tempn];
           if ((unsigned int)i22 > 255U) {
@@ -804,7 +871,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             (unsigned char)i22;
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i22 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i22 > 255U) {
             i22 = 255;
@@ -814,7 +881,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
         }
       }
 
-      /* “ì‘¤ */
+      /* ï¿½ì‘¤ */
       if (g_direction.South <= 7) {
         i24 = (unsigned char)(1 << g_direction.South);
       } else {
@@ -822,7 +889,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if ((i20 & i24) == wall->contents.nowall) {
-        /* “ì‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½ì‘¤ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         qY = contor_renew_square[tempn] - 1U;
         if (qY > contor_renew_square[tempn]) {
           qY = 0U;
@@ -837,7 +904,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
           contour_map[((int)qY + i19) - 1] = (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           qY = contor_renew_square[tempn] - 1U;
           if (qY > contor_renew_square[tempn]) {
             qY = 0U;
@@ -848,7 +915,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square_idx;
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i19 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i19 > 255U) {
             i19 = 255;
@@ -858,7 +925,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
         }
       }
 
-      /* ¼‘¤ */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       if (g_direction.West <= 7) {
         i25 = (unsigned char)(1 << g_direction.West);
       } else {
@@ -866,7 +933,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if ((i20 & i25) == wall->contents.nowall) {
-        /* ¼‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         qY = contor_renew_square_idx - 1U;
         if (qY > contor_renew_square_idx) {
           qY = 0U;
@@ -883,7 +950,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
             contor_renew_square[tempn];
           qY = contor_renew_square_idx - 1U;
@@ -894,7 +961,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             (unsigned char)qY;
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i19 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i19 > 255U) {
             i19 = 255;
@@ -905,7 +972,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
       }
     }
 
-    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
     for (i17 = 0; i17 < 2048; i17++) {
       contor_renew_square[i17] = contor_renew_square_temp[i17];
       contor_renew_square_temp[i17] = 0U;
@@ -914,7 +981,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* XV‚ª‚È‚¢A‚à‚µ‚­‚ÍŒ»İˆÊ’u‚ªXV‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍŒï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
     if ((change_flag == 0) || (contour_map[(current_y + ((current_x - 1) << 5))
          - 1] != 65535)) {
       exitg1 = true;
@@ -925,9 +992,9 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
 }
 
 /*
- * –¢’m•Ç‚Ì—Ìˆæ‚Í‰¼‘z•Ç‚ğ‚¨‚¢‚ÄN“ü‚µ‚È‚¢B
- * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”),–À˜H’Tõî•ñ(16i”)
- * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * ï¿½ï¿½ï¿½mï¿½Ç‚Ì—Ìˆï¿½Í‰ï¿½ï¿½zï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄNï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½),ï¿½ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
+ * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
  * Arguments    : coder_internal_ref_2 *max_length
  *                const coder_internal_ref_5 *wall
  *                const coder_internal_ref_4 *search
@@ -953,41 +1020,39 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   unsigned char contor_renew_node_col_temp[2048];
   unsigned char contor_renew_node_col_idx;
   unsigned char contor_renew_node_col_idx_temp;
-  int i152;
+  int i154;
   unsigned char row_dir_node[1056];
   unsigned char col_dir_node[1056];
-  int i153;
-  int i154;
   int i155;
   int i156;
   int i157;
-  int row_num_node_tmp;
   int i158;
   int i159;
+  int row_num_node_tmp;
   int i160;
-  unsigned int qY;
   int i161;
+  int i162;
+  unsigned int qY;
+  int i163;
   unsigned short i;
   bool exitg1;
   unsigned char change_flag;
-  int i162;
-  int i163;
   int i164;
   int i165;
-  unsigned int b_qY;
   int i166;
   int i167;
+  unsigned int b_qY;
   int i168;
   int i169;
   int i170;
-  unsigned int c_qY;
   int i171;
   int i172;
+  unsigned int c_qY;
   int i173;
   int i174;
-  unsigned int u9;
   int i175;
   int i176;
+  unsigned int u9;
   int i177;
   int i178;
   int i179;
@@ -1033,200 +1098,202 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   int i219;
   int i220;
   int i221;
+  int i222;
+  int i223;
 
-  /*     %% make_map_fustrun_diagonal Å’Z‘–s—p“™‚üMAP‚ğ¶¬ */
-  /* ƒ[ƒJƒ‹•Ï”İ’è */
-  /* ƒRƒ“ƒ^[XVƒm[ƒh(s)•ÛŠÇ—p */
-  /* XVÀ•W */
-  /* XVÀ•WXV—p */
+  /*     %% make_map_fustrun_diagonal ï¿½Å’Zï¿½ï¿½ï¿½sï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
+  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½İ’ï¿½ */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½mï¿½[ï¿½h(ï¿½s)ï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_node_row_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_node_row_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* ƒRƒ“ƒ^[XVƒm[ƒhi—ñj•ÛŠÇ—p */
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½iï¿½ï¿½jï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   memset(&contor_renew_node_row[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_row_temp[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_col[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_col_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* XVÀ•WXV—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_node_col_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_node_col_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* ƒpƒ‰ƒ[ƒ^İ’è */
-  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
+  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
   max_length->contents = 1024U;
 
-  /*  ƒ‹[ƒg‚Ìd‚İİ’è */
-  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ìƒm[ƒh‚Émax_length‚ğ“ü—Í) */
-  /* •à”MAP */
-  /*  %XV—pMAP */
+  /*  ï¿½ï¿½ï¿½[ï¿½gï¿½Ìdï¿½İİ’ï¿½ */
+  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ìƒmï¿½[ï¿½hï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
+  /* ï¿½ï¿½ï¿½ï¿½MAP */
+  /*  %ï¿½Xï¿½Vï¿½pMAP */
   /*  row_num_node_temp = ones(33,32,'uint16')*uint16(65535); */
   /*  col_num_node_temp = ones(32,33,'uint16')*uint16(65535); */
-  /* is•ûŒü•Û—pƒm[ƒhì¬ */
-  for (i152 = 0; i152 < 1056; i152++) {
-    row_num_node[i152] = MAX_uint16_T;
-    col_num_node[i152] = MAX_uint16_T;
-    row_dir_node[i152] = 0U;
-    col_dir_node[i152] = 0U;
+  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ûï¿½ï¿½pï¿½mï¿½[ï¿½hï¿½ì¬ */
+  for (i154 = 0; i154 < 1056; i154++) {
+    row_num_node[i154] = MAX_uint16_T;
+    col_num_node[i154] = MAX_uint16_T;
+    row_dir_node[i154] = 0U;
+    col_dir_node[i154] = 0U;
   }
 
-  /* ƒS[ƒ‹ƒZƒNƒVƒ‡ƒ“‚ªŠm’è‚µ‚Ä‚¢‚éê‡ */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
   *start_num = MAX_uint16_T;
 
-  /* ƒS[ƒ‹ƒ}ƒX‚©‚çA“Œ¼“ì–k‚Éƒ}ƒbƒv‚ğ“WŠJ */
-  /* –k•Ç */
-  i152 = maze_goal[0] - 1;
-  i153 = (maze_goal[1] + (i152 << 5)) - 1;
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½Éƒ}ï¿½bï¿½vï¿½ï¿½Wï¿½J */
+  /* ï¿½kï¿½ï¿½ */
+  i154 = maze_goal[0] - 1;
+  i155 = (maze_goal[1] + (i154 << 5)) - 1;
   if (g_direction.North <= 7) {
-    i154 = (unsigned char)(1 << g_direction.North);
+    i156 = (unsigned char)(1 << g_direction.North);
   } else {
-    i154 = 0;
+    i156 = 0;
   }
 
-  if ((maze_wall[i153] & i154) == 0) {
-    /* •à”XV */
-    i155 = (int)(maze_goal[1] + 1U);
-    i156 = i155;
-    if ((unsigned int)i155 > 255U) {
-      i156 = 255;
+  if ((maze_wall[i155] & i156) == 0) {
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+    i157 = (int)(maze_goal[1] + 1U);
+    i158 = i157;
+    if ((unsigned int)i157 > 255U) {
+      i158 = 255;
     }
 
-    row_num_node_tmp = 33 * i152;
-    row_num_node[(i156 + row_num_node_tmp) - 1] = 3U;
+    row_num_node_tmp = 33 * i154;
+    row_num_node[(i158 + row_num_node_tmp) - 1] = 3U;
 
-    /* •ûŒü’Ç‰Á */
-    i152 = i155;
-    if ((unsigned int)i155 > 255U) {
-      i152 = 255;
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+    i154 = i157;
+    if ((unsigned int)i157 > 255U) {
+      i154 = 255;
     }
 
     if (g_d_direction.North <= 7) {
-      row_dir_node[(i152 + row_num_node_tmp) - 1] = (unsigned char)(1 <<
+      row_dir_node[(i154 + row_num_node_tmp) - 1] = (unsigned char)(1 <<
         g_d_direction.North);
     } else {
-      row_dir_node[(i152 + row_num_node_tmp) - 1] = 0U;
+      row_dir_node[(i154 + row_num_node_tmp) - 1] = 0U;
     }
 
-    /* XVƒm[ƒh‚ğXV */
-    if ((unsigned int)i155 > 255U) {
-      i155 = 255;
+    /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+    if ((unsigned int)i157 > 255U) {
+      i157 = 255;
     }
 
-    contor_renew_node_row[0] = (unsigned char)i155;
+    contor_renew_node_row[0] = (unsigned char)i157;
     contor_renew_node_row[1024] = maze_goal[0];
 
-    /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+    /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
     contor_renew_node_row_idx = 2U;
   }
 
-  /* “Œ•Ç */
+  /* ï¿½ï¿½ï¿½ï¿½ */
   if (g_direction.East <= 7) {
-    i157 = (unsigned char)(1 << g_direction.East);
-  } else {
-    i157 = 0;
-  }
-
-  if ((maze_wall[i153] & i157) == 0) {
-    /* •à”XV */
-    i152 = (int)(maze_goal[0] + 1U);
-    i155 = i152;
-    if ((unsigned int)i152 > 255U) {
-      i155 = 255;
-    }
-
-    col_num_node[(maze_goal[1] + ((i155 - 1) << 5)) - 1] = 3U;
-
-    /* •ûŒü’Ç‰Á */
-    i155 = i152;
-    if ((unsigned int)i152 > 255U) {
-      i155 = 255;
-    }
-
-    if (g_d_direction.East <= 7) {
-      col_dir_node[(maze_goal[1] + ((i155 - 1) << 5)) - 1] = (unsigned char)(1 <<
-        g_d_direction.East);
-    } else {
-      col_dir_node[(maze_goal[1] + ((i155 - 1) << 5)) - 1] = 0U;
-    }
-
-    /* XVƒm[ƒh‚ğXV */
-    contor_renew_node_col[0] = maze_goal[1];
-    if ((unsigned int)i152 > 255U) {
-      i152 = 255;
-    }
-
-    contor_renew_node_col[1024] = (unsigned char)i152;
-
-    /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-    contor_renew_node_col_idx = 2U;
-  }
-
-  /* “ì•Ç */
-  if (g_direction.South <= 7) {
-    i158 = (unsigned char)(1 << g_direction.South);
-  } else {
-    i158 = 0;
-  }
-
-  if ((maze_wall[i153] & i158) == 0) {
-    /* •à”XV */
-    row_num_node_tmp = (maze_goal[1] + 33 * (maze_goal[0] - 1)) - 1;
-    row_num_node[row_num_node_tmp] = 3U;
-
-    /* •ûŒü’Ç‰Á */
-    if (g_d_direction.South <= 7) {
-      i160 = (unsigned char)(1 << g_d_direction.South);
-    } else {
-      i160 = 0;
-    }
-
-    row_dir_node[row_num_node_tmp] = (unsigned char)
-      (row_dir_node[row_num_node_tmp] | i160);
-
-    /* XVƒm[ƒh‚ğXV */
-    contor_renew_node_row[contor_renew_node_row_idx - 1] = maze_goal[1];
-    contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[0];
-
-    /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-    contor_renew_node_row_idx++;
-  }
-
-  /* ¼•Ç */
-  if (g_direction.West <= 7) {
-    i159 = (unsigned char)(1 << g_direction.West);
+    i159 = (unsigned char)(1 << g_direction.East);
   } else {
     i159 = 0;
   }
 
-  if ((maze_wall[i153] & i159) == 0) {
-    /* •à”XV */
-    col_num_node[i153] = 3U;
-
-    /* •ûŒü’Ç‰Á */
-    if (g_d_direction.West <= 7) {
-      i161 = (unsigned char)(1 << g_d_direction.West);
-    } else {
-      i161 = 0;
+  if ((maze_wall[i155] & i159) == 0) {
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+    i154 = (int)(maze_goal[0] + 1U);
+    i157 = i154;
+    if ((unsigned int)i154 > 255U) {
+      i157 = 255;
     }
 
-    col_dir_node[i153] = (unsigned char)(col_dir_node[i153] | i161);
+    col_num_node[(maze_goal[1] + ((i157 - 1) << 5)) - 1] = 3U;
 
-    /* XVƒm[ƒh‚ğXV */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+    i157 = i154;
+    if ((unsigned int)i154 > 255U) {
+      i157 = 255;
+    }
+
+    if (g_d_direction.East <= 7) {
+      col_dir_node[(maze_goal[1] + ((i157 - 1) << 5)) - 1] = (unsigned char)(1 <<
+        g_d_direction.East);
+    } else {
+      col_dir_node[(maze_goal[1] + ((i157 - 1) << 5)) - 1] = 0U;
+    }
+
+    /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+    contor_renew_node_col[0] = maze_goal[1];
+    if ((unsigned int)i154 > 255U) {
+      i154 = 255;
+    }
+
+    contor_renew_node_col[1024] = (unsigned char)i154;
+
+    /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+    contor_renew_node_col_idx = 2U;
+  }
+
+  /* ï¿½ï¿½ï¿½ */
+  if (g_direction.South <= 7) {
+    i160 = (unsigned char)(1 << g_direction.South);
+  } else {
+    i160 = 0;
+  }
+
+  if ((maze_wall[i155] & i160) == 0) {
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+    row_num_node_tmp = (maze_goal[1] + 33 * (maze_goal[0] - 1)) - 1;
+    row_num_node[row_num_node_tmp] = 3U;
+
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+    if (g_d_direction.South <= 7) {
+      i162 = (unsigned char)(1 << g_d_direction.South);
+    } else {
+      i162 = 0;
+    }
+
+    row_dir_node[row_num_node_tmp] = (unsigned char)
+      (row_dir_node[row_num_node_tmp] | i162);
+
+    /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+    contor_renew_node_row[contor_renew_node_row_idx - 1] = maze_goal[1];
+    contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[0];
+
+    /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+    contor_renew_node_row_idx++;
+  }
+
+  /* ï¿½ï¿½ï¿½ï¿½ */
+  if (g_direction.West <= 7) {
+    i161 = (unsigned char)(1 << g_direction.West);
+  } else {
+    i161 = 0;
+  }
+
+  if ((maze_wall[i155] & i161) == 0) {
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+    col_num_node[i155] = 3U;
+
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+    if (g_d_direction.West <= 7) {
+      i163 = (unsigned char)(1 << g_d_direction.West);
+    } else {
+      i163 = 0;
+    }
+
+    col_dir_node[i155] = (unsigned char)(col_dir_node[i155] | i163);
+
+    /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
     contor_renew_node_col[contor_renew_node_col_idx - 1] = maze_goal[1];
     contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[0];
 
-    /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+    /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
     contor_renew_node_col_idx++;
   }
 
-  /* ƒS[ƒ‹ƒZƒNƒVƒ‡ƒ“‚ªŠm’è‚µ‚Ä‚¢‚È‚¢ê‡ */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
   row_num_node_tmp = max_length->contents;
   qY = row_num_node_tmp - 1U;
   if (qY > (unsigned int)row_num_node_tmp) {
@@ -1236,47 +1303,47 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   i = 0U;
   exitg1 = false;
   while ((!exitg1) && (i <= (unsigned short)qY)) {
-    /* XVŠm”F—p‚Ì•à”ƒJƒEƒ“ƒg‚Í0~max_length */
+    /* ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ì•ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
     change_flag = 0U;
 
-    /* mapXVŠm”F—pƒtƒ‰ƒO */
-    /* Row_Edge‚Ìˆ—[33s,32—ñ] */
-    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
-    i152 = contor_renew_node_row_idx;
-    for (row_num_node_tmp = 0; row_num_node_tmp <= i152 - 2; row_num_node_tmp++)
+    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
+    /* Row_Edgeï¿½Ìï¿½ï¿½ï¿½[33ï¿½s,32ï¿½ï¿½] */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
+    i154 = contor_renew_node_row_idx;
+    for (row_num_node_tmp = 0; row_num_node_tmp <= i154 - 2; row_num_node_tmp++)
     {
-      /* –k‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
-      i153 = contor_renew_node_row[row_num_node_tmp + 1024] - 1;
-      i155 = (contor_renew_node_row[row_num_node_tmp] + (i153 << 5)) - 1;
+      /* ï¿½kï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      i155 = contor_renew_node_row[row_num_node_tmp + 1024] - 1;
+      i157 = (contor_renew_node_row[row_num_node_tmp] + (i155 << 5)) - 1;
       if (g_direction.North <= 7) {
-        i162 = (unsigned char)(1 << g_direction.North);
+        i164 = (unsigned char)(1 << g_direction.North);
       } else {
-        i162 = 0;
+        i164 = 0;
       }
 
-      if (((maze_wall[i155] & i162) != 0) == wall->contents.nowall) {
+      if (((maze_wall[i157] & i164) != 0) == wall->contents.nowall) {
         if (g_direction.North <= 7) {
-          i163 = (unsigned char)(1 << g_direction.North);
+          i165 = (unsigned char)(1 << g_direction.North);
         } else {
-          i163 = 0;
+          i165 = 0;
         }
 
-        if (((maze_wall_search[i155] & i163) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚ ‚é */
-          i153 *= 33;
-          i155 = (contor_renew_node_row[row_num_node_tmp] + i153) - 1;
+        if (((maze_wall_search[i157] & i165) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          i155 *= 33;
+          i157 = (contor_renew_node_row[row_num_node_tmp] + i155) - 1;
           if (g_d_direction.North <= 7) {
-            i168 = (unsigned char)(1 << g_d_direction.North);
+            i170 = (unsigned char)(1 << g_d_direction.North);
           } else {
-            i168 = 0;
+            i170 = 0;
           }
 
-          if ((row_dir_node[i155] & i168) != 0) {
-            /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-            if ((unsigned int)i155 > 255U) {
-              i155 = 255;
+          if ((row_dir_node[i157] & i170) != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i157 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
             }
 
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
@@ -1286,11 +1353,11 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (row_num_node[(i155 + i153) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+            if (row_num_node[(i157 + i155) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
@@ -1300,53 +1367,53 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              row_num_node[(i153 + 33 * (contor_renew_node_row[row_num_node_tmp
+              row_num_node[(i155 + 33 * (contor_renew_node_row[row_num_node_tmp
                 + 1024] - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               if (g_d_direction.North <= 7) {
-                row_dir_node[(i153 + 33 *
+                row_dir_node[(i155 + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
                                1)) - 1] = (unsigned char)(1 <<
                   g_d_direction.North);
               } else {
-                row_dir_node[(i153 + 33 *
+                row_dir_node[(i155 + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
                                1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i153;
+                (unsigned char)i155;
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i153;
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
@@ -1356,108 +1423,51 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i153 + 33 *
+              if (row_num_node[(i155 + 33 *
                                 (contor_renew_node_row[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-                if ((unsigned int)i153 > 255U) {
-                  i153 = 255;
-                }
-
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
                 if ((unsigned int)i155 > 255U) {
                   i155 = 255;
                 }
 
-                if (g_d_direction.North <= 7) {
-                  i184 = (unsigned char)(1 << g_d_direction.North);
-                } else {
-                  i184 = 0;
+                i157 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
-                row_dir_node[(i153 + 33 *
+                if (g_d_direction.North <= 7) {
+                  i186 = (unsigned char)(1 << g_d_direction.North);
+                } else {
+                  i186 = 0;
+                }
+
+                row_dir_node[(i155 + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
-                               1)) - 1] = (unsigned char)(row_dir_node[(i155 +
+                               1)) - 1] = (unsigned char)(row_dir_node[(i157 +
                   33 * (contor_renew_node_row[row_num_node_tmp + 1024] - 1)) - 1]
-                  | i184);
+                  | i186);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i156 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-            if ((unsigned int)i156 > 255U) {
-              i156 = 255;
+            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i158 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+            if ((unsigned int)i158 > 255U) {
+              i158 = 255;
             }
 
-            b_qY = row_num_node[i155] + 18U;
+            b_qY = row_num_node[i157] + 18U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
 
-            if (row_num_node[(i156 + i153) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
-                                   (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 18U;
-              if (b_qY > 65535U) {
-                b_qY = 65535U;
-              }
-
-              row_num_node[(i153 + 33 * (contor_renew_node_row[row_num_node_tmp
-                + 1024] - 1)) - 1] = (unsigned short)b_qY;
-
-              /* ˆÚ“®•ûŒüMAPXV */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              if (g_d_direction.North <= 7) {
-                row_dir_node[(i153 + 33 *
-                              (contor_renew_node_row[row_num_node_tmp + 1024] -
-                               1)) - 1] = (unsigned char)(1 <<
-                  g_d_direction.North);
-              } else {
-                row_dir_node[(i153 + 33 *
-                              (contor_renew_node_row[row_num_node_tmp + 1024] -
-                               1)) - 1] = 0U;
-              }
-
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
-              change_flag = 1U;
-
-              /* XVƒm[ƒh‚ğXV */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i153;
-              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
-                contor_renew_node_row[row_num_node_tmp + 1024];
-
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              contor_renew_node_row_idx_temp = (unsigned char)i153;
-
-              /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
-            } else {
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
-              i155 = i153;
-              if ((unsigned int)i153 > 255U) {
+            if (row_num_node[(i158 + i155) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
                 i155 = 255;
               }
 
@@ -1468,191 +1478,54 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i155 + 33 *
-                                (contor_renew_node_row[row_num_node_tmp + 1024]
-                                 - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i155 = i153;
-                if ((unsigned int)i153 > 255U) {
-                  i155 = 255;
-                  i153 = 255;
-                }
+              row_num_node[(i155 + 33 * (contor_renew_node_row[row_num_node_tmp
+                + 1024] - 1)) - 1] = (unsigned short)b_qY;
 
-                if (g_d_direction.North <= 7) {
-                  i182 = (unsigned char)(1 << g_d_direction.North);
-                } else {
-                  i182 = 0;
-                }
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
 
+              if (g_d_direction.North <= 7) {
                 row_dir_node[(i155 + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
-                               1)) - 1] = (unsigned char)(row_dir_node[(i153 +
-                  33 * (contor_renew_node_row[row_num_node_tmp + 1024] - 1)) - 1]
-                  | i182);
-              }
-            }
-          }
-        }
-      }
-
-      /* –k“Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
-      if (g_direction.East <= 7) {
-        i165 = (unsigned char)(1 << g_direction.East);
-      } else {
-        i165 = 0;
-      }
-
-      if (((maze_wall[(contor_renew_node_row[row_num_node_tmp] +
-                       ((contor_renew_node_row[row_num_node_tmp + 1024] - 1) <<
-                        5)) - 1] & i165) != 0) == wall->contents.nowall) {
-        if (g_direction.East <= 7) {
-          i167 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i167 = 0;
-        }
-
-        if (((maze_wall_search[(contor_renew_node_row[row_num_node_tmp] +
-                                ((contor_renew_node_row[row_num_node_tmp + 1024]
-                 - 1) << 5)) - 1] & i167) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚ ‚é */
-          if (g_d_direction.North_East <= 7) {
-            i171 = (unsigned char)(1 << g_d_direction.North_East);
-          } else {
-            i171 = 0;
-          }
-
-          if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
-                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
-               - 1] & i171) != 0) {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-            if ((unsigned int)i153 > 255U) {
-              i153 = 255;
-            }
-
-            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
-                                 (contor_renew_node_row[row_num_node_tmp + 1024]
-                                  - 1)) - 1] + 4U;
-            if (b_qY > 65535U) {
-              b_qY = 65535U;
-            }
-
-            if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 -
-                   1) << 5)) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
-                                   (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 4U;
-              if (b_qY > 65535U) {
-                b_qY = 65535U;
-              }
-
-              col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 - 1)
-                << 5)) - 1] = (unsigned short)b_qY;
-
-              /* ˆÚ“®•ûŒüMAPXV */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              if (g_d_direction.North_East <= 7) {
-                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 -
-                  1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.North_East);
+                               1)) - 1] = (unsigned char)(1 <<
+                  g_d_direction.North);
               } else {
-                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 -
-                  1) << 5)) - 1] = 0U;
+                row_dir_node[(i155 + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
-                contor_renew_node_row[row_num_node_tmp];
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i153;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i155;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i153;
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
-                                   (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 4U;
-              if (b_qY > 65535U) {
-                b_qY = 65535U;
-              }
-
-              if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i153
-                     - 1) << 5)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-                if ((unsigned int)i153 > 255U) {
-                  i153 = 255;
-                }
-
-                i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-                if ((unsigned int)i155 > 255U) {
-                  i155 = 255;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  i192 = (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  i192 = 0;
-                }
-
-                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 -
-                  1) << 5)) - 1] = (unsigned char)(col_dir_node
-                  [(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1) << 5))
-                  - 1] | i192);
-              }
-            }
-
-            /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
-          } else {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-            if ((unsigned int)i153 > 255U) {
-              i153 = 255;
-            }
-
-            i155 = (contor_renew_node_row[row_num_node_tmp] + 33 *
-                    (contor_renew_node_row[row_num_node_tmp + 1024] - 1)) - 1;
-            b_qY = row_num_node[i155] + 18U;
-            if (b_qY > 65535U) {
-              b_qY = 65535U;
-            }
-
-            if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 -
-                   1) << 5)) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
+              i157 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i157 = 255;
               }
 
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
@@ -1662,99 +1535,293 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 - 1)
-                << 5)) - 1] = (unsigned short)b_qY;
-
-              /* ˆÚ“®•ûŒüMAPXV */
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              if (g_d_direction.North_East <= 7) {
-                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 -
-                  1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.North_East);
-              } else {
-                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i153 -
-                  1) << 5)) - 1] = 0U;
-              }
-
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
-              change_flag = 1U;
-
-              /* XVƒm[ƒh‚ğXV */
-              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
-                contor_renew_node_row[row_num_node_tmp];
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i153;
-
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              contor_renew_node_col_idx_temp = (unsigned char)i153;
-
-              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
-            } else {
-              i153 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              i156 = i153;
-              if ((unsigned int)i153 > 255U) {
-                i156 = 255;
-              }
-
-              b_qY = row_num_node[i155] + 18U;
-              if (b_qY > 65535U) {
-                b_qY = 65535U;
-              }
-
-              if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i156
-                     - 1) << 5)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i155 = i153;
-                if ((unsigned int)i153 > 255U) {
+              if (row_num_node[(i157 + 33 *
+                                (contor_renew_node_row[row_num_node_tmp + 1024]
+                                 - 1)) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i157 = i155;
+                if ((unsigned int)i155 > 255U) {
+                  i157 = 255;
                   i155 = 255;
-                  i153 = 255;
                 }
 
-                if (g_d_direction.North_East <= 7) {
-                  i190 = (unsigned char)(1 << g_d_direction.North_East);
+                if (g_d_direction.North <= 7) {
+                  i184 = (unsigned char)(1 << g_d_direction.North);
                 } else {
-                  i190 = 0;
+                  i184 = 0;
                 }
 
-                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
-                  1) << 5)) - 1] = (unsigned char)(col_dir_node
-                  [(contor_renew_node_row[row_num_node_tmp] + ((i153 - 1) << 5))
-                  - 1] | i190);
+                row_dir_node[(i157 + 33 *
+                              (contor_renew_node_row[row_num_node_tmp + 1024] -
+                               1)) - 1] = (unsigned char)(row_dir_node[(i155 +
+                  33 * (contor_renew_node_row[row_num_node_tmp + 1024] - 1)) - 1]
+                  | i184);
               }
             }
           }
         }
       }
 
-      /* “Œ‘¤‚Í’Œ */
-      /* “ì“Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      if (g_direction.East <= 7) {
+        i167 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i167 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_row[row_num_node_tmp] +
+                       ((contor_renew_node_row[row_num_node_tmp + 1024] - 1) <<
+                        5)) - 1] & i167) != 0) == wall->contents.nowall) {
+        if (g_direction.East <= 7) {
+          i169 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i169 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_row[row_num_node_tmp] +
+                                ((contor_renew_node_row[row_num_node_tmp + 1024]
+                 - 1) << 5)) - 1] & i169) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          if (g_d_direction.North_East <= 7) {
+            i173 = (unsigned char)(1 << g_d_direction.North_East);
+          } else {
+            i173 = 0;
+          }
+
+          if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
+               - 1] & i173) != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i155 > 255U) {
+              i155 = 255;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                 (contor_renew_node_row[row_num_node_tmp + 1024]
+                                  - 1)) - 1] + 4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                   1) << 5)) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1)
+                << 5)) - 1] = (unsigned short)b_qY;
+
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.North_East);
+              } else {
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = 0U;
+              }
+
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              change_flag = 1U;
+
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[row_num_node_tmp];
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i155;
+
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i155;
+
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+            } else {
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155
+                     - 1) << 5)) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i155 > 255U) {
+                  i155 = 255;
+                }
+
+                i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
+                }
+
+                if (g_d_direction.North_East <= 7) {
+                  i194 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i194 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = (unsigned char)(col_dir_node
+                  [(contor_renew_node_row[row_num_node_tmp] + ((i157 - 1) << 5))
+                  - 1] | i194);
+              }
+            }
+
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+          } else {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i155 > 255U) {
+              i155 = 255;
+            }
+
+            i157 = (contor_renew_node_row[row_num_node_tmp] + 33 *
+                    (contor_renew_node_row[row_num_node_tmp + 1024] - 1)) - 1;
+            b_qY = row_num_node[i157] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                   1) << 5)) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
+                                   (contor_renew_node_row[row_num_node_tmp +
+                                    1024] - 1)) - 1] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1)
+                << 5)) - 1] = (unsigned short)b_qY;
+
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.North_East);
+              } else {
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
+                  1) << 5)) - 1] = 0U;
+              }
+
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              change_flag = 1U;
+
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[row_num_node_tmp];
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i155;
+
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i155;
+
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+            } else {
+              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              i158 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i158 = 255;
+              }
+
+              b_qY = row_num_node[i157] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i158
+                     - 1) << 5)) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i157 = i155;
+                if ((unsigned int)i155 > 255U) {
+                  i157 = 255;
+                  i155 = 255;
+                }
+
+                if (g_d_direction.North_East <= 7) {
+                  i192 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i192 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_row[row_num_node_tmp] + ((i157 -
+                  1) << 5)) - 1] = (unsigned char)(col_dir_node
+                  [(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1) << 5))
+                  - 1] | i192);
+              }
+            }
+          }
+        }
+      }
+
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ */
+      /* ï¿½ì“Œï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
       if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
         c_qY = 0U;
       }
 
-      i153 = (contor_renew_node_row[row_num_node_tmp + 1024] - 1) << 5;
+      i155 = (contor_renew_node_row[row_num_node_tmp + 1024] - 1) << 5;
       if (g_direction.East <= 7) {
-        i173 = (unsigned char)(1 << g_direction.East);
+        i175 = (unsigned char)(1 << g_direction.East);
       } else {
-        i173 = 0;
+        i175 = 0;
       }
 
-      if (((maze_wall[((int)c_qY + i153) - 1] & i173) != 0) ==
+      if (((maze_wall[((int)c_qY + i155) - 1] & i175) != 0) ==
           wall->contents.nowall) {
         c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
         if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -1762,32 +1829,32 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (g_direction.East <= 7) {
-          i177 = (unsigned char)(1 << g_direction.East);
+          i179 = (unsigned char)(1 << g_direction.East);
         } else {
-          i177 = 0;
+          i179 = 0;
         }
 
-        if (((maze_wall_search[((int)c_qY + i153) - 1] & i177) != 0) ==
+        if (((maze_wall_search[((int)c_qY + i155) - 1] & i179) != 0) ==
             search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South_East <= 7) {
-            i180 = (unsigned char)(1 << g_d_direction.South_East);
+            i182 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
-            i180 = 0;
+            i182 = 0;
           }
 
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
-               - 1] & i180) != 0) {
-            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+               - 1] & i182) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
             }
 
-            i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-            if ((unsigned int)i155 > 255U) {
-              i155 = 255;
+            i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
             }
 
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
@@ -1798,47 +1865,47 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               u9 = 65535U;
             }
 
-            if (col_num_node[((int)c_qY + ((i155 - 1) << 5)) - 1] > (int)u9) {
-              /* •à”MAPXV */
+            if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] > (int)u9) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
               }
 
-              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              col_num_node[((int)c_qY + ((i155 - 1) << 5)) - 1] = (unsigned
+              col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
                 short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
               }
 
-              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               if (g_d_direction.South_East <= 7) {
-                col_dir_node[((int)c_qY + ((i155 - 1) << 5)) - 1] = (unsigned
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
                   char)(1 << g_d_direction.South_East);
               } else {
-                col_dir_node[((int)c_qY + ((i155 - 1) << 5)) - 1] = 0U;
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -1846,49 +1913,49 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 (unsigned char)c_qY;
-              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i155;
+                (unsigned char)i157;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i155;
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
               }
 
-              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (col_num_node[((int)c_qY + ((i155 - 1) << 5)) - 1] == (int)b_qY)
+              if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] == (int)b_qY)
               {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
                 }
 
-                i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-                if ((unsigned int)i155 > 255U) {
-                  i155 = 255;
+                i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
                 b_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
@@ -1896,33 +1963,33 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   b_qY = 0U;
                 }
 
-                i156 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-                if ((unsigned int)i156 > 255U) {
-                  i156 = 255;
+                i158 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i158 > 255U) {
+                  i158 = 255;
                 }
 
                 if (g_d_direction.South_East <= 7) {
-                  i211 = (unsigned char)(1 << g_d_direction.South_East);
+                  i213 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  i211 = 0;
+                  i213 = 0;
                 }
 
-                col_dir_node[((int)c_qY + ((i155 - 1) << 5)) - 1] = (unsigned
-                  char)(col_dir_node[((int)b_qY + ((i156 - 1) << 5)) - 1] | i211);
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
+                  char)(col_dir_node[((int)b_qY + ((i158 - 1) << 5)) - 1] | i213);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
             }
 
-            i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-            if ((unsigned int)i155 > 255U) {
-              i155 = 255;
+            i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
             }
 
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
@@ -1933,47 +2000,47 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               u9 = 65535U;
             }
 
-            if (col_num_node[((int)c_qY + ((i155 - 1) << 5)) - 1] > (int)u9) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+            if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] > (int)u9) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
               }
 
-              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              col_num_node[((int)c_qY + ((i155 - 1) << 5)) - 1] = (unsigned
+              col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
                 short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
               }
 
-              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               if (g_d_direction.South_East <= 7) {
-                col_dir_node[((int)c_qY + ((i155 - 1) << 5)) - 1] = (unsigned
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
                   char)(1 << g_d_direction.South_East);
               } else {
-                col_dir_node[((int)c_qY + ((i155 - 1) << 5)) - 1] = 0U;
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -1981,49 +2048,49 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 (unsigned char)c_qY;
-              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i155;
+                (unsigned char)i157;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i155;
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
               }
 
-              i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (col_num_node[((int)c_qY + ((i155 - 1) << 5)) - 1] == (int)b_qY)
+              if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] == (int)b_qY)
               {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
                 }
 
-                i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-                if ((unsigned int)i155 > 255U) {
-                  i155 = 255;
+                i157 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
                 b_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
@@ -2031,39 +2098,39 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   b_qY = 0U;
                 }
 
-                i156 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
-                if ((unsigned int)i156 > 255U) {
-                  i156 = 255;
+                i158 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i158 > 255U) {
+                  i158 = 255;
                 }
 
                 if (g_d_direction.South_East <= 7) {
-                  i210 = (unsigned char)(1 << g_d_direction.South_East);
+                  i212 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  i210 = 0;
+                  i212 = 0;
                 }
 
-                col_dir_node[((int)c_qY + ((i155 - 1) << 5)) - 1] = (unsigned
-                  char)(col_dir_node[((int)b_qY + ((i156 - 1) << 5)) - 1] | i210);
+                col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
+                  char)(col_dir_node[((int)b_qY + ((i158 - 1) << 5)) - 1] | i212);
               }
             }
           }
         }
       }
 
-      /* “ì‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì‘¤ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
       if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
         c_qY = 0U;
       }
 
       if (g_direction.South <= 7) {
-        i178 = (unsigned char)(1 << g_direction.South);
+        i180 = (unsigned char)(1 << g_direction.South);
       } else {
-        i178 = 0;
+        i180 = 0;
       }
 
-      if (((maze_wall[((int)c_qY + i153) - 1] & i178) != 0) ==
+      if (((maze_wall[((int)c_qY + i155) - 1] & i180) != 0) ==
           wall->contents.nowall) {
         c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
         if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2071,24 +2138,24 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (g_direction.South <= 7) {
-          i183 = (unsigned char)(1 << g_direction.South);
+          i185 = (unsigned char)(1 << g_direction.South);
         } else {
-          i183 = 0;
+          i185 = 0;
         }
 
-        if (((maze_wall_search[((int)c_qY + i153) - 1] & i183) != 0) ==
+        if (((maze_wall_search[((int)c_qY + i155) - 1] & i185) != 0) ==
             search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South <= 7) {
-            i189 = (unsigned char)(1 << g_d_direction.South);
+            i191 = (unsigned char)(1 << g_d_direction.South);
           } else {
-            i189 = 0;
+            i191 = 0;
           }
 
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
-               - 1] & i189) != 0) {
-            /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+               - 1] & i191) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2105,7 +2172,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[((int)c_qY + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
                                1)) - 1] > (int)u9) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2119,7 +2186,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                 - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2136,10 +2203,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2150,15 +2217,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i155;
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2172,7 +2239,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[((int)c_qY + 33 *
                                 (contor_renew_node_row[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2184,22 +2251,22 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South <= 7) {
-                  i209 = (unsigned char)(1 << g_d_direction.South);
+                  i211 = (unsigned char)(1 << g_d_direction.South);
                 } else {
-                  i209 = 0;
+                  i211 = 0;
                 }
 
                 row_dir_node[((int)c_qY + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
                                1)) - 1] = (unsigned char)(row_dir_node[((int)
                   b_qY + 33 * (contor_renew_node_row[row_num_node_tmp + 1024] -
-                               1)) - 1] | i209);
+                               1)) - 1] | i211);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2215,7 +2282,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[((int)c_qY + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
                                1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2232,7 +2299,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                 - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2249,10 +2316,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2263,15 +2330,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i155;
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2288,7 +2355,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[((int)c_qY + 33 *
                                 (contor_renew_node_row[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2300,36 +2367,36 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South <= 7) {
-                  i208 = (unsigned char)(1 << g_d_direction.South);
+                  i210 = (unsigned char)(1 << g_d_direction.South);
                 } else {
-                  i208 = 0;
+                  i210 = 0;
                 }
 
                 row_dir_node[((int)c_qY + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
                                1)) - 1] = (unsigned char)(row_dir_node[((int)
                   b_qY + 33 * (contor_renew_node_row[row_num_node_tmp + 1024] -
-                               1)) - 1] | i208);
+                               1)) - 1] | i210);
               }
             }
           }
         }
       }
 
-      /* “ì¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì¼ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
       if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
         c_qY = 0U;
       }
 
       if (g_direction.West <= 7) {
-        i187 = (unsigned char)(1 << g_direction.West);
+        i189 = (unsigned char)(1 << g_direction.West);
       } else {
-        i187 = 0;
+        i189 = 0;
       }
 
-      if (((maze_wall[((int)c_qY + i153) - 1] & i187) != 0) ==
+      if (((maze_wall[((int)c_qY + i155) - 1] & i189) != 0) ==
           wall->contents.nowall) {
         c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
         if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2337,24 +2404,24 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (g_direction.West <= 7) {
-          i196 = (unsigned char)(1 << g_direction.West);
+          i198 = (unsigned char)(1 << g_direction.West);
         } else {
-          i196 = 0;
+          i198 = 0;
         }
 
-        if (((maze_wall_search[((int)c_qY + i153) - 1] & i196) != 0) ==
+        if (((maze_wall_search[((int)c_qY + i155) - 1] & i198) != 0) ==
             search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South_West <= 7) {
-            i202 = (unsigned char)(1 << g_d_direction.South_West);
+            i204 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
-            i202 = 0;
+            i204 = 0;
           }
 
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
-               - 1] & i202) != 0) {
-            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+               - 1] & i204) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2367,8 +2434,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[((int)c_qY + i153) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
+            if (col_num_node[((int)c_qY + i155) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2381,25 +2448,25 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[((int)c_qY + i153) - 1] = (unsigned short)b_qY;
+              col_num_node[((int)c_qY + i155) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
               }
 
               if (g_d_direction.South_West <= 7) {
-                col_dir_node[((int)c_qY + i153) - 1] = (unsigned char)(1 <<
+                col_dir_node[((int)c_qY + i155) - 1] = (unsigned char)(1 <<
                   g_d_direction.South_West);
               } else {
-                col_dir_node[((int)c_qY + i153) - 1] = 0U;
+                col_dir_node[((int)c_qY + i155) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2410,15 +2477,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i155;
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2432,8 +2499,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[((int)c_qY + i153) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+              if (col_num_node[((int)c_qY + i155) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2445,19 +2512,19 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South_West <= 7) {
-                  i217 = (unsigned char)(1 << g_d_direction.South_West);
+                  i219 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  i217 = 0;
+                  i219 = 0;
                 }
 
-                col_dir_node[((int)c_qY + i153) - 1] = (unsigned char)
-                  (col_dir_node[((int)b_qY + i153) - 1] | i217);
+                col_dir_node[((int)c_qY + i155) - 1] = (unsigned char)
+                  (col_dir_node[((int)b_qY + i155) - 1] | i219);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2470,8 +2537,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[((int)c_qY + i153) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+            if (col_num_node[((int)c_qY + i155) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2484,25 +2551,25 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[((int)c_qY + i153) - 1] = (unsigned short)b_qY;
+              col_num_node[((int)c_qY + i155) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
               }
 
               if (g_d_direction.South_West <= 7) {
-                col_dir_node[((int)c_qY + i153) - 1] = (unsigned char)(1 <<
+                col_dir_node[((int)c_qY + i155) - 1] = (unsigned char)(1 <<
                   g_d_direction.South_West);
               } else {
-                col_dir_node[((int)c_qY + i153) - 1] = 0U;
+                col_dir_node[((int)c_qY + i155) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2513,15 +2580,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i155;
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2535,8 +2602,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[((int)c_qY + i153) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+              if (col_num_node[((int)c_qY + i155) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2548,47 +2615,47 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South_West <= 7) {
-                  i216 = (unsigned char)(1 << g_d_direction.South_West);
+                  i218 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  i216 = 0;
+                  i218 = 0;
                 }
 
-                col_dir_node[((int)c_qY + i153) - 1] = (unsigned char)
-                  (col_dir_node[((int)b_qY + i153) - 1] | i216);
+                col_dir_node[((int)c_qY + i155) - 1] = (unsigned char)
+                  (col_dir_node[((int)b_qY + i155) - 1] | i218);
               }
             }
           }
         }
       }
 
-      /* –k¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
-      i153 = (contor_renew_node_row[row_num_node_tmp] + i153) - 1;
+      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      i155 = (contor_renew_node_row[row_num_node_tmp] + i155) - 1;
       if (g_direction.West <= 7) {
-        i198 = (unsigned char)(1 << g_direction.West);
+        i200 = (unsigned char)(1 << g_direction.West);
       } else {
-        i198 = 0;
+        i200 = 0;
       }
 
-      if (((maze_wall[i153] & i198) != 0) == wall->contents.nowall) {
+      if (((maze_wall[i155] & i200) != 0) == wall->contents.nowall) {
         if (g_direction.West <= 7) {
-          i201 = (unsigned char)(1 << g_direction.West);
+          i203 = (unsigned char)(1 << g_direction.West);
         } else {
-          i201 = 0;
+          i203 = 0;
         }
 
-        if (((maze_wall_search[i153] & i201) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚ ‚é */
+        if (((maze_wall_search[i155] & i203) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.North_West <= 7) {
-            i205 = (unsigned char)(1 << g_d_direction.North_West);
+            i207 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
-            i205 = 0;
+            i207 = 0;
           }
 
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
-               - 1] & i205) != 0) {
-            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+               - 1] & i207) != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                  (contor_renew_node_row[row_num_node_tmp + 1024]
                                   - 1)) - 1] + 4U;
@@ -2599,7 +2666,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (col_num_node[(contor_renew_node_row[row_num_node_tmp] +
                               ((contor_renew_node_row[row_num_node_tmp + 1024] -
                                 1) << 5)) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
                                     1024] - 1)) - 1] + 4U;
@@ -2607,34 +2674,34 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[i153] = (unsigned short)b_qY;
+              col_num_node[i155] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               if (g_d_direction.North_West <= 7) {
-                col_dir_node[i153] = (unsigned char)(1 <<
+                col_dir_node[i155] = (unsigned char)(1 <<
                   g_d_direction.North_West);
               } else {
-                col_dir_node[i153] = 0U;
+                col_dir_node[i155] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[row_num_node_tmp];
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i153;
+              contor_renew_node_col_idx_temp = (unsigned char)i155;
 
-              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
@@ -2646,20 +2713,20 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (col_num_node[(contor_renew_node_row[row_num_node_tmp] +
                                 ((contor_renew_node_row[row_num_node_tmp + 1024]
                                   - 1) << 5)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 if (g_d_direction.North_West <= 7) {
-                  i215 = (unsigned char)(1 << g_d_direction.North_West);
+                  i217 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  i215 = 0;
+                  i217 = 0;
                 }
 
-                col_dir_node[i153] = (unsigned char)(col_dir_node[i153] | i215);
+                col_dir_node[i155] = (unsigned char)(col_dir_node[i155] | i217);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                  (contor_renew_node_row[row_num_node_tmp + 1024]
                                   - 1)) - 1] + 18U;
@@ -2667,8 +2734,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[i153] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+            if (col_num_node[i155] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
                                     1024] - 1)) - 1] + 18U;
@@ -2676,34 +2743,34 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[i153] = (unsigned short)b_qY;
+              col_num_node[i155] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               if (g_d_direction.North_West <= 7) {
-                col_dir_node[i153] = (unsigned char)(1 <<
+                col_dir_node[i155] = (unsigned char)(1 <<
                   g_d_direction.North_West);
               } else {
-                col_dir_node[i153] = 0U;
+                col_dir_node[i155] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[row_num_node_tmp];
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i153;
+              contor_renew_node_col_idx_temp = (unsigned char)i155;
 
-              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
@@ -2712,15 +2779,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[i153] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+              if (col_num_node[i155] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 if (g_d_direction.North_West <= 7) {
-                  i214 = (unsigned char)(1 << g_d_direction.North_West);
+                  i216 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  i214 = 0;
+                  i216 = 0;
                 }
 
-                col_dir_node[i153] = (unsigned char)(col_dir_node[i153] | i214);
+                col_dir_node[i155] = (unsigned char)(col_dir_node[i155] | i216);
               }
             }
           }
@@ -2728,42 +2795,42 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /* Col_Edge‚Ìˆ—[32s,33—ñ] */
-    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
-    i152 = contor_renew_node_col_idx;
-    for (row_num_node_tmp = 0; row_num_node_tmp <= i152 - 2; row_num_node_tmp++)
+    /* Col_Edgeï¿½Ìï¿½ï¿½ï¿½[32ï¿½s,33ï¿½ï¿½] */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
+    i154 = contor_renew_node_col_idx;
+    for (row_num_node_tmp = 0; row_num_node_tmp <= i154 - 2; row_num_node_tmp++)
     {
-      /* –k‘¤‚Í•Ç */
-      /* –k“Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
-      i153 = (contor_renew_node_col[row_num_node_tmp] +
+      /* ï¿½kï¿½ï¿½ï¿½Í•ï¿½ */
+      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      i155 = (contor_renew_node_col[row_num_node_tmp] +
               ((contor_renew_node_col[row_num_node_tmp + 1024] - 1) << 5)) - 1;
       if (g_direction.North <= 7) {
-        i164 = (unsigned char)(1 << g_direction.North);
+        i166 = (unsigned char)(1 << g_direction.North);
       } else {
-        i164 = 0;
+        i166 = 0;
       }
 
-      if (((maze_wall[i153] & i164) != 0) == wall->contents.nowall) {
+      if (((maze_wall[i155] & i166) != 0) == wall->contents.nowall) {
         if (g_direction.North <= 7) {
-          i166 = (unsigned char)(1 << g_direction.North);
+          i168 = (unsigned char)(1 << g_direction.North);
         } else {
-          i166 = 0;
+          i168 = 0;
         }
 
-        if (((maze_wall_search[i153] & i166) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚ ‚é */
+        if (((maze_wall_search[i155] & i168) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.North_East <= 7) {
-            i170 = (unsigned char)(1 << g_d_direction.North_East);
+            i172 = (unsigned char)(1 << g_d_direction.North_East);
           } else {
-            i170 = 0;
+            i172 = 0;
           }
 
-          if ((col_dir_node[i153] & i170) != 0) {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-            if ((unsigned int)i153 > 255U) {
-              i153 = 255;
+          if ((col_dir_node[i155] & i172) != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+            if ((unsigned int)i155 > 255U) {
+              i155 = 255;
             }
 
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
@@ -2774,107 +2841,107 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               u9 = 65535U;
             }
 
-            if (row_num_node[(i153 + 33 *
+            if (row_num_node[(i155 + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
                                1)) - 1] > (int)u9) {
-              /* •à”MAPXV */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              row_num_node[(i153 + 33 * (contor_renew_node_col[row_num_node_tmp
+              row_num_node[(i155 + 33 * (contor_renew_node_col[row_num_node_tmp
                 + 1024] - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               if (g_d_direction.North_East <= 7) {
-                row_dir_node[(i153 + 33 *
+                row_dir_node[(i155 + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
                                1)) - 1] = (unsigned char)(1 <<
                   g_d_direction.North_East);
               } else {
-                row_dir_node[(i153 + 33 *
+                row_dir_node[(i155 + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
                                1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i153;
+                (unsigned char)i155;
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_col[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i153;
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i153 + 33 *
+              if (row_num_node[(i155 + 33 *
                                 (contor_renew_node_col[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-                if ((unsigned int)i153 > 255U) {
-                  i153 = 255;
-                }
-
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
                 if ((unsigned int)i155 > 255U) {
                   i155 = 255;
                 }
 
-                if (g_d_direction.North_East <= 7) {
-                  i188 = (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  i188 = 0;
+                i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
-                row_dir_node[(i153 + 33 *
+                if (g_d_direction.North_East <= 7) {
+                  i190 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i190 = 0;
+                }
+
+                row_dir_node[(i155 + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
-                               1)) - 1] = (unsigned char)(row_dir_node[(i155 +
+                               1)) - 1] = (unsigned char)(row_dir_node[(i157 +
                   33 * (contor_renew_node_col[row_num_node_tmp + 1024] - 1)) - 1]
-                  | i188);
+                  | i190);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-            i155 = i153;
-            if ((unsigned int)i153 > 255U) {
-              i155 = 255;
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+            i157 = i155;
+            if ((unsigned int)i155 > 255U) {
+              i157 = 255;
             }
 
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
@@ -2885,118 +2952,118 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               u9 = 65535U;
             }
 
-            i156 = 33 * (contor_renew_node_col[row_num_node_tmp + 1024] - 1);
-            if (row_num_node[(i155 + i156) - 1] > (int)u9) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i155 = i153;
-              if ((unsigned int)i153 > 255U) {
-                i155 = 255;
+            i158 = 33 * (contor_renew_node_col[row_num_node_tmp + 1024] - 1);
+            if (row_num_node[(i157 + i158) - 1] > (int)u9) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i157 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i157 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              row_num_node[(i155 + i156) - 1] = (unsigned short)b_qY;
+              row_num_node[(i157 + i158) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i155 = i153;
-              if ((unsigned int)i153 > 255U) {
-                i155 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i157 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i157 = 255;
               }
 
               if (g_d_direction.North_East <= 7) {
-                row_dir_node[(i155 + i156) - 1] = (unsigned char)(1 <<
+                row_dir_node[(i157 + i158) - 1] = (unsigned char)(1 <<
                   g_d_direction.North_East);
               } else {
-                row_dir_node[(i155 + i156) - 1] = 0U;
+                row_dir_node[(i157 + i158) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i153;
+                (unsigned char)i155;
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_col[row_num_node_tmp + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i153;
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i155 = i153;
-              if ((unsigned int)i153 > 255U) {
-                i155 = 255;
+              i157 = i155;
+              if ((unsigned int)i155 > 255U) {
+                i157 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i155 + i156) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i155 = i153;
-                if ((unsigned int)i153 > 255U) {
+              if (row_num_node[(i157 + i158) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i157 = i155;
+                if ((unsigned int)i155 > 255U) {
+                  i157 = 255;
                   i155 = 255;
-                  i153 = 255;
                 }
 
                 if (g_d_direction.North_East <= 7) {
-                  i186 = (unsigned char)(1 << g_d_direction.North_East);
+                  i188 = (unsigned char)(1 << g_d_direction.North_East);
                 } else {
-                  i186 = 0;
+                  i188 = 0;
                 }
 
-                row_dir_node[(i155 + i156) - 1] = (unsigned char)(row_dir_node
-                  [(i153 + i156) - 1] | i186);
+                row_dir_node[(i157 + i158) - 1] = (unsigned char)(row_dir_node
+                  [(i155 + i158) - 1] | i188);
               }
             }
           }
         }
       }
 
-      /* “Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       contor_renew_node_row_idx = contor_renew_node_col[row_num_node_tmp + 1024];
-      i153 = (contor_renew_node_col[row_num_node_tmp] +
+      i155 = (contor_renew_node_col[row_num_node_tmp] +
               ((contor_renew_node_row_idx - 1) << 5)) - 1;
       if (g_direction.East <= 7) {
-        i169 = (unsigned char)(1 << g_direction.East);
+        i171 = (unsigned char)(1 << g_direction.East);
       } else {
-        i169 = 0;
+        i171 = 0;
       }
 
-      if (((maze_wall[i153] & i169) != 0) == wall->contents.nowall) {
+      if (((maze_wall[i155] & i171) != 0) == wall->contents.nowall) {
         if (g_direction.East <= 7) {
-          i172 = (unsigned char)(1 << g_direction.East);
+          i174 = (unsigned char)(1 << g_direction.East);
         } else {
-          i172 = 0;
+          i174 = 0;
         }
 
-        if (((maze_wall_search[i153] & i172) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚ ‚é */
+        if (((maze_wall_search[i155] & i174) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.East <= 7) {
-            i175 = (unsigned char)(1 << g_d_direction.East);
+            i177 = (unsigned char)(1 << g_d_direction.East);
           } else {
-            i175 = 0;
+            i177 = 0;
           }
 
-          if ((col_dir_node[i153] & i175) != 0) {
-            /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i155 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
-            if ((unsigned int)i155 > 255U) {
-              i155 = 255;
+          if ((col_dir_node[i155] & i177) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
             }
 
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
@@ -3006,12 +3073,12 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i155 -
+            if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
                    1) << 5)) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
-              i155 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
@@ -3021,50 +3088,50 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i155 - 1)
+              col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 - 1)
                 << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i155 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               if (g_d_direction.East <= 7) {
-                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i155 -
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
                   1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.East);
               } else {
-                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i155 -
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
                   1) << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
-              i155 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i155;
+                (unsigned char)i157;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i155;
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i155 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
@@ -3074,39 +3141,39 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i155
+              if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157
                      - 1) << 5)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i155 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
-                if ((unsigned int)i155 > 255U) {
-                  i155 = 255;
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
-                i156 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
-                if ((unsigned int)i156 > 255U) {
-                  i156 = 255;
+                i158 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+                if ((unsigned int)i158 > 255U) {
+                  i158 = 255;
                 }
 
                 if (g_d_direction.East <= 7) {
-                  i200 = (unsigned char)(1 << g_d_direction.East);
+                  i202 = (unsigned char)(1 << g_d_direction.East);
                 } else {
-                  i200 = 0;
+                  i202 = 0;
                 }
 
-                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i155 -
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
                   1) << 5)) - 1] = (unsigned char)(col_dir_node
-                  [(contor_renew_node_col[row_num_node_tmp] + ((i156 - 1) << 5))
-                  - 1] | i200);
+                  [(contor_renew_node_col[row_num_node_tmp] + ((i158 - 1) << 5))
+                  - 1] | i202);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i155 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
-            i156 = i155;
-            if ((unsigned int)i155 > 255U) {
-              i156 = 255;
+            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
+            i158 = i157;
+            if ((unsigned int)i157 > 255U) {
+              i158 = 255;
             }
 
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
@@ -3116,12 +3183,12 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i156 -
+            if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
                    1) << 5)) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i156 = i155;
-              if ((unsigned int)i155 > 255U) {
-                i156 = 255;
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i158 = i157;
+              if ((unsigned int)i157 > 255U) {
+                i158 = 255;
               }
 
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
@@ -3131,49 +3198,49 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i156 - 1)
+              col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 - 1)
                 << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i156 = i155;
-              if ((unsigned int)i155 > 255U) {
-                i156 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i158 = i157;
+              if ((unsigned int)i157 > 255U) {
+                i158 = 255;
               }
 
               if (g_d_direction.East <= 7) {
-                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i156 -
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
                   1) << 5)) - 1] = (unsigned char)(1 << g_d_direction.East);
               } else {
-                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i156 -
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
                   1) << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i155;
+                (unsigned char)i157;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i155;
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i156 = i155;
-              if ((unsigned int)i155 > 255U) {
-                i156 = 255;
+              i158 = i157;
+              if ((unsigned int)i157 > 255U) {
+                i158 = 255;
               }
 
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
@@ -3183,62 +3250,62 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i156
+              if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158
                      - 1) << 5)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i156 = i155;
-                if ((unsigned int)i155 > 255U) {
-                  i156 = 255;
-                  i155 = 255;
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i158 = i157;
+                if ((unsigned int)i157 > 255U) {
+                  i158 = 255;
+                  i157 = 255;
                 }
 
                 if (g_d_direction.East <= 7) {
-                  i197 = (unsigned char)(1 << g_d_direction.East);
+                  i199 = (unsigned char)(1 << g_d_direction.East);
                 } else {
-                  i197 = 0;
+                  i199 = 0;
                 }
 
-                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i156 -
+                col_dir_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
                   1) << 5)) - 1] = (unsigned char)(col_dir_node
-                  [(contor_renew_node_col[row_num_node_tmp] + ((i155 - 1) << 5))
-                  - 1] | i197);
+                  [(contor_renew_node_col[row_num_node_tmp] + ((i157 - 1) << 5))
+                  - 1] | i199);
               }
             }
           }
         }
       }
 
-      /* “ì“Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì“Œï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       if (g_direction.South <= 7) {
-        i174 = (unsigned char)(1 << g_direction.South);
+        i176 = (unsigned char)(1 << g_direction.South);
       } else {
-        i174 = 0;
+        i176 = 0;
       }
 
       if (((maze_wall[(contor_renew_node_col[row_num_node_tmp] +
                        ((contor_renew_node_col[row_num_node_tmp + 1024] - 1) <<
-                        5)) - 1] & i174) != 0) == wall->contents.nowall) {
+                        5)) - 1] & i176) != 0) == wall->contents.nowall) {
         if (g_direction.South <= 7) {
-          i176 = (unsigned char)(1 << g_direction.South);
+          i178 = (unsigned char)(1 << g_direction.South);
         } else {
-          i176 = 0;
+          i178 = 0;
         }
 
         if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] +
                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
-                 - 1) << 5)) - 1] & i176) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚ ‚é */
+                 - 1) << 5)) - 1] & i178) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South_East <= 7) {
-            i179 = (unsigned char)(1 << g_d_direction.South_East);
+            i181 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
-            i179 = 0;
+            i181 = 0;
           }
 
           if ((col_dir_node[(contor_renew_node_col[row_num_node_tmp] +
                              ((contor_renew_node_col[row_num_node_tmp + 1024] -
-                               1) << 5)) - 1] & i179) != 0) {
-            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+                               1) << 5)) - 1] & i181) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                  ((contor_renew_node_col[row_num_node_tmp + 1024]
               - 1) << 5)) - 1] + 4U;
@@ -3249,7 +3316,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
                                1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
                 1024] - 1) << 5)) - 1] + 4U;
@@ -3261,7 +3328,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                             (contor_renew_node_col[row_num_node_tmp + 1024] - 1))
                 - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               if (g_d_direction.South_East <= 7) {
                 row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
@@ -3273,24 +3340,24 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row_idx;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i155;
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
@@ -3302,11 +3369,11 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                                 (contor_renew_node_col[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 if (g_d_direction.South_East <= 7) {
-                  i194 = (unsigned char)(1 << g_d_direction.South_East);
+                  i196 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  i194 = 0;
+                  i196 = 0;
                 }
 
                 row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
@@ -3314,13 +3381,13 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = (unsigned char)(row_dir_node
                   [(contor_renew_node_col[row_num_node_tmp] + 33 *
                     (contor_renew_node_col[row_num_node_tmp + 1024] - 1)) - 1] |
-                  i194);
+                  i196);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                  ((contor_renew_node_col[row_num_node_tmp + 1024]
               - 1) << 5)) - 1] + 18U;
@@ -3328,10 +3395,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            i155 = (contor_renew_node_col[row_num_node_tmp] + 33 *
+            i157 = (contor_renew_node_col[row_num_node_tmp] + 33 *
                     (contor_renew_node_col[row_num_node_tmp + 1024] - 1)) - 1;
-            if (row_num_node[i155] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+            if (row_num_node[i157] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
                 1024] - 1) << 5)) - 1] + 18U;
@@ -3339,94 +3406,94 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              row_num_node[i155] = (unsigned short)b_qY;
+              row_num_node[i157] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               if (g_d_direction.South_East <= 7) {
-                row_dir_node[i155] = (unsigned char)(1 <<
+                row_dir_node[i157] = (unsigned char)(1 <<
                   g_d_direction.South_East);
               } else {
-                row_dir_node[i155] = 0U;
+                row_dir_node[i157] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row_idx;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i155;
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              b_qY = col_num_node[i153] + 18U;
+              b_qY = col_num_node[i155] + 18U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (row_num_node[i155] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+              if (row_num_node[i157] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 if (g_d_direction.South_East <= 7) {
-                  i195 = (unsigned char)(1 << g_d_direction.South_East);
+                  i197 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  i195 = 0;
+                  i197 = 0;
                 }
 
-                row_dir_node[i155] = (unsigned char)(row_dir_node[i155] | i195);
+                row_dir_node[i157] = (unsigned char)(row_dir_node[i157] | i197);
               }
             }
           }
         }
       }
 
-      /* “ì‘¤‚Í’Œ */
-      /* “ì¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì‘¤ï¿½Í’ï¿½ */
+      /* ï¿½ì¼ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row_idx - 1U;
       if (c_qY > contor_renew_node_row_idx) {
         c_qY = 0U;
       }
 
       if (g_direction.South <= 7) {
-        i181 = (unsigned char)(1 << g_direction.South);
+        i183 = (unsigned char)(1 << g_direction.South);
       } else {
-        i181 = 0;
+        i183 = 0;
       }
 
       if (((maze_wall[(contor_renew_node_col[row_num_node_tmp] + (((int)c_qY - 1)
-              << 5)) - 1] & i181) != 0) == wall->contents.nowall) {
+              << 5)) - 1] & i183) != 0) == wall->contents.nowall) {
         c_qY = contor_renew_node_row_idx - 1U;
         if (c_qY > contor_renew_node_row_idx) {
           c_qY = 0U;
         }
 
         if (g_direction.South <= 7) {
-          i185 = (unsigned char)(1 << g_direction.South);
+          i187 = (unsigned char)(1 << g_direction.South);
         } else {
-          i185 = 0;
+          i187 = 0;
         }
 
         if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
-                 c_qY - 1) << 5)) - 1] & i185) != 0) == search->contents.known)
+                 c_qY - 1) << 5)) - 1] & i187) != 0) == search->contents.known)
         {
-          /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South_West <= 7) {
-            i193 = (unsigned char)(1 << g_d_direction.South_West);
+            i195 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
-            i193 = 0;
+            i195 = 0;
           }
 
-          if ((col_dir_node[i153] & i193) != 0) {
-            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+          if ((col_dir_node[i155] & i195) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = contor_renew_node_row_idx - 1U;
             if (c_qY > contor_renew_node_row_idx) {
               c_qY = 0U;
@@ -3441,7 +3508,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3457,7 +3524,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 * ((int)
                 c_qY - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3472,10 +3539,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                               ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3486,15 +3553,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i155;
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
@@ -3510,7 +3577,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                                 ((int)c_qY - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row_idx - 1U;
                 if (c_qY > contor_renew_node_row_idx) {
                   c_qY = 0U;
@@ -3522,34 +3589,34 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South_West <= 7) {
-                  i213 = (unsigned char)(1 << g_d_direction.South_West);
+                  i215 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  i213 = 0;
+                  i215 = 0;
                 }
 
                 row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               ((int)c_qY - 1)) - 1] = (unsigned char)
                   (row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
-                                 ((int)b_qY - 1)) - 1] | i213);
+                                 ((int)b_qY - 1)) - 1] | i215);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = contor_renew_node_row_idx - 1U;
             if (c_qY > contor_renew_node_row_idx) {
               c_qY = 0U;
             }
 
-            b_qY = col_num_node[i153] + 18U;
+            b_qY = col_num_node[i155] + 18U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
 
             if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3565,7 +3632,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 * ((int)
                 c_qY - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3580,10 +3647,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                               ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3594,29 +3661,29 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i155;
+              contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
               }
 
-              b_qY = col_num_node[i153] + 18U;
+              b_qY = col_num_node[i155] + 18U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
               if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                                 ((int)c_qY - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row_idx - 1U;
                 if (c_qY > contor_renew_node_row_idx) {
                   c_qY = 0U;
@@ -3628,59 +3695,59 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South_West <= 7) {
-                  i212 = (unsigned char)(1 << g_d_direction.South_West);
+                  i214 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  i212 = 0;
+                  i214 = 0;
                 }
 
                 row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               ((int)c_qY - 1)) - 1] = (unsigned char)
                   (row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
-                                 ((int)b_qY - 1)) - 1] | i212);
+                                 ((int)b_qY - 1)) - 1] | i214);
               }
             }
           }
         }
       }
 
-      /* ¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row_idx - 1U;
       if (c_qY > contor_renew_node_row_idx) {
         c_qY = 0U;
       }
 
       if (g_direction.West <= 7) {
-        i191 = (unsigned char)(1 << g_direction.West);
+        i193 = (unsigned char)(1 << g_direction.West);
       } else {
-        i191 = 0;
+        i193 = 0;
       }
 
       if (((maze_wall[(contor_renew_node_col[row_num_node_tmp] + (((int)c_qY - 1)
-              << 5)) - 1] & i191) != 0) == wall->contents.nowall) {
+              << 5)) - 1] & i193) != 0) == wall->contents.nowall) {
         c_qY = contor_renew_node_row_idx - 1U;
         if (c_qY > contor_renew_node_row_idx) {
           c_qY = 0U;
         }
 
         if (g_direction.West <= 7) {
-          i199 = (unsigned char)(1 << g_direction.West);
+          i201 = (unsigned char)(1 << g_direction.West);
         } else {
-          i199 = 0;
+          i201 = 0;
         }
 
         if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
-                 c_qY - 1) << 5)) - 1] & i199) != 0) == search->contents.known)
+                 c_qY - 1) << 5)) - 1] & i201) != 0) == search->contents.known)
         {
-          /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.West <= 7) {
-            i204 = (unsigned char)(1 << g_d_direction.West);
+            i206 = (unsigned char)(1 << g_d_direction.West);
           } else {
-            i204 = 0;
+            i206 = 0;
           }
 
-          if ((col_dir_node[i153] & i204) != 0) {
-            /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+          if ((col_dir_node[i155] & i206) != 0) {
+            /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = contor_renew_node_row_idx - 1U;
             if (c_qY > contor_renew_node_row_idx) {
               c_qY = 0U;
@@ -3695,7 +3762,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                    c_qY - 1) << 5)) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3711,7 +3778,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                 c_qY - 1) << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3726,10 +3793,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   c_qY - 1) << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3740,15 +3807,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i155;
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
@@ -3764,7 +3831,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                      c_qY - 1) << 5)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row_idx - 1U;
                 if (c_qY > contor_renew_node_row_idx) {
                   c_qY = 0U;
@@ -3776,21 +3843,21 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.West <= 7) {
-                  i219 = (unsigned char)(1 << g_d_direction.West);
+                  i221 = (unsigned char)(1 << g_d_direction.West);
                 } else {
-                  i219 = 0;
+                  i221 = 0;
                 }
 
                 col_dir_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                   c_qY - 1) << 5)) - 1] = (unsigned char)(col_dir_node
                   [(contor_renew_node_col[row_num_node_tmp] + (((int)b_qY - 1) <<
-                  5)) - 1] | i219);
+                  5)) - 1] | i221);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = contor_renew_node_row_idx - 1U;
             if (c_qY > contor_renew_node_row_idx) {
               c_qY = 0U;
@@ -3805,7 +3872,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                    c_qY - 1) << 5)) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3821,7 +3888,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                 c_qY - 1) << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3836,10 +3903,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   c_qY - 1) << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3850,29 +3917,29 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i155 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i155 > 255U) {
-                i155 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i157 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i155;
+              contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
               }
 
-              b_qY = col_num_node[i153] + 18U;
+              b_qY = col_num_node[i155] + 18U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
               if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                      c_qY - 1) << 5)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row_idx - 1U;
                 if (c_qY > contor_renew_node_row_idx) {
                   c_qY = 0U;
@@ -3884,64 +3951,64 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.West <= 7) {
-                  i218 = (unsigned char)(1 << g_d_direction.West);
+                  i220 = (unsigned char)(1 << g_d_direction.West);
                 } else {
-                  i218 = 0;
+                  i220 = 0;
                 }
 
                 col_dir_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                   c_qY - 1) << 5)) - 1] = (unsigned char)(col_dir_node
                   [(contor_renew_node_col[row_num_node_tmp] + (((int)b_qY - 1) <<
-                  5)) - 1] | i218);
+                  5)) - 1] | i220);
               }
             }
           }
         }
       }
 
-      /* –k¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row_idx - 1U;
       if (c_qY > contor_renew_node_row_idx) {
         c_qY = 0U;
       }
 
       if (g_direction.North <= 7) {
-        i203 = (unsigned char)(1 << g_direction.North);
+        i205 = (unsigned char)(1 << g_direction.North);
       } else {
-        i203 = 0;
+        i205 = 0;
       }
 
       if (((maze_wall[(contor_renew_node_col[row_num_node_tmp] + (((int)c_qY - 1)
-              << 5)) - 1] & i203) != 0) == wall->contents.nowall) {
+              << 5)) - 1] & i205) != 0) == wall->contents.nowall) {
         c_qY = contor_renew_node_row_idx - 1U;
         if (c_qY > contor_renew_node_row_idx) {
           c_qY = 0U;
         }
 
         if (g_direction.North <= 7) {
-          i206 = (unsigned char)(1 << g_direction.North);
+          i208 = (unsigned char)(1 << g_direction.North);
         } else {
-          i206 = 0;
+          i208 = 0;
         }
 
         if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
-                 c_qY - 1) << 5)) - 1] & i206) != 0) == search->contents.known)
+                 c_qY - 1) << 5)) - 1] & i208) != 0) == search->contents.known)
         {
-          /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.North_West <= 7) {
-            i207 = (unsigned char)(1 << g_d_direction.North_West);
+            i209 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
-            i207 = 0;
+            i209 = 0;
           }
 
           if ((col_dir_node[(contor_renew_node_col[row_num_node_tmp] +
                              ((contor_renew_node_col[row_num_node_tmp + 1024] -
-                               1) << 5)) - 1] & i207) != 0) {
-            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-            if ((unsigned int)i153 > 255U) {
-              i153 = 255;
+                               1) << 5)) - 1] & i209) != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+            if ((unsigned int)i155 > 255U) {
+              i155 = 255;
             }
 
             c_qY = contor_renew_node_row_idx - 1U;
@@ -3956,11 +4023,11 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (row_num_node[(i153 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+            if (row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3975,13 +4042,13 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              row_num_node[(i153 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
+              row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3990,23 +4057,23 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (g_d_direction.North_West <= 7) {
-                row_dir_node[(i153 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
                   (1 << g_d_direction.North_West);
               } else {
-                row_dir_node[(i153 + 33 * ((int)c_qY - 1)) - 1] = 0U;
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i153;
+                (unsigned char)i155;
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -4015,19 +4082,19 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i153;
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               c_qY = contor_renew_node_row_idx - 1U;
@@ -4042,12 +4109,12 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i153 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY)
+              if (row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY)
               {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-                if ((unsigned int)i153 > 255U) {
-                  i153 = 255;
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i155 > 255U) {
+                  i155 = 255;
                 }
 
                 c_qY = contor_renew_node_row_idx - 1U;
@@ -4055,9 +4122,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   c_qY = 0U;
                 }
 
-                i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-                if ((unsigned int)i155 > 255U) {
-                  i155 = 255;
+                i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
                 b_qY = contor_renew_node_row_idx - 1U;
@@ -4066,22 +4133,22 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.North_West <= 7) {
-                  i221 = (unsigned char)(1 << g_d_direction.North_West);
+                  i223 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  i221 = 0;
+                  i223 = 0;
                 }
 
-                row_dir_node[(i153 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
-                  (row_dir_node[(i155 + 33 * ((int)b_qY - 1)) - 1] | i221);
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(i157 + 33 * ((int)b_qY - 1)) - 1] | i223);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-            if ((unsigned int)i155 > 255U) {
-              i155 = 255;
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+            if ((unsigned int)i157 > 255U) {
+              i157 = 255;
             }
 
             c_qY = contor_renew_node_row_idx - 1U;
@@ -4089,16 +4156,16 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               c_qY = 0U;
             }
 
-            b_qY = col_num_node[i153] + 18U;
+            b_qY = col_num_node[i155] + 18U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
 
-            if (row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
+            if (row_num_node[(i157 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
               }
 
               c_qY = contor_renew_node_row_idx - 1U;
@@ -4113,56 +4180,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              row_num_node[(i153 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
+              row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              c_qY = contor_renew_node_row_idx - 1U;
-              if (c_qY > contor_renew_node_row_idx) {
-                c_qY = 0U;
-              }
-
-              if (g_d_direction.North_West <= 7) {
-                row_dir_node[(i153 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
-                  (1 << g_d_direction.North_West);
-              } else {
-                row_dir_node[(i153 + 33 * ((int)c_qY - 1)) - 1] = 0U;
-              }
-
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
-              change_flag = 1U;
-
-              /* XVƒm[ƒh‚ğXV */
-              i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i153;
-              c_qY = contor_renew_node_row_idx - 1U;
-              if (c_qY > contor_renew_node_row_idx) {
-                c_qY = 0U;
-              }
-
-              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
-                (unsigned char)c_qY;
-
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i153 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i153 > 255U) {
-                i153 = 255;
-              }
-
-              contor_renew_node_row_idx_temp = (unsigned char)i153;
-
-              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
-            } else {
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4173,17 +4194,63 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 c_qY = 0U;
               }
 
-              b_qY = col_num_node[i153] + 18U;
+              if (g_d_direction.North_West <= 7) {
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (1 << g_d_direction.North_West);
+              } else {
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = 0U;
+              }
+
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              change_flag = 1U;
+
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i155;
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i155 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i155 > 255U) {
+                i155 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i155;
+
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+            } else {
+              i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+              if ((unsigned int)i157 > 255U) {
+                i157 = 255;
+              }
+
+              c_qY = contor_renew_node_row_idx - 1U;
+              if (c_qY > contor_renew_node_row_idx) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[i155] + 18U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY)
+              if (row_num_node[(i157 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY)
               {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i153 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-                if ((unsigned int)i153 > 255U) {
-                  i153 = 255;
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i155 > 255U) {
+                  i155 = 255;
                 }
 
                 c_qY = contor_renew_node_row_idx - 1U;
@@ -4191,9 +4258,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   c_qY = 0U;
                 }
 
-                i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
-                if ((unsigned int)i155 > 255U) {
-                  i155 = 255;
+                i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
+                if ((unsigned int)i157 > 255U) {
+                  i157 = 255;
                 }
 
                 b_qY = contor_renew_node_row_idx - 1U;
@@ -4202,13 +4269,13 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.North_West <= 7) {
-                  i220 = (unsigned char)(1 << g_d_direction.North_West);
+                  i222 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  i220 = 0;
+                  i222 = 0;
                 }
 
-                row_dir_node[(i153 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
-                  (row_dir_node[(i155 + 33 * ((int)b_qY - 1)) - 1] | i220);
+                row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(i157 + 33 * ((int)b_qY - 1)) - 1] | i222);
               }
             }
           }
@@ -4216,20 +4283,20 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /* ƒS[ƒ‹XVƒm[ƒh‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
     contor_renew_node_col_idx = contor_renew_node_col_idx_temp;
     contor_renew_node_col_idx_temp = 1U;
-    for (i152 = 0; i152 < 2048; i152++) {
-      contor_renew_node_col[i152] = contor_renew_node_col_temp[i152];
-      contor_renew_node_col_temp[i152] = 0U;
-      contor_renew_node_row[i152] = contor_renew_node_row_temp[i152];
-      contor_renew_node_row_temp[i152] = 0U;
+    for (i154 = 0; i154 < 2048; i154++) {
+      contor_renew_node_col[i154] = contor_renew_node_col_temp[i154];
+      contor_renew_node_col_temp[i154] = 0U;
+      contor_renew_node_row[i154] = contor_renew_node_row_temp[i154];
+      contor_renew_node_row_temp[i154] = 0U;
     }
 
     contor_renew_node_row_idx = contor_renew_node_row_idx_temp;
     contor_renew_node_row_idx_temp = 1U;
 
-    /* XV‚ª‚È‚¯‚ê‚ÎI—¹(ƒXƒ^[ƒg’n“_‚Ì•à”ƒ}ƒbƒv‚ğXV) */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½(ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½Ì•ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½Xï¿½V) */
     if (change_flag == 0) {
       b_qY = row_num_node[1] + 3U;
       if (b_qY > 65535U) {
@@ -4245,8 +4312,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 }
 
 /*
- * “ü—Í@Œ»İˆÊ’ux,y,Œ»İ•ûŒü,–À˜Hs•ûŒüƒTƒCƒY,–À˜H—ñ•ûŒüƒTƒCƒY,–À˜H•Çî•ñ,–À˜H•Ç‚Ì’Tõî•ñ,ƒS[ƒ‹À•W
- * o—Í  Œ»İˆÊ’ux,y,Œ»İ•ûŒü,•Çî•ñ,’Tõî•ñ
+ * ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Ç‚Ì’Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W
+ * ï¿½oï¿½ï¿½  ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½,ï¿½Çï¿½ï¿½,ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½
  * Arguments    : const coder_internal_ref_5 *wall
  *                coder_internal_ref *wall_flg
  *                const coder_internal_ref_4 *search
@@ -4283,73 +4350,73 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   int q0;
   unsigned int qY;
 
-  /*     %% search_adachi ‘«—§–@‚Å‚Ì’Tõ */
-  /* local•Ï”éŒ¾ */
+  /*     %% search_adachi ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½Å‚Ì’Tï¿½ï¿½ */
+  /* localï¿½Ïï¿½ï¿½éŒ¾ */
   goal_flg = 0U;
 
-  /* ƒS[ƒ‹”»’èƒtƒ‰ƒO */
-  /* •Çî•ñXVŠm”F—p•Ï” */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O */
+  /* ï¿½Çï¿½ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ïï¿½ */
   contour_flg = 0U;
 
-  /*      search_start_x = current_x %’TõŠJnx */
-  /*      search_start_y = current_y %’TõŠJny */
-  /* ‰‰ñ‚ÌƒRƒ“ƒ^[ƒ}ƒbƒvì» */
+  /*      search_start_x = current_x %ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½x */
+  /*      search_start_y = current_y %ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½y */
+  /* ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ì» */
   b_make_map_find(wall, exploration_goal, maze_wall, *current_x, *current_y,
                   contour_map);
   do {
     exitg1 = 0;
 
-    /* •Çî•ñæ“¾ */
-    /* ƒS[ƒ‹’¼Œã‚Í•Çî•ñ‚ğXV‚µ‚È‚¢ */
+    /* ï¿½Çï¿½ï¿½æ“¾ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í•Çï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ */
     if (goal_after_flg != 1) {
       next_dir = maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
       wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size, *
                current_x, *current_y, *current_dir, maze_wall, maze_wall_search);
 
-      /* •Çî•ñ‚ªXV‚³‚ê‚ê‚ÎAƒRƒ“ƒ^[XV‚Ìƒtƒ‰ƒO‚ğ—§‚Ä‚éB */
+      /* ï¿½Çï¿½ñ‚ªXï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½B */
       if (next_dir != maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1]) {
         contour_flg = 1U;
       }
     } else {
-      /* ƒS[ƒ‹’¼Œã‚Ì‚Æ‚« */
+      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Æ‚ï¿½ */
       goal_after_flg = 0U;
 
-      /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
     }
 
-    /*  “™‚üMAP¶¬ */
-    /* •Çî•ñ‚É•ÏX‚ª‚ ‚Á‚½ê‡‚Ì‚İ */
+    /*  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½ï¿½ */
+    /* ï¿½Çï¿½ï¿½É•ÏXï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ì‚ï¿½ */
     if (contour_flg != 0) {
       b_make_map_find(wall, exploration_goal, maze_wall, *current_x, *current_y,
                       contour_map);
     }
 
-    /* Œ»İˆÊ’u‚ªƒS[ƒ‹‚©”»’è */
+    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     if ((*current_x == exploration_goal[0]) && (*current_y == exploration_goal[1]))
     {
       goal_flg = 1U;
     }
 
-    /* ’Tõƒ‚[ƒh‚Ìê‡A‘ÎÛ‚Ìƒ}ƒX‚ª‚·‚×‚Ä’TõÏ‚İ‚Ì‚Æ‚«AƒS[ƒ‹ƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+    /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½Ìê‡ï¿½Aï¿½ÎÛ‚Ìƒ}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä’Tï¿½ï¿½ï¿½Ï‚İ‚Ì‚Æ‚ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
     if (adachi_s_mode == adachi_search_mode->contents.search) {
       goal_flg = 1U;
 
-      /* ƒS[ƒ‹À•W‚ª–¢’Tõ‚Å‚ ‚ê‚ÎAƒtƒ‰ƒO‚ğ‚¨‚ë‚µAƒuƒŒƒCƒN */
+      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ë‚µï¿½Aï¿½uï¿½ï¿½ï¿½Cï¿½N */
       if (maze_wall_search[(exploration_goal[1] + ((exploration_goal[0] - 1) <<
             5)) - 1] != 15) {
         goal_flg = 0U;
       }
     }
 
-    /* ƒS[ƒ‹ˆ— */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     if (goal_flg == 1) {
       exitg1 = 1;
     } else {
-      /*  is•ûŒü‘I’è */
-      /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
+      /*  ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
+      /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
       next_dir = get_nextdir2(*current_x, *current_y, maze_wall, contour_map);
 
-      /*  Œ»İ•ûŒü‚Æis•ûŒü‚É‰‚¶‚½ˆ— */
+      /*  ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ï¿½Æiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
       q0 = (int)(4U + next_dir);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
@@ -4380,10 +4447,10 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         /* disp("front") */
         m_move_front(*start_flg, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         *start_flg = 0U;
 
-        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
 
@@ -4394,10 +4461,10 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         /* disp("right") */
         m_move_right(*start_flg, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         *start_flg = 0U;
 
-        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
 
@@ -4408,10 +4475,10 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         /* disp("back") */
         m_move_back(*start_flg, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         *start_flg = 0U;
 
-        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
 
@@ -4422,10 +4489,10 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         /* disp("left") */
         m_move_left(*start_flg, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         *start_flg = 0U;
 
-        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
       }
@@ -4435,16 +4502,16 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   } while (exitg1 == 0);
 
   if (stop_flg == 1) {
-    /* ƒS[ƒ‹’â~ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é‚Æ‚« */
-    /* ’â~“®ì‚ğÀ{ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
     m_goal_movement(*start_flg, wall_flg->contents, move_dir_property.straight);
   }
 
-  /* ƒS[ƒ‹’â~ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚È‚¯‚ê‚ÎA“®ì‚³‚¹‚½‚Ü‚ÜI—¹ */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ì‚³ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ÜIï¿½ï¿½ */
 }
 
 /*
- * ƒXƒ^[ƒgƒm[ƒh,•ûŒü‚ğİ’è
+ * ï¿½Xï¿½^ï¿½[ï¿½gï¿½mï¿½[ï¿½h,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½
  * Arguments    : const unsigned char maze_goal[18]
  *                unsigned char goal_size
  *                const unsigned short row_num_node[1056]
@@ -4463,43 +4530,43 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
   unsigned char next_node_idx_0;
   unsigned char next_node_idx_1;
   unsigned short map_min;
-  int i148;
+  int i150;
   int exitg1;
   unsigned char goal_flag;
   int i;
   bool guard1 = false;
-  int i149;
+  int i151;
   bool guard2 = false;
   bool guard3 = false;
   bool guard4 = false;
   unsigned int qY;
   unsigned short u8;
 
-  /*     %% decide_goal_node_dir ƒS[ƒ‹ƒm[ƒhA‚¨‚æ‚Ñ•ûŒü‚ÌŠm’è */
-  /*  Î‚ß‚ÌƒRƒ“ƒ^[ƒ}ƒbƒv‚©‚çAƒS[ƒ‹‚Æ‚È‚éƒm[ƒh‚ÆAƒS[ƒ‹‚Ìi“üŠp“x‚ğŠm’è‚·‚éB */
+  /*     %% decide_goal_node_dir ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Aï¿½ï¿½ï¿½ï¿½Ñ•ï¿½ï¿½ï¿½ï¿½ÌŠmï¿½ï¿½ */
+  /*  ï¿½Î‚ß‚ÌƒRï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚È‚ï¿½mï¿½[ï¿½hï¿½ÆAï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½ï¿½ï¿½pï¿½xï¿½ï¿½ï¿½mï¿½è‚·ï¿½ï¿½B */
   *goal_matrix_dir = matrix_dir.Row;
 
-  /* ƒXƒ^[ƒgƒm[ƒh‚Ís•ûŒü */
-  /* ƒXƒ^[ƒgƒ}ƒX‚Ì–k‚Ìƒm[ƒh */
+  /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½mï¿½[ï¿½hï¿½Ísï¿½ï¿½ï¿½ï¿½ */
+  /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½}ï¿½Xï¿½Ì–kï¿½Ìƒmï¿½[ï¿½h */
   next_matrix_dir = matrix_dir.Row;
 
-  /* is•ûŒüæ‚Ìƒm[ƒh•ûŒüi‰¼j */
+  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½j */
   goal_node[0] = 2U;
   next_node_idx_0 = 2U;
   goal_node[1] = 1U;
   next_node_idx_1 = 1U;
 
-  /* is•ûŒüæ‚Ìƒm[ƒhÀ•W */
+  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½W */
   *goal_dir = g_d_direction.North;
 
-  /* is•ûŒüiÅ‰‚Ì‰¼‚Ì’l‚Í–kŒü‚«j */
+  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Åï¿½ï¿½Ì‰ï¿½ï¿½Ì’lï¿½Í–kï¿½ï¿½ï¿½ï¿½ï¿½j */
   map_min = MAX_uint16_T;
-  i148 = goal_size;
+  i150 = goal_size;
   do {
     exitg1 = 0;
     goal_flag = 0U;
-    for (i = 0; i < i148; i++) {
-      /* Œ»İ‚Ìƒm[ƒh‚ªs•ûŒü‚Ì */
+    for (i = 0; i < i150; i++) {
+      /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
       if (*goal_matrix_dir == matrix_dir.Row) {
         /*  %x */
         if (maze_goal[i] == goal_node[1]) {
@@ -4507,34 +4574,34 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
           if (maze_goal[i + 9] == goal_node[0]) {
             guard1 = true;
           } else {
-            i149 = (int)(maze_goal[i + 9] + 1U);
-            if ((unsigned int)i149 > 255U) {
-              i149 = 255;
+            i151 = (int)(maze_goal[i + 9] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (i149 == goal_node[0]) {
+            if (i151 == goal_node[0]) {
               guard1 = true;
             }
           }
 
           if (guard1) {
-            /* yÀ•W‚Ìˆê’v */
-            /* is•ûŒüæ‚É•Ç‚ª‚ ‚ê‚Î(ƒ}ƒbƒv’l‚ª65535‚Å‚ ‚ê‚Î)Ais•ûŒü‚ğ•ÏX‚·‚éiÎ‚ßN“üj */
-            /* –k“Œ */
+            /* yï¿½ï¿½ï¿½Wï¿½Ìˆï¿½v */
+            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½}ï¿½bï¿½vï¿½lï¿½ï¿½65535ï¿½Å‚ï¿½ï¿½ï¿½ï¿½)ï¿½Aï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½iï¿½Î‚ßNï¿½ï¿½ï¿½ï¿½ï¿½j */
+            /* ï¿½kï¿½ï¿½ */
             guard2 = false;
             guard3 = false;
             guard4 = false;
             if (*goal_dir == g_d_direction.North_East) {
-              i149 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              if (col_num_node[(goal_node[0] + ((i149 - 1) << 5)) - 1] == 65535)
+              if (col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1] == 65535)
               {
                 *goal_dir = g_d_direction.North;
 
-                /* “ì“Œ */
+                /* ï¿½ì“Œ */
               } else {
                 guard4 = true;
               }
@@ -4549,15 +4616,15 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                   qY = 0U;
                 }
 
-                i149 = (int)(goal_node[1] + 1U);
-                if ((unsigned int)i149 > 255U) {
-                  i149 = 255;
+                i151 = (int)(goal_node[1] + 1U);
+                if ((unsigned int)i151 > 255U) {
+                  i151 = 255;
                 }
 
-                if (col_num_node[((int)qY + ((i149 - 1) << 5)) - 1] == 65535) {
+                if (col_num_node[((int)qY + ((i151 - 1) << 5)) - 1] == 65535) {
                   *goal_dir = g_d_direction.South;
 
-                  /* “ì¼ */
+                  /* ï¿½ì¼ */
                 } else {
                   guard3 = true;
                 }
@@ -4577,7 +4644,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                     65535) {
                   *goal_dir = g_d_direction.South;
 
-                  /* –k¼ */
+                  /* ï¿½kï¿½ï¿½ */
                 } else {
                   guard2 = true;
                 }
@@ -4592,44 +4659,44 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               *goal_dir = g_d_direction.North;
             }
 
-            /* ƒtƒ‰ƒO */
+            /* ï¿½tï¿½ï¿½ï¿½O */
             goal_flag = 1U;
           }
         }
 
-        /* Œ»İ‚Ìƒm[ƒh‚ª—ñ•ûŒü‚Ì */
+        /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
       } else {
         /*  %x */
         guard1 = false;
         if (maze_goal[i] == goal_node[1]) {
           guard1 = true;
         } else {
-          i149 = (int)(maze_goal[i] + 1U);
-          if ((unsigned int)i149 > 255U) {
-            i149 = 255;
+          i151 = (int)(maze_goal[i] + 1U);
+          if ((unsigned int)i151 > 255U) {
+            i151 = 255;
           }
 
-          if (i149 == goal_node[1]) {
+          if (i151 == goal_node[1]) {
             guard1 = true;
           }
         }
 
         if (guard1 && (maze_goal[i + 9] == goal_node[0])) {
-          /* yÀ•W‚Ìˆê’v */
-          /* is•ûŒüæ‚É•Ç‚ª‚ ‚ê‚Î(ƒ}ƒbƒv’l‚ª65535‚Å‚ ‚ê‚Î)Ais•ûŒü‚ğ•ÏX‚·‚éiÎ‚ßN“üj */
-          /* –k“Œ */
+          /* yï¿½ï¿½ï¿½Wï¿½Ìˆï¿½v */
+          /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½}ï¿½bï¿½vï¿½lï¿½ï¿½65535ï¿½Å‚ï¿½ï¿½ï¿½ï¿½)ï¿½Aï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½iï¿½Î‚ßNï¿½ï¿½ï¿½ï¿½ï¿½j */
+          /* ï¿½kï¿½ï¿½ */
           guard2 = false;
           guard3 = false;
           if (*goal_dir == g_d_direction.North_East) {
-            i149 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i149 > 255U) {
-              i149 = 255;
+            i151 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (row_num_node[(i149 + 33 * (goal_node[1] - 1)) - 1] == 65535) {
+            if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] == 65535) {
               *goal_dir = g_d_direction.East;
 
-              /* “ì“Œ */
+              /* ï¿½ì“Œ */
             } else {
               guard3 = true;
             }
@@ -4642,7 +4709,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                  [(goal_node[0] + 33 * (goal_node[1] - 1)) - 1] == 65535)) {
               *goal_dir = g_d_direction.East;
 
-              /* “ì¼ */
+              /* ï¿½ì¼ */
             } else if (*goal_dir == g_d_direction.South_West) {
               qY = goal_node[1] - 1U;
               if (qY > goal_node[1]) {
@@ -4653,7 +4720,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               {
                 *goal_dir = g_d_direction.West;
 
-                /* –k¼ */
+                /* ï¿½kï¿½ï¿½ */
               } else {
                 guard2 = true;
               }
@@ -4663,9 +4730,9 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
           }
 
           if (guard2 && (*goal_dir == g_d_direction.North_West)) {
-            i149 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i149 > 255U) {
-              i149 = 255;
+            i151 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
             qY = goal_node[1] - 1U;
@@ -4673,12 +4740,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               qY = 0U;
             }
 
-            if (row_num_node[(i149 + 33 * ((int)qY - 1)) - 1] == 65535) {
+            if (row_num_node[(i151 + 33 * ((int)qY - 1)) - 1] == 65535) {
               *goal_dir = g_d_direction.West;
             }
           }
 
-          /* ƒtƒ‰ƒO */
+          /* ï¿½tï¿½ï¿½ï¿½O */
           goal_flag = 1U;
         }
       }
@@ -4690,79 +4757,79 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
     /*              disp(current_matrix_dir) */
     /*              disp("current_dir_dgnd") */
     /*              disp(current_dir_dgnd) */
-    /* ƒS[ƒ‹ƒm[ƒh”»’è‚Ì */
-    /* Œ»İ‚Ìƒm[ƒh‚ğƒS[ƒ‹ƒm[ƒh‚Æ‚µA */
-    /* Œ»İ‚Ì•ûŒü‚ğƒS[ƒ‹‚Ì•ûŒü‚Æ‚·‚éB */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½Ìï¿½ */
+    /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Æ‚ï¿½ï¿½A */
+    /* ï¿½ï¿½ï¿½İ‚Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½B */
     if (goal_flag == 1) {
       exitg1 = 1;
     } else {
-      /* Œ»İ‚Ìƒm[ƒh‚Ì•ûŒü‚©‚ç—Dæ“I‚Éis•ûŒü‚ğŠm’è */
+      /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dï¿½ï¿½Iï¿½Éiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ */
       for (i = 0; i < 8; i++) {
-        i149 = *goal_dir + i;
-        if (i149 > 255) {
-          i149 = 255;
+        i151 = *goal_dir + i;
+        if (i151 > 255) {
+          i151 = 255;
         }
 
-        goal_flag = (unsigned char)(i149 % 8);
+        goal_flag = (unsigned char)(i151 % 8);
 
-        /* Œ»İ‚Ìƒm[ƒh‚ªs•ûŒü‚Ì */
+        /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
         if (*goal_matrix_dir == matrix_dir.Row) {
           if (goal_flag == g_d_direction.North) {
-            i149 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i149 > 255U) {
-              i149 = 255;
+            i151 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (row_num_node[(i149 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
-              /* Å¬’l‚ğXV */
-              i149 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+            if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              i151 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              map_min = row_num_node[(i149 + 33 * (goal_node[1] - 1)) - 1];
+              map_min = row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1];
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *goal_dir = g_d_direction.North;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               next_matrix_dir = matrix_dir.Row;
-              i149 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+              i151 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              next_node_idx_0 = (unsigned char)i149;
+              next_node_idx_0 = (unsigned char)i151;
               next_node_idx_1 = goal_node[1];
             }
           } else if (goal_flag == g_d_direction.North_East) {
-            i149 = (int)(goal_node[1] + 1U);
-            if ((unsigned int)i149 > 255U) {
-              i149 = 255;
+            i151 = (int)(goal_node[1] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (col_num_node[(goal_node[0] + ((i149 - 1) << 5)) - 1] < map_min)
+            if (col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1] < map_min)
             {
-              /* Å¬’l‚ğXV */
-              i149 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              map_min = col_num_node[(goal_node[0] + ((i149 - 1) << 5)) - 1];
+              map_min = col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1];
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *goal_dir = g_d_direction.North_East;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               next_matrix_dir = matrix_dir.Col;
               next_node_idx_0 = goal_node[0];
-              i149 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              next_node_idx_1 = (unsigned char)i149;
+              next_node_idx_1 = (unsigned char)i151;
             }
           } else if (goal_flag != g_d_direction.East) {
             if (goal_flag == g_d_direction.South_East) {
@@ -4771,29 +4838,29 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                 qY = 0U;
               }
 
-              i149 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              if (col_num_node[((int)qY + ((i149 - 1) << 5)) - 1] < map_min) {
-                /* Å¬’l‚ğXV */
+              if (col_num_node[((int)qY + ((i151 - 1) << 5)) - 1] < map_min) {
+                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
                   qY = 0U;
                 }
 
-                i149 = (int)(goal_node[1] + 1U);
-                if ((unsigned int)i149 > 255U) {
-                  i149 = 255;
+                i151 = (int)(goal_node[1] + 1U);
+                if ((unsigned int)i151 > 255U) {
+                  i151 = 255;
                 }
 
-                map_min = col_num_node[((int)qY + ((i149 - 1) << 5)) - 1];
+                map_min = col_num_node[((int)qY + ((i151 - 1) << 5)) - 1];
 
-                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
+                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                 *goal_dir = g_d_direction.South_East;
 
-                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                 next_matrix_dir = matrix_dir.Col;
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
@@ -4801,12 +4868,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                 }
 
                 next_node_idx_0 = (unsigned char)qY;
-                i149 = (int)(goal_node[1] + 1U);
-                if ((unsigned int)i149 > 255U) {
-                  i149 = 255;
+                i151 = (int)(goal_node[1] + 1U);
+                if ((unsigned int)i151 > 255U) {
+                  i151 = 255;
                 }
 
-                next_node_idx_1 = (unsigned char)i149;
+                next_node_idx_1 = (unsigned char)i151;
               }
             } else if (goal_flag == g_d_direction.South) {
               qY = goal_node[0] - 1U;
@@ -4816,7 +4883,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               if (row_num_node[((int)qY + 33 * (goal_node[1] - 1)) - 1] <
                   map_min) {
-                /* Å¬’l‚ğXV */
+                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
                   qY = 0U;
@@ -4824,10 +4891,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = row_num_node[((int)qY + 33 * (goal_node[1] - 1)) - 1];
 
-                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
+                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                 *goal_dir = g_d_direction.South;
 
-                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                 next_matrix_dir = matrix_dir.Row;
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
@@ -4845,7 +4912,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               if (col_num_node[((int)qY + ((goal_node[1] - 1) << 5)) - 1] <
                   map_min) {
-                /* Å¬’l‚ğXV */
+                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
                   qY = 0U;
@@ -4853,10 +4920,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = col_num_node[((int)qY + ((goal_node[1] - 1) << 5)) - 1];
 
-                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
+                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                 *goal_dir = g_d_direction.South_West;
 
-                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                 next_matrix_dir = matrix_dir.Col;
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
@@ -4869,93 +4936,93 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
             } else if ((goal_flag != g_d_direction.West) && (goal_flag ==
                         g_d_direction.North_West) && (col_num_node[(goal_node[0]
               + ((goal_node[1] - 1) << 5)) - 1] < map_min)) {
-              /* Å¬’l‚ğXV */
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
               map_min = col_num_node[(goal_node[0] + ((goal_node[1] - 1) << 5))
                 - 1];
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *goal_dir = g_d_direction.North_West;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               next_matrix_dir = matrix_dir.Col;
               next_node_idx_0 = goal_node[0];
               next_node_idx_1 = goal_node[1];
             } else {
-              /* ’Œ */
+              /* ï¿½ï¿½ */
             }
           } else {
-            /* ’Œ */
+            /* ï¿½ï¿½ */
           }
 
-          /* Œ»İ‚Ìƒm[ƒh‚ª—ñ•ûŒü‚Ì */
+          /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
         } else if (goal_flag != g_d_direction.North) {
           if (goal_flag == g_d_direction.North_East) {
-            i149 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i149 > 255U) {
-              i149 = 255;
+            i151 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (row_num_node[(i149 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
-              /* Å¬’l‚ğXV */
-              i149 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+            if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              i151 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              map_min = row_num_node[(i149 + 33 * (goal_node[1] - 1)) - 1];
+              map_min = row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1];
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k“ŒŒü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *goal_dir = g_d_direction.North_East;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               next_matrix_dir = matrix_dir.Row;
-              i149 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+              i151 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              next_node_idx_0 = (unsigned char)i149;
+              next_node_idx_0 = (unsigned char)i151;
               next_node_idx_1 = goal_node[1];
             }
           } else if (goal_flag == g_d_direction.East) {
-            i149 = (int)(goal_node[1] + 1U);
-            if ((unsigned int)i149 > 255U) {
-              i149 = 255;
+            i151 = (int)(goal_node[1] + 1U);
+            if ((unsigned int)i151 > 255U) {
+              i151 = 255;
             }
 
-            if (col_num_node[(goal_node[0] + ((i149 - 1) << 5)) - 1] < map_min)
+            if (col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1] < map_min)
             {
-              /* Å¬’l‚ğXV */
-              i149 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              map_min = col_num_node[(goal_node[0] + ((i149 - 1) << 5)) - 1];
+              map_min = col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1];
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ŒŒü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ“ŒŒï¿½ï¿½ï¿½ï¿½ï¿½ */
               *goal_dir = g_d_direction.East;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               next_matrix_dir = matrix_dir.Col;
               next_node_idx_0 = goal_node[0];
-              i149 = (int)(goal_node[1] + 1U);
-              if ((unsigned int)i149 > 255U) {
-                i149 = 255;
+              i151 = (int)(goal_node[1] + 1U);
+              if ((unsigned int)i151 > 255U) {
+                i151 = 255;
               }
 
-              next_node_idx_1 = (unsigned char)i149;
+              next_node_idx_1 = (unsigned char)i151;
             }
           } else if (goal_flag == g_d_direction.South_East) {
             u8 = row_num_node[(goal_node[0] + 33 * (goal_node[1] - 1)) - 1];
             if (u8 < map_min) {
-              /* Å¬’l‚ğXV */
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
               map_min = u8;
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì“ŒŒü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *goal_dir = g_d_direction.South_East;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               next_matrix_dir = matrix_dir.Row;
               next_node_idx_0 = goal_node[0];
               next_node_idx_1 = goal_node[1];
@@ -4969,7 +5036,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               if (row_num_node[(goal_node[0] + 33 * ((int)qY - 1)) - 1] <
                   map_min) {
-                /* Å¬’l‚ğXV */
+                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
                 qY = goal_node[1] - 1U;
                 if (qY > goal_node[1]) {
                   qY = 0U;
@@ -4977,10 +5044,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = row_num_node[(goal_node[0] + 33 * ((int)qY - 1)) - 1];
 
-                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì¼Œü‚«‚É */
+                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                 *goal_dir = g_d_direction.South_West;
 
-                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                 next_matrix_dir = matrix_dir.Row;
                 next_node_idx_0 = goal_node[0];
                 qY = goal_node[1] - 1U;
@@ -4998,7 +5065,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               if (col_num_node[(goal_node[0] + (((int)qY - 1) << 5)) - 1] <
                   map_min) {
-                /* Å¬’l‚ğXV */
+                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
                 qY = goal_node[1] - 1U;
                 if (qY > goal_node[1]) {
                   qY = 0U;
@@ -5006,10 +5073,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = col_num_node[(goal_node[0] + (((int)qY - 1) << 5)) - 1];
 
-                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ¼Œü‚«‚É */
+                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ¼Œï¿½ï¿½ï¿½ï¿½ï¿½ */
                 *goal_dir = g_d_direction.West;
 
-                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                 next_matrix_dir = matrix_dir.Col;
                 next_node_idx_0 = goal_node[0];
                 qY = goal_node[1] - 1U;
@@ -5021,9 +5088,9 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               }
             } else {
               if (goal_flag == g_d_direction.North_West) {
-                i149 = (int)(goal_node[0] + 1U);
-                if ((unsigned int)i149 > 255U) {
-                  i149 = 255;
+                i151 = (int)(goal_node[0] + 1U);
+                if ((unsigned int)i151 > 255U) {
+                  i151 = 255;
                 }
 
                 qY = goal_node[1] - 1U;
@@ -5031,11 +5098,11 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                   qY = 0U;
                 }
 
-                if (row_num_node[(i149 + 33 * ((int)qY - 1)) - 1] < map_min) {
-                  /* Å¬’l‚ğXV */
-                  i149 = (int)(goal_node[0] + 1U);
-                  if ((unsigned int)i149 > 255U) {
-                    i149 = 255;
+                if (row_num_node[(i151 + 33 * ((int)qY - 1)) - 1] < map_min) {
+                  /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                  i151 = (int)(goal_node[0] + 1U);
+                  if ((unsigned int)i151 > 255U) {
+                    i151 = 255;
                   }
 
                   qY = goal_node[1] - 1U;
@@ -5043,19 +5110,19 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                     qY = 0U;
                   }
 
-                  map_min = row_num_node[(i149 + 33 * ((int)qY - 1)) - 1];
+                  map_min = row_num_node[(i151 + 33 * ((int)qY - 1)) - 1];
 
-                  /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k¼Œü‚«‚É */
+                  /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                   *goal_dir = g_d_direction.North_West;
 
-                  /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                   next_matrix_dir = matrix_dir.Row;
-                  i149 = (int)(goal_node[0] + 1U);
-                  if ((unsigned int)i149 > 255U) {
-                    i149 = 255;
+                  i151 = (int)(goal_node[0] + 1U);
+                  if ((unsigned int)i151 > 255U) {
+                    i151 = 255;
                   }
 
-                  next_node_idx_0 = (unsigned char)i149;
+                  next_node_idx_0 = (unsigned char)i151;
                   qY = goal_node[1] - 1U;
                   if (qY > goal_node[1]) {
                     qY = 0U;
@@ -5066,10 +5133,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               }
             }
           } else {
-            /* ’Œ */
+            /* ï¿½ï¿½ */
           }
         } else {
-          /* ’Œ */
+          /* ï¿½ï¿½ */
         }
       }
 
@@ -5097,7 +5164,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   goal_dir, unsigned char goal_section[2], unsigned char goal_node2[2], unsigned
   char *goal_matrix_dir2)
 {
-  int i150;
+  int i152;
   int ex;
   unsigned int qY;
   int k;
@@ -5106,9 +5173,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   bool temp1[18];
   signed char varargin_1[9];
 
-  /*     %% decide_goal_section ƒS[ƒ‹ƒ}ƒX‚ÌŠm’è */
-  /*  Šm’è‚³‚ê‚½ƒS[ƒ‹‚Ìƒm[ƒh‚ÆAƒS[ƒ‹‚Ìi“üŠp“x‚©‚çA */
-  /*  ƒS[ƒ‹ƒ}ƒX‚ğŠm’è‚·‚éB */
+  /*     %% decide_goal_section ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ÌŠmï¿½ï¿½ */
+  /*  ï¿½mï¿½è‚³ï¿½ê‚½ï¿½Sï¿½[ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ÆAï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½ï¿½ï¿½pï¿½xï¿½ï¿½ï¿½ï¿½A */
+  /*  ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½mï¿½è‚·ï¿½ï¿½B */
   /* (y,x) */
   goal_section[0] = 1U;
   goal_node2[0] = 1U;
@@ -5117,22 +5184,22 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   *goal_matrix_dir2 = matrix_dir.Row;
   if (goal_dir == g_d_direction.North) {
     if (goal_matrix_dir == matrix_dir.Row) {
-      i150 = (int)(goal_node[0] + 1U);
-      ex = i150;
-      if ((unsigned int)i150 > 255U) {
+      i152 = (int)(goal_node[0] + 1U);
+      ex = i152;
+      if ((unsigned int)i152 > 255U) {
         ex = 255;
       }
 
       if (goal_judge(maze_goal, goal_node[1], (unsigned char)ex) != 0.0) {
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[0] = (unsigned char)i150;
+        goal_section[0] = (unsigned char)i152;
         goal_section[1] = goal_node[1];
 
         /* (y,x) */
-        goal_node2[0] = (unsigned char)i150;
+        goal_node2[0] = (unsigned char)i152;
         goal_node2[1] = goal_node[1];
       } else {
         goal_section[0] = goal_node[0];
@@ -5144,12 +5211,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
       }
     }
 
-    /* —ñ•ûŒü‚Í’Œ‚È‚Ì‚Å‚È‚µ */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ï¿½È‚Ì‚Å‚È‚ï¿½ */
   } else if (goal_dir == g_d_direction.North_East) {
     if (goal_matrix_dir == matrix_dir.Row) {
-      i150 = (int)(goal_node[1] + 1U);
-      if ((unsigned int)i150 > 255U) {
-        i150 = 255;
+      i152 = (int)(goal_node[1] + 1U);
+      if ((unsigned int)i152 > 255U) {
+        i152 = 255;
       }
 
       ex = (int)(goal_node[0] + 1U);
@@ -5157,80 +5224,80 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         ex = 255;
       }
 
-      if (goal_judge(maze_goal, (unsigned char)i150, (unsigned char)ex) != 0.0)
+      if (goal_judge(maze_goal, (unsigned char)i152, (unsigned char)ex) != 0.0)
       {
-        i150 = (int)(goal_node[0] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[0] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[0] = (unsigned char)i150;
-        i150 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        goal_section[0] = (unsigned char)i152;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i150;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
-        i150 = (int)(goal_node[0] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[0] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_node2[0] = (unsigned char)i150;
-        i150 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        goal_node2[0] = (unsigned char)i152;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_node2[1] = (unsigned char)i150;
+        goal_node2[1] = (unsigned char)i152;
       } else {
-        i150 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        if (goal_judge(maze_goal, (unsigned char)i150, goal_node[0]) != 0.0) {
+        if (goal_judge(maze_goal, (unsigned char)i152, goal_node[0]) != 0.0) {
           goal_section[0] = goal_node[0];
-          i150 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[1] = (unsigned char)i150;
+          goal_section[1] = (unsigned char)i152;
 
           /* (y,x) */
           goal_node2[0] = goal_node[0];
-          i150 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_node2[1] = (unsigned char)i150;
+          goal_node2[1] = (unsigned char)i152;
           *goal_matrix_dir2 = matrix_dir.Col;
         } else {
-          i150 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          if (goal_judge(maze_goal, goal_node[1], (unsigned char)i150) != 0.0) {
-            i150 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i150 > 255U) {
-              i150 = 255;
+          if (goal_judge(maze_goal, goal_node[1], (unsigned char)i152) != 0.0) {
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_section[0] = (unsigned char)i150;
+            goal_section[0] = (unsigned char)i152;
             goal_section[1] = goal_node[1];
 
             /* (y,x) */
-            i150 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i150 > 255U) {
-              i150 = 255;
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_node2[0] = (unsigned char)i150;
+            goal_node2[0] = (unsigned char)i152;
             goal_node2[1] = goal_node[1];
           } else {
             goal_section[0] = goal_node[0];
@@ -5243,9 +5310,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
       }
     } else {
-      i150 = (int)(goal_node[1] + 1U);
-      ex = i150;
-      if ((unsigned int)i150 > 255U) {
+      i152 = (int)(goal_node[1] + 1U);
+      ex = i152;
+      if ((unsigned int)i152 > 255U) {
         ex = 255;
       }
 
@@ -5261,15 +5328,15 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         goal_section[0] = (unsigned char)ex;
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i150;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
         goal_node2[0] = (unsigned char)ex;
-        goal_node2[1] = (unsigned char)i150;
+        goal_node2[1] = (unsigned char)i152;
         *goal_matrix_dir2 = matrix_dir.Col;
       } else {
         ex = (int)(goal_node[0] + 1U);
@@ -5278,32 +5345,32 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         if (goal_judge(maze_goal, goal_node[1], (unsigned char)ex) != 0.0) {
-          i150 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[0] = (unsigned char)i150;
+          goal_section[0] = (unsigned char)i152;
           goal_section[1] = goal_node[1];
 
           /* (y,x) */
-          i150 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_node2[0] = (unsigned char)i150;
+          goal_node2[0] = (unsigned char)i152;
           goal_node2[1] = goal_node[1];
         } else {
-          ex = i150;
-          if ((unsigned int)i150 > 255U) {
+          ex = i152;
+          if ((unsigned int)i152 > 255U) {
             ex = 255;
           }
 
           if (goal_judge(maze_goal, (unsigned char)ex, goal_node[0]) != 0.0) {
             goal_section[0] = goal_node[0];
-            ex = i150;
-            if ((unsigned int)i150 > 255U) {
+            ex = i152;
+            if ((unsigned int)i152 > 255U) {
               ex = 255;
             }
 
@@ -5311,11 +5378,11 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
 
             /* (y,x) */
             goal_node2[0] = goal_node[0];
-            if ((unsigned int)i150 > 255U) {
-              i150 = 255;
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_node2[1] = (unsigned char)i150;
+            goal_node2[1] = (unsigned char)i152;
             *goal_matrix_dir2 = matrix_dir.Col;
           } else {
             goal_section[0] = goal_node[0];
@@ -5330,25 +5397,25 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
       }
     }
   } else if (goal_dir == g_d_direction.East) {
-    /* s•ûŒü‚Í’Œ‚È‚Ì‚Å‚È‚µ */
+    /* ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ï¿½È‚Ì‚Å‚È‚ï¿½ */
     if (goal_matrix_dir == matrix_dir.Col) {
-      i150 = (int)(goal_node[1] + 1U);
-      if ((unsigned int)i150 > 255U) {
-        i150 = 255;
+      i152 = (int)(goal_node[1] + 1U);
+      if ((unsigned int)i152 > 255U) {
+        i152 = 255;
       }
 
-      if (goal_judge(maze_goal, (unsigned char)i150, goal_node[0]) != 0.0) {
+      if (goal_judge(maze_goal, (unsigned char)i152, goal_node[0]) != 0.0) {
         goal_section[0] = goal_node[0];
-        i150 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i150;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
         goal_node2[0] = goal_node[0];
-        goal_node2[1] = (unsigned char)i150;
+        goal_node2[1] = (unsigned char)i152;
         *goal_matrix_dir2 = matrix_dir.Col;
       } else {
         goal_section[0] = goal_node[0];
@@ -5362,9 +5429,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
     }
   } else if (goal_dir == g_d_direction.South_East) {
     if (goal_matrix_dir == matrix_dir.Row) {
-      i150 = (int)(goal_node[1] + 1U);
-      if ((unsigned int)i150 > 255U) {
-        i150 = 255;
+      i152 = (int)(goal_node[1] + 1U);
+      if ((unsigned int)i152 > 255U) {
+        i152 = 255;
       }
 
       qY = goal_node[0] - 2U;
@@ -5372,7 +5439,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         qY = 0U;
       }
 
-      if (goal_judge(maze_goal, (unsigned char)i150, (unsigned char)qY) != 0.0)
+      if (goal_judge(maze_goal, (unsigned char)i152, (unsigned char)qY) != 0.0)
       {
         qY = goal_node[0] - 2U;
         if (qY > goal_node[0]) {
@@ -5380,12 +5447,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         goal_section[0] = (unsigned char)qY;
-        i150 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i150;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
         qY = goal_node[0] - 1U;
@@ -5394,16 +5461,16 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         goal_node2[0] = (unsigned char)qY;
-        i150 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_node2[1] = (unsigned char)i150;
+        goal_node2[1] = (unsigned char)i152;
       } else {
-        i150 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
         qY = goal_node[0] - 1U;
@@ -5411,7 +5478,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           qY = 0U;
         }
 
-        if (goal_judge(maze_goal, (unsigned char)i150, (unsigned char)qY) != 0.0)
+        if (goal_judge(maze_goal, (unsigned char)i152, (unsigned char)qY) != 0.0)
         {
           qY = goal_node[0] - 1U;
           if (qY > goal_node[0]) {
@@ -5419,12 +5486,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           }
 
           goal_section[0] = (unsigned char)qY;
-          i150 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[1] = (unsigned char)i150;
+          goal_section[1] = (unsigned char)i152;
 
           /* (y,x) */
           qY = goal_node[0] - 1U;
@@ -5433,12 +5500,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           }
 
           goal_node2[0] = (unsigned char)qY;
-          i150 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_node2[1] = (unsigned char)i150;
+          goal_node2[1] = (unsigned char)i152;
           *goal_matrix_dir2 = matrix_dir.Col;
         } else {
           qY = goal_node[0] - 2U;
@@ -5479,9 +5546,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
       }
     } else {
-      i150 = (int)(goal_node[1] + 1U);
-      if ((unsigned int)i150 > 255U) {
-        i150 = 255;
+      i152 = (int)(goal_node[1] + 1U);
+      if ((unsigned int)i152 > 255U) {
+        i152 = 255;
       }
 
       qY = goal_node[0] - 1U;
@@ -5489,7 +5556,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         qY = 0U;
       }
 
-      if (goal_judge(maze_goal, (unsigned char)i150, (unsigned char)qY) != 0.0)
+      if (goal_judge(maze_goal, (unsigned char)i152, (unsigned char)qY) != 0.0)
       {
         qY = goal_node[0] - 1U;
         if (qY > goal_node[0]) {
@@ -5497,16 +5564,16 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
         }
 
         goal_section[0] = (unsigned char)qY;
-        i150 = (int)(goal_node[1] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[1] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        goal_section[1] = (unsigned char)i150;
+        goal_section[1] = (unsigned char)i152;
 
         /* (y,x) */
         goal_node2[0] = (unsigned char)qY;
-        goal_node2[1] = (unsigned char)i150;
+        goal_node2[1] = (unsigned char)i152;
         *goal_matrix_dir2 = matrix_dir.Col;
       } else {
         qY = goal_node[0] - 1U;
@@ -5527,28 +5594,28 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           goal_node2[0] = goal_node[0];
           goal_node2[1] = goal_node[1];
         } else {
-          i150 = (int)(goal_node[1] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[1] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          if (goal_judge(maze_goal, (unsigned char)i150, goal_node[0]) != 0.0) {
+          if (goal_judge(maze_goal, (unsigned char)i152, goal_node[0]) != 0.0) {
             goal_section[0] = goal_node[0];
-            i150 = (int)(goal_node[1] + 1U);
-            if ((unsigned int)i150 > 255U) {
-              i150 = 255;
+            i152 = (int)(goal_node[1] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_section[1] = (unsigned char)i150;
+            goal_section[1] = (unsigned char)i152;
 
             /* (y,x) */
             goal_node2[0] = goal_node[0];
-            i150 = (int)(goal_node[1] + 1U);
-            if ((unsigned int)i150 > 255U) {
-              i150 = 255;
+            i152 = (int)(goal_node[1] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_node2[1] = (unsigned char)i150;
+            goal_node2[1] = (unsigned char)i152;
             *goal_matrix_dir2 = matrix_dir.Col;
           } else {
             goal_section[0] = goal_node[0];
@@ -5829,7 +5896,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
       }
     }
   } else if (goal_dir == g_d_direction.West) {
-    /* s•ûŒü‚Í’Œ‚È‚Ì‚Å‚È‚µ */
+    /* ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ï¿½È‚Ì‚Å‚È‚ï¿½ */
     if (goal_matrix_dir == matrix_dir.Col) {
       qY = goal_node[1] - 2U;
       if (qY > goal_node[1]) {
@@ -5877,19 +5944,19 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           qY = 0U;
         }
 
-        i150 = (int)(goal_node[0] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[0] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i150) != 0.0)
+        if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i152) != 0.0)
         {
-          i150 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[0] = (unsigned char)i150;
+          goal_section[0] = (unsigned char)i152;
           qY = goal_node[1] - 1U;
           if (qY > goal_node[1]) {
             qY = 0U;
@@ -5898,7 +5965,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           goal_section[1] = (unsigned char)qY;
 
           /* (y,x) */
-          goal_node2[0] = (unsigned char)i150;
+          goal_node2[0] = (unsigned char)i152;
           goal_node2[1] = (unsigned char)qY;
         } else {
           qY = goal_node[1] - 1U;
@@ -5920,28 +5987,28 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
             goal_node2[1] = goal_node[1];
             *goal_matrix_dir2 = matrix_dir.Col;
           } else {
-            i150 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i150 > 255U) {
-              i150 = 255;
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            if (goal_judge(maze_goal, goal_node[1], (unsigned char)i150) != 0.0)
+            if (goal_judge(maze_goal, goal_node[1], (unsigned char)i152) != 0.0)
             {
-              i150 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i150 > 255U) {
-                i150 = 255;
+              i152 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i152 > 255U) {
+                i152 = 255;
               }
 
-              goal_section[0] = (unsigned char)i150;
+              goal_section[0] = (unsigned char)i152;
               goal_section[1] = goal_node[1];
 
               /* (y,x) */
-              i150 = (int)(goal_node[0] + 1U);
-              if ((unsigned int)i150 > 255U) {
-                i150 = 255;
+              i152 = (int)(goal_node[0] + 1U);
+              if ((unsigned int)i152 > 255U) {
+                i152 = 255;
               }
 
-              goal_node2[0] = (unsigned char)i150;
+              goal_node2[0] = (unsigned char)i152;
               goal_node2[1] = goal_node[1];
             } else {
               goal_section[0] = goal_node[0];
@@ -5959,19 +6026,19 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           qY = 0U;
         }
 
-        i150 = (int)(goal_node[0] + 1U);
-        if ((unsigned int)i150 > 255U) {
-          i150 = 255;
+        i152 = (int)(goal_node[0] + 1U);
+        if ((unsigned int)i152 > 255U) {
+          i152 = 255;
         }
 
-        if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i150) != 0.0)
+        if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i152) != 0.0)
         {
-          i150 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_section[0] = (unsigned char)i150;
+          goal_section[0] = (unsigned char)i152;
           qY = goal_node[1] - 2U;
           if (qY > goal_node[1]) {
             qY = 0U;
@@ -5980,12 +6047,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
           goal_section[1] = (unsigned char)qY;
 
           /* (y,x) */
-          i150 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          goal_node2[0] = (unsigned char)i150;
+          goal_node2[0] = (unsigned char)i152;
           qY = goal_node[1] - 1U;
           if (qY > goal_node[1]) {
             qY = 0U;
@@ -5999,19 +6066,19 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
             qY = 0U;
           }
 
-          i150 = (int)(goal_node[0] + 1U);
-          if ((unsigned int)i150 > 255U) {
-            i150 = 255;
+          i152 = (int)(goal_node[0] + 1U);
+          if ((unsigned int)i152 > 255U) {
+            i152 = 255;
           }
 
-          if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i150) !=
+          if (goal_judge(maze_goal, (unsigned char)qY, (unsigned char)i152) !=
               0.0) {
-            i150 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i150 > 255U) {
-              i150 = 255;
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_section[0] = (unsigned char)i150;
+            goal_section[0] = (unsigned char)i152;
             qY = goal_node[1] - 1U;
             if (qY > goal_node[1]) {
               qY = 0U;
@@ -6020,12 +6087,12 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
             goal_section[1] = (unsigned char)qY;
 
             /* (y,x) */
-            i150 = (int)(goal_node[0] + 1U);
-            if ((unsigned int)i150 > 255U) {
-              i150 = 255;
+            i152 = (int)(goal_node[0] + 1U);
+            if ((unsigned int)i152 > 255U) {
+              i152 = 255;
             }
 
-            goal_node2[0] = (unsigned char)i150;
+            goal_node2[0] = (unsigned char)i152;
             qY = goal_node[1] - 1U;
             if (qY > goal_node[1]) {
               qY = 0U;
@@ -6038,28 +6105,28 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
               qY = 0U;
             }
 
-            /* “ü—ÍÀ•W‚Ì”z—ñ‚ğì¬ */
-            /* ƒS[ƒ‹”»’èŠÖ” */
-            /* ƒS[ƒ‹À•W‚Æ”äŠr */
-            for (i150 = 0; i150 < 9; i150++) {
-              uv0[i150] = (unsigned char)qY;
-              uv0[9 + i150] = goal_node[0];
+            /* ï¿½ï¿½ï¿½Íï¿½ï¿½Wï¿½Ì”zï¿½ï¿½ï¿½ï¿½ì¬ */
+            /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+            /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½Æ”ï¿½r */
+            for (i152 = 0; i152 < 9; i152++) {
+              uv0[i152] = (unsigned char)qY;
+              uv0[9 + i152] = goal_node[0];
             }
 
-            for (i150 = 0; i150 < 18; i150++) {
-              temp1[i150] = (maze_goal[i150] == uv0[i150]);
+            for (i152 = 0; i152 < 18; i152++) {
+              temp1[i152] = (maze_goal[i152] == uv0[i152]);
             }
 
-            /* x,y‚Æ‚à‚Éˆê’v‚·‚é‚©Šm”FAˆê’v‚È‚ç1‚ğ•Ô‚· */
-            for (i150 = 0; i150 < 9; i150++) {
-              varargin_1[i150] = (signed char)(temp1[i150] * temp1[9 + i150]);
+            /* x,yï¿½Æ‚ï¿½ï¿½Éˆï¿½vï¿½ï¿½ï¿½é‚©ï¿½mï¿½Fï¿½Aï¿½ï¿½vï¿½È‚ï¿½1ï¿½ï¿½Ô‚ï¿½ */
+            for (i152 = 0; i152 < 9; i152++) {
+              varargin_1[i152] = (signed char)(temp1[i152] * temp1[9 + i152]);
             }
 
             ex = varargin_1[0];
             for (k = 0; k < 8; k++) {
-              i150 = varargin_1[k + 1];
-              if (ex < i150) {
-                ex = i150;
+              i152 = varargin_1[k + 1];
+              if (ex < i152) {
+                ex = i152;
               }
             }
 
@@ -6103,9 +6170,10 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
 }
 
 /*
- * “ü—Í@•Çî•ñ,•Ç’Tõî•ñ,“™‚üMAP,ƒS[ƒ‹À•W,Å‘åŒo˜H’·
- * o—Í   Å’ZŒo˜Hã‚Ì–¢’Tõƒ}ƒX‚ÌÀ•WA–¢’Tõƒ}ƒX‚Ì”
+ * ï¿½ï¿½ï¿½Í@ï¿½Çï¿½ï¿½,ï¿½Ç’Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAP,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
+ * ï¿½oï¿½ï¿½   ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½ï¿½Wï¿½Aï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½
  * Arguments    : const coder_internal_ref *goal_size
+ *                coder_internal_ref *wall_flg
  *                const coder_internal_ref_5 *wall
  *                const unsigned char maze_wall[1024]
  *                const unsigned char maze_wall_search[1024]
@@ -6116,22 +6184,24 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
  *                unsigned char *unexp_square_idx
  * Return Type  : void
  */
-static void fust_run(const coder_internal_ref *goal_size, const
-                     coder_internal_ref_5 *wall, const unsigned char maze_wall
-                     [1024], const unsigned char maze_wall_search[1024], const
-                     unsigned short contour_map[1024], const unsigned char
-                     maze_goal[18], unsigned short max_length, unsigned char
-                     unexp_square[1024], unsigned char *unexp_square_idx)
+static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
+                     *wall_flg, const coder_internal_ref_5 *wall, const unsigned
+                     char maze_wall[1024], const unsigned char maze_wall_search
+                     [1024], const unsigned short contour_map[1024], const
+                     unsigned char maze_goal[18], unsigned short max_length,
+                     unsigned char unexp_square[1024], unsigned char
+                     *unexp_square_idx)
 {
   unsigned char goal_flag;
   unsigned short little;
+  int i53;
+  coder_internal_ref_6 b_maze_wall;
   unsigned char temp_x;
   unsigned char temp_y;
   unsigned char temp_dir;
   unsigned char next_dir;
   int tempk;
   bool exitg1;
-  int i53;
   int i54;
   int i55;
   int b_unexp_square_idx;
@@ -6143,43 +6213,48 @@ static void fust_run(const coder_internal_ref *goal_size, const
   unsigned int qY;
   unsigned char switch_expression;
 
-  /*     %% fust_run Å’ZŒo˜H‘–s */
-  /* Å’ZŒo˜H•\¦—pax */
+  /*     %% fust_run ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½s */
+  /* ï¿½Å’Zï¿½oï¿½Hï¿½\ï¿½ï¿½ï¿½pax */
   /*          global sh_route_ax */
-  /* local•Ï”éŒ¾ */
+  /* localï¿½Ïï¿½ï¿½éŒ¾ */
   goal_flag = 0U;
 
-  /* ƒS[ƒ‹”»’èƒtƒ‰ƒO */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O */
   little = max_length;
 
-  /* is•ûŒü‘I’è—pè‡’l */
-  memset(&unexp_square[0], 0, sizeof(unsigned char) << 10);
+  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½pè‡’l */
+  for (i53 = 0; i53 < 1024; i53++) {
+    b_maze_wall.contents[i53] = maze_wall[i53];
+    unexp_square[i53] = 0U;
+  }
+
   *unexp_square_idx = 0U;
 
-  /*          %ƒ}ƒEƒXˆÊ’u•\¦—pƒIƒuƒWƒFƒNƒg */
+  /*          %ï¿½}ï¿½Eï¿½Xï¿½Ê’uï¿½\ï¿½ï¿½ï¿½pï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g */
   /*          if coder.target('MATLAB') */
   /*              ax = gca; */
   /*              h = hgtransform('Parent',ax); */
   /*          end */
-  /* ƒ}ƒEƒX‚Ì‰ŠúˆÊ’uİ’è */
+  /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½İ’ï¿½ */
   temp_x = 1U;
   temp_y = 1U;
 
-  /* ƒ}ƒEƒX‚Ì‰Šú•ûŒü’è‹` */
+  /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
   temp_dir = g_direction.North;
   next_dir = g_direction.North;
 
-  /* ’TõŠJnx */
-  /* ’TõŠJny */
-  /* ÀsAŠù‘¶‚ÌÅ’Zƒ‹[ƒg•\¦‚ğíœ‚·‚é(MATLAB‚Ì‚İ) */
+  /* ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½x */
+  /* ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½y */
+  /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ÌÅ’Zï¿½ï¿½ï¿½[ï¿½gï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½(MATLABï¿½Ì‚ï¿½) */
   tempk = 0;
   exitg1 = false;
   while ((!exitg1) && (tempk <= max_length - 1)) {
-    /* Œ»İˆÊ’u‚ª–¢’Tõƒ}ƒX‚©”»’è */
+    /* ï¿½ñ‘–sï¿½ï¿½ï¿½[ï¿½hï¿½Ì‚Æ‚ï¿½ï¿½Aï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½Lï¿½^ï¿½ï¿½ï¿½ï¿½ */
+    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     i53 = temp_y + ((temp_x - 1) << 5);
     i54 = i53 - 1;
     if (maze_wall_search[i54] != 15) {
-      /* –¢’Tõƒ}ƒX‚Å‚ ‚ê‚ÎA‹L˜^‚·‚éBƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á‚³‚¹‚éB */
+      /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½Lï¿½^ï¿½ï¿½ï¿½ï¿½Bï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
       i55 = (int)(*unexp_square_idx + 1U);
       b_unexp_square_idx = i55;
       if ((unsigned int)i55 > 255U) {
@@ -6196,7 +6271,7 @@ static void fust_run(const coder_internal_ref *goal_size, const
       *unexp_square_idx = (unsigned char)i55;
     }
 
-    /* Œ»İˆÊ’u‚ªƒS[ƒ‹‚©”»’è */
+    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     i55 = goal_size->contents;
     for (b_unexp_square_idx = 0; b_unexp_square_idx < i55; b_unexp_square_idx++)
     {
@@ -6207,36 +6282,37 @@ static void fust_run(const coder_internal_ref *goal_size, const
     }
 
     if (goal_flag == 1) {
-      /* ƒS[ƒ‹‚©‚Â‘–sA’â~ˆ—‚ğÀ{ */
+      /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Â‘ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
       exitg1 = true;
     } else {
-      /*         %%is•ûŒü‘I’è */
-      /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
-      /* –k‘¤‚Ì•Ç‚Ì‚ ‚è‚È‚µ */
+      /*         %%ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
+      /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
+      /* ï¿½kï¿½ï¿½ï¿½Ì•Ç‚Ì‚ï¿½ï¿½ï¿½È‚ï¿½ */
       if (g_direction.North <= 7) {
         i56 = (unsigned char)(1 << g_direction.North);
       } else {
         i56 = 0;
       }
 
-      if (((maze_wall[i54] & i56) == wall->contents.nowall) && (contour_map[i53]
-           < little)) {
-        /* –k‘¤‚Ì“™‚ümap‚ªè‡’l‚æ‚è’á‚¯‚ê‚ÎA */
-        /* è‡’l‚ğ–k‘¤‚Ì“™‚map’l‚É•ÏX */
+      if (((b_maze_wall.contents[i54] & i56) == wall->contents.nowall) &&
+          (contour_map[i53] < little)) {
+        /* ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½è‡’lï¿½ï¿½ï¿½á‚¯ï¿½ï¿½ÎA */
+        /* è‡’lï¿½ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½mapï¿½lï¿½É•ÏX */
         little = contour_map[temp_y + ((temp_x - 1) << 5)];
 
-        /* –k‘¤‚ğis•ûŒü‚É•ÏXy */
+        /* ï¿½kï¿½ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É•ÏXy */
         next_dir = g_direction.North;
       }
 
-      /* “Œ‘¤ */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       if (g_direction.East <= 7) {
         i57 = (unsigned char)(1 << g_direction.East);
       } else {
         i57 = 0;
       }
 
-      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i57) ==
+      if ((b_maze_wall.contents[(temp_y + ((temp_x - 1) << 5)) - 1] & i57) ==
           wall->contents.nowall) {
         u3 = contour_map[(temp_y + (temp_x << 5)) - 1];
         if (u3 < little) {
@@ -6245,14 +6321,14 @@ static void fust_run(const coder_internal_ref *goal_size, const
         }
       }
 
-      /* “ì‘¤ */
+      /* ï¿½ì‘¤ */
       if (g_direction.South <= 7) {
         i58 = (unsigned char)(1 << g_direction.South);
       } else {
         i58 = 0;
       }
 
-      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i58) ==
+      if ((b_maze_wall.contents[(temp_y + ((temp_x - 1) << 5)) - 1] & i58) ==
           wall->contents.nowall) {
         u3 = contour_map[i53 - 2];
         if (u3 < little) {
@@ -6261,14 +6337,14 @@ static void fust_run(const coder_internal_ref *goal_size, const
         }
       }
 
-      /* ¼‘¤ */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       if (g_direction.West <= 7) {
         i59 = (unsigned char)(1 << g_direction.West);
       } else {
         i59 = 0;
       }
 
-      if ((maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i59) ==
+      if ((b_maze_wall.contents[(temp_y + ((temp_x - 1) << 5)) - 1] & i59) ==
           wall->contents.nowall) {
         u3 = contour_map[(temp_y + ((temp_x - 2) << 5)) - 1];
         if (u3 < little) {
@@ -6277,8 +6353,22 @@ static void fust_run(const coder_internal_ref *goal_size, const
         }
       }
 
-      /* ‘–sA’Tõ•Çî•ñ‚É‰‚¶‚ÄA•Çƒtƒ‰ƒO‚ğƒZƒbƒg */
-      /*         %%Œ»İ•ûŒü‚Æis•ûŒü‚É‰‚¶‚½ˆ— */
+      /*          %ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Çï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ÄAï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Zï¿½bï¿½g */
+      /*          if (Sh_r_mode) */
+      /*              %ï¿½O */
+      /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir),15)) */
+      /*                  wall_flg = bitor(wall_flg,1,'uint8'); */
+      /*              end */
+      /*              %ï¿½E */
+      /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir+1),15)) */
+      /*                  wall_flg = bitor(wall_flg,2,'uint8'); */
+      /*              end */
+      /*              %ï¿½ï¿½ */
+      /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir+3),15)) */
+      /*                  wall_flg = bitor(wall_flg,8,'uint8'); */
+      /*              end */
+      /*          end */
+      /*         %%ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ï¿½Æiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
       b_unexp_square_idx = (int)(4U + next_dir);
       if ((unsigned int)b_unexp_square_idx > 255U) {
         b_unexp_square_idx = 255;
@@ -6304,44 +6394,63 @@ static void fust_run(const coder_internal_ref *goal_size, const
 
       switch (b_unexp_square_idx) {
        case 0:
-        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
-        /* o—Í Œ»İˆÊ’ux,y */
-        /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-        /* –k‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½iï¿½Ìê‡ï¿½Aï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½g */
+        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+          temp_dir);
+
+        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
+        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* “Œ‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* “ì‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ¼‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
 
-        /* disp("front") */
+        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½ï¿½ï¿½Ú“ï¿½ */
+        /*                  %disp("front") */
+        /*                  if (Sh_r_mode) %ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        /*                      if ~coder.target('MATLAB') */
+        /*                          coder.ceval('m_move_front',start_flg,wall_flg,uint8(move_dir_property.straight)); */
+        /*                      end */
+        /*                      %ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /*                      start_flg = uint8(0); */
+        /*                      wall_flg = uint8(0); */
+        /*                  end */
         break;
 
        case 1:
-        /* “ü—Í Œ»İ•ûŒü */
-        /* o—Í Œ»İ•ûŒü */
-        /*     %% turn_clk_90deg Œvü‚è‚É90“xƒ^[ƒ“‚·‚éŠÖ” */
+        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+          temp_dir);
+
+        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
+        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /*     %% turn_clk_90deg ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
         i53 = (int)(4U + temp_dir);
         if ((unsigned int)i53 > 255U) {
           i53 = 255;
@@ -6354,44 +6463,47 @@ static void fust_run(const coder_internal_ref *goal_size, const
 
         temp_dir = (unsigned char)(i53 % 4);
 
-        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
-        /* o—Í Œ»İˆÊ’ux,y */
-        /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-        /* –k‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
+        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* “Œ‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* “ì‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ¼‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
-
-        /* disp("right") */
         break;
 
        case 2:
-        /* “ü—Í Œ»İ•ûŒü */
-        /* o—Í Œ»İ•ûŒü */
-        /*     %% turn_180deg 180“xƒ^[ƒ“‚·‚éŠÖ” */
+        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+          temp_dir);
+
+        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
+        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /*     %% turn_180deg 180ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
         i53 = (int)(4U + temp_dir);
         if ((unsigned int)i53 > 255U) {
           i53 = 255;
@@ -6399,44 +6511,47 @@ static void fust_run(const coder_internal_ref *goal_size, const
 
         temp_dir = (unsigned char)((i53 - 2) % 4);
 
-        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
-        /* o—Í Œ»İˆÊ’ux,y */
-        /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-        /* –k‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
+        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* “Œ‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* “ì‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ¼‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
-
-        /* disp("back") */
         break;
 
        case 3:
-        /* “ü—Í@Œ»İ•ûŒü */
-        /* o—Í@Œ»İ•ûŒü */
-        /*     %% turn_conclk_90deg ”½Œvü‚è‚É90“x‰ñ‚éŠÖ” */
+        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+          temp_dir);
+
+        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
+        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /*     %% turn_conclk_90deg ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½ï¿½ï¿½Öï¿½ */
         i53 = (int)(4U + temp_dir);
         if ((unsigned int)i53 > 255U) {
           i53 = 255;
@@ -6444,31 +6559,31 @@ static void fust_run(const coder_internal_ref *goal_size, const
 
         temp_dir = (unsigned char)((i53 - 1) % 4);
 
-        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
-        /* o—Í Œ»İˆÊ’ux,y */
-        /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-        /* –k‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
+        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
+        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* “Œ‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* “ì‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ¼‚Éˆêƒ}ƒX */
+        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
@@ -6485,10 +6600,79 @@ static void fust_run(const coder_internal_ref *goal_size, const
   }
 
   /*          pause(0.01) */
+  /*      writeVideo(vidObj, getframe(gcf)); */
+  /* limitrate nocallbacks */
 }
 
 /*
- * o—Í•Ï”’è‹`
+ * Arguments    : const coder_internal_ref_6 *maze_wall
+ *                unsigned char temp_y
+ *                unsigned char temp_x
+ *                unsigned char temp_dir
+ * Return Type  : unsigned char
+ */
+static unsigned char fust_run_wallset(const coder_internal_ref_6 *maze_wall,
+  unsigned char temp_y, unsigned char temp_x, unsigned char temp_dir)
+{
+  unsigned char wall_flg;
+  int i60;
+  int b_temp_dir;
+  int i61;
+  int i62;
+  int i63;
+
+  /* ï¿½Å’Zï¿½ï¿½ï¿½Ì•Çï¿½ï¿½æ“¾ï¿½Öï¿½ */
+  wall_flg = 0U;
+
+  /* ï¿½O */
+  i60 = maze_wall->contents[(temp_y + ((temp_x - 1) << 5)) - 1];
+  if (temp_dir <= 7) {
+    b_temp_dir = (unsigned char)(1 << temp_dir);
+  } else {
+    b_temp_dir = 0;
+  }
+
+  if ((i60 & (b_temp_dir % 15)) != 0) {
+    wall_flg = 1U;
+  }
+
+  /* ï¿½E */
+  i61 = (int)(temp_dir + 1U);
+  if ((unsigned int)i61 > 255U) {
+    i61 = 255;
+  }
+
+  if ((unsigned char)i61 <= 7) {
+    i62 = (unsigned char)(1 << (unsigned char)i61);
+  } else {
+    i62 = 0;
+  }
+
+  if ((i60 & (i62 % 15)) != 0) {
+    wall_flg = (unsigned char)(wall_flg | 2);
+  }
+
+  /* ï¿½ï¿½ */
+  i61 = (int)(temp_dir + 3U);
+  if ((unsigned int)i61 > 255U) {
+    i61 = 255;
+  }
+
+  if ((unsigned char)i61 <= 7) {
+    i63 = (unsigned char)(1 << (unsigned char)i61);
+  } else {
+    i63 = 0;
+  }
+
+  if ((i60 & (i63 % 15)) != 0) {
+    wall_flg = (unsigned char)(wall_flg | 8);
+  }
+
+  return wall_flg;
+}
+
+/*
+ * ï¿½oï¿½Í•Ïï¿½ï¿½ï¿½`
  * Arguments    : const unsigned short row_num_node[1056]
  *                const unsigned short col_num_node[1056]
  *                unsigned char current_move_dir
@@ -6515,18 +6699,18 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   bool exitg1;
   unsigned short map_min;
   unsigned int qY;
-  int i222;
+  int i224;
   unsigned char temp;
-  int i223;
+  int i225;
   unsigned short u10;
 
-  /*     %% get_next_dir_diagonal Î‚ß—L‚Å‚Ìis•ûŒü,sææ“¾ */
+  /*     %% get_next_dir_diagonal ï¿½Î‚ß—Lï¿½Å‚Ìiï¿½sï¿½ï¿½ï¿½ï¿½,ï¿½sï¿½ï¿½æ“¾ */
   *next_dir = g_d_direction.North;
   next_node[0] = 1U;
   next_node[1] = 1U;
   *next_node_property = matrix_dir.Row;
 
-  /* Œ»İ‚ÌƒGƒbƒW‚ÍƒS[ƒ‹ƒm[ƒh‚© */
+  /* ï¿½ï¿½ï¿½İ‚ÌƒGï¿½bï¿½Wï¿½ÍƒSï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ */
   p = false;
   b_p = true;
   k = 0;
@@ -6545,8 +6729,8 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   }
 
   if (p && (current_matrix_dir == goal_matrix_dir2)) {
-    /* ƒS[ƒ‹ƒm[ƒh‚Ìê‡ */
-    /* ƒS[ƒ‹ƒm[ƒh‚ªs•ûŒü‚Ìê‡ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Ìê‡ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìê‡ */
     if (goal_matrix_dir2 == matrix_dir.Row) {
       if ((goal_section[1] == goal_node2[0]) && (goal_section[0] == goal_node2[1]))
       {
@@ -6565,7 +6749,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
         *next_node_property = matrix_dir.section;
       }
     } else {
-      /* ƒS[ƒ‹ƒm[ƒh‚ª—ñ•ûŒü‚Ìê‡ */
+      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìê‡ */
       if ((goal_section[1] == goal_node2[0]) && (goal_section[0] == goal_node2[1]))
       {
         *next_dir = g_d_direction.East;
@@ -6585,77 +6769,77 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
       }
     }
   } else {
-    /* ƒS[ƒ‹ƒm[ƒh‚Å‚È‚¢ê‡ */
-    /* è‡’l‚ğ’è‹` */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Å‚È‚ï¿½ï¿½ê‡ */
+    /* è‡’lï¿½ï¿½ï¿½` */
     map_min = MAX_uint16_T;
 
-    /* Œ»İ‚Ìƒm[ƒh‚Ì•ûŒü‚©‚ç—Dæ“I‚Éis•ûŒü‚ğŠm’è */
+    /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dï¿½ï¿½Iï¿½Éiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ */
     for (k = 0; k < 8; k++) {
-      i222 = current_move_dir + k;
-      if (i222 > 255) {
-        i222 = 255;
+      i224 = current_move_dir + k;
+      if (i224 > 255) {
+        i224 = 255;
       }
 
-      temp = (unsigned char)(i222 % 8);
+      temp = (unsigned char)(i224 % 8);
 
-      /* Œ»İ‚Ìƒm[ƒh‚ªs•ûŒü‚Ì */
+      /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
       if (current_matrix_dir == matrix_dir.Row) {
         if (temp == g_d_direction.North) {
-          i222 = (int)(current_node[0] + 1U);
-          i223 = i222;
-          if ((unsigned int)i222 > 255U) {
-            i223 = 255;
+          i224 = (int)(current_node[0] + 1U);
+          i225 = i224;
+          if ((unsigned int)i224 > 255U) {
+            i225 = 255;
           }
 
-          if (row_num_node[(i223 + 33 * (current_node[1] - 1)) - 1] < map_min) {
-            /* Å¬’l‚ğXV */
-            i223 = i222;
-            if ((unsigned int)i222 > 255U) {
-              i223 = 255;
+          if (row_num_node[(i225 + 33 * (current_node[1] - 1)) - 1] < map_min) {
+            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            i225 = i224;
+            if ((unsigned int)i224 > 255U) {
+              i225 = 255;
             }
 
-            map_min = row_num_node[(i223 + 33 * (current_node[1] - 1)) - 1];
+            map_min = row_num_node[(i225 + 33 * (current_node[1] - 1)) - 1];
 
-            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
+            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
             *next_dir = g_d_direction.North;
 
-            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
             *next_node_property = matrix_dir.Row;
-            if ((unsigned int)i222 > 255U) {
-              i222 = 255;
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            next_node[0] = (unsigned char)i222;
+            next_node[0] = (unsigned char)i224;
             next_node[1] = current_node[1];
           }
         } else if (temp == g_d_direction.North_East) {
-          i222 = (int)(current_node[1] + 1U);
-          i223 = i222;
-          if ((unsigned int)i222 > 255U) {
-            i223 = 255;
+          i224 = (int)(current_node[1] + 1U);
+          i225 = i224;
+          if ((unsigned int)i224 > 255U) {
+            i225 = 255;
           }
 
-          if (col_num_node[(current_node[0] + ((i223 - 1) << 5)) - 1] < map_min)
+          if (col_num_node[(current_node[0] + ((i225 - 1) << 5)) - 1] < map_min)
           {
-            /* Å¬’l‚ğXV */
-            i223 = i222;
-            if ((unsigned int)i222 > 255U) {
-              i223 = 255;
+            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            i225 = i224;
+            if ((unsigned int)i224 > 255U) {
+              i225 = 255;
             }
 
-            map_min = col_num_node[(current_node[0] + ((i223 - 1) << 5)) - 1];
+            map_min = col_num_node[(current_node[0] + ((i225 - 1) << 5)) - 1];
 
-            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“Œ–kŒü‚«‚É */
+            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ“Œ–kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
             *next_dir = g_d_direction.North_East;
 
-            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
             *next_node_property = matrix_dir.Col;
             next_node[0] = current_node[0];
-            if ((unsigned int)i222 > 255U) {
-              i222 = 255;
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            next_node[1] = (unsigned char)i222;
+            next_node[1] = (unsigned char)i224;
           }
         } else if (temp != g_d_direction.East) {
           if (temp == g_d_direction.South_East) {
@@ -6664,29 +6848,29 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
               qY = 0U;
             }
 
-            i222 = (int)(current_node[1] + 1U);
-            if ((unsigned int)i222 > 255U) {
-              i222 = 255;
+            i224 = (int)(current_node[1] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            if (col_num_node[((int)qY + ((i222 - 1) << 5)) - 1] < map_min) {
-              /* Å¬’l‚ğXV */
+            if (col_num_node[((int)qY + ((i224 - 1) << 5)) - 1] < map_min) {
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
                 qY = 0U;
               }
 
-              i222 = (int)(current_node[1] + 1U);
-              if ((unsigned int)i222 > 255U) {
-                i222 = 255;
+              i224 = (int)(current_node[1] + 1U);
+              if ((unsigned int)i224 > 255U) {
+                i224 = 255;
               }
 
-              map_min = col_num_node[((int)qY + ((i222 - 1) << 5)) - 1];
+              map_min = col_num_node[((int)qY + ((i224 - 1) << 5)) - 1];
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì“ŒŒü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *next_dir = g_d_direction.South_East;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               *next_node_property = matrix_dir.Col;
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
@@ -6694,12 +6878,12 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
               }
 
               next_node[0] = (unsigned char)qY;
-              i222 = (int)(current_node[1] + 1U);
-              if ((unsigned int)i222 > 255U) {
-                i222 = 255;
+              i224 = (int)(current_node[1] + 1U);
+              if ((unsigned int)i224 > 255U) {
+                i224 = 255;
               }
 
-              next_node[1] = (unsigned char)i222;
+              next_node[1] = (unsigned char)i224;
             }
           } else if (temp == g_d_direction.South) {
             qY = current_node[0] - 1U;
@@ -6709,7 +6893,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
             if (row_num_node[((int)qY + 33 * (current_node[1] - 1)) - 1] <
                 map_min) {
-              /* Å¬’l‚ğXV */
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
                 qY = 0U;
@@ -6717,10 +6901,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
               map_min = row_num_node[((int)qY + 33 * (current_node[1] - 1)) - 1];
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ìŒü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *next_dir = g_d_direction.South;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               *next_node_property = matrix_dir.Row;
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
@@ -6738,7 +6922,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
             if (col_num_node[((int)qY + ((current_node[1] - 1) << 5)) - 1] <
                 map_min) {
-              /* Å¬’l‚ğXV */
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
                 qY = 0U;
@@ -6747,10 +6931,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
               map_min = col_num_node[((int)qY + ((current_node[1] - 1) << 5)) -
                 1];
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì¼Œü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *next_dir = g_d_direction.South_West;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               *next_node_property = matrix_dir.Col;
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
@@ -6765,93 +6949,93 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
             u10 = col_num_node[(current_node[0] + ((current_node[1] - 1) << 5))
               - 1];
             if (u10 < map_min) {
-              /* Å¬’l‚ğXV */
+              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
               map_min = u10;
 
-              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k¼Œü‚«‚É */
+              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
               *next_dir = g_d_direction.North_West;
 
-              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
               *next_node_property = matrix_dir.Col;
               next_node[0] = current_node[0];
               next_node[1] = current_node[1];
             }
           } else {
-            /* ’Œ */
+            /* ï¿½ï¿½ */
           }
         } else {
-          /* ’Œ */
+          /* ï¿½ï¿½ */
         }
 
-        /* Œ»İ‚Ìƒm[ƒh‚ªs•ûŒü‚Ì */
+        /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
       } else if (temp != g_d_direction.North) {
         if (temp == g_d_direction.North_East) {
-          i222 = (int)(current_node[0] + 1U);
-          if ((unsigned int)i222 > 255U) {
-            i222 = 255;
+          i224 = (int)(current_node[0] + 1U);
+          if ((unsigned int)i224 > 255U) {
+            i224 = 255;
           }
 
-          if (row_num_node[(i222 + 33 * (current_node[1] - 1)) - 1] < map_min) {
-            /* Å¬’l‚ğXV */
-            i222 = (int)(current_node[0] + 1U);
-            if ((unsigned int)i222 > 255U) {
-              i222 = 255;
+          if (row_num_node[(i224 + 33 * (current_node[1] - 1)) - 1] < map_min) {
+            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            i224 = (int)(current_node[0] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            map_min = row_num_node[(i222 + 33 * (current_node[1] - 1)) - 1];
+            map_min = row_num_node[(i224 + 33 * (current_node[1] - 1)) - 1];
 
-            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k“ŒŒü‚«‚É */
+            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
             *next_dir = g_d_direction.North_East;
 
-            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
             *next_node_property = matrix_dir.Row;
-            i222 = (int)(current_node[0] + 1U);
-            if ((unsigned int)i222 > 255U) {
-              i222 = 255;
+            i224 = (int)(current_node[0] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            next_node[0] = (unsigned char)i222;
+            next_node[0] = (unsigned char)i224;
             next_node[1] = current_node[1];
           }
         } else if (temp == g_d_direction.East) {
-          i222 = (int)(current_node[1] + 1U);
-          if ((unsigned int)i222 > 255U) {
-            i222 = 255;
+          i224 = (int)(current_node[1] + 1U);
+          if ((unsigned int)i224 > 255U) {
+            i224 = 255;
           }
 
-          if (col_num_node[(current_node[0] + ((i222 - 1) << 5)) - 1] < map_min)
+          if (col_num_node[(current_node[0] + ((i224 - 1) << 5)) - 1] < map_min)
           {
-            /* Å¬’l‚ğXV */
-            i222 = (int)(current_node[1] + 1U);
-            if ((unsigned int)i222 > 255U) {
-              i222 = 255;
+            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            i224 = (int)(current_node[1] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            map_min = col_num_node[(current_node[0] + ((i222 - 1) << 5)) - 1];
+            map_min = col_num_node[(current_node[0] + ((i224 - 1) << 5)) - 1];
 
-            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ŒŒü‚«‚É */
+            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ“ŒŒï¿½ï¿½ï¿½ï¿½ï¿½ */
             *next_dir = g_d_direction.East;
 
-            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
             *next_node_property = matrix_dir.Col;
             next_node[0] = current_node[0];
-            i222 = (int)(current_node[1] + 1U);
-            if ((unsigned int)i222 > 255U) {
-              i222 = 255;
+            i224 = (int)(current_node[1] + 1U);
+            if ((unsigned int)i224 > 255U) {
+              i224 = 255;
             }
 
-            next_node[1] = (unsigned char)i222;
+            next_node[1] = (unsigned char)i224;
           }
         } else if (temp == g_d_direction.South_East) {
           u10 = row_num_node[(current_node[0] + 33 * (current_node[1] - 1)) - 1];
           if (u10 < map_min) {
-            /* Å¬’l‚ğXV */
+            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
             map_min = u10;
 
-            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì“ŒŒü‚«‚É */
+            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
             *next_dir = g_d_direction.South_East;
 
-            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
             *next_node_property = matrix_dir.Row;
             next_node[0] = current_node[0];
             next_node[1] = current_node[1];
@@ -6871,7 +7055,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
               if (row_num_node[(current_node[0] + 33 * ((int)qY - 1)) - 1] <
                   map_min) {
-                /* Å¬’l‚ğXV */
+                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
                 qY = current_node[1] - 1U;
                 if (qY > current_node[1]) {
                   qY = 0U;
@@ -6880,10 +7064,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                 map_min = row_num_node[(current_node[0] + 33 * ((int)qY - 1)) -
                   1];
 
-                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì¼Œü‚«‚É */
+                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                 *next_dir = g_d_direction.South_West;
 
-                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                 *next_node_property = matrix_dir.Row;
                 next_node[0] = current_node[0];
                 qY = current_node[1] - 1U;
@@ -6908,7 +7092,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
               if (col_num_node[(current_node[0] + (((int)qY - 1) << 5)) - 1] <
                   map_min) {
-                /* Å¬’l‚ğXV */
+                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
                 qY = current_node[1] - 1U;
                 if (qY > current_node[1]) {
                   qY = 0U;
@@ -6917,10 +7101,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                 map_min = col_num_node[(current_node[0] + (((int)qY - 1) << 5))
                   - 1];
 
-                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ¼Œü‚«‚É */
+                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ¼Œï¿½ï¿½ï¿½ï¿½ï¿½ */
                 *next_dir = g_d_direction.West;
 
-                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                 *next_node_property = matrix_dir.Col;
                 next_node[0] = current_node[0];
                 qY = current_node[1] - 1U;
@@ -6939,9 +7123,9 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
               }
 
               if ((int)qY > 0) {
-                i222 = (int)(current_node[0] + 1U);
-                if ((unsigned int)i222 > 255U) {
-                  i222 = 255;
+                i224 = (int)(current_node[0] + 1U);
+                if ((unsigned int)i224 > 255U) {
+                  i224 = 255;
                 }
 
                 qY = current_node[1] - 1U;
@@ -6949,11 +7133,11 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                   qY = 0U;
                 }
 
-                if (row_num_node[(i222 + 33 * ((int)qY - 1)) - 1] < map_min) {
-                  /* Å¬’l‚ğXV */
-                  i222 = (int)(current_node[0] + 1U);
-                  if ((unsigned int)i222 > 255U) {
-                    i222 = 255;
+                if (row_num_node[(i224 + 33 * ((int)qY - 1)) - 1] < map_min) {
+                  /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                  i224 = (int)(current_node[0] + 1U);
+                  if ((unsigned int)i224 > 255U) {
+                    i224 = 255;
                   }
 
                   qY = current_node[1] - 1U;
@@ -6961,19 +7145,19 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                     qY = 0U;
                   }
 
-                  map_min = row_num_node[(i222 + 33 * ((int)qY - 1)) - 1];
+                  map_min = row_num_node[(i224 + 33 * ((int)qY - 1)) - 1];
 
-                  /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k¼Œü‚«‚É */
+                  /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                   *next_dir = g_d_direction.North_West;
 
-                  /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
+                  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
                   *next_node_property = matrix_dir.Row;
-                  i222 = (int)(current_node[0] + 1U);
-                  if ((unsigned int)i222 > 255U) {
-                    i222 = 255;
+                  i224 = (int)(current_node[0] + 1U);
+                  if ((unsigned int)i224 > 255U) {
+                    i224 = 255;
                   }
 
-                  next_node[0] = (unsigned char)i222;
+                  next_node[0] = (unsigned char)i224;
                   qY = current_node[1] - 1U;
                   if (qY > current_node[1]) {
                     qY = 0U;
@@ -6985,18 +7169,18 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
             }
           }
         } else {
-          /* ’Œ */
+          /* ï¿½ï¿½ */
         }
       } else {
-        /* ’Œ */
+        /* ï¿½ï¿½ */
       }
     }
   }
 }
 
 /*
- * “ü—Í Œ»İ’nx,y,•Çî•ñ,“™‚ümap,Å‘åŒo˜H’·
- *  o—Í Ÿ‚Ìis•ûŠp
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ’nx,y,ï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
+ *  ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½Ìiï¿½sï¿½ï¿½ï¿½p
  * Arguments    : unsigned char current_x
  *                unsigned char current_y
  *                const unsigned char maze_wall[1024]
@@ -7017,14 +7201,14 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
   int i15;
   int i16;
 
-  /*     %% get_nextdir2 “™‚ümap‚©‚çŸ‚ÉŒü‚©‚¤•ûŒü‚ğ‘I‘ğ */
-  /* o—Í‚Ì‰Šú‰» */
+  /*     %% get_nextdir2 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½çŸï¿½ÉŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
+  /* ï¿½oï¿½Í‚Ìï¿½ï¿½ï¿½ï¿½ï¿½ */
   next_dir = 0U;
   little = MAX_uint16_T;
 
-  /*     %%is•ûŒü‘I’è */
-  /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
-  /* –k‘¤‚Ì•Ç‚Ì‚ ‚è‚È‚µ”»’è */
+  /*     %%ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
+  /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
+  /* ï¿½kï¿½ï¿½ï¿½Ì•Ç‚Ì‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ */
   i11 = current_y + ((current_x - 1) << 5);
   i12 = maze_wall[i11 - 1];
   if (g_direction.North <= 7) {
@@ -7034,15 +7218,15 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
   }
 
   if (((i12 & i13) == 0) && (contour_map[i11] < 65535)) {
-    /* –k‘¤‚Ì“™‚ümap‚ªè‡’l‚æ‚è’á‚¯‚ê‚ÎA */
-    /* è‡’l‚ğ–k‘¤‚Ì“™‚map’l‚É•ÏX */
+    /* ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½è‡’lï¿½ï¿½ï¿½á‚¯ï¿½ï¿½ÎA */
+    /* è‡’lï¿½ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½mapï¿½lï¿½É•ÏX */
     little = contour_map[current_y + ((current_x - 1) << 5)];
 
-    /* –k‘¤‚ğis•ûŒü‚É•ÏXy */
+    /* ï¿½kï¿½ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É•ÏXy */
     next_dir = g_direction.North;
   }
 
-  /* “Œ‘¤ */
+  /* ï¿½ï¿½ï¿½ï¿½ */
   if (g_direction.East <= 7) {
     i14 = (unsigned char)(1 << g_direction.East);
   } else {
@@ -7057,7 +7241,7 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
     }
   }
 
-  /* “ì‘¤ */
+  /* ï¿½ì‘¤ */
   if (g_direction.South <= 7) {
     i15 = (unsigned char)(1 << g_direction.South);
   } else {
@@ -7072,7 +7256,7 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
     }
   }
 
-  /* ¼‘¤ */
+  /* ï¿½ï¿½ï¿½ï¿½ */
   if (g_direction.West <= 7) {
     i16 = (unsigned char)(1 << g_direction.West);
   } else {
@@ -7089,7 +7273,7 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
 }
 
 /*
- * ù‰ñƒpƒ^[ƒ“”Ô†‚Ì‰Šú‰»
+ * ï¿½ï¿½ï¿½ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ôï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
  * Arguments    : const double move_dir_buffer[3]
  *                unsigned char ref_move_mode
  * Return Type  : unsigned char
@@ -7099,12 +7283,12 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
 {
   unsigned char turn_pattern_num;
 
-  /* ƒpƒ^[ƒ“‚ğ”»’è‚·‚éŠÖ” */
+  /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½ğ”»’è‚·ï¿½ï¿½Öï¿½ */
   turn_pattern_num = turn_pattern.b_default;
 
-  /* ’¼i */
+  /* ï¿½ï¿½ï¿½iï¿½ï¿½ */
   if (ref_move_mode == move_dir_property.straight) {
-    /* Ÿ‚ª45“x‚Ü‚ª‚é‚Æ‚«(‰EÜƒpƒ^[ƒ“) */
+    /* ï¿½ï¿½ï¿½ï¿½45ï¿½xï¿½Ü‚ï¿½ï¿½ï¿½Æ‚ï¿½(ï¿½Eï¿½Üƒpï¿½^ï¿½[ï¿½ï¿½) */
     if (move_dir_buffer[0] == 1.0) {
       if (move_dir_buffer[1] == 1.0) {
         turn_pattern_num = turn_pattern.r_45;
@@ -7122,7 +7306,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
         }
       }
 
-      /* Ÿ‚ª-45“x‚Ü‚ª‚é‚Æ‚«(¶Üƒpƒ^[ƒ“) */
+      /* ï¿½ï¿½ï¿½ï¿½-45ï¿½xï¿½Ü‚ï¿½ï¿½ï¿½Æ‚ï¿½(ï¿½ï¿½ï¿½Üƒpï¿½^ï¿½[ï¿½ï¿½) */
     } else {
       if (move_dir_buffer[0] == 7.0) {
         if (move_dir_buffer[1] == 7.0) {
@@ -7143,10 +7327,10 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
       }
     }
 
-    /* Î‚ß‚Ì */
+    /* ï¿½Î‚ß‚Ìï¿½ */
   } else {
     if (ref_move_mode == move_dir_property.diagonal) {
-      /* ‰EÜƒpƒ^[ƒ“ */
+      /* ï¿½Eï¿½Üƒpï¿½^ï¿½[ï¿½ï¿½ */
       if (move_dir_buffer[0] == 1.0) {
         turn_pattern_num = turn_pattern.r_45;
       } else if (move_dir_buffer[0] == 2.0) {
@@ -7158,7 +7342,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
           }
         }
 
-        /* ¶Üƒpƒ^[ƒ“ */
+        /* ï¿½ï¿½ï¿½Üƒpï¿½^ï¿½[ï¿½ï¿½ */
       } else if (move_dir_buffer[0] == 7.0) {
         turn_pattern_num = turn_pattern.l_45;
       } else {
@@ -7179,7 +7363,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
 }
 
 /*
- * “ü—ÍÀ•W‚Ì”z—ñ‚ğì¬
+ * ï¿½ï¿½ï¿½Íï¿½ï¿½Wï¿½Ì”zï¿½ï¿½ï¿½ï¿½ì¬
  * Arguments    : const unsigned char maze_goal[18]
  *                unsigned char x
  *                unsigned char y
@@ -7188,34 +7372,34 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
 static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
   unsigned char y)
 {
-  int i151;
+  int i153;
   unsigned char uv1[18];
   bool temp1[18];
   int ex;
   signed char varargin_1[9];
   int k;
 
-  /* ƒS[ƒ‹”»’èŠÖ” */
-  /* ƒS[ƒ‹À•W‚Æ”äŠr */
-  for (i151 = 0; i151 < 9; i151++) {
-    uv1[i151] = x;
-    uv1[9 + i151] = y;
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½Æ”ï¿½r */
+  for (i153 = 0; i153 < 9; i153++) {
+    uv1[i153] = x;
+    uv1[9 + i153] = y;
   }
 
-  for (i151 = 0; i151 < 18; i151++) {
-    temp1[i151] = (maze_goal[i151] == uv1[i151]);
+  for (i153 = 0; i153 < 18; i153++) {
+    temp1[i153] = (maze_goal[i153] == uv1[i153]);
   }
 
-  /* x,y‚Æ‚à‚Éˆê’v‚·‚é‚©Šm”FAˆê’v‚È‚ç1‚ğ•Ô‚· */
-  for (i151 = 0; i151 < 9; i151++) {
-    varargin_1[i151] = (signed char)(temp1[i151] * temp1[9 + i151]);
+  /* x,yï¿½Æ‚ï¿½ï¿½Éˆï¿½vï¿½ï¿½ï¿½é‚©ï¿½mï¿½Fï¿½Aï¿½ï¿½vï¿½È‚ï¿½1ï¿½ï¿½Ô‚ï¿½ */
+  for (i153 = 0; i153 < 9; i153++) {
+    varargin_1[i153] = (signed char)(temp1[i153] * temp1[9 + i153]);
   }
 
   ex = varargin_1[0];
   for (k = 0; k < 8; k++) {
-    i151 = varargin_1[k + 1];
-    if (ex < i151) {
-      ex = i151;
+    i153 = varargin_1[k + 1];
+    if (ex < i153) {
+      ex = i153;
     }
   }
 
@@ -7223,8 +7407,8 @@ static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
 }
 
 /*
- * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”)
- * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
+ * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
  * Arguments    : const coder_internal_ref_5 *wall
  *                const unsigned char maze_goal[18]
  *                unsigned char l_goal_size
@@ -7258,35 +7442,35 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
   unsigned int qY;
   int i10;
 
-  /*     %%  make_map_find •Çî•ñ‚©‚ç“™‚üMAP‚ğ¶¬ */
-  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
-  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
-  /* XVÀ•W */
+  /*     %%  make_map_find ï¿½Çï¿½ñ‚©‚ç“™ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
+  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* XVÀ•WXV—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_square_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_square_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
-  /* 32ƒ}ƒX•ªmap‚ğ•Û */
-  /* 16bit‚É‚·‚×‚« */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
+  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
+  /* 16bitï¿½É‚ï¿½ï¿½×‚ï¿½ */
   for (i2 = 0; i2 < 1024; i2++) {
     contour_map[i2] = MAX_uint16_T;
   }
 
-  /* ƒS[ƒ‹À•W‚É0‚ğ“ü—Í */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½0ï¿½ï¿½ï¿½ï¿½ï¿½ */
   i2 = l_goal_size;
   for (temp = 0; temp < i2; temp++) {
     contor_renew_square_idx = maze_goal[temp + 9];
     contour_map[(contor_renew_square_idx + ((maze_goal[temp] - 1) << 5)) - 1] =
       0U;
 
-    /* ‰‰ñ‚ÌXVÀ•W = ƒS[ƒ‹À•W@‚ğ“ü—Í */
+    /* ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½W = ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ */
     contor_renew_square[temp] = contor_renew_square_idx;
     contor_renew_square[1024 + temp] = maze_goal[temp];
     contor_renew_square_idx = (unsigned char)(1 + temp);
@@ -7295,14 +7479,14 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* •à”ƒJƒEƒ“ƒg‚Í0~max_length */
-    /* mapXVŠm”F—pƒtƒ‰ƒO */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
+    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
     change_flag = 0U;
 
-    /* XV‚³‚ê‚½À•W‚É‘Î‚µA•à”map‚ğXV */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
     i2 = contor_renew_square_idx;
     for (temp = 0; temp < i2; temp++) {
-      /* –k‘¤ */
+      /* ï¿½kï¿½ï¿½ */
       /* if (bitand(maze_wall(row(tempn),col(tempn)),bitshift(uint8(1),g_direction.North)) == wall.nowall) */
       if (g_direction.North <= 7) {
         i3 = (unsigned char)(1 << g_direction.North);
@@ -7312,7 +7496,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
 
       if ((maze_wall[(contor_renew_square[temp] + ((contor_renew_square[temp +
               1024] - 1) << 5)) - 1] & i3) == wall->contents.nowall) {
-        /* –k‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½kï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         i4 = (int)(contor_renew_square[temp] + 1U);
         i5 = i4;
         if ((unsigned int)i4 > 255U) {
@@ -7330,7 +7514,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           if ((unsigned int)i4 > 255U) {
             i4 = 255;
           }
@@ -7340,7 +7524,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square[temp + 1024];
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i4 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i4 > 255U) {
             i4 = 255;
@@ -7350,7 +7534,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
         }
       }
 
-      /* “Œ‘¤ */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       contor_renew_square_idx = contor_renew_square[temp + 1024];
       i4 = (contor_renew_square_idx - 1) << 5;
       i5 = maze_wall[(contor_renew_square[temp] + i4) - 1];
@@ -7361,7 +7545,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
       }
 
       if ((i5 & i6) == wall->contents.nowall) {
-        /* “Œ‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         i7 = (int)(contor_renew_square[temp + 1024] + 1U);
         i8 = i7;
         if ((unsigned int)i7 > 255U) {
@@ -7379,7 +7563,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
             contor_renew_square[temp];
           if ((unsigned int)i7 > 255U) {
@@ -7389,7 +7573,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             (unsigned char)i7;
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i7 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i7 > 255U) {
             i7 = 255;
@@ -7399,7 +7583,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
         }
       }
 
-      /* “ì‘¤ */
+      /* ï¿½ì‘¤ */
       if (g_direction.South <= 7) {
         i9 = (unsigned char)(1 << g_direction.South);
       } else {
@@ -7407,7 +7591,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
       }
 
       if ((i5 & i9) == wall->contents.nowall) {
-        /* “ì‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½ì‘¤ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         qY = contor_renew_square[temp] - 1U;
         if (qY > contor_renew_square[temp]) {
           qY = 0U;
@@ -7422,7 +7606,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contour_map[((int)qY + i4) - 1] = (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           qY = contor_renew_square[temp] - 1U;
           if (qY > contor_renew_square[temp]) {
             qY = 0U;
@@ -7433,7 +7617,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square_idx;
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i4 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i4 > 255U) {
             i4 = 255;
@@ -7443,7 +7627,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
         }
       }
 
-      /* ¼‘¤ */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       if (g_direction.West <= 7) {
         i10 = (unsigned char)(1 << g_direction.West);
       } else {
@@ -7451,7 +7635,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
       }
 
       if ((i5 & i10) == wall->contents.nowall) {
-        /* ¼‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         qY = contor_renew_square_idx - 1U;
         if (qY > contor_renew_square_idx) {
           qY = 0U;
@@ -7468,7 +7652,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
             contor_renew_square[temp];
           qY = contor_renew_square_idx - 1U;
@@ -7479,7 +7663,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             (unsigned char)qY;
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i4 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i4 > 255U) {
             i4 = 255;
@@ -7490,7 +7674,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
       }
     }
 
-    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
     for (i2 = 0; i2 < 2048; i2++) {
       contor_renew_square[i2] = contor_renew_square_temp[i2];
       contor_renew_square_temp[i2] = 0U;
@@ -7499,7 +7683,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* XV‚ª‚È‚¢A‚à‚µ‚­‚ÍŒ»İˆÊ’u‚ªXV‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍŒï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
     if ((change_flag == 0) || (contour_map[(current_y + ((current_x - 1) << 5))
          - 1] != 65535)) {
       exitg1 = true;
@@ -7510,9 +7694,9 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
 }
 
 /*
- * –¢’m•Ç‚Ì—Ìˆæ‚Í‰¼‘z•Ç‚ğ‚¨‚¢‚ÄN“ü‚µ‚È‚¢B
- * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”),–À˜H’Tõî•ñ(16i”)
- * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * ï¿½ï¿½ï¿½mï¿½Ç‚Ì—Ìˆï¿½Í‰ï¿½ï¿½zï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄNï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½),ï¿½ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
+ * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
  * Arguments    : const coder_internal_ref *goal_size
  *                const coder_internal_ref_5 *wall
  *                const coder_internal_ref_4 *search
@@ -7562,34 +7746,34 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
   int i51;
   int i52;
 
-  /*     %% make_map_fustrun Å’Z‘–s—p“™‚üMAP‚ğ¶¬ */
-  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
-  /* XVÀ•W */
+  /*     %% make_map_fustrun ï¿½Å’Zï¿½ï¿½ï¿½sï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* XVÀ•WXV—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_square_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_square_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* ƒ[ƒJƒ‹•Ï”İ’è */
-  /* ƒpƒ‰ƒ[ƒ^İ’è */
-  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
-  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
-  /* 32ƒ}ƒX•ªmap‚ğ•Û */
-  /* is•ûŒü•âŠ®—p•Ï”’è‹` */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½İ’ï¿½ */
+  /* ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
+  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
+  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
+  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
+  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½âŠ®ï¿½pï¿½Ïï¿½ï¿½ï¿½` */
   for (i33 = 0; i33 < 1024; i33++) {
     contour_map[i33] = MAX_uint16_T;
     move_dir_map[i33] = 0U;
   }
 
-  /* ƒS[ƒ‹À•W‚É */
-  /*  •à”ƒ}ƒbƒvF0‚ğ“ü—Í */
-  /*  is•ûŒü : 1+2+4+8(“Œ¼“ì–k‚·‚×‚Ä)=15 */
-  /*  ‚ğ“ü—Í */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ */
+  /*  ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½F0ï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /*  ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ : 1+2+4+8(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½×‚ï¿½)=15 */
+  /*  ï¿½ï¿½ï¿½ï¿½ï¿½ */
   i33 = goal_size->contents;
   for (tempn = 0; tempn < i33; tempn++) {
     contor_renew_square_idx = maze_goal[tempn + 9];
@@ -7637,7 +7821,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
     move_dir_map[contour_map_tmp] = (unsigned char)i36;
 
-    /* ‰‰ñ‚ÌXVÀ•W = ƒS[ƒ‹À•W@‚ğ“ü—Í */
+    /* ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½W = ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ */
     contor_renew_square[tempn] = contor_renew_square_idx;
     contor_renew_square[1024 + tempn] = maze_goal[tempn];
     contor_renew_square_idx = (unsigned char)(1 + tempn);
@@ -7646,15 +7830,15 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* XVŠm”F—p‚Ì•à”ƒJƒEƒ“ƒg‚Í0~max_length */
+    /* ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ì•ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
     change_flag = 0U;
 
-    /* XVƒtƒ‰ƒO‚ÌƒNƒŠƒA */
-    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
+    /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ÌƒNï¿½ï¿½ï¿½A */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
     i33 = contor_renew_square_idx;
     for (tempn = 0; tempn < i33; tempn++) {
-      /* –k‘¤ */
-      /* •Ç‚ª–³‚¢ & (’TõÏ‚İ || ~–¢’m•Çƒtƒ‰ƒO)‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½kï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & (ï¿½Tï¿½ï¿½ï¿½Ï‚ï¿½ || ~ï¿½ï¿½ï¿½mï¿½Çƒtï¿½ï¿½ï¿½O)ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       if (g_direction.North <= 7) {
         i38 = (unsigned char)(1 << g_direction.North);
       } else {
@@ -7672,7 +7856,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
         if ((((maze_wall_search[(contor_renew_square[tempn] +
                 ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i39) != 0)
              == search->contents.known) || (unknown_wall_flg == 0)) {
-          /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           contor_renew_square_idx = contor_renew_square[tempn + 1024];
           i36 = (contor_renew_square_idx - 1) << 5;
           contour_map_tmp = (contor_renew_square[tempn] + i36) - 1;
@@ -7683,7 +7867,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
           }
 
           if ((move_dir_map[contour_map_tmp] & i43) != 0) {
-            /* ‚©‚Â–k‚Ìƒ}ƒX‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒ}ï¿½Xï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
             if ((unsigned int)contour_map_tmp > 255U) {
               contour_map_tmp = 255;
@@ -7698,7 +7882,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
             }
 
             if (contour_map[(contour_map_tmp + i36) - 1] > (int)qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
               if ((unsigned int)contour_map_tmp > 255U) {
                 contour_map_tmp = 255;
@@ -7710,7 +7894,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
               contour_map[(contour_map_tmp + i36) - 1] = (unsigned short)u2;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
               if ((unsigned int)contour_map_tmp > 255U) {
                 contour_map_tmp = 255;
@@ -7723,10 +7907,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                 move_dir_map[(contour_map_tmp + i36) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒ}ƒX‚ğXV */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
               i36 = (int)(contor_renew_square[tempn] + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -7737,7 +7921,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 contor_renew_square_idx;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
               i36 = (int)(contor_renew_square_idx_temp + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -7746,9 +7930,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_idx_temp = (unsigned char)i36;
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k‚Ìƒ}ƒX‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒ}ï¿½Xï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             i46 = (int)(contor_renew_square[tempn] + 1U);
             i47 = i46;
             if ((unsigned int)i46 > 255U) {
@@ -7762,7 +7946,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
             }
 
             if (contour_map[(i47 + i36) - 1] > (int)qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               contour_map_tmp = i46;
               if ((unsigned int)i46 > 255U) {
                 contour_map_tmp = 255;
@@ -7774,7 +7958,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
               contour_map[(contour_map_tmp + i36) - 1] = (unsigned short)u2;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               contour_map_tmp = i46;
               if ((unsigned int)i46 > 255U) {
                 contour_map_tmp = 255;
@@ -7787,10 +7971,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                 move_dir_map[(contour_map_tmp + i36) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒ}ƒX‚ğXV */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
               if ((unsigned int)i46 > 255U) {
                 i46 = 255;
               }
@@ -7800,7 +7984,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 contor_renew_square_idx;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
               i36 = (int)(contor_renew_square_idx_temp + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -7812,8 +7996,8 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
         }
       }
 
-      /* “Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & (’TõÏ‚İ|| ~–¢’m•Çƒtƒ‰ƒO)‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & (ï¿½Tï¿½ï¿½ï¿½Ï‚ï¿½|| ~ï¿½ï¿½ï¿½mï¿½Çƒtï¿½ï¿½ï¿½O)ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       if (g_direction.East <= 7) {
         i41 = (unsigned char)(1 << g_direction.East);
       } else {
@@ -7831,7 +8015,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
         if ((((maze_wall_search[(contor_renew_square[tempn] +
                 ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i42) != 0)
              == search->contents.known) || (unknown_wall_flg == 0)) {
-          /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_direction.East <= 7) {
             i45 = (unsigned char)(1 << g_direction.East);
           } else {
@@ -7841,7 +8025,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
           if ((move_dir_map[(contor_renew_square[tempn] +
                              ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
                & i45) != 0) {
-            /* ‚©‚Â“Œ‚Ìƒ}ƒX‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒ}ï¿½Xï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
             if ((unsigned int)i36 > 255U) {
               i36 = 255;
@@ -7856,9 +8040,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1]
                 > (int)u2) {
-              /*                                  %XVŠm”F—p‚ÌMAPXV */
+              /*                                  %ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½ï¿½MAPï¿½Xï¿½V */
               /*                                  contour_refine_map(row(tempn),col(tempn)+1) = contour_refine_map(row(tempn),col(tempn))+uint16(1); */
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -7874,7 +8058,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1] =
                 (unsigned short)u2;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -7888,10 +8072,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒ}ƒX‚ğXV */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
                 contor_renew_square[tempn];
               i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
@@ -7902,7 +8086,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 (unsigned char)i36;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
               i36 = (int)(contor_renew_square_idx_temp + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -7911,9 +8095,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_idx_temp = (unsigned char)i36;
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“Œ‚Ìƒ}ƒX‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
             contour_map_tmp = i36;
             if ((unsigned int)i36 > 255U) {
@@ -7929,9 +8113,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[(contor_renew_square[tempn] + ((contour_map_tmp - 1)
                   << 5)) - 1] > (int)u2) {
-              /*                                  %XVŠm”F—p‚ÌMAPXV */
+              /*                                  %ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½ï¿½MAPï¿½Xï¿½V */
               /*                                  contour_refine_map(contor_renew_square(tempn,1),contor_renew_square(tempn,2)+1) = contour_refine_map(contor_renew_square(tempn,1),contor_renew_square(tempn,2))+uint16(1); */
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               contour_map_tmp = i36;
               if ((unsigned int)i36 > 255U) {
                 contour_map_tmp = 255;
@@ -7947,7 +8131,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[(contor_renew_square[tempn] + ((contour_map_tmp - 1) <<
                 5)) - 1] = (unsigned short)u2;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               contour_map_tmp = i36;
               if ((unsigned int)i36 > 255U) {
                 contour_map_tmp = 255;
@@ -7961,10 +8145,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒ}ƒX‚ğXV */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
                 contor_renew_square[tempn];
               if ((unsigned int)i36 > 255U) {
@@ -7974,7 +8158,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 (unsigned char)i36;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
               i36 = (int)(contor_renew_square_idx_temp + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -7986,8 +8170,8 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
         }
       }
 
-      /* “ì‘¤ */
-      /* •Ç‚ª–³‚¢ &  (’TõÏ‚İ|| ~–¢’m•Çƒtƒ‰ƒO)‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì‘¤ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ &  (ï¿½Tï¿½ï¿½ï¿½Ï‚ï¿½|| ~ï¿½ï¿½ï¿½mï¿½Çƒtï¿½ï¿½ï¿½O)ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       if (g_direction.South <= 7) {
         i44 = (unsigned char)(1 << g_direction.South);
       } else {
@@ -8005,7 +8189,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
         if ((((maze_wall_search[(contor_renew_square[tempn] +
                 ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i48) != 0)
              == search->contents.known) || (unknown_wall_flg == 0)) {
-          /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_direction.South <= 7) {
             i50 = (unsigned char)(1 << g_direction.South);
           } else {
@@ -8015,7 +8199,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
           if ((move_dir_map[(contor_renew_square[tempn] +
                              ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
                & i50) != 0) {
-            /* ‚©‚Â“ì‚Ìƒ}ƒX‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒ}ï¿½Xï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -8030,9 +8214,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
                   5)) - 1] > (int)u2) {
-              /*                                  %XVŠm”F—p‚ÌMAPXV */
+              /*                                  %ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½ï¿½MAPï¿½Xï¿½V */
               /*                                  contour_refine_map(row(tempn)-1,col(tempn)) = contour_refine_map(row(tempn),col(tempn))+uint16(1); */
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8048,7 +8232,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
                 5)) - 1] = (unsigned short)u2;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8062,10 +8246,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒ}ƒX‚ğXV */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8076,7 +8260,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 contor_renew_square[tempn + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
               i36 = (int)(contor_renew_square_idx_temp + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -8085,9 +8269,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_idx_temp = (unsigned char)i36;
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì‚Ìƒ}ƒX‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒ}ï¿½Xï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -8102,7 +8286,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
                   5)) - 1] > (int)u2) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8118,7 +8302,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
                 5)) - 1] = (unsigned short)u2;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8132,10 +8316,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒ}ƒX‚ğXV */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8146,7 +8330,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 contor_renew_square[tempn + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
               i36 = (int)(contor_renew_square_idx_temp + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -8158,8 +8342,8 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
         }
       }
 
-      /* ¼‘¤ */
-      /* •Ç‚ª–³‚¢ &  (’TõÏ‚İ|| ~–¢’m•Çƒtƒ‰ƒO)‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ &  (ï¿½Tï¿½ï¿½ï¿½Ï‚ï¿½|| ~ï¿½ï¿½ï¿½mï¿½Çƒtï¿½ï¿½ï¿½O)ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       if (g_direction.West <= 7) {
         i49 = (unsigned char)(1 << g_direction.West);
       } else {
@@ -8177,7 +8361,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
         if ((((maze_wall_search[(contor_renew_square[tempn] +
                 ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i51) != 0)
              == search->contents.known) || (unknown_wall_flg == 0)) {
-          /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_direction.West <= 7) {
             i52 = (unsigned char)(1 << g_direction.West);
           } else {
@@ -8187,7 +8371,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
           if ((move_dir_map[(contor_renew_square[tempn] +
                              ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
                & i52) != 0) {
-            /* ‚©‚Â–k‚Ìƒ}ƒX‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒ}ï¿½Xï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             contour_map_tmp = contor_renew_square[tempn + 1024];
             qY = contour_map_tmp - 1U;
             if (qY > (unsigned int)contour_map_tmp) {
@@ -8203,7 +8387,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
                 - 1] > (int)u2) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               contour_map_tmp = contor_renew_square[tempn + 1024];
               qY = contour_map_tmp - 1U;
               if (qY > (unsigned int)contour_map_tmp) {
@@ -8220,7 +8404,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) -
                 1] = (unsigned short)u2;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               contour_map_tmp = contor_renew_square[tempn + 1024];
               qY = contour_map_tmp - 1U;
               if (qY > (unsigned int)contour_map_tmp) {
@@ -8235,10 +8419,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒ}ƒX‚ğXV */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
                 contor_renew_square[tempn];
               contour_map_tmp = contor_renew_square[tempn + 1024];
@@ -8250,7 +8434,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 (unsigned char)qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
               i36 = (int)(contor_renew_square_idx_temp + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -8259,9 +8443,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_idx_temp = (unsigned char)i36;
             }
 
-            /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k‚Ìƒ}ƒX‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒ}ï¿½Xï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             contour_map_tmp = contor_renew_square[tempn + 1024];
             qY = contour_map_tmp - 1U;
             if (qY > (unsigned int)contour_map_tmp) {
@@ -8277,7 +8461,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
                 - 1] > (int)u2) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               contour_map_tmp = contor_renew_square[tempn + 1024];
               qY = contour_map_tmp - 1U;
               if (qY > (unsigned int)contour_map_tmp) {
@@ -8294,7 +8478,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) -
                 1] = (unsigned short)u2;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               contour_map_tmp = contor_renew_square[tempn + 1024];
               qY = contour_map_tmp - 1U;
               if (qY > (unsigned int)contour_map_tmp) {
@@ -8309,10 +8493,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒ}ƒX‚ğXV */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
                 contor_renew_square[tempn];
               contour_map_tmp = contor_renew_square[tempn + 1024];
@@ -8324,7 +8508,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 (unsigned char)qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
               i36 = (int)(contor_renew_square_idx_temp + 1U);
               if ((unsigned int)i36 > 255U) {
                 i36 = 255;
@@ -8337,7 +8521,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
       }
     }
 
-    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
     for (i33 = 0; i33 < 2048; i33++) {
       contor_renew_square[i33] = contor_renew_square_temp[i33];
       contor_renew_square_temp[i33] = 0U;
@@ -8346,7 +8530,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* XV‚ª‚È‚¯‚ê‚Î || ƒXƒ^[ƒg’n“_‚ªXV‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ || ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
     if ((change_flag == 0) || (contour_map[0] != 65535)) {
       exitg1 = true;
     } else {
@@ -8356,9 +8540,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 }
 
 /*
- * –¢’m•Ç‚Ì—Ìˆæ‚Í‰¼‘z•Ç‚ğ‚¨‚¢‚ÄN“ü‚µ‚È‚¢B
- * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”),–À˜H’Tõî•ñ(16i”)
- * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * ï¿½ï¿½ï¿½mï¿½Ç‚Ì—Ìˆï¿½Í‰ï¿½ï¿½zï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄNï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½),ï¿½ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
+ * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
  * Arguments    : coder_internal_ref_2 *max_length
  *                const coder_internal_ref_5 *wall
  *                const coder_internal_ref_4 *search
@@ -8389,24 +8573,22 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   int q0;
   unsigned char row_dir_node[1056];
   unsigned char col_dir_node[1056];
-  int i74;
-  int n;
-  int i75;
-  unsigned char u6;
   int i76;
+  int n;
   int i77;
+  unsigned char u6;
   int i78;
-  unsigned int qY;
   int i79;
+  int i80;
+  unsigned int qY;
+  int i81;
   int row_num_node_tmp;
   unsigned short i;
   bool exitg1;
-  int i80;
-  int i81;
   int i82;
-  unsigned char change_flag;
   int i83;
   int i84;
+  unsigned char change_flag;
   int i85;
   int i86;
   int i87;
@@ -8414,20 +8596,20 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   int i89;
   int i90;
   int i91;
-  unsigned int b_qY;
   int i92;
   int i93;
+  unsigned int b_qY;
   int i94;
   int i95;
   int i96;
-  unsigned int c_qY;
   int i97;
   int i98;
+  unsigned int c_qY;
   int i99;
   int i100;
-  unsigned int u7;
   int i101;
   int i102;
+  unsigned int u7;
   int i103;
   int i104;
   int i105;
@@ -8473,43 +8655,45 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   int i145;
   int i146;
   int i147;
+  int i148;
+  int i149;
 
-  /*     %% make_map_fustrun_diagonal Å’Z‘–s—p“™‚üMAP‚ğ¶¬ */
-  /* ƒ[ƒJƒ‹•Ï”İ’è */
-  /* ƒRƒ“ƒ^[XVƒm[ƒh(s)•ÛŠÇ—p */
-  /* XVÀ•W */
-  /* XVÀ•WXV—p */
+  /*     %% make_map_fustrun_diagonal ï¿½Å’Zï¿½ï¿½ï¿½sï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
+  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½İ’ï¿½ */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½mï¿½[ï¿½h(ï¿½s)ï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_node_row_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_node_row_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* ƒRƒ“ƒ^[XVƒm[ƒhi—ñj•ÛŠÇ—p */
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½iï¿½ï¿½jï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   memset(&contor_renew_node_row[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_row_temp[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_col[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_col_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* XVÀ•WXV—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_node_col_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_node_col_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* ƒpƒ‰ƒ[ƒ^İ’è */
-  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
+  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
   max_length->contents = 1024U;
 
-  /*  ƒ‹[ƒg‚Ìd‚İİ’è */
-  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ìƒm[ƒh‚Émax_length‚ğ“ü—Í) */
-  /* •à”MAP */
-  /*  %XV—pMAP */
+  /*  ï¿½ï¿½ï¿½[ï¿½gï¿½Ìdï¿½İİ’ï¿½ */
+  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ìƒmï¿½[ï¿½hï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
+  /* ï¿½ï¿½ï¿½ï¿½MAP */
+  /*  %ï¿½Xï¿½Vï¿½pMAP */
   /*  row_num_node_temp = ones(33,32,'uint16')*uint16(65535); */
   /*  col_num_node_temp = ones(32,33,'uint16')*uint16(65535); */
-  /* is•ûŒü•Û—pƒm[ƒhì¬ */
+  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ûï¿½ï¿½pï¿½mï¿½[ï¿½hï¿½ì¬ */
   for (q0 = 0; q0 < 1056; q0++) {
     row_num_node[q0] = MAX_uint16_T;
     col_num_node[q0] = MAX_uint16_T;
@@ -8517,33 +8701,33 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     col_dir_node[q0] = 0U;
   }
 
-  /* ƒS[ƒ‹ƒZƒNƒVƒ‡ƒ“‚ªŠm’è‚µ‚Ä‚¢‚éê‡ */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
   *start_num = MAX_uint16_T;
   if (goal_size == 1) {
-    /* ƒS[ƒ‹ƒ}ƒX‚©‚çA“Œ¼“ì–k‚Éƒ}ƒbƒv‚ğ“WŠJ */
-    /* –k•Ç */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½Éƒ}ï¿½bï¿½vï¿½ï¿½Wï¿½J */
+    /* ï¿½kï¿½ï¿½ */
     q0 = maze_goal[0] - 1;
-    i74 = (maze_goal[9] + (q0 << 5)) - 1;
+    i76 = (maze_goal[9] + (q0 << 5)) - 1;
     if (g_direction.North <= 7) {
-      i75 = (unsigned char)(1 << g_direction.North);
+      i77 = (unsigned char)(1 << g_direction.North);
     } else {
-      i75 = 0;
+      i77 = 0;
     }
 
-    if ((maze_wall[i74] & i75) == 0) {
-      /* •à”XV */
-      i76 = (int)(maze_goal[9] + 1U);
-      i77 = i76;
-      if ((unsigned int)i76 > 255U) {
-        i77 = 255;
+    if ((maze_wall[i76] & i77) == 0) {
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      i78 = (int)(maze_goal[9] + 1U);
+      i79 = i78;
+      if ((unsigned int)i78 > 255U) {
+        i79 = 255;
       }
 
       row_num_node_tmp = 33 * q0;
-      row_num_node[(i77 + row_num_node_tmp) - 1] = 3U;
+      row_num_node[(i79 + row_num_node_tmp) - 1] = 3U;
 
-      /* •ûŒü’Ç‰Á */
-      q0 = i76;
-      if ((unsigned int)i76 > 255U) {
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+      q0 = i78;
+      if ((unsigned int)i78 > 255U) {
         q0 = 255;
       }
 
@@ -8554,49 +8738,49 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         row_dir_node[(q0 + row_num_node_tmp) - 1] = 0U;
       }
 
-      /* XVƒm[ƒh‚ğXV */
-      if ((unsigned int)i76 > 255U) {
-        i76 = 255;
+      /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+      if ((unsigned int)i78 > 255U) {
+        i78 = 255;
       }
 
-      contor_renew_node_row[0] = (unsigned char)i76;
+      contor_renew_node_row[0] = (unsigned char)i78;
       contor_renew_node_row[1024] = maze_goal[0];
 
-      /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+      /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
       contor_renew_node_row_idx = 2U;
     }
 
-    /* “Œ•Ç */
+    /* ï¿½ï¿½ï¿½ï¿½ */
     if (g_direction.East <= 7) {
-      i78 = (unsigned char)(1 << g_direction.East);
+      i80 = (unsigned char)(1 << g_direction.East);
     } else {
-      i78 = 0;
+      i80 = 0;
     }
 
-    if ((maze_wall[i74] & i78) == 0) {
-      /* •à”XV */
+    if ((maze_wall[i76] & i80) == 0) {
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
       q0 = (int)(maze_goal[0] + 1U);
-      i76 = q0;
+      i78 = q0;
       if ((unsigned int)q0 > 255U) {
-        i76 = 255;
+        i78 = 255;
       }
 
-      col_num_node[(maze_goal[9] + ((i76 - 1) << 5)) - 1] = 3U;
+      col_num_node[(maze_goal[9] + ((i78 - 1) << 5)) - 1] = 3U;
 
-      /* •ûŒü’Ç‰Á */
-      i76 = q0;
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+      i78 = q0;
       if ((unsigned int)q0 > 255U) {
-        i76 = 255;
+        i78 = 255;
       }
 
       if (g_d_direction.East <= 7) {
-        col_dir_node[(maze_goal[9] + ((i76 - 1) << 5)) - 1] = (unsigned char)(1 <<
+        col_dir_node[(maze_goal[9] + ((i78 - 1) << 5)) - 1] = (unsigned char)(1 <<
           g_d_direction.East);
       } else {
-        col_dir_node[(maze_goal[9] + ((i76 - 1) << 5)) - 1] = 0U;
+        col_dir_node[(maze_goal[9] + ((i78 - 1) << 5)) - 1] = 0U;
       }
 
-      /* XVƒm[ƒh‚ğXV */
+      /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
       contor_renew_node_col[0] = maze_goal[9];
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
@@ -8604,223 +8788,223 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
       contor_renew_node_col[1024] = (unsigned char)q0;
 
-      /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+      /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
       contor_renew_node_col_idx = 2U;
     }
 
-    /* “ì•Ç */
+    /* ï¿½ï¿½ï¿½ */
     if (g_direction.South <= 7) {
-      i81 = (unsigned char)(1 << g_direction.South);
-    } else {
-      i81 = 0;
-    }
-
-    if ((maze_wall[i74] & i81) == 0) {
-      /* •à”XV */
-      row_num_node_tmp = (maze_goal[9] + 33 * (maze_goal[0] - 1)) - 1;
-      row_num_node[row_num_node_tmp] = 3U;
-
-      /* •ûŒü’Ç‰Á */
-      if (g_d_direction.South <= 7) {
-        i85 = (unsigned char)(1 << g_d_direction.South);
-      } else {
-        i85 = 0;
-      }
-
-      row_dir_node[row_num_node_tmp] = (unsigned char)
-        (row_dir_node[row_num_node_tmp] | i85);
-
-      /* XVƒm[ƒh‚ğXV */
-      contor_renew_node_row[contor_renew_node_row_idx - 1] = maze_goal[9];
-      contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[0];
-
-      /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-      contor_renew_node_row_idx++;
-    }
-
-    /* ¼•Ç */
-    if (g_direction.West <= 7) {
-      i83 = (unsigned char)(1 << g_direction.West);
+      i83 = (unsigned char)(1 << g_direction.South);
     } else {
       i83 = 0;
     }
 
-    if ((maze_wall[i74] & i83) == 0) {
-      /* •à”XV */
-      col_num_node[i74] = 3U;
+    if ((maze_wall[i76] & i83) == 0) {
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      row_num_node_tmp = (maze_goal[9] + 33 * (maze_goal[0] - 1)) - 1;
+      row_num_node[row_num_node_tmp] = 3U;
 
-      /* •ûŒü’Ç‰Á */
-      if (g_d_direction.West <= 7) {
-        i87 = (unsigned char)(1 << g_d_direction.West);
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+      if (g_d_direction.South <= 7) {
+        i87 = (unsigned char)(1 << g_d_direction.South);
       } else {
         i87 = 0;
       }
 
-      col_dir_node[i74] = (unsigned char)(col_dir_node[i74] | i87);
+      row_dir_node[row_num_node_tmp] = (unsigned char)
+        (row_dir_node[row_num_node_tmp] | i87);
 
-      /* XVƒm[ƒh‚ğXV */
+      /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+      contor_renew_node_row[contor_renew_node_row_idx - 1] = maze_goal[9];
+      contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[0];
+
+      /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+      contor_renew_node_row_idx++;
+    }
+
+    /* ï¿½ï¿½ï¿½ï¿½ */
+    if (g_direction.West <= 7) {
+      i85 = (unsigned char)(1 << g_direction.West);
+    } else {
+      i85 = 0;
+    }
+
+    if ((maze_wall[i76] & i85) == 0) {
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      col_num_node[i76] = 3U;
+
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+      if (g_d_direction.West <= 7) {
+        i89 = (unsigned char)(1 << g_d_direction.West);
+      } else {
+        i89 = 0;
+      }
+
+      col_dir_node[i76] = (unsigned char)(col_dir_node[i76] | i89);
+
+      /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
       contor_renew_node_col[contor_renew_node_col_idx - 1] = maze_goal[9];
       contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[0];
 
-      /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+      /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
       contor_renew_node_col_idx++;
     }
 
-    /* ƒS[ƒ‹ƒZƒNƒVƒ‡ƒ“‚ªŠm’è‚µ‚Ä‚¢‚È‚¢ê‡ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
   } else {
-    /* ƒS[ƒ‹ƒm[ƒh‚É */
-    /*  •à”F0‚ğ“ü—Í */
-    /*  is•ûŒü : •Ç‚ª‚È‚¯‚ê‚Î‘S•ûŒü=0b11111111=255 */
-    /*  ‚ğ“ü—Í */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ */
+    /*  ï¿½ï¿½ï¿½ï¿½ï¿½F0ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /*  ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ : ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Î‘Sï¿½ï¿½ï¿½ï¿½=0b11111111=255 */
+    /*  ï¿½ï¿½ï¿½ï¿½ï¿½ */
     q0 = goal_size;
     for (n = 0; n < q0; n++) {
-      /* –k•Ç */
-      i74 = maze_goal[n] - 1;
+      /* ï¿½kï¿½ï¿½ */
+      i76 = maze_goal[n] - 1;
       u6 = maze_goal[n + 9];
-      i76 = (u6 + (i74 << 5)) - 1;
+      i78 = (u6 + (i76 << 5)) - 1;
       if (g_direction.North <= 7) {
-        i79 = (unsigned char)(1 << g_direction.North);
+        i81 = (unsigned char)(1 << g_direction.North);
       } else {
-        i79 = 0;
+        i81 = 0;
       }
 
-      if ((maze_wall[i76] & i79) == 0) {
-        /* •à”XV */
-        i77 = (int)(maze_goal[n + 9] + 1U);
-        i80 = i77;
-        if ((unsigned int)i77 > 255U) {
-          i80 = 255;
+      if ((maze_wall[i78] & i81) == 0) {
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        i79 = (int)(maze_goal[n + 9] + 1U);
+        i82 = i79;
+        if ((unsigned int)i79 > 255U) {
+          i82 = 255;
         }
 
-        row_num_node_tmp = 33 * i74;
-        row_num_node[(i80 + row_num_node_tmp) - 1] = 0U;
+        row_num_node_tmp = 33 * i76;
+        row_num_node[(i82 + row_num_node_tmp) - 1] = 0U;
 
-        /* •ûŒüXV */
-        i74 = i77;
-        if ((unsigned int)i77 > 255U) {
-          i74 = 255;
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        i76 = i79;
+        if ((unsigned int)i79 > 255U) {
+          i76 = 255;
         }
 
-        row_dir_node[(i74 + row_num_node_tmp) - 1] = MAX_uint8_T;
+        row_dir_node[(i76 + row_num_node_tmp) - 1] = MAX_uint8_T;
 
-        /* XVƒm[ƒh‚ğXV */
-        if ((unsigned int)i77 > 255U) {
-          i77 = 255;
+        /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+        if ((unsigned int)i79 > 255U) {
+          i79 = 255;
         }
 
         contor_renew_node_row[contor_renew_node_row_idx - 1] = (unsigned char)
-          i77;
+          i79;
         contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[n];
 
-        /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-        i74 = (int)(contor_renew_node_row_idx + 1U);
-        if ((unsigned int)i74 > 255U) {
-          i74 = 255;
+        /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+        i76 = (int)(contor_renew_node_row_idx + 1U);
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
         }
 
-        contor_renew_node_row_idx = (unsigned char)i74;
+        contor_renew_node_row_idx = (unsigned char)i76;
       }
 
-      /* “Œ•Ç */
+      /* ï¿½ï¿½ï¿½ï¿½ */
       if (g_direction.East <= 7) {
-        i82 = (unsigned char)(1 << g_direction.East);
-      } else {
-        i82 = 0;
-      }
-
-      if ((maze_wall[i76] & i82) == 0) {
-        /* •à”XV */
-        i74 = (int)(maze_goal[n] + 1U);
-        i77 = i74;
-        if ((unsigned int)i74 > 255U) {
-          i77 = 255;
-        }
-
-        col_num_node[(u6 + ((i77 - 1) << 5)) - 1] = 0U;
-
-        /* •ûŒüXV */
-        i77 = i74;
-        if ((unsigned int)i74 > 255U) {
-          i77 = 255;
-        }
-
-        col_dir_node[(u6 + ((i77 - 1) << 5)) - 1] = MAX_uint8_T;
-
-        /* XVƒm[ƒh‚ğXV */
-        contor_renew_node_col[contor_renew_node_col_idx - 1] = u6;
-        if ((unsigned int)i74 > 255U) {
-          i74 = 255;
-        }
-
-        contor_renew_node_col[contor_renew_node_col_idx + 1023] = (unsigned char)
-          i74;
-
-        /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-        i74 = (int)(contor_renew_node_col_idx + 1U);
-        if ((unsigned int)i74 > 255U) {
-          i74 = 255;
-        }
-
-        contor_renew_node_col_idx = (unsigned char)i74;
-      }
-
-      /* “ì•Ç */
-      if (g_direction.South <= 7) {
-        i84 = (unsigned char)(1 << g_direction.South);
+        i84 = (unsigned char)(1 << g_direction.East);
       } else {
         i84 = 0;
       }
 
-      if ((maze_wall[i76] & i84) == 0) {
-        /* •à”XV */
-        row_num_node_tmp = (u6 + 33 * (maze_goal[n] - 1)) - 1;
-        row_num_node[row_num_node_tmp] = 0U;
-
-        /* •ûŒüXV */
-        row_dir_node[row_num_node_tmp] = MAX_uint8_T;
-
-        /* XVƒm[ƒh‚ğXV */
-        contor_renew_node_row[contor_renew_node_row_idx - 1] = u6;
-        contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[n];
-
-        /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-        i74 = (int)(contor_renew_node_row_idx + 1U);
-        if ((unsigned int)i74 > 255U) {
-          i74 = 255;
+      if ((maze_wall[i78] & i84) == 0) {
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        i76 = (int)(maze_goal[n] + 1U);
+        i79 = i76;
+        if ((unsigned int)i76 > 255U) {
+          i79 = 255;
         }
 
-        contor_renew_node_row_idx = (unsigned char)i74;
+        col_num_node[(u6 + ((i79 - 1) << 5)) - 1] = 0U;
+
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        i79 = i76;
+        if ((unsigned int)i76 > 255U) {
+          i79 = 255;
+        }
+
+        col_dir_node[(u6 + ((i79 - 1) << 5)) - 1] = MAX_uint8_T;
+
+        /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+        contor_renew_node_col[contor_renew_node_col_idx - 1] = u6;
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
+        }
+
+        contor_renew_node_col[contor_renew_node_col_idx + 1023] = (unsigned char)
+          i76;
+
+        /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+        i76 = (int)(contor_renew_node_col_idx + 1U);
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
+        }
+
+        contor_renew_node_col_idx = (unsigned char)i76;
       }
 
-      /* ¼•Ç */
-      if (g_direction.West <= 7) {
-        i86 = (unsigned char)(1 << g_direction.West);
+      /* ï¿½ï¿½ï¿½ */
+      if (g_direction.South <= 7) {
+        i86 = (unsigned char)(1 << g_direction.South);
       } else {
         i86 = 0;
       }
 
-      if ((maze_wall[i76] & i86) == 0) {
-        /* •à”XV */
-        col_num_node[i76] = 0U;
+      if ((maze_wall[i78] & i86) == 0) {
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        row_num_node_tmp = (u6 + 33 * (maze_goal[n] - 1)) - 1;
+        row_num_node[row_num_node_tmp] = 0U;
 
-        /* •ûŒüXV */
-        col_dir_node[i76] = MAX_uint8_T;
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        row_dir_node[row_num_node_tmp] = MAX_uint8_T;
 
-        /* XVƒm[ƒh‚ğXV */
+        /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+        contor_renew_node_row[contor_renew_node_row_idx - 1] = u6;
+        contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[n];
+
+        /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+        i76 = (int)(contor_renew_node_row_idx + 1U);
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
+        }
+
+        contor_renew_node_row_idx = (unsigned char)i76;
+      }
+
+      /* ï¿½ï¿½ï¿½ï¿½ */
+      if (g_direction.West <= 7) {
+        i88 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i88 = 0;
+      }
+
+      if ((maze_wall[i78] & i88) == 0) {
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        col_num_node[i78] = 0U;
+
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        col_dir_node[i78] = MAX_uint8_T;
+
+        /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
         contor_renew_node_col[contor_renew_node_col_idx - 1] = u6;
         contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[n];
 
-        /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-        i74 = (int)(contor_renew_node_col_idx + 1U);
-        if ((unsigned int)i74 > 255U) {
-          i74 = 255;
+        /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+        i76 = (int)(contor_renew_node_col_idx + 1U);
+        if ((unsigned int)i76 > 255U) {
+          i76 = 255;
         }
 
-        contor_renew_node_col_idx = (unsigned char)i74;
+        contor_renew_node_col_idx = (unsigned char)i76;
       }
     }
 
-    /*      %XV”»’è—p•Ï”(d‚İ‚Ã‚¯‚È‚µ‚Ì•à”ƒ}ƒbƒv) */
+    /*      %ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½pï¿½Ïï¿½(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½È‚ï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½v) */
     /*      row_num_node_temp = row_num_node; */
     /*      col_num_node_temp = col_num_node; */
   }
@@ -8834,46 +9018,46 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   i = 0U;
   exitg1 = false;
   while ((!exitg1) && (i <= (unsigned short)qY)) {
-    /* XVŠm”F—p‚Ì•à”ƒJƒEƒ“ƒg‚Í0~max_length */
+    /* ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ì•ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
     change_flag = 0U;
 
-    /* mapXVŠm”F—pƒtƒ‰ƒO */
-    /* Row_Edge‚Ìˆ—[33s,32—ñ] */
-    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
+    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
+    /* Row_Edgeï¿½Ìï¿½ï¿½ï¿½[33ï¿½s,32ï¿½ï¿½] */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
     q0 = contor_renew_node_row_idx;
     for (n = 0; n <= q0 - 2; n++) {
-      /* –k‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
-      i74 = contor_renew_node_row[n + 1024] - 1;
-      i76 = (contor_renew_node_row[n] + (i74 << 5)) - 1;
+      /* ï¿½kï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      i76 = contor_renew_node_row[n + 1024] - 1;
+      i78 = (contor_renew_node_row[n] + (i76 << 5)) - 1;
       if (g_direction.North <= 7) {
-        i88 = (unsigned char)(1 << g_direction.North);
+        i90 = (unsigned char)(1 << g_direction.North);
       } else {
-        i88 = 0;
+        i90 = 0;
       }
 
-      if (((maze_wall[i76] & i88) != 0) == wall->contents.nowall) {
+      if (((maze_wall[i78] & i90) != 0) == wall->contents.nowall) {
         if (g_direction.North <= 7) {
-          i89 = (unsigned char)(1 << g_direction.North);
+          i91 = (unsigned char)(1 << g_direction.North);
         } else {
-          i89 = 0;
+          i91 = 0;
         }
 
-        if (((maze_wall_search[i76] & i89) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚ ‚é */
-          i74 *= 33;
-          i76 = (contor_renew_node_row[n] + i74) - 1;
+        if (((maze_wall_search[i78] & i91) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          i76 *= 33;
+          i78 = (contor_renew_node_row[n] + i76) - 1;
           if (g_d_direction.North <= 7) {
-            i94 = (unsigned char)(1 << g_d_direction.North);
+            i96 = (unsigned char)(1 << g_d_direction.North);
           } else {
-            i94 = 0;
+            i96 = 0;
           }
 
-          if ((row_dir_node[i76] & i94) != 0) {
-            /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i76 = (int)(contor_renew_node_row[n] + 1U);
-            if ((unsigned int)i76 > 255U) {
-              i76 = 255;
+          if ((row_dir_node[i78] & i96) != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i78 = (int)(contor_renew_node_row[n] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
             }
 
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
@@ -8883,11 +9067,11 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (row_num_node[(i76 + i74) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
-              i74 = (int)(contor_renew_node_row[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+            if (row_num_node[(i78 + i76) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
@@ -8897,50 +9081,50 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              row_num_node[(i74 + 33 * (contor_renew_node_row[n + 1024] - 1)) -
+              row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1)) -
                 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i74 = (int)(contor_renew_node_row[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               if (g_d_direction.North <= 7) {
-                row_dir_node[(i74 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
                   - 1] = (unsigned char)(1 << g_d_direction.North);
               } else {
-                row_dir_node[(i74 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
                   - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              i74 = (int)(contor_renew_node_row[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i74;
+                (unsigned char)i76;
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i74;
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i74 = (int)(contor_renew_node_row[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
@@ -8950,102 +9134,48 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i74 + 33 * (contor_renew_node_row[n + 1024] - 1))
+              if (row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
                   - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i74 = (int)(contor_renew_node_row[n] + 1U);
-                if ((unsigned int)i74 > 255U) {
-                  i74 = 255;
-                }
-
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 i76 = (int)(contor_renew_node_row[n] + 1U);
                 if ((unsigned int)i76 > 255U) {
                   i76 = 255;
                 }
 
-                if (g_d_direction.North <= 7) {
-                  i110 = (unsigned char)(1 << g_d_direction.North);
-                } else {
-                  i110 = 0;
+                i78 = (int)(contor_renew_node_row[n] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
-                row_dir_node[(i74 + 33 * (contor_renew_node_row[n + 1024] - 1))
-                  - 1] = (unsigned char)(row_dir_node[(i76 + 33 *
-                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i110);
+                if (g_d_direction.North <= 7) {
+                  i112 = (unsigned char)(1 << g_d_direction.North);
+                } else {
+                  i112 = 0;
+                }
+
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = (unsigned char)(row_dir_node[(i78 + 33 *
+                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i112);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i77 = (int)(contor_renew_node_row[n] + 1U);
-            if ((unsigned int)i77 > 255U) {
-              i77 = 255;
+            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i79 = (int)(contor_renew_node_row[n] + 1U);
+            if ((unsigned int)i79 > 255U) {
+              i79 = 255;
             }
 
-            b_qY = row_num_node[i76] + 18U;
+            b_qY = row_num_node[i78] + 18U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
 
-            if (row_num_node[(i77 + i74) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i74 = (int)(contor_renew_node_row[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
-                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                18U;
-              if (b_qY > 65535U) {
-                b_qY = 65535U;
-              }
-
-              row_num_node[(i74 + 33 * (contor_renew_node_row[n + 1024] - 1)) -
-                1] = (unsigned short)b_qY;
-
-              /* ˆÚ“®•ûŒüMAPXV */
-              i74 = (int)(contor_renew_node_row[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              if (g_d_direction.North <= 7) {
-                row_dir_node[(i74 + 33 * (contor_renew_node_row[n + 1024] - 1))
-                  - 1] = (unsigned char)(1 << g_d_direction.North);
-              } else {
-                row_dir_node[(i74 + 33 * (contor_renew_node_row[n + 1024] - 1))
-                  - 1] = 0U;
-              }
-
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
-              change_flag = 1U;
-
-              /* XVƒm[ƒh‚ğXV */
-              i74 = (int)(contor_renew_node_row[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i74;
-              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
-                contor_renew_node_row[n + 1024];
-
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              contor_renew_node_row_idx_temp = (unsigned char)i74;
-
-              /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
-            } else {
-              i74 = (int)(contor_renew_node_row[n] + 1U);
-              i76 = i74;
-              if ((unsigned int)i74 > 255U) {
+            if (row_num_node[(i79 + i76) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
                 i76 = 255;
               }
 
@@ -9056,186 +9186,51 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
-                  - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i76 = i74;
-                if ((unsigned int)i74 > 255U) {
-                  i76 = 255;
-                  i74 = 255;
-                }
+              row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1)) -
+                1] = (unsigned short)b_qY;
 
-                if (g_d_direction.North <= 7) {
-                  i108 = (unsigned char)(1 << g_d_direction.North);
-                } else {
-                  i108 = 0;
-                }
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
 
+              if (g_d_direction.North <= 7) {
                 row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
-                  - 1] = (unsigned char)(row_dir_node[(i74 + 33 *
-                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i108);
-              }
-            }
-          }
-        }
-      }
-
-      /* –k“Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
-      if (g_direction.East <= 7) {
-        i91 = (unsigned char)(1 << g_direction.East);
-      } else {
-        i91 = 0;
-      }
-
-      if (((maze_wall[(contor_renew_node_row[n] + ((contor_renew_node_row[n +
-               1024] - 1) << 5)) - 1] & i91) != 0) == wall->contents.nowall) {
-        if (g_direction.East <= 7) {
-          i93 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i93 = 0;
-        }
-
-        if (((maze_wall_search[(contor_renew_node_row[n] +
-                                ((contor_renew_node_row[n + 1024] - 1) << 5)) -
-              1] & i93) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚ ‚é */
-          if (g_d_direction.North_East <= 7) {
-            i97 = (unsigned char)(1 << g_d_direction.North_East);
-          } else {
-            i97 = 0;
-          }
-
-          if ((row_dir_node[(contor_renew_node_row[n] + 33 *
-                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i97)
-              != 0) {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-            if ((unsigned int)i74 > 255U) {
-              i74 = 255;
-            }
-
-            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
-                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
-              4U;
-            if (b_qY > 65535U) {
-              b_qY = 65535U;
-            }
-
-            if (col_num_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] >
-                (int)b_qY) {
-              /* •à”MAPXV */
-              i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
-                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                4U;
-              if (b_qY > 65535U) {
-                b_qY = 65535U;
-              }
-
-              col_num_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] =
-                (unsigned short)b_qY;
-
-              /* ˆÚ“®•ûŒüMAPXV */
-              i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              if (g_d_direction.North_East <= 7) {
-                col_dir_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] =
-                  (unsigned char)(1 << g_d_direction.North_East);
+                  - 1] = (unsigned char)(1 << g_d_direction.North);
               } else {
-                col_dir_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] =
-                  0U;
+                row_dir_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
-                contor_renew_node_row[n];
-              i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i74;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i76;
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                contor_renew_node_row[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i74;
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
-                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                4U;
-              if (b_qY > 65535U) {
-                b_qY = 65535U;
-              }
-
-              if (col_num_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1]
-                  == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-                if ((unsigned int)i74 > 255U) {
-                  i74 = 255;
-                }
-
-                i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-                if ((unsigned int)i76 > 255U) {
-                  i76 = 255;
-                }
-
-                if (g_d_direction.North_East <= 7) {
-                  i118 = (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  i118 = 0;
-                }
-
-                col_dir_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] =
-                  (unsigned char)(col_dir_node[(contor_renew_node_row[n] + ((i76
-                  - 1) << 5)) - 1] | i118);
-              }
-            }
-
-            /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
-          } else {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-            if ((unsigned int)i74 > 255U) {
-              i74 = 255;
-            }
-
-            i76 = (contor_renew_node_row[n] + 33 * (contor_renew_node_row[n +
-                    1024] - 1)) - 1;
-            b_qY = row_num_node[i76] + 18U;
-            if (b_qY > 65535U) {
-              b_qY = 65535U;
-            }
-
-            if (col_num_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] >
-                (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              i76 = (int)(contor_renew_node_row[n] + 1U);
+              i78 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i78 = 255;
               }
 
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
@@ -9245,98 +9240,287 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] =
-                (unsigned short)b_qY;
-
-              /* ˆÚ“®•ûŒüMAPXV */
-              i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              if (g_d_direction.North_East <= 7) {
-                col_dir_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] =
-                  (unsigned char)(1 << g_d_direction.North_East);
-              } else {
-                col_dir_node[(contor_renew_node_row[n] + ((i74 - 1) << 5)) - 1] =
-                  0U;
-              }
-
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
-              change_flag = 1U;
-
-              /* XVƒm[ƒh‚ğXV */
-              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
-                contor_renew_node_row[n];
-              i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i74;
-
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              contor_renew_node_col_idx_temp = (unsigned char)i74;
-
-              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
-            } else {
-              i74 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              i77 = i74;
-              if ((unsigned int)i74 > 255U) {
-                i77 = 255;
-              }
-
-              b_qY = row_num_node[i76] + 18U;
-              if (b_qY > 65535U) {
-                b_qY = 65535U;
-              }
-
-              if (col_num_node[(contor_renew_node_row[n] + ((i77 - 1) << 5)) - 1]
-                  == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i76 = i74;
-                if ((unsigned int)i74 > 255U) {
+              if (row_num_node[(i78 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i78 = i76;
+                if ((unsigned int)i76 > 255U) {
+                  i78 = 255;
                   i76 = 255;
-                  i74 = 255;
                 }
 
-                if (g_d_direction.North_East <= 7) {
-                  i116 = (unsigned char)(1 << g_d_direction.North_East);
+                if (g_d_direction.North <= 7) {
+                  i110 = (unsigned char)(1 << g_d_direction.North);
                 } else {
-                  i116 = 0;
+                  i110 = 0;
                 }
 
-                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
-                  (unsigned char)(col_dir_node[(contor_renew_node_row[n] + ((i74
-                  - 1) << 5)) - 1] | i116);
+                row_dir_node[(i78 + 33 * (contor_renew_node_row[n + 1024] - 1))
+                  - 1] = (unsigned char)(row_dir_node[(i76 + 33 *
+                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i110);
               }
             }
           }
         }
       }
 
-      /* “Œ‘¤‚Í’Œ */
-      /* “ì“Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      if (g_direction.East <= 7) {
+        i93 = (unsigned char)(1 << g_direction.East);
+      } else {
+        i93 = 0;
+      }
+
+      if (((maze_wall[(contor_renew_node_row[n] + ((contor_renew_node_row[n +
+               1024] - 1) << 5)) - 1] & i93) != 0) == wall->contents.nowall) {
+        if (g_direction.East <= 7) {
+          i95 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i95 = 0;
+        }
+
+        if (((maze_wall_search[(contor_renew_node_row[n] +
+                                ((contor_renew_node_row[n + 1024] - 1) << 5)) -
+              1] & i95) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          if (g_d_direction.North_East <= 7) {
+            i99 = (unsigned char)(1 << g_d_direction.North_East);
+          } else {
+            i99 = 0;
+          }
+
+          if ((row_dir_node[(contor_renew_node_row[n] + 33 *
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i99)
+              != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+            if ((unsigned int)i76 > 255U) {
+              i76 = 255;
+            }
+
+            b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                 (contor_renew_node_row[n + 1024] - 1)) - 1] +
+              4U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] >
+                (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                (unsigned short)b_qY;
+
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  (unsigned char)(1 << g_d_direction.North_East);
+              } else {
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  0U;
+              }
+
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              change_flag = 1U;
+
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[n];
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i76;
+
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i76;
+
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+            } else {
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                4U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1]
+                  == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i76 > 255U) {
+                  i76 = 255;
+                }
+
+                i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
+                }
+
+                if (g_d_direction.North_East <= 7) {
+                  i120 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i120 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  (unsigned char)(col_dir_node[(contor_renew_node_row[n] + ((i78
+                  - 1) << 5)) - 1] | i120);
+              }
+            }
+
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+          } else {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+            if ((unsigned int)i76 > 255U) {
+              i76 = 255;
+            }
+
+            i78 = (contor_renew_node_row[n] + 33 * (contor_renew_node_row[n +
+                    1024] - 1)) - 1;
+            b_qY = row_num_node[i78] + 18U;
+            if (b_qY > 65535U) {
+              b_qY = 65535U;
+            }
+
+            if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] >
+                (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
+                                   (contor_renew_node_row[n + 1024] - 1)) - 1] +
+                18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                (unsigned short)b_qY;
+
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              if (g_d_direction.North_East <= 7) {
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  (unsigned char)(1 << g_d_direction.North_East);
+              } else {
+                col_dir_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
+                  0U;
+              }
+
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              change_flag = 1U;
+
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
+                contor_renew_node_row[n];
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
+                (unsigned char)i76;
+
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_col_idx_temp = (unsigned char)i76;
+
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+            } else {
+              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              i79 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i79 = 255;
+              }
+
+              b_qY = row_num_node[i78] + 18U;
+              if (b_qY > 65535U) {
+                b_qY = 65535U;
+              }
+
+              if (col_num_node[(contor_renew_node_row[n] + ((i79 - 1) << 5)) - 1]
+                  == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i78 = i76;
+                if ((unsigned int)i76 > 255U) {
+                  i78 = 255;
+                  i76 = 255;
+                }
+
+                if (g_d_direction.North_East <= 7) {
+                  i118 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i118 = 0;
+                }
+
+                col_dir_node[(contor_renew_node_row[n] + ((i78 - 1) << 5)) - 1] =
+                  (unsigned char)(col_dir_node[(contor_renew_node_row[n] + ((i76
+                  - 1) << 5)) - 1] | i118);
+              }
+            }
+          }
+        }
+      }
+
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ */
+      /* ï¿½ì“Œï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row[n] - 1U;
       if (c_qY > contor_renew_node_row[n]) {
         c_qY = 0U;
       }
 
-      i74 = (contor_renew_node_row[n + 1024] - 1) << 5;
+      i76 = (contor_renew_node_row[n + 1024] - 1) << 5;
       if (g_direction.East <= 7) {
-        i99 = (unsigned char)(1 << g_direction.East);
+        i101 = (unsigned char)(1 << g_direction.East);
       } else {
-        i99 = 0;
+        i101 = 0;
       }
 
-      if (((maze_wall[((int)c_qY + i74) - 1] & i99) != 0) ==
+      if (((maze_wall[((int)c_qY + i76) - 1] & i101) != 0) ==
           wall->contents.nowall) {
         c_qY = contor_renew_node_row[n] - 1U;
         if (c_qY > contor_renew_node_row[n]) {
@@ -9344,32 +9528,32 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (g_direction.East <= 7) {
-          i103 = (unsigned char)(1 << g_direction.East);
+          i105 = (unsigned char)(1 << g_direction.East);
         } else {
-          i103 = 0;
+          i105 = 0;
         }
 
-        if (((maze_wall_search[((int)c_qY + i74) - 1] & i103) != 0) ==
+        if (((maze_wall_search[((int)c_qY + i76) - 1] & i105) != 0) ==
             search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South_East <= 7) {
-            i106 = (unsigned char)(1 << g_d_direction.South_East);
+            i108 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
-            i106 = 0;
+            i108 = 0;
           }
 
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
-                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i106)
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i108)
               != 0) {
-            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
             }
 
-            i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-            if ((unsigned int)i76 > 255U) {
-              i76 = 255;
+            i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
             }
 
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
@@ -9380,47 +9564,47 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               u7 = 65535U;
             }
 
-            if (col_num_node[((int)c_qY + ((i76 - 1) << 5)) - 1] > (int)u7) {
-              /* •à”MAPXV */
+            if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] > (int)u7) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
               }
 
-              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              col_num_node[((int)c_qY + ((i76 - 1) << 5)) - 1] = (unsigned short)
+              col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
               }
 
-              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               if (g_d_direction.South_East <= 7) {
-                col_dir_node[((int)c_qY + ((i76 - 1) << 5)) - 1] = (unsigned
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned
                   char)(1 << g_d_direction.South_East);
               } else {
-                col_dir_node[((int)c_qY + ((i76 - 1) << 5)) - 1] = 0U;
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9428,49 +9612,49 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 (unsigned char)c_qY;
-              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i76;
+                (unsigned char)i78;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i76;
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
               }
 
-              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (col_num_node[((int)c_qY + ((i76 - 1) << 5)) - 1] == (int)b_qY)
+              if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] == (int)b_qY)
               {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
                 }
 
-                i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-                if ((unsigned int)i76 > 255U) {
-                  i76 = 255;
+                i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
                 b_qY = contor_renew_node_row[n] - 1U;
@@ -9478,33 +9662,33 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   b_qY = 0U;
                 }
 
-                i77 = (int)(contor_renew_node_row[n + 1024] + 1U);
-                if ((unsigned int)i77 > 255U) {
-                  i77 = 255;
+                i79 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i79 > 255U) {
+                  i79 = 255;
                 }
 
                 if (g_d_direction.South_East <= 7) {
-                  i137 = (unsigned char)(1 << g_d_direction.South_East);
+                  i139 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  i137 = 0;
+                  i139 = 0;
                 }
 
-                col_dir_node[((int)c_qY + ((i76 - 1) << 5)) - 1] = (unsigned
-                  char)(col_dir_node[((int)b_qY + ((i77 - 1) << 5)) - 1] | i137);
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned
+                  char)(col_dir_node[((int)b_qY + ((i79 - 1) << 5)) - 1] | i139);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
             }
 
-            i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-            if ((unsigned int)i76 > 255U) {
-              i76 = 255;
+            i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
             }
 
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
@@ -9515,47 +9699,47 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               u7 = 65535U;
             }
 
-            if (col_num_node[((int)c_qY + ((i76 - 1) << 5)) - 1] > (int)u7) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+            if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] > (int)u7) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
               }
 
-              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              col_num_node[((int)c_qY + ((i76 - 1) << 5)) - 1] = (unsigned short)
+              col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
               }
 
-              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               if (g_d_direction.South_East <= 7) {
-                col_dir_node[((int)c_qY + ((i76 - 1) << 5)) - 1] = (unsigned
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned
                   char)(1 << g_d_direction.South_East);
               } else {
-                col_dir_node[((int)c_qY + ((i76 - 1) << 5)) - 1] = 0U;
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9563,49 +9747,49 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 (unsigned char)c_qY;
-              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i76;
+                (unsigned char)i78;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i76;
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
               }
 
-              i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (col_num_node[((int)c_qY + ((i76 - 1) << 5)) - 1] == (int)b_qY)
+              if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] == (int)b_qY)
               {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
                 }
 
-                i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
-                if ((unsigned int)i76 > 255U) {
-                  i76 = 255;
+                i78 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
                 b_qY = contor_renew_node_row[n] - 1U;
@@ -9613,39 +9797,39 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   b_qY = 0U;
                 }
 
-                i77 = (int)(contor_renew_node_row[n + 1024] + 1U);
-                if ((unsigned int)i77 > 255U) {
-                  i77 = 255;
+                i79 = (int)(contor_renew_node_row[n + 1024] + 1U);
+                if ((unsigned int)i79 > 255U) {
+                  i79 = 255;
                 }
 
                 if (g_d_direction.South_East <= 7) {
-                  i136 = (unsigned char)(1 << g_d_direction.South_East);
+                  i138 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  i136 = 0;
+                  i138 = 0;
                 }
 
-                col_dir_node[((int)c_qY + ((i76 - 1) << 5)) - 1] = (unsigned
-                  char)(col_dir_node[((int)b_qY + ((i77 - 1) << 5)) - 1] | i136);
+                col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned
+                  char)(col_dir_node[((int)b_qY + ((i79 - 1) << 5)) - 1] | i138);
               }
             }
           }
         }
       }
 
-      /* “ì‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì‘¤ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row[n] - 1U;
       if (c_qY > contor_renew_node_row[n]) {
         c_qY = 0U;
       }
 
       if (g_direction.South <= 7) {
-        i104 = (unsigned char)(1 << g_direction.South);
+        i106 = (unsigned char)(1 << g_direction.South);
       } else {
-        i104 = 0;
+        i106 = 0;
       }
 
-      if (((maze_wall[((int)c_qY + i74) - 1] & i104) != 0) ==
+      if (((maze_wall[((int)c_qY + i76) - 1] & i106) != 0) ==
           wall->contents.nowall) {
         c_qY = contor_renew_node_row[n] - 1U;
         if (c_qY > contor_renew_node_row[n]) {
@@ -9653,24 +9837,24 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (g_direction.South <= 7) {
-          i109 = (unsigned char)(1 << g_direction.South);
+          i111 = (unsigned char)(1 << g_direction.South);
         } else {
-          i109 = 0;
+          i111 = 0;
         }
 
-        if (((maze_wall_search[((int)c_qY + i74) - 1] & i109) != 0) ==
+        if (((maze_wall_search[((int)c_qY + i76) - 1] & i111) != 0) ==
             search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South <= 7) {
-            i115 = (unsigned char)(1 << g_d_direction.South);
+            i117 = (unsigned char)(1 << g_d_direction.South);
           } else {
-            i115 = 0;
+            i117 = 0;
           }
 
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
-                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i115)
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i117)
               != 0) {
-            /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -9686,7 +9870,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                   - 1)) - 1] > (int)u7) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9699,7 +9883,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024] -
                 1)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9713,10 +9897,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9727,15 +9911,15 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i76;
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -9748,7 +9932,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                     - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -9760,20 +9944,20 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South <= 7) {
-                  i135 = (unsigned char)(1 << g_d_direction.South);
+                  i137 = (unsigned char)(1 << g_d_direction.South);
                 } else {
-                  i135 = 0;
+                  i137 = 0;
                 }
 
                 row_dir_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                   - 1)) - 1] = (unsigned char)(row_dir_node[((int)b_qY + 33 *
-                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i135);
+                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i137);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -9788,7 +9972,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                   - 1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9804,7 +9988,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024] -
                 1)) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9818,10 +10002,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9832,15 +10016,15 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i76;
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -9856,7 +10040,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                     - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -9868,34 +10052,34 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South <= 7) {
-                  i134 = (unsigned char)(1 << g_d_direction.South);
+                  i136 = (unsigned char)(1 << g_d_direction.South);
                 } else {
-                  i134 = 0;
+                  i136 = 0;
                 }
 
                 row_dir_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                   - 1)) - 1] = (unsigned char)(row_dir_node[((int)b_qY + 33 *
-                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i134);
+                  (contor_renew_node_row[n + 1024] - 1)) - 1] | i136);
               }
             }
           }
         }
       }
 
-      /* “ì¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì¼ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = contor_renew_node_row[n] - 1U;
       if (c_qY > contor_renew_node_row[n]) {
         c_qY = 0U;
       }
 
       if (g_direction.West <= 7) {
-        i113 = (unsigned char)(1 << g_direction.West);
+        i115 = (unsigned char)(1 << g_direction.West);
       } else {
-        i113 = 0;
+        i115 = 0;
       }
 
-      if (((maze_wall[((int)c_qY + i74) - 1] & i113) != 0) ==
+      if (((maze_wall[((int)c_qY + i76) - 1] & i115) != 0) ==
           wall->contents.nowall) {
         c_qY = contor_renew_node_row[n] - 1U;
         if (c_qY > contor_renew_node_row[n]) {
@@ -9903,24 +10087,24 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (g_direction.West <= 7) {
-          i122 = (unsigned char)(1 << g_direction.West);
+          i124 = (unsigned char)(1 << g_direction.West);
         } else {
-          i122 = 0;
+          i124 = 0;
         }
 
-        if (((maze_wall_search[((int)c_qY + i74) - 1] & i122) != 0) ==
+        if (((maze_wall_search[((int)c_qY + i76) - 1] & i124) != 0) ==
             search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚ ‚é */
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South_West <= 7) {
-            i128 = (unsigned char)(1 << g_d_direction.South_West);
+            i130 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
-            i128 = 0;
+            i130 = 0;
           }
 
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
-                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i128)
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i130)
               != 0) {
-            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -9933,8 +10117,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[((int)c_qY + i74) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
+            if (col_num_node[((int)c_qY + i76) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9947,25 +10131,25 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[((int)c_qY + i74) - 1] = (unsigned short)b_qY;
+              col_num_node[((int)c_qY + i76) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
               }
 
               if (g_d_direction.South_West <= 7) {
-                col_dir_node[((int)c_qY + i74) - 1] = (unsigned char)(1 <<
+                col_dir_node[((int)c_qY + i76) - 1] = (unsigned char)(1 <<
                   g_d_direction.South_West);
               } else {
-                col_dir_node[((int)c_qY + i74) - 1] = 0U;
+                col_dir_node[((int)c_qY + i76) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9976,15 +10160,15 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i76;
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -9998,8 +10182,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[((int)c_qY + i74) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+              if (col_num_node[((int)c_qY + i76) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -10011,19 +10195,19 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South_West <= 7) {
-                  i143 = (unsigned char)(1 << g_d_direction.South_West);
+                  i145 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  i143 = 0;
+                  i145 = 0;
                 }
 
-                col_dir_node[((int)c_qY + i74) - 1] = (unsigned char)
-                  (col_dir_node[((int)b_qY + i74) - 1] | i143);
+                col_dir_node[((int)c_qY + i76) - 1] = (unsigned char)
+                  (col_dir_node[((int)b_qY + i76) - 1] | i145);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -10036,8 +10220,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[((int)c_qY + i74) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+            if (col_num_node[((int)c_qY + i76) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10050,25 +10234,25 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[((int)c_qY + i74) - 1] = (unsigned short)b_qY;
+              col_num_node[((int)c_qY + i76) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
               }
 
               if (g_d_direction.South_West <= 7) {
-                col_dir_node[((int)c_qY + i74) - 1] = (unsigned char)(1 <<
+                col_dir_node[((int)c_qY + i76) - 1] = (unsigned char)(1 <<
                   g_d_direction.South_West);
               } else {
-                col_dir_node[((int)c_qY + i74) - 1] = 0U;
+                col_dir_node[((int)c_qY + i76) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10079,15 +10263,15 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i76;
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -10101,8 +10285,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[((int)c_qY + i74) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+              if (col_num_node[((int)c_qY + i76) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -10114,47 +10298,47 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South_West <= 7) {
-                  i142 = (unsigned char)(1 << g_d_direction.South_West);
+                  i144 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  i142 = 0;
+                  i144 = 0;
                 }
 
-                col_dir_node[((int)c_qY + i74) - 1] = (unsigned char)
-                  (col_dir_node[((int)b_qY + i74) - 1] | i142);
+                col_dir_node[((int)c_qY + i76) - 1] = (unsigned char)
+                  (col_dir_node[((int)b_qY + i76) - 1] | i144);
               }
             }
           }
         }
       }
 
-      /* –k¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
-      i74 = (contor_renew_node_row[n] + i74) - 1;
+      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      i76 = (contor_renew_node_row[n] + i76) - 1;
       if (g_direction.West <= 7) {
-        i124 = (unsigned char)(1 << g_direction.West);
+        i126 = (unsigned char)(1 << g_direction.West);
       } else {
-        i124 = 0;
+        i126 = 0;
       }
 
-      if (((maze_wall[i74] & i124) != 0) == wall->contents.nowall) {
+      if (((maze_wall[i76] & i126) != 0) == wall->contents.nowall) {
         if (g_direction.West <= 7) {
-          i127 = (unsigned char)(1 << g_direction.West);
+          i129 = (unsigned char)(1 << g_direction.West);
         } else {
-          i127 = 0;
+          i129 = 0;
         }
 
-        if (((maze_wall_search[i74] & i127) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚ ‚é */
+        if (((maze_wall_search[i76] & i129) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.North_West <= 7) {
-            i131 = (unsigned char)(1 << g_d_direction.North_West);
+            i133 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
-            i131 = 0;
+            i133 = 0;
           }
 
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
-                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i131)
+                             (contor_renew_node_row[n + 1024] - 1)) - 1] & i133)
               != 0) {
-            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                  (contor_renew_node_row[n + 1024] - 1)) - 1] +
               4U;
@@ -10165,7 +10349,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (col_num_node[(contor_renew_node_row[n] +
                               ((contor_renew_node_row[n + 1024] - 1) << 5)) - 1]
                 > (int)b_qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
                 4U;
@@ -10173,34 +10357,34 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[i74] = (unsigned short)b_qY;
+              col_num_node[i76] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               if (g_d_direction.North_West <= 7) {
-                col_dir_node[i74] = (unsigned char)(1 <<
+                col_dir_node[i76] = (unsigned char)(1 <<
                   g_d_direction.North_West);
               } else {
-                col_dir_node[i74] = 0U;
+                col_dir_node[i76] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[n];
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i74;
+              contor_renew_node_col_idx_temp = (unsigned char)i76;
 
-              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
@@ -10212,20 +10396,20 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (col_num_node[(contor_renew_node_row[n] +
                                 ((contor_renew_node_row[n + 1024] - 1) << 5)) -
                   1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 if (g_d_direction.North_West <= 7) {
-                  i141 = (unsigned char)(1 << g_d_direction.North_West);
+                  i143 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  i141 = 0;
+                  i143 = 0;
                 }
 
-                col_dir_node[i74] = (unsigned char)(col_dir_node[i74] | i141);
+                col_dir_node[i76] = (unsigned char)(col_dir_node[i76] | i143);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                  (contor_renew_node_row[n + 1024] - 1)) - 1] +
               18U;
@@ -10233,8 +10417,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[i74] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+            if (col_num_node[i76] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
                 18U;
@@ -10242,34 +10426,34 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[i74] = (unsigned short)b_qY;
+              col_num_node[i76] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               if (g_d_direction.North_West <= 7) {
-                col_dir_node[i74] = (unsigned char)(1 <<
+                col_dir_node[i76] = (unsigned char)(1 <<
                   g_d_direction.North_West);
               } else {
-                col_dir_node[i74] = 0U;
+                col_dir_node[i76] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[n];
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i74;
+              contor_renew_node_col_idx_temp = (unsigned char)i76;
 
-              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
@@ -10278,15 +10462,15 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[i74] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+              if (col_num_node[i76] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 if (g_d_direction.North_West <= 7) {
-                  i140 = (unsigned char)(1 << g_d_direction.North_West);
+                  i142 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  i140 = 0;
+                  i142 = 0;
                 }
 
-                col_dir_node[i74] = (unsigned char)(col_dir_node[i74] | i140);
+                col_dir_node[i76] = (unsigned char)(col_dir_node[i76] | i142);
               }
             }
           }
@@ -10294,41 +10478,41 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /* Col_Edge‚Ìˆ—[32s,33—ñ] */
-    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
+    /* Col_Edgeï¿½Ìï¿½ï¿½ï¿½[32ï¿½s,33ï¿½ï¿½] */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
     q0 = contor_renew_node_col_idx;
     for (n = 0; n <= q0 - 2; n++) {
-      /* –k‘¤‚Í•Ç */
-      /* –k“Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
-      i74 = (contor_renew_node_col[n] + ((contor_renew_node_col[n + 1024] - 1) <<
+      /* ï¿½kï¿½ï¿½ï¿½Í•ï¿½ */
+      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      i76 = (contor_renew_node_col[n] + ((contor_renew_node_col[n + 1024] - 1) <<
               5)) - 1;
       if (g_direction.North <= 7) {
-        i90 = (unsigned char)(1 << g_direction.North);
+        i92 = (unsigned char)(1 << g_direction.North);
       } else {
-        i90 = 0;
+        i92 = 0;
       }
 
-      if (((maze_wall[i74] & i90) != 0) == wall->contents.nowall) {
+      if (((maze_wall[i76] & i92) != 0) == wall->contents.nowall) {
         if (g_direction.North <= 7) {
-          i92 = (unsigned char)(1 << g_direction.North);
+          i94 = (unsigned char)(1 << g_direction.North);
         } else {
-          i92 = 0;
+          i94 = 0;
         }
 
-        if (((maze_wall_search[i74] & i92) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚ ‚é */
+        if (((maze_wall_search[i76] & i94) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.North_East <= 7) {
-            i96 = (unsigned char)(1 << g_d_direction.North_East);
+            i98 = (unsigned char)(1 << g_d_direction.North_East);
           } else {
-            i96 = 0;
+            i98 = 0;
           }
 
-          if ((col_dir_node[i74] & i96) != 0) {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i74 = (int)(contor_renew_node_col[n] + 1U);
-            if ((unsigned int)i74 > 255U) {
-              i74 = 255;
+          if ((col_dir_node[i76] & i98) != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i76 = (int)(contor_renew_node_col[n] + 1U);
+            if ((unsigned int)i76 > 255U) {
+              i76 = 255;
             }
 
             b_qY = col_num_node[(contor_renew_node_col[n] +
@@ -10339,100 +10523,100 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               u7 = 65535U;
             }
 
-            if (row_num_node[(i74 + 33 * (contor_renew_node_col[n + 1024] - 1))
+            if (row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
                 - 1] > (int)u7) {
-              /* •à”MAPXV */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              row_num_node[(i74 + 33 * (contor_renew_node_col[n + 1024] - 1)) -
+              row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1)) -
                 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               if (g_d_direction.North_East <= 7) {
-                row_dir_node[(i74 + 33 * (contor_renew_node_col[n + 1024] - 1))
+                row_dir_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
                   - 1] = (unsigned char)(1 << g_d_direction.North_East);
               } else {
-                row_dir_node[(i74 + 33 * (contor_renew_node_col[n + 1024] - 1))
+                row_dir_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
                   - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i74;
+                (unsigned char)i76;
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_col[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i74;
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i74 + 33 * (contor_renew_node_col[n + 1024] - 1))
+              if (row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
                   - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i74 = (int)(contor_renew_node_col[n] + 1U);
-                if ((unsigned int)i74 > 255U) {
-                  i74 = 255;
-                }
-
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 i76 = (int)(contor_renew_node_col[n] + 1U);
                 if ((unsigned int)i76 > 255U) {
                   i76 = 255;
                 }
 
-                if (g_d_direction.North_East <= 7) {
-                  i114 = (unsigned char)(1 << g_d_direction.North_East);
-                } else {
-                  i114 = 0;
+                i78 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
-                row_dir_node[(i74 + 33 * (contor_renew_node_col[n + 1024] - 1))
-                  - 1] = (unsigned char)(row_dir_node[(i76 + 33 *
-                  (contor_renew_node_col[n + 1024] - 1)) - 1] | i114);
+                if (g_d_direction.North_East <= 7) {
+                  i116 = (unsigned char)(1 << g_d_direction.North_East);
+                } else {
+                  i116 = 0;
+                }
+
+                row_dir_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
+                  - 1] = (unsigned char)(row_dir_node[(i78 + 33 *
+                  (contor_renew_node_col[n + 1024] - 1)) - 1] | i116);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i74 = (int)(contor_renew_node_col[n] + 1U);
-            i76 = i74;
-            if ((unsigned int)i74 > 255U) {
-              i76 = 255;
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i76 = (int)(contor_renew_node_col[n] + 1U);
+            i78 = i76;
+            if ((unsigned int)i76 > 255U) {
+              i78 = 255;
             }
 
             b_qY = col_num_node[(contor_renew_node_col[n] +
@@ -10443,117 +10627,117 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               u7 = 65535U;
             }
 
-            i77 = 33 * (contor_renew_node_col[n + 1024] - 1);
-            if (row_num_node[(i76 + i77) - 1] > (int)u7) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i76 = i74;
-              if ((unsigned int)i74 > 255U) {
-                i76 = 255;
+            i79 = 33 * (contor_renew_node_col[n + 1024] - 1);
+            if (row_num_node[(i78 + i79) - 1] > (int)u7) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i78 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i78 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              row_num_node[(i76 + i77) - 1] = (unsigned short)b_qY;
+              row_num_node[(i78 + i79) - 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i76 = i74;
-              if ((unsigned int)i74 > 255U) {
-                i76 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i78 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i78 = 255;
               }
 
               if (g_d_direction.North_East <= 7) {
-                row_dir_node[(i76 + i77) - 1] = (unsigned char)(1 <<
+                row_dir_node[(i78 + i79) - 1] = (unsigned char)(1 <<
                   g_d_direction.North_East);
               } else {
-                row_dir_node[(i76 + i77) - 1] = 0U;
+                row_dir_node[(i78 + i79) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i74;
+                (unsigned char)i76;
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_col[n + 1024];
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i74;
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i76 = i74;
-              if ((unsigned int)i74 > 255U) {
-                i76 = 255;
+              i78 = i76;
+              if ((unsigned int)i76 > 255U) {
+                i78 = 255;
               }
 
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i76 + i77) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i76 = i74;
-                if ((unsigned int)i74 > 255U) {
+              if (row_num_node[(i78 + i79) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i78 = i76;
+                if ((unsigned int)i76 > 255U) {
+                  i78 = 255;
                   i76 = 255;
-                  i74 = 255;
                 }
 
                 if (g_d_direction.North_East <= 7) {
-                  i112 = (unsigned char)(1 << g_d_direction.North_East);
+                  i114 = (unsigned char)(1 << g_d_direction.North_East);
                 } else {
-                  i112 = 0;
+                  i114 = 0;
                 }
 
-                row_dir_node[(i76 + i77) - 1] = (unsigned char)(row_dir_node
-                  [(i74 + i77) - 1] | i112);
+                row_dir_node[(i78 + i79) - 1] = (unsigned char)(row_dir_node
+                  [(i76 + i79) - 1] | i114);
               }
             }
           }
         }
       }
 
-      /* “Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       u6 = contor_renew_node_col[n + 1024];
-      i74 = (contor_renew_node_col[n] + ((u6 - 1) << 5)) - 1;
+      i76 = (contor_renew_node_col[n] + ((u6 - 1) << 5)) - 1;
       if (g_direction.East <= 7) {
-        i95 = (unsigned char)(1 << g_direction.East);
+        i97 = (unsigned char)(1 << g_direction.East);
       } else {
-        i95 = 0;
+        i97 = 0;
       }
 
-      if (((maze_wall[i74] & i95) != 0) == wall->contents.nowall) {
+      if (((maze_wall[i76] & i97) != 0) == wall->contents.nowall) {
         if (g_direction.East <= 7) {
-          i98 = (unsigned char)(1 << g_direction.East);
+          i100 = (unsigned char)(1 << g_direction.East);
         } else {
-          i98 = 0;
+          i100 = 0;
         }
 
-        if (((maze_wall_search[i74] & i98) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚ ‚é */
+        if (((maze_wall_search[i76] & i100) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.East <= 7) {
-            i101 = (unsigned char)(1 << g_d_direction.East);
+            i103 = (unsigned char)(1 << g_d_direction.East);
           } else {
-            i101 = 0;
+            i103 = 0;
           }
 
-          if ((col_dir_node[i74] & i101) != 0) {
-            /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i76 = (int)(contor_renew_node_col[n + 1024] + 1U);
-            if ((unsigned int)i76 > 255U) {
-              i76 = 255;
+          if ((col_dir_node[i76] & i103) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
             }
 
             b_qY = col_num_node[(contor_renew_node_col[n] +
@@ -10563,12 +10747,12 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[(contor_renew_node_col[n] + ((i76 - 1) << 5)) - 1] >
+            if (col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] >
                 (int)b_qY) {
-              /* •à”MAPXV */
-              i76 = (int)(contor_renew_node_col[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               b_qY = col_num_node[(contor_renew_node_col[n] +
@@ -10578,50 +10762,50 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[(contor_renew_node_col[n] + ((i76 - 1) << 5)) - 1] =
+              col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
                 (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i76 = (int)(contor_renew_node_col[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               if (g_d_direction.East <= 7) {
-                col_dir_node[(contor_renew_node_col[n] + ((i76 - 1) << 5)) - 1] =
+                col_dir_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
                   (unsigned char)(1 << g_d_direction.East);
               } else {
-                col_dir_node[(contor_renew_node_col[n] + ((i76 - 1) << 5)) - 1] =
+                col_dir_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
                   0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[n];
-              i76 = (int)(contor_renew_node_col[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i76;
+                (unsigned char)i78;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i76;
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i76 = (int)(contor_renew_node_col[n + 1024] + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               b_qY = col_num_node[(contor_renew_node_col[n] +
@@ -10631,38 +10815,38 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[(contor_renew_node_col[n] + ((i76 - 1) << 5)) - 1]
+              if (col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1]
                   == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i76 = (int)(contor_renew_node_col[n + 1024] + 1U);
-                if ((unsigned int)i76 > 255U) {
-                  i76 = 255;
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
-                i77 = (int)(contor_renew_node_col[n + 1024] + 1U);
-                if ((unsigned int)i77 > 255U) {
-                  i77 = 255;
+                i79 = (int)(contor_renew_node_col[n + 1024] + 1U);
+                if ((unsigned int)i79 > 255U) {
+                  i79 = 255;
                 }
 
                 if (g_d_direction.East <= 7) {
-                  i126 = (unsigned char)(1 << g_d_direction.East);
+                  i128 = (unsigned char)(1 << g_d_direction.East);
                 } else {
-                  i126 = 0;
+                  i128 = 0;
                 }
 
-                col_dir_node[(contor_renew_node_col[n] + ((i76 - 1) << 5)) - 1] =
-                  (unsigned char)(col_dir_node[(contor_renew_node_col[n] + ((i77
-                  - 1) << 5)) - 1] | i126);
+                col_dir_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
+                  (unsigned char)(col_dir_node[(contor_renew_node_col[n] + ((i79
+                  - 1) << 5)) - 1] | i128);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i76 = (int)(contor_renew_node_col[n + 1024] + 1U);
-            i77 = i76;
-            if ((unsigned int)i76 > 255U) {
-              i77 = 255;
+            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
+            i79 = i78;
+            if ((unsigned int)i78 > 255U) {
+              i79 = 255;
             }
 
             b_qY = col_num_node[(contor_renew_node_col[n] +
@@ -10672,12 +10856,12 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (col_num_node[(contor_renew_node_col[n] + ((i77 - 1) << 5)) - 1] >
+            if (col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] >
                 (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i77 = i76;
-              if ((unsigned int)i76 > 255U) {
-                i77 = 255;
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i79 = i78;
+              if ((unsigned int)i78 > 255U) {
+                i79 = 255;
               }
 
               b_qY = col_num_node[(contor_renew_node_col[n] +
@@ -10687,49 +10871,49 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              col_num_node[(contor_renew_node_col[n] + ((i77 - 1) << 5)) - 1] =
+              col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
                 (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i77 = i76;
-              if ((unsigned int)i76 > 255U) {
-                i77 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i79 = i78;
+              if ((unsigned int)i78 > 255U) {
+                i79 = 255;
               }
 
               if (g_d_direction.East <= 7) {
-                col_dir_node[(contor_renew_node_col[n] + ((i77 - 1) << 5)) - 1] =
+                col_dir_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
                   (unsigned char)(1 << g_d_direction.East);
               } else {
-                col_dir_node[(contor_renew_node_col[n] + ((i77 - 1) << 5)) - 1] =
+                col_dir_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
                   0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[n];
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
-                (unsigned char)i76;
+                (unsigned char)i78;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i76;
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i77 = i76;
-              if ((unsigned int)i76 > 255U) {
-                i77 = 255;
+              i79 = i78;
+              if ((unsigned int)i78 > 255U) {
+                i79 = 255;
               }
 
               b_qY = col_num_node[(contor_renew_node_col[n] +
@@ -10739,60 +10923,60 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (col_num_node[(contor_renew_node_col[n] + ((i77 - 1) << 5)) - 1]
+              if (col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1]
                   == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i77 = i76;
-                if ((unsigned int)i76 > 255U) {
-                  i77 = 255;
-                  i76 = 255;
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i79 = i78;
+                if ((unsigned int)i78 > 255U) {
+                  i79 = 255;
+                  i78 = 255;
                 }
 
                 if (g_d_direction.East <= 7) {
-                  i123 = (unsigned char)(1 << g_d_direction.East);
+                  i125 = (unsigned char)(1 << g_d_direction.East);
                 } else {
-                  i123 = 0;
+                  i125 = 0;
                 }
 
-                col_dir_node[(contor_renew_node_col[n] + ((i77 - 1) << 5)) - 1] =
-                  (unsigned char)(col_dir_node[(contor_renew_node_col[n] + ((i76
-                  - 1) << 5)) - 1] | i123);
+                col_dir_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
+                  (unsigned char)(col_dir_node[(contor_renew_node_col[n] + ((i78
+                  - 1) << 5)) - 1] | i125);
               }
             }
           }
         }
       }
 
-      /* “ì“Œ‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì“Œï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       if (g_direction.South <= 7) {
-        i100 = (unsigned char)(1 << g_direction.South);
+        i102 = (unsigned char)(1 << g_direction.South);
       } else {
-        i100 = 0;
+        i102 = 0;
       }
 
       if (((maze_wall[(contor_renew_node_col[n] + ((contor_renew_node_col[n +
-               1024] - 1) << 5)) - 1] & i100) != 0) == wall->contents.nowall) {
+               1024] - 1) << 5)) - 1] & i102) != 0) == wall->contents.nowall) {
         if (g_direction.South <= 7) {
-          i102 = (unsigned char)(1 << g_direction.South);
+          i104 = (unsigned char)(1 << g_direction.South);
         } else {
-          i102 = 0;
+          i104 = 0;
         }
 
         if (((maze_wall_search[(contor_renew_node_col[n] +
                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
-              1] & i102) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚ ‚é */
+              1] & i104) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South_East <= 7) {
-            i105 = (unsigned char)(1 << g_d_direction.South_East);
+            i107 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
-            i105 = 0;
+            i107 = 0;
           }
 
           if ((col_dir_node[(contor_renew_node_col[n] +
                              ((contor_renew_node_col[n + 1024] - 1) << 5)) - 1]
-               & i105) != 0) {
-            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+               & i107) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             b_qY = col_num_node[(contor_renew_node_col[n] +
                                  ((contor_renew_node_col[n + 1024] - 1) << 5)) -
               1] + 4U;
@@ -10803,7 +10987,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[(contor_renew_node_col[n] + 33 *
                               (contor_renew_node_col[n + 1024] - 1)) - 1] > (int)
                 b_qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
                 - 1] + 4U;
@@ -10815,7 +10999,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                             (contor_renew_node_col[n + 1024] - 1)) - 1] =
                 (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               if (g_d_direction.South_East <= 7) {
                 row_dir_node[(contor_renew_node_col[n] + 33 *
                               (contor_renew_node_col[n + 1024] - 1)) - 1] =
@@ -10825,24 +11009,24 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                               (contor_renew_node_col[n + 1024] - 1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[n];
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 u6;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i76;
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
@@ -10854,23 +11038,23 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[(contor_renew_node_col[n] + 33 *
                                 (contor_renew_node_col[n + 1024] - 1)) - 1] ==
                   (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 if (g_d_direction.South_East <= 7) {
-                  i120 = (unsigned char)(1 << g_d_direction.South_East);
+                  i122 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  i120 = 0;
+                  i122 = 0;
                 }
 
                 row_dir_node[(contor_renew_node_col[n] + 33 *
                               (contor_renew_node_col[n + 1024] - 1)) - 1] =
                   (unsigned char)(row_dir_node[(contor_renew_node_col[n] + 33 *
-                  (contor_renew_node_col[n + 1024] - 1)) - 1] | i120);
+                  (contor_renew_node_col[n + 1024] - 1)) - 1] | i122);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             b_qY = col_num_node[(contor_renew_node_col[n] +
                                  ((contor_renew_node_col[n + 1024] - 1) << 5)) -
               1] + 18U;
@@ -10878,10 +11062,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            i76 = (contor_renew_node_col[n] + 33 * (contor_renew_node_col[n +
+            i78 = (contor_renew_node_col[n] + 33 * (contor_renew_node_col[n +
                     1024] - 1)) - 1;
-            if (row_num_node[i76] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+            if (row_num_node[i78] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
                 - 1] + 18U;
@@ -10889,93 +11073,93 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              row_num_node[i76] = (unsigned short)b_qY;
+              row_num_node[i78] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               if (g_d_direction.South_East <= 7) {
-                row_dir_node[i76] = (unsigned char)(1 <<
+                row_dir_node[i78] = (unsigned char)(1 <<
                   g_d_direction.South_East);
               } else {
-                row_dir_node[i76] = 0U;
+                row_dir_node[i78] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[n];
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 u6;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i76;
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              b_qY = col_num_node[i74] + 18U;
+              b_qY = col_num_node[i76] + 18U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (row_num_node[i76] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+              if (row_num_node[i78] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 if (g_d_direction.South_East <= 7) {
-                  i121 = (unsigned char)(1 << g_d_direction.South_East);
+                  i123 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
-                  i121 = 0;
+                  i123 = 0;
                 }
 
-                row_dir_node[i76] = (unsigned char)(row_dir_node[i76] | i121);
+                row_dir_node[i78] = (unsigned char)(row_dir_node[i78] | i123);
               }
             }
           }
         }
       }
 
-      /* “ì‘¤‚Í’Œ */
-      /* “ì¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ì‘¤ï¿½Í’ï¿½ */
+      /* ï¿½ì¼ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = u6 - 1U;
       if (c_qY > u6) {
         c_qY = 0U;
       }
 
       if (g_direction.South <= 7) {
-        i107 = (unsigned char)(1 << g_direction.South);
+        i109 = (unsigned char)(1 << g_direction.South);
       } else {
-        i107 = 0;
+        i109 = 0;
       }
 
       if (((maze_wall[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) - 1] &
-            i107) != 0) == wall->contents.nowall) {
+            i109) != 0) == wall->contents.nowall) {
         c_qY = u6 - 1U;
         if (c_qY > u6) {
           c_qY = 0U;
         }
 
         if (g_direction.South <= 7) {
-          i111 = (unsigned char)(1 << g_direction.South);
+          i113 = (unsigned char)(1 << g_direction.South);
         } else {
-          i111 = 0;
+          i113 = 0;
         }
 
         if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
-              - 1] & i111) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚ ‚é */
+              - 1] & i113) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.South_West <= 7) {
-            i119 = (unsigned char)(1 << g_d_direction.South_West);
+            i121 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
-            i119 = 0;
+            i121 = 0;
           }
 
-          if ((col_dir_node[i74] & i119) != 0) {
-            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+          if ((col_dir_node[i76] & i121) != 0) {
+            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = u6 - 1U;
             if (c_qY > u6) {
               c_qY = 0U;
@@ -10990,7 +11174,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
                 1] > (int)b_qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11006,7 +11190,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) - 1]
                 = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11020,10 +11204,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[n];
               c_qY = u6 - 1U;
@@ -11034,15 +11218,15 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i76;
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = u6 - 1U;
               if (c_qY > u6) {
@@ -11058,7 +11242,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1))
                   - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = u6 - 1U;
                 if (c_qY > u6) {
                   c_qY = 0U;
@@ -11070,33 +11254,33 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South_West <= 7) {
-                  i139 = (unsigned char)(1 << g_d_direction.South_West);
+                  i141 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  i139 = 0;
+                  i141 = 0;
                 }
 
                 row_dir_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
                   1] = (unsigned char)(row_dir_node[(contor_renew_node_col[n] +
-                  33 * ((int)b_qY - 1)) - 1] | i139);
+                  33 * ((int)b_qY - 1)) - 1] | i141);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = u6 - 1U;
             if (c_qY > u6) {
               c_qY = 0U;
             }
 
-            b_qY = col_num_node[i74] + 18U;
+            b_qY = col_num_node[i76] + 18U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
 
             if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
                 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11112,7 +11296,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) - 1]
                 = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11126,10 +11310,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[n];
               c_qY = u6 - 1U;
@@ -11140,29 +11324,29 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i76;
+              contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
               }
 
-              b_qY = col_num_node[i74] + 18U;
+              b_qY = col_num_node[i76] + 18U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
               if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1))
                   - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = u6 - 1U;
                 if (c_qY > u6) {
                   c_qY = 0U;
@@ -11174,57 +11358,57 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.South_West <= 7) {
-                  i138 = (unsigned char)(1 << g_d_direction.South_West);
+                  i140 = (unsigned char)(1 << g_d_direction.South_West);
                 } else {
-                  i138 = 0;
+                  i140 = 0;
                 }
 
                 row_dir_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
                   1] = (unsigned char)(row_dir_node[(contor_renew_node_col[n] +
-                  33 * ((int)b_qY - 1)) - 1] | i138);
+                  33 * ((int)b_qY - 1)) - 1] | i140);
               }
             }
           }
         }
       }
 
-      /* ¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = u6 - 1U;
       if (c_qY > u6) {
         c_qY = 0U;
       }
 
       if (g_direction.West <= 7) {
-        i117 = (unsigned char)(1 << g_direction.West);
+        i119 = (unsigned char)(1 << g_direction.West);
       } else {
-        i117 = 0;
+        i119 = 0;
       }
 
       if (((maze_wall[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) - 1] &
-            i117) != 0) == wall->contents.nowall) {
+            i119) != 0) == wall->contents.nowall) {
         c_qY = u6 - 1U;
         if (c_qY > u6) {
           c_qY = 0U;
         }
 
         if (g_direction.West <= 7) {
-          i125 = (unsigned char)(1 << g_direction.West);
+          i127 = (unsigned char)(1 << g_direction.West);
         } else {
-          i125 = 0;
+          i127 = 0;
         }
 
         if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
-              - 1] & i125) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚ ‚é */
+              - 1] & i127) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.West <= 7) {
-            i130 = (unsigned char)(1 << g_d_direction.West);
+            i132 = (unsigned char)(1 << g_d_direction.West);
           } else {
-            i130 = 0;
+            i132 = 0;
           }
 
-          if ((col_dir_node[i74] & i130) != 0) {
-            /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+          if ((col_dir_node[i76] & i132) != 0) {
+            /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
             c_qY = u6 - 1U;
             if (c_qY > u6) {
               c_qY = 0U;
@@ -11239,7 +11423,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                 - 1] > (int)b_qY) {
-              /* •à”MAPXV */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11255,7 +11439,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) -
                 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11269,10 +11453,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[n];
               c_qY = u6 - 1U;
@@ -11283,15 +11467,15 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i76;
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = u6 - 1U;
               if (c_qY > u6) {
@@ -11307,7 +11491,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                   - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = u6 - 1U;
                 if (c_qY > u6) {
                   c_qY = 0U;
@@ -11319,20 +11503,20 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.West <= 7) {
-                  i145 = (unsigned char)(1 << g_d_direction.West);
+                  i147 = (unsigned char)(1 << g_d_direction.West);
                 } else {
-                  i145 = 0;
+                  i147 = 0;
                 }
 
                 col_dir_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                   - 1] = (unsigned char)(col_dir_node[(contor_renew_node_col[n]
-                  + (((int)b_qY - 1) << 5)) - 1] | i145);
+                  + (((int)b_qY - 1) << 5)) - 1] | i147);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
             c_qY = u6 - 1U;
             if (c_qY > u6) {
               c_qY = 0U;
@@ -11347,7 +11531,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                 - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11363,7 +11547,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) -
                 1] = (unsigned short)b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11377,10 +11561,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[n];
               c_qY = u6 - 1U;
@@ -11391,29 +11575,29 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i76 = (int)(contor_renew_node_col_idx_temp + 1U);
-              if ((unsigned int)i76 > 255U) {
-                i76 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i78 = (int)(contor_renew_node_col_idx_temp + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
               }
 
-              contor_renew_node_col_idx_temp = (unsigned char)i76;
+              contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
               }
 
-              b_qY = col_num_node[i74] + 18U;
+              b_qY = col_num_node[i76] + 18U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
               if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                   - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
                 c_qY = u6 - 1U;
                 if (c_qY > u6) {
                   c_qY = 0U;
@@ -11425,62 +11609,62 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.West <= 7) {
-                  i144 = (unsigned char)(1 << g_d_direction.West);
+                  i146 = (unsigned char)(1 << g_d_direction.West);
                 } else {
-                  i144 = 0;
+                  i146 = 0;
                 }
 
                 col_dir_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                   - 1] = (unsigned char)(col_dir_node[(contor_renew_node_col[n]
-                  + (((int)b_qY - 1) << 5)) - 1] | i144);
+                  + (((int)b_qY - 1) << 5)) - 1] | i146);
               }
             }
           }
         }
       }
 
-      /* –k¼‘¤ */
-      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
+      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
       c_qY = u6 - 1U;
       if (c_qY > u6) {
         c_qY = 0U;
       }
 
       if (g_direction.North <= 7) {
-        i129 = (unsigned char)(1 << g_direction.North);
+        i131 = (unsigned char)(1 << g_direction.North);
       } else {
-        i129 = 0;
+        i131 = 0;
       }
 
       if (((maze_wall[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) - 1] &
-            i129) != 0) == wall->contents.nowall) {
+            i131) != 0) == wall->contents.nowall) {
         c_qY = u6 - 1U;
         if (c_qY > u6) {
           c_qY = 0U;
         }
 
         if (g_direction.North <= 7) {
-          i132 = (unsigned char)(1 << g_direction.North);
+          i134 = (unsigned char)(1 << g_direction.North);
         } else {
-          i132 = 0;
+          i134 = 0;
         }
 
         if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
-              - 1] & i132) != 0) == search->contents.known) {
-          /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚ ‚é */
+              - 1] & i134) != 0) == search->contents.known) {
+          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
           if (g_d_direction.North_West <= 7) {
-            i133 = (unsigned char)(1 << g_d_direction.North_West);
+            i135 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
-            i133 = 0;
+            i135 = 0;
           }
 
           if ((col_dir_node[(contor_renew_node_col[n] +
                              ((contor_renew_node_col[n + 1024] - 1) << 5)) - 1]
-               & i133) != 0) {
-            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
-            i74 = (int)(contor_renew_node_col[n] + 1U);
-            if ((unsigned int)i74 > 255U) {
-              i74 = 255;
+               & i135) != 0) {
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            i76 = (int)(contor_renew_node_col[n] + 1U);
+            if ((unsigned int)i76 > 255U) {
+              i76 = 255;
             }
 
             c_qY = u6 - 1U;
@@ -11495,11 +11679,11 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               b_qY = 65535U;
             }
 
-            if (row_num_node[(i74 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+            if (row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               c_qY = u6 - 1U;
@@ -11514,13 +11698,13 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              row_num_node[(i74 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
+              row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               c_qY = u6 - 1U;
@@ -11529,23 +11713,23 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (g_d_direction.North_West <= 7) {
-                row_dir_node[(i74 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
                   (1 << g_d_direction.North_West);
               } else {
-                row_dir_node[(i74 + 33 * ((int)c_qY - 1)) - 1] = 0U;
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
               change_flag = 1U;
 
-              /* XVƒm[ƒh‚ğXV */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i74;
+                (unsigned char)i76;
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11554,19 +11738,19 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
-              contor_renew_node_row_idx_temp = (unsigned char)i74;
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
             } else {
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               c_qY = u6 - 1U;
@@ -11581,11 +11765,11 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i74 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i74 = (int)(contor_renew_node_col[n] + 1U);
-                if ((unsigned int)i74 > 255U) {
-                  i74 = 255;
+              if (row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i76 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i76 > 255U) {
+                  i76 = 255;
                 }
 
                 c_qY = u6 - 1U;
@@ -11593,9 +11777,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   c_qY = 0U;
                 }
 
-                i76 = (int)(contor_renew_node_col[n] + 1U);
-                if ((unsigned int)i76 > 255U) {
-                  i76 = 255;
+                i78 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
                 b_qY = u6 - 1U;
@@ -11604,22 +11788,22 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.North_West <= 7) {
-                  i147 = (unsigned char)(1 << g_d_direction.North_West);
+                  i149 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  i147 = 0;
+                  i149 = 0;
                 }
 
-                row_dir_node[(i74 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
-                  (row_dir_node[(i76 + 33 * ((int)b_qY - 1)) - 1] | i147);
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(i78 + 33 * ((int)b_qY - 1)) - 1] | i149);
               }
             }
 
-            /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚È‚¢‚Æ‚« */
+            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
           } else {
-            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
-            i76 = (int)(contor_renew_node_col[n] + 1U);
-            if ((unsigned int)i76 > 255U) {
-              i76 = 255;
+            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            i78 = (int)(contor_renew_node_col[n] + 1U);
+            if ((unsigned int)i78 > 255U) {
+              i78 = 255;
             }
 
             c_qY = u6 - 1U;
@@ -11627,16 +11811,16 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               c_qY = 0U;
             }
 
-            b_qY = col_num_node[i74] + 18U;
+            b_qY = col_num_node[i76] + 18U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
 
-            if (row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
+            if (row_num_node[(i78 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
+              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
               }
 
               c_qY = u6 - 1U;
@@ -11651,56 +11835,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 b_qY = 65535U;
               }
 
-              row_num_node[(i74 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
+              row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ˆÚ“®•ûŒüMAPXV */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              c_qY = u6 - 1U;
-              if (c_qY > u6) {
-                c_qY = 0U;
-              }
-
-              if (g_d_direction.North_West <= 7) {
-                row_dir_node[(i74 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
-                  (1 << g_d_direction.North_West);
-              } else {
-                row_dir_node[(i74 + 33 * ((int)c_qY - 1)) - 1] = 0U;
-              }
-
-              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
-              change_flag = 1U;
-
-              /* XVƒm[ƒh‚ğXV */
-              i74 = (int)(contor_renew_node_col[n] + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
-                (unsigned char)i74;
-              c_qY = u6 - 1U;
-              if (c_qY > u6) {
-                c_qY = 0U;
-              }
-
-              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
-                (unsigned char)c_qY;
-
-              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-              i74 = (int)(contor_renew_node_row_idx_temp + 1U);
-              if ((unsigned int)i74 > 255U) {
-                i74 = 255;
-              }
-
-              contor_renew_node_row_idx_temp = (unsigned char)i74;
-
-              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
-            } else {
+              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11711,16 +11849,62 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 c_qY = 0U;
               }
 
-              b_qY = col_num_node[i74] + 18U;
+              if (g_d_direction.North_West <= 7) {
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (1 << g_d_direction.North_West);
+              } else {
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = 0U;
+              }
+
+              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              change_flag = 1U;
+
+              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              i76 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
+                (unsigned char)i76;
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
+                (unsigned char)c_qY;
+
+              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              i76 = (int)(contor_renew_node_row_idx_temp + 1U);
+              if ((unsigned int)i76 > 255U) {
+                i76 = 255;
+              }
+
+              contor_renew_node_row_idx_temp = (unsigned char)i76;
+
+              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+            } else {
+              i78 = (int)(contor_renew_node_col[n] + 1U);
+              if ((unsigned int)i78 > 255U) {
+                i78 = 255;
+              }
+
+              c_qY = u6 - 1U;
+              if (c_qY > u6) {
+                c_qY = 0U;
+              }
+
+              b_qY = col_num_node[i76] + 18U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
 
-              if (row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY) {
-                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
-                i74 = (int)(contor_renew_node_col[n] + 1U);
-                if ((unsigned int)i74 > 255U) {
-                  i74 = 255;
+              if (row_num_node[(i78 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY) {
+                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                i76 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i76 > 255U) {
+                  i76 = 255;
                 }
 
                 c_qY = u6 - 1U;
@@ -11728,9 +11912,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   c_qY = 0U;
                 }
 
-                i76 = (int)(contor_renew_node_col[n] + 1U);
-                if ((unsigned int)i76 > 255U) {
-                  i76 = 255;
+                i78 = (int)(contor_renew_node_col[n] + 1U);
+                if ((unsigned int)i78 > 255U) {
+                  i78 = 255;
                 }
 
                 b_qY = u6 - 1U;
@@ -11739,13 +11923,13 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 }
 
                 if (g_d_direction.North_West <= 7) {
-                  i146 = (unsigned char)(1 << g_d_direction.North_West);
+                  i148 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
-                  i146 = 0;
+                  i148 = 0;
                 }
 
-                row_dir_node[(i74 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
-                  (row_dir_node[(i76 + 33 * ((int)b_qY - 1)) - 1] | i146);
+                row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned char)
+                  (row_dir_node[(i78 + 33 * ((int)b_qY - 1)) - 1] | i148);
               }
             }
           }
@@ -11753,7 +11937,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /* ƒS[ƒ‹XVƒm[ƒh‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
     contor_renew_node_col_idx = contor_renew_node_col_idx_temp;
     contor_renew_node_col_idx_temp = 1U;
     for (q0 = 0; q0 < 2048; q0++) {
@@ -11766,7 +11950,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     contor_renew_node_row_idx = contor_renew_node_row_idx_temp;
     contor_renew_node_row_idx_temp = 1U;
 
-    /* XV‚ª‚È‚¯‚ê‚ÎI—¹(ƒXƒ^[ƒg’n“_‚Ì•à”ƒ}ƒbƒv‚ğXV) */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½(ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½Ì•ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½Xï¿½V) */
     if (change_flag == 0) {
       b_qY = row_num_node[1] + 3U;
       if (b_qY > 65535U) {
@@ -11782,7 +11966,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 }
 
 /*
- * –À˜Hƒpƒ‰ƒ[ƒ^İ’è
+ * ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½
  * Arguments    : const coder_internal_ref_5 *wall
  *                const unsigned char maze_wall[1024]
  *                const unsigned char maze_wall_search[1024]
@@ -11820,51 +12004,51 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
   unsigned int u1;
   unsigned int qY;
 
-  /*     %% make_new_goal_all Œ»İˆÊ’u‚©‚çV‹K‚ÌƒS[ƒ‹‚ğì‚éB(‘S–Ê’Tõ—p) */
-  /* V‹KƒS[ƒ‹À•WŠi”[—p•Ï” */
+  /*     %% make_new_goal_all ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½ÌƒSï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B(ï¿½Sï¿½Ê’Tï¿½ï¿½ï¿½p) */
+  /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½iï¿½[ï¿½pï¿½Ïï¿½ */
   new_goal[0] = 0U;
   new_goal[1] = 0U;
 
-  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
-  /* XVÀ•W */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* XVÀ•WXV—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_square_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_square_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
-  /* 32ƒ}ƒX•ªmap‚ğ•Û */
-  /* 16bit‚É‚·‚×‚« */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
+  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
+  /* 16bitï¿½É‚ï¿½ï¿½×‚ï¿½ */
   for (q0 = 0; q0 < 1024; q0++) {
     contour_map[q0] = MAX_uint16_T;
   }
 
-  /* ƒXƒ^[ƒg’n“_‚Ì•à”‚ğ1‚¾‚¯Œ¸‚ç‚µA”»•Ê‰Â”\‚Èó‘Ô‚É‚·‚éB */
+  /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç‚µï¿½Aï¿½ï¿½ï¿½Ê‰Â”\ï¿½Èï¿½Ô‚É‚ï¿½ï¿½ï¿½B */
   contour_map[(current_y + ((current_x - 1) << 5)) - 1] = 65534U;
 
-  /* ‰‰ñ‚ÌXVÀ•W = Œ»İˆÊ’u@‚ğ“ü—Í */
+  /* ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½W = ï¿½ï¿½ï¿½İˆÊ’uï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ */
   contor_renew_square[0] = current_y;
   contor_renew_square[1024] = current_x;
 
-  /* Œ»İ‚ÌˆÊ’u‚©‚çƒRƒ“ƒ^[‚ğ“WŠJB */
-  /* –¢’TõˆÊ’u‚ÉƒRƒ“ƒ^[‚ª“WŠJ‚³‚ê‚ê‚Î‚»‚±‚ğV‹KƒS[ƒ‹‚Æ‚µAI—¹‚·‚éB */
+  /* ï¿½ï¿½ï¿½İ‚ÌˆÊ’uï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½Wï¿½Jï¿½B */
+  /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ê’uï¿½ÉƒRï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½ï¿½Wï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Î‚ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* •à”ƒJƒEƒ“ƒg‚Í0~max_length */
-    /* mapXVŠm”F—pƒtƒ‰ƒO */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
+    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
     change_flag = 0U;
 
-    /* XV‚³‚ê‚½À•W‚É‘Î‚µAƒRƒ“ƒ^[ƒ}ƒbƒv‚ğ“WŠJ */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½Wï¿½J */
     tempn = 0;
     exitg2 = false;
     while ((!exitg2) && (tempn <= contor_renew_square_idx - 1)) {
-      /* –k‘¤ */
+      /* ï¿½kï¿½ï¿½ */
       q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
         1024] - 1) << 5)) - 1];
       if (g_direction.North <= 7) {
@@ -11877,7 +12061,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       guard2 = false;
       guard3 = false;
       if ((q0 & i26) == wall->contents.nowall) {
-        /* –k‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        /* ï¿½kï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         i27 = (int)(contor_renew_square[tempn] + 1U);
         if ((unsigned int)i27 > 255U) {
           i27 = 255;
@@ -11899,7 +12083,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
           contour_map[(i30 + i28) - 1] = (unsigned short)(65535 - (int)u1);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
           i30 = i27;
           if ((unsigned int)i27 > 255U) {
             i30 = 255;
@@ -11910,7 +12094,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square[tempn + 1024];
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
           i30 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i30 > 255U) {
             i30 = 255;
@@ -11918,7 +12102,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
 
           contor_renew_square_idx_temp = (unsigned char)i30;
 
-          /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
+          /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
           i30 = i27;
           if ((unsigned int)i27 > 255U) {
             i30 = 255;
@@ -11943,7 +12127,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard3) {
-        /* “Œ‘¤ */
+        /* ï¿½ï¿½ï¿½ï¿½ */
         if (g_direction.East <= 7) {
           i29 = (unsigned char)(1 << g_direction.East);
         } else {
@@ -11951,7 +12135,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
         }
 
         if ((q0 & i29) == wall->contents.nowall) {
-          /* “Œ‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
           q0 = (int)(contor_renew_square[tempn + 1024] + 1U);
           i27 = q0;
           if ((unsigned int)q0 > 255U) {
@@ -11974,7 +12158,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
               (unsigned short)(65535 - (int)u1);
             change_flag = 1U;
 
-            /* XVƒ}ƒX‚ğXV */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
             contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
               contor_renew_square[tempn];
             i27 = q0;
@@ -11985,7 +12169,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               (unsigned char)i27;
 
-            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
             i27 = (int)(contor_renew_square_idx_temp + 1U);
             if ((unsigned int)i27 > 255U) {
               i27 = 255;
@@ -11993,7 +12177,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
 
             contor_renew_square_idx_temp = (unsigned char)i27;
 
-            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
+            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
             i27 = q0;
             if ((unsigned int)q0 > 255U) {
               i27 = 255;
@@ -12020,7 +12204,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard2) {
-        /* “ì‘¤ */
+        /* ï¿½ì‘¤ */
         q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
           + 1024] - 1) << 5)) - 1];
         if (g_direction.South <= 7) {
@@ -12030,7 +12214,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
         }
 
         if ((q0 & i31) == wall->contents.nowall) {
-          /* “ì‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+          /* ï¿½ì‘¤ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
           qY = contor_renew_square[tempn] - 1U;
           if (qY > contor_renew_square[tempn]) {
             qY = 0U;
@@ -12052,7 +12236,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
               - 1] = (unsigned short)(65535 - (int)u1);
             change_flag = 1U;
 
-            /* XVƒ}ƒX‚ğXV */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -12063,7 +12247,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               contor_renew_square[tempn + 1024];
 
-            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
             i27 = (int)(contor_renew_square_idx_temp + 1U);
             if ((unsigned int)i27 > 255U) {
               i27 = 255;
@@ -12071,7 +12255,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
 
             contor_renew_square_idx_temp = (unsigned char)i27;
 
-            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
+            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -12099,7 +12283,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard1) {
-        /* ¼‘¤ */
+        /* ï¿½ï¿½ï¿½ï¿½ */
         if (g_direction.West <= 7) {
           i32 = (unsigned char)(1 << g_direction.West);
         } else {
@@ -12107,7 +12291,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
         }
 
         if ((q0 & i32) == wall->contents.nowall) {
-          /* ¼‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
           q0 = contor_renew_square[tempn + 1024];
           qY = q0 - 1U;
           if (qY > (unsigned int)q0) {
@@ -12131,7 +12315,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
               = (unsigned short)(65535 - (int)u1);
             change_flag = 1U;
 
-            /* XVƒ}ƒX‚ğXV */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
             contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
               contor_renew_square[tempn];
             q0 = contor_renew_square[tempn + 1024];
@@ -12143,7 +12327,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               (unsigned char)qY;
 
-            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
             q0 = (int)(contor_renew_square_idx_temp + 1U);
             if ((unsigned int)q0 > 255U) {
               q0 = 255;
@@ -12151,7 +12335,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
 
             contor_renew_square_idx_temp = (unsigned char)q0;
 
-            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
+            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
             q0 = contor_renew_square[tempn + 1024];
             qY = q0 - 1U;
             if (qY > (unsigned int)q0) {
@@ -12181,7 +12365,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       }
     }
 
-    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
     for (q0 = 0; q0 < 2048; q0++) {
       contor_renew_square[q0] = contor_renew_square_temp[q0];
       contor_renew_square_temp[q0] = 0U;
@@ -12190,7 +12374,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* XV‚ª‚È‚¢A‚à‚µ‚­‚ÍƒS[ƒ‹‚ªİ’è‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍƒSï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
     if ((change_flag == 0) || (new_goal[0] != 0)) {
       /* disp(tempi) */
       exitg1 = true;
@@ -12201,7 +12385,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
 }
 
 /*
- * –À˜Hƒpƒ‰ƒ[ƒ^İ’è
+ * ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½
  * Arguments    : const coder_internal_ref_5 *wall
  *                const unsigned char maze_wall[1024]
  *                unsigned char current_x
@@ -12227,88 +12411,88 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
   unsigned char change_flag;
   int tempn;
   bool exitg2;
-  int i60;
+  int i64;
   bool guard1 = false;
   bool guard2 = false;
   bool guard3 = false;
-  int i61;
-  int i62;
-  int i63;
-  int i64;
   int i65;
   int i66;
+  int i67;
+  int i68;
+  int i69;
+  int i70;
   unsigned int u4;
   unsigned int qY;
 
-  /*     %% make_new_goal_sh Œ»İˆÊ’u‚©‚çV‹K‚ÌƒS[ƒ‹¶¬‚·‚éB(Å’ZŒo˜H’Tõ—p) */
-  /* V‹KƒS[ƒ‹À•WŠi”[—p•Ï” */
+  /*     %% make_new_goal_sh ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½ÌƒSï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B(ï¿½Å’Zï¿½oï¿½Hï¿½Tï¿½ï¿½ï¿½p) */
+  /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½iï¿½[ï¿½pï¿½Ïï¿½ */
   new_goal[0] = 0U;
   new_goal[1] = 0U;
 
-  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
-  /* XVÀ•W */
+  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* XVÀ•WXV—p */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
   contor_renew_square_idx = 1U;
 
-  /* XVÀ•W */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
   contor_renew_square_idx_temp = 1U;
 
-  /* XVÀ•WXV—p */
-  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
-  /* 32ƒ}ƒX•ªmap‚ğ•Û */
-  /* 16bit‚É‚·‚×‚« */
+  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
+  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
+  /* 16bitï¿½É‚ï¿½ï¿½×‚ï¿½ */
   for (q0 = 0; q0 < 1024; q0++) {
     contour_map[q0] = MAX_uint16_T;
   }
 
-  /* ƒXƒ^[ƒg’n“_‚Ì•à”‚ğ1‚¾‚¯Œ¸‚ç‚µA”»•Ê‰Â”\‚Èó‘Ô‚É‚·‚éB */
+  /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç‚µï¿½Aï¿½ï¿½ï¿½Ê‰Â”\ï¿½Èï¿½Ô‚É‚ï¿½ï¿½ï¿½B */
   contour_map[(current_y + ((current_x - 1) << 5)) - 1] = 65534U;
 
-  /* ‰‰ñ‚ÌXVÀ•W = Œ»İˆÊ’u@‚ğ“ü—Í */
+  /* ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½W = ï¿½ï¿½ï¿½İˆÊ’uï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ */
   contor_renew_square[0] = current_y;
   contor_renew_square[1024] = current_x;
 
-  /* Œ»İ‚ÌˆÊ’u‚©‚çƒRƒ“ƒ^[‚ğ“WŠJB */
-  /* Å’ZŒo˜H‚ÉƒRƒ“ƒ^[‚ª“WŠJ‚³‚ê‚ê‚Î‚»‚±‚ğV‹KƒS[ƒ‹‚Æ‚µAI—¹‚·‚éB */
+  /* ï¿½ï¿½ï¿½İ‚ÌˆÊ’uï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½Wï¿½Jï¿½B */
+  /* ï¿½Å’Zï¿½oï¿½Hï¿½ÉƒRï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½ï¿½Wï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Î‚ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* •à”ƒJƒEƒ“ƒg‚Í0~max_length */
-    /* mapXVŠm”F—pƒtƒ‰ƒO */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
+    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
     change_flag = 0U;
 
-    /* XV‚³‚ê‚½À•W‚É‘Î‚µAƒRƒ“ƒ^[ƒ}ƒbƒv‚ğ“WŠJ */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½Wï¿½J */
     tempn = 0;
     exitg2 = false;
     while ((!exitg2) && (tempn <= contor_renew_square_idx - 1)) {
-      /* –k‘¤ */
+      /* ï¿½kï¿½ï¿½ */
       q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
         1024] - 1) << 5)) - 1];
       if (g_direction.North <= 7) {
-        i60 = (unsigned char)(1 << g_direction.North);
+        i64 = (unsigned char)(1 << g_direction.North);
       } else {
-        i60 = 0;
+        i64 = 0;
       }
 
       guard1 = false;
       guard2 = false;
       guard3 = false;
-      if ((q0 & i60) == wall->contents.nowall) {
-        /* –k‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
-        i61 = (int)(contor_renew_square[tempn] + 1U);
-        if ((unsigned int)i61 > 255U) {
-          i61 = 255;
+      if ((q0 & i64) == wall->contents.nowall) {
+        /* ï¿½kï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        i65 = (int)(contor_renew_square[tempn] + 1U);
+        if ((unsigned int)i65 > 255U) {
+          i65 = 255;
         }
 
-        i62 = (contor_renew_square[tempn + 1024] - 1) << 5;
-        if (contour_map[(i61 + i62) - 1] == 65535) {
-          i61 = (int)(contor_renew_square[tempn] + 1U);
-          i64 = i61;
-          if ((unsigned int)i61 > 255U) {
-            i64 = 255;
+        i66 = (contor_renew_square[tempn + 1024] - 1) << 5;
+        if (contour_map[(i65 + i66) - 1] == 65535) {
+          i65 = (int)(contor_renew_square[tempn] + 1U);
+          i68 = i65;
+          if ((unsigned int)i65 > 255U) {
+            i68 = 255;
           }
 
           u4 = tempi + 2U;
@@ -12316,42 +12500,42 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
             u4 = 65535U;
           }
 
-          contour_map[(i64 + i62) - 1] = (unsigned short)(65535 - (int)u4);
+          contour_map[(i68 + i66) - 1] = (unsigned short)(65535 - (int)u4);
           change_flag = 1U;
 
-          /* XVƒ}ƒX‚ğXV */
-          i62 = i61;
-          if ((unsigned int)i61 > 255U) {
-            i62 = 255;
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+          i66 = i65;
+          if ((unsigned int)i65 > 255U) {
+            i66 = 255;
           }
 
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
-            char)i62;
+            char)i66;
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square[tempn + 1024];
 
-          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-          i62 = (int)(contor_renew_square_idx_temp + 1U);
-          if ((unsigned int)i62 > 255U) {
-            i62 = 255;
+          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+          i66 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i66 > 255U) {
+            i66 = 255;
           }
 
-          contor_renew_square_idx_temp = (unsigned char)i62;
+          contor_renew_square_idx_temp = (unsigned char)i66;
 
-          /* XV‚µ‚½’n“_‚ªÅ’ZŒo˜H–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
-          i62 = i61;
-          if ((unsigned int)i61 > 255U) {
-            i62 = 255;
+          /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+          i66 = i65;
+          if ((unsigned int)i65 > 255U) {
+            i66 = 255;
           }
 
           if (sh_route_unexp_sq_jud(unexp_square, unexp_square_idx, (unsigned
-                char)i62, contor_renew_square[tempn + 1024]) == 1) {
+                char)i66, contor_renew_square[tempn + 1024]) == 1) {
             new_goal[0] = contor_renew_square[tempn + 1024];
-            if ((unsigned int)i61 > 255U) {
-              i61 = 255;
+            if ((unsigned int)i65 > 255U) {
+              i65 = 255;
             }
 
-            new_goal[1] = (unsigned char)i61;
+            new_goal[1] = (unsigned char)i65;
             exitg2 = true;
           } else {
             guard3 = true;
@@ -12364,26 +12548,26 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard3) {
-        /* “Œ‘¤ */
+        /* ï¿½ï¿½ï¿½ï¿½ */
         if (g_direction.East <= 7) {
-          i63 = (unsigned char)(1 << g_direction.East);
+          i67 = (unsigned char)(1 << g_direction.East);
         } else {
-          i63 = 0;
+          i67 = 0;
         }
 
-        if ((q0 & i63) == wall->contents.nowall) {
-          /* “Œ‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        if ((q0 & i67) == wall->contents.nowall) {
+          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
           q0 = (int)(contor_renew_square[tempn + 1024] + 1U);
-          i61 = q0;
+          i65 = q0;
           if ((unsigned int)q0 > 255U) {
-            i61 = 255;
+            i65 = 255;
           }
 
-          if (contour_map[(contor_renew_square[tempn] + ((i61 - 1) << 5)) - 1] ==
+          if (contour_map[(contor_renew_square[tempn] + ((i65 - 1) << 5)) - 1] ==
               65535) {
-            i61 = q0;
+            i65 = q0;
             if ((unsigned int)q0 > 255U) {
-              i61 = 255;
+              i65 = 255;
             }
 
             u4 = tempi + 2U;
@@ -12391,37 +12575,37 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
               u4 = 65535U;
             }
 
-            contour_map[(contor_renew_square[tempn] + ((i61 - 1) << 5)) - 1] =
+            contour_map[(contor_renew_square[tempn] + ((i65 - 1) << 5)) - 1] =
               (unsigned short)(65535 - (int)u4);
             change_flag = 1U;
 
-            /* XVƒ}ƒX‚ğXV */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
             contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
               contor_renew_square[tempn];
-            i61 = q0;
+            i65 = q0;
             if ((unsigned int)q0 > 255U) {
-              i61 = 255;
+              i65 = 255;
             }
 
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
-              (unsigned char)i61;
+              (unsigned char)i65;
 
-            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-            i61 = (int)(contor_renew_square_idx_temp + 1U);
-            if ((unsigned int)i61 > 255U) {
-              i61 = 255;
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+            i65 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)i65 > 255U) {
+              i65 = 255;
             }
 
-            contor_renew_square_idx_temp = (unsigned char)i61;
+            contor_renew_square_idx_temp = (unsigned char)i65;
 
-            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
-            i61 = q0;
+            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+            i65 = q0;
             if ((unsigned int)q0 > 255U) {
-              i61 = 255;
+              i65 = 255;
             }
 
             if (sh_route_unexp_sq_jud(unexp_square, unexp_square_idx,
-                 contor_renew_square[tempn], (unsigned char)i61) == 1) {
+                 contor_renew_square[tempn], (unsigned char)i65) == 1) {
               if ((unsigned int)q0 > 255U) {
                 q0 = 255;
               }
@@ -12441,17 +12625,17 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard2) {
-        /* “ì‘¤ */
+        /* ï¿½ì‘¤ */
         q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
           + 1024] - 1) << 5)) - 1];
         if (g_direction.South <= 7) {
-          i65 = (unsigned char)(1 << g_direction.South);
+          i69 = (unsigned char)(1 << g_direction.South);
         } else {
-          i65 = 0;
+          i69 = 0;
         }
 
-        if ((q0 & i65) == wall->contents.nowall) {
-          /* “ì‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        if ((q0 & i69) == wall->contents.nowall) {
+          /* ï¿½ì‘¤ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
           qY = contor_renew_square[tempn] - 1U;
           if (qY > contor_renew_square[tempn]) {
             qY = 0U;
@@ -12473,7 +12657,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
               - 1] = (unsigned short)(65535 - (int)u4);
             change_flag = 1U;
 
-            /* XVƒ}ƒX‚ğXV */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -12484,15 +12668,15 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               contor_renew_square[tempn + 1024];
 
-            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
-            i61 = (int)(contor_renew_square_idx_temp + 1U);
-            if ((unsigned int)i61 > 255U) {
-              i61 = 255;
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+            i65 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)i65 > 255U) {
+              i65 = 255;
             }
 
-            contor_renew_square_idx_temp = (unsigned char)i61;
+            contor_renew_square_idx_temp = (unsigned char)i65;
 
-            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
+            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -12520,15 +12704,15 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard1) {
-        /* ¼‘¤ */
+        /* ï¿½ï¿½ï¿½ï¿½ */
         if (g_direction.West <= 7) {
-          i66 = (unsigned char)(1 << g_direction.West);
+          i70 = (unsigned char)(1 << g_direction.West);
         } else {
-          i66 = 0;
+          i70 = 0;
         }
 
-        if ((q0 & i66) == wall->contents.nowall) {
-          /* ¼‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        if ((q0 & i70) == wall->contents.nowall) {
+          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
           q0 = contor_renew_square[tempn + 1024];
           qY = q0 - 1U;
           if (qY > (unsigned int)q0) {
@@ -12552,7 +12736,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
               = (unsigned short)(65535 - (int)u4);
             change_flag = 1U;
 
-            /* XVƒ}ƒX‚ğXV */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
             contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
               contor_renew_square[tempn];
             q0 = contor_renew_square[tempn + 1024];
@@ -12564,7 +12748,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               (unsigned char)qY;
 
-            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
             q0 = (int)(contor_renew_square_idx_temp + 1U);
             if ((unsigned int)q0 > 255U) {
               q0 = 255;
@@ -12572,7 +12756,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
 
             contor_renew_square_idx_temp = (unsigned char)q0;
 
-            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
+            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
             q0 = contor_renew_square[tempn + 1024];
             qY = q0 - 1U;
             if (qY > (unsigned int)q0) {
@@ -12602,7 +12786,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       }
     }
 
-    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
     for (q0 = 0; q0 < 2048; q0++) {
       contor_renew_square[q0] = contor_renew_square_temp[q0];
       contor_renew_square_temp[q0] = 0U;
@@ -12611,7 +12795,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* XV‚ª‚È‚¢A‚à‚µ‚­‚ÍƒS[ƒ‹‚ªİ’è‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
+    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍƒSï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
     if ((change_flag == 0) || (new_goal[0] != 0)) {
       /* disp(tempi) */
       exitg1 = true;
@@ -12622,7 +12806,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
 }
 
 /*
- * ƒXƒ^[ƒgƒm[ƒh‚Ì‰Šú‰»
+ * ï¿½Xï¿½^ï¿½[ï¿½gï¿½mï¿½[ï¿½hï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
  * Arguments    : const unsigned short row_num_node[1056]
  *                const unsigned short col_num_node[1056]
  *                const unsigned char goal_section[2]
@@ -12659,35 +12843,35 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
   unsigned int qY;
   unsigned char b_next_move_dir;
 
-  /*     %% make_route_diagonal Î‚ß—L‚Å‚ÌÅ’Zƒ‹[ƒg¶¬A‘–s */
+  /*     %% make_route_diagonal ï¿½Î‚ß—Lï¿½Å‚ÌÅ’Zï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½s */
   current_node[0] = 1U;
   current_node[1] = 1U;
 
-  /* ‰Šúƒ}ƒX‚Ì“ì‚Ìƒm[ƒh */
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½Xï¿½Ì“ï¿½Ìƒmï¿½[ï¿½h */
   current_node_property = matrix_dir.Row;
 
-  /* “ì‚Ìƒm[ƒh‚Ì‘®«‚Ís•ûŒü */
+  /* ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì‘ï¿½ï¿½ï¿½ï¿½Ísï¿½ï¿½ï¿½ï¿½ */
   current_move_dir = g_d_direction.North;
 
-  /* ‰Šú‚Ìis•ûŒü‚Í–k */
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Í–k */
   current_move_mode = move_dir_property.straight;
 
-  /* ‰Šú‚Ìis•ûŒü‘®«‚Í’¼iiÎ‚ß‚Å‚È‚¢j */
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ï¿½iï¿½iï¿½Î‚ß‚Å‚È‚ï¿½ï¿½j */
   straight_count = 0U;
 
-  /* ’¼i—p‚ÌƒJƒEƒ“ƒ^ */
-  /* ‰‰ñ‚Ì‚İŸ‚Ìƒm[ƒh‚ğŒÅ’è */
-  /* ‰Šúƒ}ƒX‚Ì–k‚Ìƒm[ƒh */
-  /* –k‚Ìƒm[ƒh‚Ì‘®«‚Ís•ûŒü */
-  /* Šî€ƒm[ƒhÀ•W‚ğŸ‚Ìƒm[ƒh‚É */
-  /* Šî€ƒm[ƒh‚ÌˆÚ“®•ûŒüAƒ‚[ƒh‚ğŒ»İ‚Ìƒm[ƒh‚Éİ’è */
+  /* ï¿½ï¿½ï¿½iï¿½pï¿½ÌƒJï¿½Eï¿½ï¿½ï¿½^ */
+  /* ï¿½ï¿½ï¿½ï¿½Ì‚İï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Å’ï¿½ */
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½Xï¿½Ì–kï¿½Ìƒmï¿½[ï¿½h */
+  /* ï¿½kï¿½Ìƒmï¿½[ï¿½hï¿½Ì‘ï¿½ï¿½ï¿½ï¿½Ísï¿½ï¿½ï¿½ï¿½ */
+  /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ */
+  /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½Éİ’ï¿½ */
   ref_move_dir = g_d_direction.North;
   ref_move_mode = move_dir_property.straight;
 
-  /* ƒS[ƒ‹ƒtƒ‰ƒO‚ª‚½‚Â‚Ü‚Åƒ‹[ƒv */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Â‚Ü‚Åƒï¿½ï¿½[ï¿½v */
   goal_flag = 0;
 
-  /* Î‚ß‚İ‚Ìis•û–@‘I‘ğ */
+  /* ï¿½Î‚ßï¿½ï¿½İ‚Ìiï¿½sï¿½ï¿½ï¿½@ï¿½Iï¿½ï¿½ */
   next_node[0] = 2U;
   next_node[1] = 1U;
   get_next_dir_diagonal(row_num_node, col_num_node, g_d_direction.North,
@@ -12699,9 +12883,9 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
     /*          disp(["next_move_dir=",num2str(next_move_dir)]) */
     /*          disp(["ref_move_dir=",num2str(ref_move_dir)]) */
-    /* Šî€ƒm[ƒh‚©‚çŒ©‚ÄAis•ûŒü‚ª“¯ˆê‚Ì‚Æ‚« */
+    /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½çŒ©ï¿½ÄAï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Æ‚ï¿½ */
     if (ref_move_dir == next_move_dir) {
-      /*              disp("’¼i") */
+      /*              disp("ï¿½ï¿½ï¿½i") */
       i = (int)(straight_count + 1U);
       if ((unsigned int)i > 255U) {
         i = 255;
@@ -12709,12 +12893,12 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
       straight_count = (unsigned char)i;
 
-      /* ’¼iƒJƒEƒ“ƒ^‚ğƒCƒ“ƒNƒŠƒƒ“ƒg */
-      /* Šî€ƒm[ƒh‚ğˆÚ“®‚·‚éB */
+      /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½g */
+      /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½B */
       ref_node_property = next_node_property;
       ref_move_dir = next_move_dir;
 
-      /* Šî€ƒm[ƒh‚ªƒS[ƒ‹‚Å‚ ‚é‚©”»’è */
+      /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½ */
       p = false;
       b_p = true;
       k = 0;
@@ -12735,7 +12919,7 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
       if ((p && (next_node_property == goal_node_property)) ||
           ((next_node_property == matrix_dir.section) && (goal_section[1] ==
             b_next_node[0]) && (goal_section[0] == b_next_node[1]))) {
-        /* Œ»İˆÊ’u‚ªƒm[ƒh‚Å‚ ‚éAƒS[ƒ‹i“ü‚Ìƒpƒ^[ƒ“‚ğŒˆ’è‚·‚éB */
+        /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Å‚ï¿½ï¿½éï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Ìƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½B */
         p = false;
         b_p = true;
         k = 0;
@@ -12754,50 +12938,50 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         }
 
         if (p && (next_node_property == goal_node_property)) {
-          /* ƒS[ƒ‹‚Ìê‡AƒS[ƒ‹i“ü‚Ìƒpƒ^[ƒ“‚ğŒˆ’è‚·‚éB */
+          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Ìê‡ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Ìƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½B */
           get_next_dir_diagonal(row_num_node, col_num_node, next_move_dir,
                                 b_next_node, next_node_property, goal_node2,
                                 goal_node_property, goal_section,
                                 &b_next_move_dir, next_node,
                                 &b_next_node_property);
 
-          /* ’¼i‚Ìê‡i’¼iN“üj */
+          /* ï¿½ï¿½ï¿½iï¿½Ìê‡ï¿½iï¿½ï¿½ï¿½iï¿½Nï¿½ï¿½ï¿½j */
           if (next_move_dir == b_next_move_dir) {
-            /* ƒS[ƒ‹•ªƒJƒEƒ“ƒ^‚ğ‘‰Á */
+            /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ğ‘‰ï¿½ */
             i = (int)((unsigned char)i + 1U);
             if ((unsigned int)i > 255U) {
               i = 255;
             }
 
-            /* Œ»İƒm[ƒh‚©‚ç’¼iƒJƒEƒ“ƒ^•ªˆÚ“®‚·‚éŠÖ”B */
+            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½ï¿½ï¿½ç’¼ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B */
             move_straight(current_node, &current_node_property,
                           &current_move_dir, &current_move_mode, (unsigned char)
                           i);
             straight_count = 0U;
 
-            /*                          disp("ƒS[ƒ‹’¼üN“ü") */
+            /*                          disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½") */
             /*                          disp(current_node) */
-            /* ƒ^[ƒ“‚Ìê‡iÎ‚ßN“üj */
-            /* 45“xƒ^[ƒ“‚Ì‚İ‘z’è(ˆê‚Âæ‚ÌˆÚ“®•ûŒü‚Åƒ^[ƒ“‚Ìí—Ş‚ªŒˆ’è) */
+            /* ï¿½^ï¿½[ï¿½ï¿½ï¿½Ìê‡ï¿½iï¿½Î‚ßNï¿½ï¿½ï¿½j */
+            /* 45ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½Ì‚İ‘zï¿½ï¿½(ï¿½ï¿½Âï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åƒ^ï¿½[ï¿½ï¿½ï¿½Ìï¿½Ş‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
           } else {
-            /*                          disp("ƒS[ƒ‹’¼i‘O") */
+            /*                          disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½O") */
             /*                          disp(current_node) */
-            /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚ê‚ÎˆÚ“® */
-            /* ‹OÕ‚ğƒvƒƒbƒg */
-            /* Œ»İƒm[ƒh‚©‚ç’¼iƒJƒEƒ“ƒ^•ªˆÚ“®‚·‚éŠÖ”B */
+            /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎˆÚ“ï¿½ */
+            /* ï¿½Oï¿½Õ‚ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
+            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½ï¿½ï¿½ç’¼ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B */
             move_straight(current_node, &current_node_property,
                           &current_move_dir, &current_move_mode, (unsigned char)
                           i);
             straight_count = 0U;
 
-            /*                          disp("ƒS[ƒ‹’¼iŒã") */
+            /*                          disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½") */
             /*                          disp(current_node) */
-            /* is•ûŒü‚Ìƒoƒbƒtƒ@‚ğƒNƒŠƒA */
+            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìƒoï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
             move_dir_buffer[1] = 0.0;
             move_dir_buffer[2] = 0.0;
 
-            /* 1‚Âæ‚Ü‚Å‚Ìis•ûŒü‚©‚çAƒ^[ƒ“‚Ìƒpƒ^[ƒ“‚ğŒˆ’è */
-            /* Œ»İis•ûŒü‚©‚ç‚Ì‘Š‘Î“I‚ÈˆÚ“®•ûŒü‚ğƒoƒbƒtƒ@ */
+            /* 1ï¿½Âï¿½Ü‚Å‚Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½^ï¿½[ï¿½ï¿½ï¿½Ìƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+            /* ï¿½ï¿½ï¿½İiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½Î“Iï¿½ÈˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½bï¿½tï¿½@ */
             if (b_next_move_dir > 127) {
               b_next_move_dir = 127U;
             }
@@ -12809,13 +12993,13 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
             move_dir_buffer[0] = (b_next_move_dir - turn_pattern_num) & 7;
 
-            /* ƒ^[ƒ“‚Ìí—Ş‚ğ”»’è‚·‚é */
+            /* ï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½Ş‚ğ”»’è‚·ï¿½ï¿½ */
             turn_pattern_num = get_turn_pattern_num(move_dir_buffer,
               ref_move_mode);
 
-            /* ƒ^[ƒ“‚Ì‹OÕ‚ğ•`‰æ‚·‚é */
-            /* ƒpƒ^[ƒ“‚ªŒˆ‚Ü‚ç‚È‚©‚Á‚½ê‡AƒGƒ‰[ */
-            /* ƒpƒ^[ƒ“‚É‰‚¶‚½ˆÚ“®ˆ— */
+            /* ï¿½^ï¿½[ï¿½ï¿½ï¿½Ì‹Oï¿½Õ‚ï¿½`ï¿½æ‚·ï¿½ï¿½ */
+            /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½Gï¿½ï¿½ï¿½[ */
+            /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ */
             if (turn_pattern_num == turn_pattern.r_45) {
               turn_r_45(current_node, &current_node_property, &current_move_dir,
                         &current_move_mode);
@@ -12827,50 +13011,50 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
             }
           }
 
-          /* QÆˆÊ’u‚ªƒZƒNƒVƒ‡ƒ“‚Å‚ ‚é‚Æ‚« */
+          /* ï¿½Qï¿½ÆˆÊ’uï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
         } else {
-          /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚ê‚ÎAˆÚ“®‚·‚éB */
-          /*                      disp("ƒS[ƒ‹’¼iiƒZƒNƒVƒ‡ƒ“j") */
-          /* ‹OÕ‚ğƒvƒƒbƒg */
-          /* Œ»İƒm[ƒh‚©‚ç’¼iƒJƒEƒ“ƒ^•ªˆÚ“®‚·‚éŠÖ”B */
+          /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½B */
+          /*                      disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½iï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½j") */
+          /* ï¿½Oï¿½Õ‚ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
+          /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½ï¿½ï¿½ç’¼ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B */
           move_straight(current_node, &current_node_property, &current_move_dir,
                         &current_move_mode, (unsigned char)i);
           straight_count = 0U;
         }
 
-        /* ƒS[ƒ‹ˆ—‚ª‚¨‚í‚Á‚½‚çƒtƒ‰ƒO‚ğ—§‚Ä‚é */
-        /*                  disp("ƒS[ƒ‹Œã") */
+        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+        /*                  disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½") */
         /*                  disp(straight_count) */
         /*                  disp(current_node) */
         goal_flag = 1;
       }
 
-      /* Šî€ƒm[ƒh‚©‚çŒ©‚ÄAis•ûŒü‚ªˆÙ‚È‚é(‹È‚ª‚é)‚Æ‚« */
+      /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½çŒ©ï¿½ÄAï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù‚È‚ï¿½(ï¿½È‚ï¿½ï¿½ï¿½)ï¿½Æ‚ï¿½ */
     } else {
-      /*              disp("ƒ^[ƒ“") */
-      /* ’¼iƒJƒEƒ“ƒ^‚ ‚é‚Æ‚« */
+      /*              disp("ï¿½^ï¿½[ï¿½ï¿½") */
+      /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ */
       if (straight_count > 0) {
-        /* ‹OÕ‚ğƒvƒƒbƒg */
-        /* Œ»İƒm[ƒh‚©‚ç’¼iƒJƒEƒ“ƒ^•ªˆÚ“®‚·‚éŠÖ”B */
+        /* ï¿½Oï¿½Õ‚ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
+        /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½ï¿½ï¿½ç’¼ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B */
         move_straight(current_node, &current_node_property, &current_move_dir,
                       &current_move_mode, straight_count);
         straight_count = 0U;
 
-        /*                  disp("ƒ^[ƒ“‘O’¼iƒJƒEƒ“ƒ^") */
+        /*                  disp("ï¿½^ï¿½[ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^") */
         /*                  disp(straight_count) */
         /*                  disp(current_node) */
       }
 
-      /* is•ûŒü‚Ìƒoƒbƒtƒ@‚ğƒNƒŠƒA */
+      /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìƒoï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
       move_dir_buffer[0] = 0.0;
       move_dir_buffer[1] = 0.0;
       move_dir_buffer[2] = 0.0;
 
-      /* 3‚Âæ‚Ü‚Å‚Ìis•ûŒü‚©‚çAƒ^[ƒ“‚Ìƒpƒ^[ƒ“‚ğŒˆ’è */
+      /* 3ï¿½Âï¿½Ü‚Å‚Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½^ï¿½[ï¿½ï¿½ï¿½Ìƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
       i = 0;
       exitg2 = false;
       while ((!exitg2) && (i < 3)) {
-        /* Œ»İis•ûŒü‚©‚ç‚Ì‘Š‘Î“I‚ÈˆÚ“®•ûŒü‚ğƒoƒbƒtƒ@ */
+        /* ï¿½ï¿½ï¿½İiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½Î“Iï¿½ÈˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½bï¿½tï¿½@ */
         /*                  disp(["current_move_dir",num2str(current_move_dir)]) */
         /*                  disp(["next_move_dir",num2str(next_move_dir)]) */
         turn_pattern_num = next_move_dir;
@@ -12885,15 +13069,15 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
         move_dir_buffer[i] = (turn_pattern_num - b_next_node_property) & 7;
 
-        /* ƒ^[ƒ“‚Ìí—Ş‚ğ”»’è‚·‚é */
+        /* ï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½Ş‚ğ”»’è‚·ï¿½ï¿½ */
         turn_pattern_num = get_turn_pattern_num(move_dir_buffer, ref_move_mode);
 
-        /* ƒpƒ^[ƒ“‚ªŠm’è‚µ‚Ä‚¢‚ê‚ÎI—¹ */
+        /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
         if (turn_pattern_num != 0) {
-          /* ƒpƒ^[ƒ“‚Ì‹OÕ‚ğ•`‰æ */
+          /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ì‹Oï¿½Õ‚ï¿½`ï¿½ï¿½ */
           exitg2 = true;
         } else {
-          /* Ÿ‚Ìis•ûŒü‚ğŒˆ’è‚·‚é */
+          /* ï¿½ï¿½ï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½ */
           next_node[0] = b_next_node[0];
           next_node[1] = b_next_node[1];
           get_next_dir_diagonal(row_num_node, col_num_node, next_move_dir,
@@ -12901,12 +13085,12 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
                                 goal_node_property, goal_section, &next_move_dir,
                                 b_next_node, &next_node_property);
 
-          /* 3‰ñ–Ú‚Åƒpƒ^[ƒ“‚ªŒˆ‚Ü‚ç‚È‚©‚Á‚½ê‡AƒGƒ‰[ */
+          /* 3ï¿½ï¿½Ú‚Åƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½Gï¿½ï¿½ï¿½[ */
           i++;
         }
       }
 
-      /* ƒpƒ^[ƒ“‚É‰‚¶‚ÄˆÚ“® */
+      /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ÄˆÚ“ï¿½ */
       if (turn_pattern_num == turn_pattern.r_45) {
         turn_r_45(current_node, &current_node_property, &current_move_dir,
                   &current_move_mode);
@@ -12914,8 +13098,8 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         turn_l_45(current_node, &current_node_property, &current_move_dir,
                   &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.r_90) {
-        /* ’¼iƒpƒ^[ƒ“‚Ì */
-        /*  ‰E90“x */
+        /* ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
+        /*  ï¿½E90ï¿½x */
         if (current_move_mode == move_dir_property.straight) {
           if (current_move_dir == g_d_direction.North) {
             i = (int)(current_node[0] + 1U);
@@ -12973,7 +13157,7 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
             }
           }
 
-          /* Î‚ßƒpƒ^[ƒ“‚ÌiV90j */
+          /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½iV90ï¿½j */
         } else {
           if (current_move_mode == move_dir_property.diagonal) {
             if (current_move_dir == g_d_direction.North_East) {
@@ -13031,8 +13215,8 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         turn_l_135(current_node, &current_node_property, &current_move_dir,
                    &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.r_180) {
-        /* ’¼iƒpƒ^[ƒ“‚Ì */
-        /*  ‰E180“x */
+        /* ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
+        /*  ï¿½E180ï¿½x */
         if (current_move_mode == move_dir_property.straight) {
           if (current_move_dir == g_d_direction.North) {
             i = (int)(current_node[0] + 1U);
@@ -13102,7 +13286,7 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
             }
           }
 
-          /* Î‚ßƒpƒ^[ƒ“‚Ì */
+          /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
         }
       } else {
         if (turn_pattern_num == turn_pattern.l_180) {
@@ -13111,27 +13295,27 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         }
       }
 
-      /*              disp("ƒ^[ƒ“I—¹Aƒm[ƒh") */
+      /*              disp("ï¿½^ï¿½[ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½mï¿½[ï¿½h") */
       /*              disp(current_node) */
       /*              disp(goal_node2) */
-      /* ˆÚ“®ŒãAƒS[ƒ‹‚ğ”»’è */
+      /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½ğ”»’ï¿½ */
       if (isequal(current_node, goal_node2) && (current_node_property ==
            goal_node_property)) {
         goal_flag = 1;
       }
 
-      /* Šî€ƒm[ƒh‚ğˆÚ“® */
+      /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Ú“ï¿½ */
       ref_node_property = next_node_property;
       ref_move_dir = current_move_dir;
       ref_move_mode = current_move_mode;
     }
 
-    /* ƒS[ƒ‹ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ê‚ÎI—¹ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
     if (goal_flag == 1) {
       exitg1 = 1;
     } else {
-      /* Ÿ‚ÌˆÚ“®•ûŒü‚ğæ“¾ */
-      /* Î‚ß‚İ‚Ìis•û–@‘I‘ğ */
+      /* ï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ */
+      /* ï¿½Î‚ßï¿½ï¿½İ‚Ìiï¿½sï¿½ï¿½ï¿½@ï¿½Iï¿½ï¿½ */
       next_node[0] = b_next_node[0];
       next_node[1] = b_next_node[1];
       get_next_dir_diagonal(row_num_node, col_num_node, ref_move_dir, next_node,
@@ -13139,15 +13323,15 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
                             goal_section, &next_move_dir, b_next_node,
                             &next_node_property);
 
-      /*          disp("Ÿis•ûŒü") */
+      /*          disp("ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½") */
       /*          disp(next_move_dir) */
     }
   } while (exitg1 == 0);
 }
 
 /*
- * “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü
- * o—Í Œ»İˆÊ’ux,y
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
+ * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y
  * Arguments    : unsigned char *temp_x
  *                unsigned char *temp_y
  *                unsigned char temp_dir
@@ -13159,8 +13343,8 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
   int q0;
   unsigned int qY;
 
-  /*     %% move_step ˆêƒ}ƒX‘Oi‚·‚éŠÖ” */
-  /* –k‚Éˆêƒ}ƒX */
+  /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
+  /* ï¿½kï¿½Éˆï¿½}ï¿½X */
   if (temp_dir == g_direction.North) {
     q0 = (int)(*temp_y + 1U);
     if ((unsigned int)q0 > 255U) {
@@ -13172,7 +13356,7 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
     /* disp("north_step") */
   }
 
-  /* “Œ‚Éˆêƒ}ƒX */
+  /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
   if (temp_dir == g_direction.East) {
     q0 = (int)(*temp_x + 1U);
     if ((unsigned int)q0 > 255U) {
@@ -13184,7 +13368,7 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
     /* disp("east_step") */
   }
 
-  /* “ì‚Éˆêƒ}ƒX */
+  /* ï¿½ï¿½Éˆï¿½}ï¿½X */
   if (temp_dir == g_direction.South) {
     q0 = *temp_y;
     qY = q0 - 1U;
@@ -13197,7 +13381,7 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
     /* disp("south_step") */
   }
 
-  /* ¼‚Éˆêƒ}ƒX */
+  /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
   if (temp_dir == g_direction.West) {
     q0 = *temp_x;
     qY = q0 - 1U;
@@ -13212,7 +13396,7 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
 }
 
 /*
- * ’¼i
+ * ï¿½ï¿½ï¿½iï¿½ï¿½
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -13231,8 +13415,8 @@ static void move_straight(unsigned char current_node[2], unsigned char
   unsigned char temp_qr;
   unsigned int qY;
 
-  /*     %% ˆÚ“®—pŠÖ” */
-  /*  ’¼i */
+  /*     %% ï¿½Ú“ï¿½ï¿½pï¿½Öï¿½ */
+  /*  ï¿½ï¿½ï¿½i */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u11 = current_node[1];
@@ -13284,11 +13468,11 @@ static void move_straight(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* Î‚ß’¼i‚Ì‚Æ‚« */
+    /* ï¿½Î‚ß’ï¿½ï¿½iï¿½Ì‚Æ‚ï¿½ */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
-      /* ’¼iƒJƒEƒ“ƒ^‚ğ2‚ÅŠ„‚Á‚½¤‚Æ‚ ‚Ü‚èA‚»‚Ì‡Œv‚ğŒvZ */
-      /* (ˆÚ“®æƒm[ƒhÀ•W‚Ìˆê”Ê‰»—p) */
+      /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½2ï¿½ÅŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Ü‚ï¿½Aï¿½ï¿½ï¿½Ìï¿½ï¿½vï¿½ï¿½ï¿½vï¿½Z */
+      /* (ï¿½Ú“ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Wï¿½Ìˆï¿½Ê‰ï¿½ï¿½p) */
       temp_quotient = (unsigned char)trunc((double)straight_count / 2.0);
       temp_remainder = (unsigned char)(straight_count % 2);
       temp_qr = (unsigned char)(temp_quotient + temp_remainder);
@@ -13498,12 +13682,12 @@ static void move_straight(unsigned char current_node[2], unsigned char
     }
   }
 
-  /* ˆÚ“®Š®—¹A’¼iƒJƒEƒ“ƒ^‚ğƒNƒŠƒA */
+  /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
 }
 
 /*
- * “ü—Í@Œ»İˆÊ’ux,y,Œ»İ•ûŒü,–À˜Hs•ûŒüƒTƒCƒY,–À˜H—ñ•ûŒüƒTƒCƒY,–À˜H•Çî•ñ,–À˜H•Ç‚Ì’Tõî•ñ,ƒS[ƒ‹À•W
- * o—Í  Œ»İˆÊ’ux,y,Œ»İ•ûŒü,•Çî•ñ,’Tõî•ñ
+ * ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Ç‚Ì’Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W
+ * ï¿½oï¿½ï¿½  ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½,ï¿½Çï¿½ï¿½,ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½
  * Arguments    : const coder_internal_ref_5 *wall
  *                coder_internal_ref *wall_flg
  *                const coder_internal_ref_4 *search
@@ -13534,7 +13718,7 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
 {
   unsigned char goal_flg;
   unsigned char contour_flg;
-  int i224;
+  int i226;
   int exitg1;
   unsigned char next_dir;
   int i;
@@ -13542,56 +13726,56 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   unsigned int qY;
   *start_flg = 0U;
 
-  /*     %% search_adachi ‘«—§–@‚Å‚Ì’Tõ */
-  /* local•Ï”éŒ¾ */
+  /*     %% search_adachi ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½Å‚Ì’Tï¿½ï¿½ */
+  /* localï¿½Ïï¿½ï¿½éŒ¾ */
   goal_flg = 0U;
 
-  /* ƒS[ƒ‹”»’èƒtƒ‰ƒO */
-  /* •Çî•ñXVŠm”F—p•Ï” */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O */
+  /* ï¿½Çï¿½ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ïï¿½ */
   contour_flg = 0U;
 
-  /*      search_start_x = current_x %’TõŠJnx */
-  /*      search_start_y = current_y %’TõŠJny */
-  /* ‰‰ñ‚ÌƒRƒ“ƒ^[ƒ}ƒbƒvì» */
+  /*      search_start_x = current_x %ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½x */
+  /*      search_start_y = current_y %ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½y */
+  /* ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ì» */
   make_map_find(wall, exploration_goal, l_goal_size, maze_wall, *current_x,
                 *current_y, contour_map);
-  i224 = l_goal_size;
+  i226 = l_goal_size;
   do {
     exitg1 = 0;
 
-    /* •Çî•ñæ“¾ */
-    /* ƒS[ƒ‹’¼Œã‚Í•Çî•ñ‚ğXV‚µ‚È‚¢ */
+    /* ï¿½Çï¿½ï¿½æ“¾ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í•Çï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ */
     next_dir = maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
     wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size,
              *current_x, *current_y, *current_dir, maze_wall, maze_wall_search);
 
-    /* •Çî•ñ‚ªXV‚³‚ê‚ê‚ÎAƒRƒ“ƒ^[XV‚Ìƒtƒ‰ƒO‚ğ—§‚Ä‚éB */
+    /* ï¿½Çï¿½ñ‚ªXï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½B */
     if (next_dir != maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1]) {
       contour_flg = 1U;
     }
 
-    /*  “™‚üMAP¶¬ */
-    /* •Çî•ñ‚É•ÏX‚ª‚ ‚Á‚½ê‡‚Ì‚İ */
+    /*  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½ï¿½ */
+    /* ï¿½Çï¿½ï¿½É•ÏXï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ì‚ï¿½ */
     if (contour_flg != 0) {
       make_map_find(wall, exploration_goal, l_goal_size, maze_wall, *current_x, *
                     current_y, contour_map);
     }
 
-    /* Œ»İˆÊ’u‚ªƒS[ƒ‹‚©”»’è */
-    for (i = 0; i < i224; i++) {
+    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    for (i = 0; i < i226; i++) {
       if ((*current_x == exploration_goal[i]) && (*current_y ==
            exploration_goal[i + 9])) {
         goal_flg = 1U;
       }
     }
 
-    /* ’Tõƒ‚[ƒh‚Ìê‡A‘ÎÛ‚Ìƒ}ƒX‚ª‚·‚×‚Ä’TõÏ‚İ‚Ì‚Æ‚«AƒS[ƒ‹ƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+    /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½Ìê‡ï¿½Aï¿½ÎÛ‚Ìƒ}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä’Tï¿½ï¿½ï¿½Ï‚İ‚Ì‚Æ‚ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
     if (adachi_s_mode == adachi_search_mode->contents.search) {
       goal_flg = 1U;
       i = 0;
       exitg2 = false;
       while ((!exitg2) && (i <= l_goal_size - 1)) {
-        /* ƒS[ƒ‹À•W‚ª–¢’Tõ‚Å‚ ‚ê‚ÎAƒtƒ‰ƒO‚ğ‚¨‚ë‚µAƒuƒŒƒCƒN */
+        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ë‚µï¿½Aï¿½uï¿½ï¿½ï¿½Cï¿½N */
         if (maze_wall_search[(exploration_goal[i + 9] + ((exploration_goal[i] -
                1) << 5)) - 1] != 15) {
           goal_flg = 0U;
@@ -13602,15 +13786,15 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
       }
     }
 
-    /* ƒS[ƒ‹ˆ— */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     if (goal_flg == 1) {
       exitg1 = 1;
     } else {
-      /*  is•ûŒü‘I’è */
-      /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
+      /*  ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
+      /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
       next_dir = get_nextdir2(*current_x, *current_y, maze_wall, contour_map);
 
-      /*  Œ»İ•ûŒü‚Æis•ûŒü‚É‰‚¶‚½ˆ— */
+      /*  ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ï¿½Æiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
       i = (int)(4U + next_dir);
       if ((unsigned int)i > 255U) {
         i = 255;
@@ -13641,10 +13825,10 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         /* disp("front") */
         m_move_front(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         *start_flg = 0U;
 
-        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
 
@@ -13655,10 +13839,10 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         /* disp("right") */
         m_move_right(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         *start_flg = 0U;
 
-        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
 
@@ -13669,10 +13853,10 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         /* disp("back") */
         m_move_back(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         *start_flg = 0U;
 
-        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
 
@@ -13683,10 +13867,10 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
         /* disp("left") */
         m_move_left(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         *start_flg = 0U;
 
-        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
         wall_flg->contents = 0U;
         break;
       }
@@ -13695,11 +13879,11 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
     }
   } while (exitg1 == 0);
 
-  /* ƒS[ƒ‹’â~ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é‚Æ‚« */
-  /* ’â~“®ì‚ğÀ{ */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+  /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
   m_goal_movement(0, wall_flg->contents, move_dir_property.straight);
 
-  /* ƒS[ƒ‹’â~ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚È‚¯‚ê‚ÎA“®ì‚³‚¹‚½‚Ü‚ÜI—¹ */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ì‚³ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ÜIï¿½ï¿½ */
 }
 
 /*
@@ -13717,13 +13901,13 @@ static unsigned char sh_route_unexp_sq_jud(const unsigned char
   int i;
   bool exitg1;
 
-  /* Å’ZŒo˜H–¢’Tõƒ}ƒX‡’v”»’èŠÖ”(“ü‚êq) */
-  /* o—Í:”»’èŒ‹‰Ê@0,‡’v‚È‚µ@1,‡’v‚ ‚è */
+  /* ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½Öï¿½(ï¿½ï¿½ï¿½ï¿½q) */
+  /* ï¿½oï¿½ï¿½:ï¿½ï¿½ï¿½èŒ‹ï¿½Ê@0,ï¿½ï¿½ï¿½vï¿½È‚ï¿½ï¿½@1,ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ */
   result = 0U;
   i = 0;
   exitg1 = false;
   while ((!exitg1) && (i <= temp_unexp_square_idx - 1)) {
-    /* Å’ZŒo˜H‚Ì–¢’Tõ‚Ìƒ}ƒX‚Æ“ü—ÍÀ•W‚ªˆê’v‚·‚ê‚Îƒtƒ‰ƒO‚ğ—§‚Ä‚ÄƒuƒŒƒCƒN */
+    /* ï¿½Å’Zï¿½oï¿½Hï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Æ“ï¿½ï¿½Íï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½Îƒtï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚Äƒuï¿½ï¿½ï¿½Cï¿½N */
     if ((temp_unexp_square[i] == temp_y) && (temp_unexp_square[i + 512] ==
          temp_x)) {
       result = 1U;
@@ -13737,69 +13921,69 @@ static unsigned char sh_route_unexp_sq_jud(const unsigned char
 }
 
 /*
- * “ü—Í Œ»İ•ûŒü
- * o—Í Œ»İ•ûŒü
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
+ * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
  * Arguments    : unsigned char *current_dir
  * Return Type  : void
  */
 static void turn_180deg(unsigned char *current_dir)
 {
-  int i320;
+  int i322;
 
-  /*     %% turn_180deg 180“xƒ^[ƒ“‚·‚éŠÖ” */
-  i320 = (int)(4U + *current_dir);
-  if ((unsigned int)i320 > 255U) {
-    i320 = 255;
+  /*     %% turn_180deg 180ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+  i322 = (int)(4U + *current_dir);
+  if ((unsigned int)i322 > 255U) {
+    i322 = 255;
   }
 
-  *current_dir = (unsigned char)((i320 - 2) % 4);
+  *current_dir = (unsigned char)((i322 - 2) % 4);
 }
 
 /*
- * “ü—Í Œ»İ•ûŒü
- * o—Í Œ»İ•ûŒü
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
+ * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
  * Arguments    : unsigned char *current_dir
  * Return Type  : void
  */
 static void turn_clk_90deg(unsigned char *current_dir)
 {
-  int i319;
-
-  /*     %% turn_clk_90deg Œvü‚è‚É90“xƒ^[ƒ“‚·‚éŠÖ” */
-  i319 = (int)(4U + *current_dir);
-  if ((unsigned int)i319 > 255U) {
-    i319 = 255;
-  }
-
-  i319++;
-  if ((unsigned int)i319 > 255U) {
-    i319 = 255;
-  }
-
-  *current_dir = (unsigned char)(i319 % 4);
-}
-
-/*
- * “ü—Í@Œ»İ•ûŒü
- * o—Í@Œ»İ•ûŒü
- * Arguments    : unsigned char *current_dir
- * Return Type  : void
- */
-static void turn_conclk_90deg(unsigned char *current_dir)
-{
   int i321;
 
-  /*     %% turn_conclk_90deg ”½Œvü‚è‚É90“x‰ñ‚éŠÖ” */
+  /*     %% turn_clk_90deg ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
   i321 = (int)(4U + *current_dir);
   if ((unsigned int)i321 > 255U) {
     i321 = 255;
   }
 
-  *current_dir = (unsigned char)((i321 - 1) % 4);
+  i321++;
+  if ((unsigned int)i321 > 255U) {
+    i321 = 255;
+  }
+
+  *current_dir = (unsigned char)(i321 % 4);
 }
 
 /*
- * ’¼iƒpƒ^[ƒ“‚Ì
+ * ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
+ * ï¿½oï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
+ * Arguments    : unsigned char *current_dir
+ * Return Type  : void
+ */
+static void turn_conclk_90deg(unsigned char *current_dir)
+{
+  int i323;
+
+  /*     %% turn_conclk_90deg ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½ï¿½ï¿½Öï¿½ */
+  i323 = (int)(4U + *current_dir);
+  if ((unsigned int)i323 > 255U) {
+    i323 = 255;
+  }
+
+  *current_dir = (unsigned char)((i323 - 1) % 4);
+}
+
+/*
+ * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -13814,7 +13998,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ¶135“x */
+  /*  ï¿½ï¿½135ï¿½x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u16 = current_node[1];
@@ -13890,7 +14074,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* Î‚ßƒpƒ^[ƒ“‚Ì */
+    /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
@@ -13947,7 +14131,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
 }
 
 /*
- * ’¼iƒpƒ^[ƒ“‚Ì
+ * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -13962,7 +14146,7 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ¶180“x */
+  /*  ï¿½ï¿½180ï¿½x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u17 = current_node[1];
@@ -14038,12 +14222,12 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* Î‚ßƒpƒ^[ƒ“‚Ì */
+    /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
   }
 }
 
 /*
- * ’¼iƒpƒ^[ƒ“‚Ì
+ * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14058,7 +14242,7 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ¶45“x */
+  /*  ï¿½ï¿½45ï¿½x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u13 = current_node[1];
@@ -14176,7 +14360,7 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
 }
 
 /*
- * ’¼iƒpƒ^[ƒ“‚Ì
+ * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14191,7 +14375,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ¶90“x */
+  /*  ï¿½ï¿½90ï¿½x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u14 = current_node[1];
@@ -14255,7 +14439,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* Î‚ßƒpƒ^[ƒ“‚ÌiV90j */
+    /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½iV90ï¿½j */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
@@ -14312,7 +14496,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
 }
 
 /*
- * ’¼iƒpƒ^[ƒ“‚Ì
+ * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14327,7 +14511,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ‰E135“x */
+  /*  ï¿½E135ï¿½x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u15 = current_node[1];
@@ -14403,7 +14587,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* Î‚ßƒpƒ^[ƒ“‚Ì */
+    /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
@@ -14460,7 +14644,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
 }
 
 /*
- * ’¼iƒpƒ^[ƒ“‚Ì
+ * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14475,7 +14659,7 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ‰E45“x */
+  /*  ï¿½E45ï¿½x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u12 = current_node[1];
@@ -14591,10 +14775,10 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
 }
 
 /*
- * matlabã‚Å‚Í‰æ‘œ‚©‚çæ“¾‚µ‚½•Çî•ñ‚ğQÆ‚·‚éB
- * “ü—Í:‰æ‘œ‚©‚ç“¾‚½–À˜Hî•ñ,–À˜Hs•ûŒü•Ç–‡”,–À˜H—ñ•ûŒü•Ç–‡”,
- *      Œ»İ’nÀ•Wx,y,Œ»İis•ûŒü,–À˜H•Çî•ñ,–À˜H•Ç’Tõî•ñ
- * o—Í:–À˜H•Çî•ñ,–À˜H•Ç’Tõî•ñ
+ * matlabï¿½ï¿½Å‚Í‰æ‘œï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½ï¿½Çï¿½ï¿½ï¿½ï¿½Qï¿½Æ‚ï¿½ï¿½ï¿½B
+ * ï¿½ï¿½ï¿½ï¿½:ï¿½æ‘œï¿½ï¿½ï¿½ç“¾ï¿½ï¿½ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ç–ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç–ï¿½ï¿½ï¿½,
+ *      ï¿½ï¿½ï¿½İ’nï¿½ï¿½ï¿½Wx,y,ï¿½ï¿½ï¿½İiï¿½sï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Ç’Tï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½oï¿½ï¿½:ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Ç’Tï¿½ï¿½ï¿½ï¿½ï¿½
  * Arguments    : const coder_internal_ref_5 *wall
  *                coder_internal_ref *wall_flg
  *                const coder_internal_ref_4 *search
@@ -14619,13 +14803,11 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   unsigned char wall_write[4];
   unsigned char serch_write[4];
   short wall_sensor_front;
-  int i225;
-  int ex;
-  int i226;
   int i227;
-  int k;
+  int ex;
   int i228;
   int i229;
+  int k;
   int i230;
   int i231;
   int i232;
@@ -14635,14 +14817,14 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   int i236;
   int i237;
   int i238;
-  unsigned int qY;
   int i239;
   int i240;
+  unsigned int qY;
   int i241;
   int i242;
-  signed char varargin_1[9];
   int i243;
   int i244;
+  signed char varargin_1[9];
   int i245;
   int i246;
   int i247;
@@ -14675,9 +14857,9 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   int i274;
   int i275;
   int i276;
-  unsigned int b_qY;
   int i277;
   int i278;
+  unsigned int b_qY;
   int i279;
   int i280;
   int i281;
@@ -14708,10 +14890,10 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   int i306;
   int i307;
   int i308;
-  unsigned int c_qY;
-  unsigned int d_qY;
   int i309;
   int i310;
+  unsigned int c_qY;
+  unsigned int d_qY;
   int i311;
   int i312;
   int i313;
@@ -14720,14 +14902,16 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   int i316;
   int i317;
   int i318;
+  int i319;
+  int i320;
 
-  /*     %%  wall_set •Çî•ñæ“¾ */
-  /* ƒOƒ[ƒoƒ‹•Ï”(matlab‚Å‚Í–À˜Hƒf[ƒ^‚ğAC‚Å‚Í•ÇƒZƒ“ƒT’l‚ğQÆ) */
+  /*     %%  wall_set ï¿½Çï¿½ï¿½æ“¾ */
+  /* ï¿½Oï¿½ï¿½ï¿½[ï¿½oï¿½ï¿½ï¿½Ïï¿½(matlabï¿½Å‚Í–ï¿½ï¿½Hï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ACï¿½Å‚Í•ÇƒZï¿½ï¿½ï¿½Tï¿½lï¿½ï¿½ï¿½Qï¿½ï¿½) */
   /* for matlab */
   /* for C gen */
-  /* •ÇƒZƒ“ƒTè‡’l */
-  /* ƒ[ƒJƒ‹•Ï”éŒ¾ */
-  /* •Çî•ñ‘‚«‚İ—pƒoƒbƒtƒ@(N,E,S,W) */
+  /* ï¿½ÇƒZï¿½ï¿½ï¿½Tè‡’l */
+  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½éŒ¾ */
+  /* ï¿½Çï¿½ñ‘‚ï¿½ï¿½ï¿½ï¿½İ—pï¿½oï¿½bï¿½tï¿½@(N,E,S,W) */
   wall_write[0] = 0U;
   serch_write[0] = 0U;
   wall_write[1] = 0U;
@@ -14737,849 +14921,561 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   wall_write[3] = 0U;
   serch_write[3] = 0U;
 
-  /* ’Tõî•ñ‘‚«‚İ—pƒoƒbƒtƒ@(N,E,S,W) */
-  /* •ÇƒZƒ“ƒTAD’lŠi”[•Ï” */
-  /* ƒ}ƒEƒX‚Ì•ûŒü‚ÉŠî‚Ã‚­•Çî•ñæ“¾ */
-  /* ƒ}ƒEƒX‚Ì•ûŒü‚Æâ‘Î•ûŒü‚Ì·=ƒ}ƒEƒX‚Ì•ûŒü‚Æ‚È‚é‚±‚Æ‚ğ—˜—p‚µA */
-  /* â‘ÎŠp“x‚Æ®‡‚ğ‚Æ‚éB */
-  /* ‘O•û‚Ì•Ç”»’è */
+  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ñ‘‚ï¿½ï¿½ï¿½ï¿½İ—pï¿½oï¿½bï¿½tï¿½@(N,E,S,W) */
+  /* ï¿½ÇƒZï¿½ï¿½ï¿½TADï¿½lï¿½iï¿½[ï¿½Ïï¿½ */
+  /* ï¿½}ï¿½Eï¿½Xï¿½Ì•ï¿½ï¿½ï¿½ï¿½ÉŠï¿½Ã‚ï¿½ï¿½Çï¿½ï¿½æ“¾ */
+  /* ï¿½}ï¿½Eï¿½Xï¿½Ì•ï¿½ï¿½ï¿½ï¿½Æï¿½Î•ï¿½ï¿½ï¿½ï¿½Ìï¿½=ï¿½}ï¿½Eï¿½Xï¿½Ì•ï¿½ï¿½ï¿½ï¿½Æ‚È‚é‚±ï¿½Æ‚ğ—˜—pï¿½ï¿½ï¿½A */
+  /* ï¿½ï¿½ÎŠpï¿½xï¿½Æï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½B */
+  /* ï¿½Oï¿½ï¿½ï¿½Ì•Ç”ï¿½ï¿½ï¿½ */
   /* for Cgen */
-  /* ƒZƒ“ƒT’læ“¾ */
+  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½æ“¾ */
   wall_sensor_front = m_get_front_sensor();
 
-  /* ƒZƒ“ƒT’l‚ğ‚à‚Æ‚ÉA•Ç‚Ì—L–³‚ğ”»’è */
+  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉAï¿½Ç‚Ì—Lï¿½ï¿½ï¿½ğ”»’ï¿½ */
   if (wall_sensor_front > wall_sensor_front_th) {
-    /* •Çî•ñæ“¾ */
-    i225 = (int)(b_rem(current_dir) + 1U);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    /* ï¿½Çï¿½ï¿½æ“¾ */
+    i227 = (int)(b_rem(current_dir) + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    wall_write[i225 - 1] = wall->contents.wall;
+    wall_write[i227 - 1] = wall->contents.wall;
 
-    /* •Çƒtƒ‰ƒOƒZƒbƒg */
+    /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g */
     wall_flg->contents |= 1;
   }
 
-  /* ’Tõî•ñæXV */
-  i225 = (int)(b_rem(current_dir) + 1U);
-  if ((unsigned int)i225 > 255U) {
-    i225 = 255;
+  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+  i227 = (int)(b_rem(current_dir) + 1U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  serch_write[i225 - 1] = search->contents.known;
+  serch_write[i227 - 1] = search->contents.known;
 
-  /* ‰E•Ç”»’è */
+  /* ï¿½Eï¿½Ç”ï¿½ï¿½ï¿½ */
   /* for Cgen */
-  /* ƒZƒ“ƒT’læ“¾ */
+  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½æ“¾ */
   wall_sensor_front = m_get_right_sensor();
 
-  /* ƒZƒ“ƒT’l‚ğ‚à‚Æ‚ÉA•Ç‚Ì—L–³‚ğ”»’è */
+  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉAï¿½Ç‚Ì—Lï¿½ï¿½ï¿½ğ”»’ï¿½ */
   if (wall_sensor_front > wall_sensor_right_th) {
-    /* •Çî•ñæ“¾ */
-    i225 = (int)(current_dir + 1U);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    /* ï¿½Çï¿½ï¿½æ“¾ */
+    i227 = (int)(current_dir + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    i225 = (int)(b_rem((unsigned char)i225) + 1U);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    i227 = (int)(b_rem((unsigned char)i227) + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    wall_write[i225 - 1] = wall->contents.wall;
+    wall_write[i227 - 1] = wall->contents.wall;
 
-    /* •Çƒtƒ‰ƒOƒZƒbƒg */
+    /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g */
     wall_flg->contents = (unsigned char)(wall_flg->contents | 2);
   }
 
-  /* ’Tõî•ñæXV */
-  i225 = (int)(current_dir + 1U);
-  if ((unsigned int)i225 > 255U) {
-    i225 = 255;
+  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+  i227 = (int)(current_dir + 1U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  i225 = (int)(b_rem((unsigned char)i225) + 1U);
-  if ((unsigned int)i225 > 255U) {
-    i225 = 255;
+  i227 = (int)(b_rem((unsigned char)i227) + 1U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  serch_write[i225 - 1] = search->contents.known;
+  serch_write[i227 - 1] = search->contents.known;
 
-  /* Œã•û‚Íî•ñ‚ğ“¾‚é‚±‚Æ‚ª‚Å‚«‚È‚¢‚Ì‚Åˆ—‚µ‚È‚¢B */
-  /* ¶•Ç”»’è */
+  /* ï¿½ï¿½ï¿½ï¿½Íï¿½ï¿½ğ“¾‚é‚±ï¿½Æ‚ï¿½ï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½Ì‚Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B */
+  /* ï¿½ï¿½ï¿½Ç”ï¿½ï¿½ï¿½ */
   /* for Cgen */
-  /* ƒZƒ“ƒT’læ“¾ */
+  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½æ“¾ */
   wall_sensor_front = m_get_left_sensor();
 
-  /* ƒZƒ“ƒT’l‚ğ‚à‚Æ‚ÉA•Ç‚Ì—L–³‚ğ”»’è */
+  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉAï¿½Ç‚Ì—Lï¿½ï¿½ï¿½ğ”»’ï¿½ */
   if (wall_sensor_front > wall_sensor_left_th) {
-    /* •Çî•ñæ“¾ */
-    i225 = (int)(current_dir + 3U);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    /* ï¿½Çï¿½ï¿½æ“¾ */
+    i227 = (int)(current_dir + 3U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    i225 = (int)(b_rem((unsigned char)i225) + 1U);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    i227 = (int)(b_rem((unsigned char)i227) + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    wall_write[i225 - 1] = wall->contents.wall;
+    wall_write[i227 - 1] = wall->contents.wall;
 
-    /* •Çƒtƒ‰ƒOƒZƒbƒg */
+    /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g */
     wall_flg->contents = (unsigned char)(wall_flg->contents | 8);
   }
 
-  /* ’Tõî•ñæXV */
-  i225 = (int)(current_dir + 3U);
-  if ((unsigned int)i225 > 255U) {
-    i225 = 255;
+  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+  i227 = (int)(current_dir + 3U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  i225 = (int)(b_rem((unsigned char)i225) + 1U);
-  if ((unsigned int)i225 > 255U) {
-    i225 = 255;
+  i227 = (int)(b_rem((unsigned char)i227) + 1U);
+  if ((unsigned int)i227 > 255U) {
+    i227 = 255;
   }
 
-  serch_write[i225 - 1] = search->contents.known;
+  serch_write[i227 - 1] = search->contents.known;
 
-  /* ‚±‚±‚Ü‚Å */
-  /* •Çî•ñ,’Tõî•ñ‚ğ“ü—Í */
-  /* –k‘¤ */
-  i225 = (int)(g_direction.North + 1U);
-  ex = i225;
-  if ((unsigned int)i225 > 255U) {
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ */
+  /* ï¿½Çï¿½ï¿½,ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /* ï¿½kï¿½ï¿½ */
+  i227 = (int)(g_direction.North + 1U);
+  ex = i227;
+  if ((unsigned int)i227 > 255U) {
     ex = 255;
   }
 
   if (g_direction.North <= 7) {
-    i226 = (unsigned char)(1 << g_direction.North);
+    i228 = (unsigned char)(1 << g_direction.North);
   } else {
-    i226 = 0;
+    i228 = 0;
   }
 
-  ex = (int)((unsigned int)i226 * wall_write[ex - 1]);
+  ex = (int)((unsigned int)i228 * wall_write[ex - 1]);
   if ((unsigned int)ex > 255U) {
     ex = 255;
   }
 
-  i227 = (current_x - 1) << 5;
-  k = current_y + i227;
-  i228 = k - 1;
-  maze_wall[i228] = (unsigned char)(maze_wall[i228] | ex);
-  ex = i225;
-  if ((unsigned int)i225 > 255U) {
+  i229 = (current_x - 1) << 5;
+  k = current_y + i229;
+  i230 = k - 1;
+  maze_wall[i230] = (unsigned char)(maze_wall[i230] | ex);
+  ex = i227;
+  if ((unsigned int)i227 > 255U) {
     ex = 255;
   }
 
   if (g_direction.North <= 7) {
-    i229 = (unsigned char)(1 << g_direction.North);
-  } else {
-    i229 = 0;
-  }
-
-  ex = (int)((unsigned int)i229 * serch_write[ex - 1]);
-  if ((unsigned int)ex > 255U) {
-    ex = 255;
-  }
-
-  maze_wall_search[i228] = (unsigned char)(maze_wall_search[i228] | ex);
-
-  /* “Œ‘¤ */
-  ex = (int)(g_direction.East + 1U);
-  i230 = ex;
-  if ((unsigned int)ex > 255U) {
-    i230 = 255;
-  }
-
-  if (g_direction.East <= 7) {
-    i231 = (unsigned char)(1 << g_direction.East);
+    i231 = (unsigned char)(1 << g_direction.North);
   } else {
     i231 = 0;
   }
 
-  i230 = (int)((unsigned int)i231 * wall_write[i230 - 1]);
-  if ((unsigned int)i230 > 255U) {
-    i230 = 255;
+  ex = (int)((unsigned int)i231 * serch_write[ex - 1]);
+  if ((unsigned int)ex > 255U) {
+    ex = 255;
   }
 
-  maze_wall[i228] = (unsigned char)(maze_wall[i228] | i230);
-  i230 = ex;
+  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | ex);
+
+  /* ï¿½ï¿½ï¿½ï¿½ */
+  ex = (int)(g_direction.East + 1U);
+  i232 = ex;
   if ((unsigned int)ex > 255U) {
-    i230 = 255;
+    i232 = 255;
   }
 
   if (g_direction.East <= 7) {
-    i232 = (unsigned char)(1 << g_direction.East);
+    i233 = (unsigned char)(1 << g_direction.East);
   } else {
-    i232 = 0;
+    i233 = 0;
   }
 
-  i230 = (int)((unsigned int)i232 * serch_write[i230 - 1]);
-  if ((unsigned int)i230 > 255U) {
-    i230 = 255;
+  i232 = (int)((unsigned int)i233 * wall_write[i232 - 1]);
+  if ((unsigned int)i232 > 255U) {
+    i232 = 255;
   }
 
-  maze_wall_search[i228] = (unsigned char)(maze_wall_search[i228] | i230);
-
-  /* “ì‘¤ */
-  i230 = (int)(g_direction.South + 1U);
-  i233 = i230;
-  if ((unsigned int)i230 > 255U) {
-    i233 = 255;
+  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i232);
+  i232 = ex;
+  if ((unsigned int)ex > 255U) {
+    i232 = 255;
   }
 
-  if (g_direction.South <= 7) {
-    i234 = (unsigned char)(1 << g_direction.South);
+  if (g_direction.East <= 7) {
+    i234 = (unsigned char)(1 << g_direction.East);
   } else {
     i234 = 0;
   }
 
-  i233 = (int)((unsigned int)i234 * wall_write[i233 - 1]);
-  if ((unsigned int)i233 > 255U) {
-    i233 = 255;
+  i232 = (int)((unsigned int)i234 * serch_write[i232 - 1]);
+  if ((unsigned int)i232 > 255U) {
+    i232 = 255;
   }
 
-  maze_wall[i228] = (unsigned char)(maze_wall[i228] | i233);
-  i233 = i230;
-  if ((unsigned int)i230 > 255U) {
-    i233 = 255;
+  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i232);
+
+  /* ï¿½ì‘¤ */
+  i232 = (int)(g_direction.South + 1U);
+  i235 = i232;
+  if ((unsigned int)i232 > 255U) {
+    i235 = 255;
   }
 
   if (g_direction.South <= 7) {
-    i235 = (unsigned char)(1 << g_direction.South);
+    i236 = (unsigned char)(1 << g_direction.South);
   } else {
-    i235 = 0;
+    i236 = 0;
   }
 
-  i233 = (int)((unsigned int)i235 * serch_write[i233 - 1]);
-  if ((unsigned int)i233 > 255U) {
-    i233 = 255;
+  i235 = (int)((unsigned int)i236 * wall_write[i235 - 1]);
+  if ((unsigned int)i235 > 255U) {
+    i235 = 255;
   }
 
-  maze_wall_search[i228] = (unsigned char)(maze_wall_search[i228] | i233);
-
-  /* ¼‘¤ */
-  i233 = (int)(g_direction.West + 1U);
-  i236 = i233;
-  if ((unsigned int)i233 > 255U) {
-    i236 = 255;
+  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i235);
+  i235 = i232;
+  if ((unsigned int)i232 > 255U) {
+    i235 = 255;
   }
 
-  if (g_direction.West <= 7) {
-    i237 = (unsigned char)(1 << g_direction.West);
+  if (g_direction.South <= 7) {
+    i237 = (unsigned char)(1 << g_direction.South);
   } else {
     i237 = 0;
   }
 
-  i236 = (int)((unsigned int)i237 * wall_write[i236 - 1]);
-  if ((unsigned int)i236 > 255U) {
-    i236 = 255;
+  i235 = (int)((unsigned int)i237 * serch_write[i235 - 1]);
+  if ((unsigned int)i235 > 255U) {
+    i235 = 255;
   }
 
-  maze_wall[i228] = (unsigned char)(maze_wall[i228] | i236);
-  i236 = i233;
-  if ((unsigned int)i233 > 255U) {
-    i236 = 255;
+  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i235);
+
+  /* ï¿½ï¿½ï¿½ï¿½ */
+  i235 = (int)(g_direction.West + 1U);
+  i238 = i235;
+  if ((unsigned int)i235 > 255U) {
+    i238 = 255;
   }
 
   if (g_direction.West <= 7) {
-    i238 = (unsigned char)(1 << g_direction.West);
+    i239 = (unsigned char)(1 << g_direction.West);
   } else {
-    i238 = 0;
+    i239 = 0;
   }
 
-  i236 = (int)((unsigned int)i238 * serch_write[i236 - 1]);
-  if ((unsigned int)i236 > 255U) {
-    i236 = 255;
+  i238 = (int)((unsigned int)i239 * wall_write[i238 - 1]);
+  if ((unsigned int)i238 > 255U) {
+    i238 = 255;
   }
 
-  maze_wall_search[i228] = (unsigned char)(maze_wall_search[i228] | i236);
+  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i238);
+  i238 = i235;
+  if ((unsigned int)i235 > 255U) {
+    i238 = 255;
+  }
 
-  /* —×‚è‡‚¤ƒ}ƒX‚Ìî•ñ‚É‚à“ü—Í */
-  /* –k‘¤‚Ìƒ}ƒX‚Ì“ì‘¤‚Ì•Çî•ñ */
+  if (g_direction.West <= 7) {
+    i240 = (unsigned char)(1 << g_direction.West);
+  } else {
+    i240 = 0;
+  }
+
+  i238 = (int)((unsigned int)i240 * serch_write[i238 - 1]);
+  if ((unsigned int)i238 > 255U) {
+    i238 = 255;
+  }
+
+  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i238);
+
+  /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /* ï¿½kï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ì‘¤ï¿½Ì•Çï¿½ï¿½ */
   qY = maze_row_size - 1U;
   if (qY > maze_row_size) {
     qY = 0U;
   }
 
   if (current_y < (int)qY) {
-    i236 = i225;
-    if ((unsigned int)i225 > 255U) {
-      i236 = 255;
+    i238 = i227;
+    if ((unsigned int)i227 > 255U) {
+      i238 = 255;
     }
 
     if (g_direction.South <= 7) {
-      i239 = (unsigned char)(1 << g_direction.South);
+      i241 = (unsigned char)(1 << g_direction.South);
     } else {
-      i239 = 0;
+      i241 = 0;
     }
 
-    i236 = (int)((unsigned int)i239 * wall_write[i236 - 1]);
-    if ((unsigned int)i236 > 255U) {
-      i236 = 255;
+    i238 = (int)((unsigned int)i241 * wall_write[i238 - 1]);
+    if ((unsigned int)i238 > 255U) {
+      i238 = 255;
     }
 
-    maze_wall[k] = (unsigned char)(maze_wall[k] | i236);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    maze_wall[k] = (unsigned char)(maze_wall[k] | i238);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
     if (g_direction.South <= 7) {
-      i242 = (unsigned char)(1 << g_direction.South);
+      i244 = (unsigned char)(1 << g_direction.South);
     } else {
-      i242 = 0;
+      i244 = 0;
     }
 
-    i225 = (int)((unsigned int)i242 * serch_write[i225 - 1]);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    i227 = (int)((unsigned int)i244 * serch_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    maze_wall_search[k] = (unsigned char)(maze_wall_search[k] | i225);
+    maze_wall_search[k] = (unsigned char)(maze_wall_search[k] | i227);
   }
 
-  /* “Œ‘¤‚Ìƒ}ƒX‚Ì¼‘¤‚Ì•Çî•ñ */
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Ì•Çï¿½ï¿½ */
   qY = maze_col_size - 1U;
   if (qY > maze_col_size) {
     qY = 0U;
   }
 
   if (current_x < (int)qY) {
-    i225 = ex;
+    i227 = ex;
     if ((unsigned int)ex > 255U) {
-      i225 = 255;
+      i227 = 255;
     }
 
     if (g_direction.West <= 7) {
-      i240 = (unsigned char)(1 << g_direction.West);
+      i242 = (unsigned char)(1 << g_direction.West);
     } else {
-      i240 = 0;
+      i242 = 0;
     }
 
-    i225 = (int)((unsigned int)i240 * wall_write[i225 - 1]);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    i227 = (int)((unsigned int)i242 * wall_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    i236 = (current_y + (current_x << 5)) - 1;
-    maze_wall[i236] = (unsigned char)(maze_wall[i236] | i225);
+    i238 = (current_y + (current_x << 5)) - 1;
+    maze_wall[i238] = (unsigned char)(maze_wall[i238] | i227);
     if ((unsigned int)ex > 255U) {
       ex = 255;
     }
 
     if (g_direction.West <= 7) {
-      i244 = (unsigned char)(1 << g_direction.West);
-    } else {
-      i244 = 0;
-    }
-
-    i225 = (int)((unsigned int)i244 * serch_write[ex - 1]);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
-    }
-
-    maze_wall_search[i236] = (unsigned char)(maze_wall_search[i236] | i225);
-  }
-
-  /* “ì‘¤‚Ìƒ}ƒX‚Ì–k‘¤‚Ì•Çî•ñ */
-  if (current_y > 1) {
-    i225 = i230;
-    if ((unsigned int)i230 > 255U) {
-      i225 = 255;
-    }
-
-    if (g_direction.North <= 7) {
-      i241 = (unsigned char)(1 << g_direction.North);
-    } else {
-      i241 = 0;
-    }
-
-    i225 = (int)((unsigned int)i241 * wall_write[i225 - 1]);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
-    }
-
-    ex = k - 2;
-    maze_wall[ex] = (unsigned char)(maze_wall[ex] | i225);
-    if ((unsigned int)i230 > 255U) {
-      i230 = 255;
-    }
-
-    if (g_direction.North <= 7) {
-      i246 = (unsigned char)(1 << g_direction.North);
+      i246 = (unsigned char)(1 << g_direction.West);
     } else {
       i246 = 0;
     }
 
-    i225 = (int)((unsigned int)i246 * serch_write[i230 - 1]);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    i227 = (int)((unsigned int)i246 * serch_write[ex - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    maze_wall_search[ex] = (unsigned char)(maze_wall_search[ex] | i225);
+    maze_wall_search[i238] = (unsigned char)(maze_wall_search[i238] | i227);
   }
 
-  /* ¼‘¤‚Ìƒ}ƒX‚Ì“Œ‘¤‚Ì•Çî•ñ */
-  if (current_x > 1) {
-    i225 = i233;
-    if ((unsigned int)i233 > 255U) {
-      i225 = 255;
+  /* ï¿½ì‘¤ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½ï¿½ï¿½Ì•Çï¿½ï¿½ */
+  if (current_y > 1) {
+    i227 = i232;
+    if ((unsigned int)i232 > 255U) {
+      i227 = 255;
     }
 
-    if (g_direction.East <= 7) {
-      i243 = (unsigned char)(1 << g_direction.East);
+    if (g_direction.North <= 7) {
+      i243 = (unsigned char)(1 << g_direction.North);
     } else {
       i243 = 0;
     }
 
-    i225 = (int)((unsigned int)i243 * wall_write[i225 - 1]);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    i227 = (int)((unsigned int)i243 * wall_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    ex = (current_y + ((current_x - 2) << 5)) - 1;
-    maze_wall[ex] = (unsigned char)(maze_wall[ex] | i225);
-    if ((unsigned int)i233 > 255U) {
-      i233 = 255;
+    ex = k - 2;
+    maze_wall[ex] = (unsigned char)(maze_wall[ex] | i227);
+    if ((unsigned int)i232 > 255U) {
+      i232 = 255;
     }
 
-    if (g_direction.East <= 7) {
-      i248 = (unsigned char)(1 << g_direction.East);
+    if (g_direction.North <= 7) {
+      i248 = (unsigned char)(1 << g_direction.North);
     } else {
       i248 = 0;
     }
 
-    i225 = (int)((unsigned int)i248 * serch_write[i233 - 1]);
-    if ((unsigned int)i225 > 255U) {
-      i225 = 255;
+    i227 = (int)((unsigned int)i248 * serch_write[i232 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
-    maze_wall_search[ex] = (unsigned char)(maze_wall_search[ex] | i225);
+    maze_wall_search[ex] = (unsigned char)(maze_wall_search[ex] | i227);
   }
 
-  /* Œ»İ’n‚ªƒS[ƒ‹‚Å‚È‚¢ê‡ */
-  for (i225 = 0; i225 < 9; i225++) {
-    varargin_1[i225] = (signed char)((maze_goal->contents[i225] == current_x) *
-      (maze_goal->contents[9 + i225] == current_y));
-  }
-
-  ex = varargin_1[0];
-  for (k = 0; k < 8; k++) {
-    i225 = varargin_1[k + 1];
-    if (ex < i225) {
-      ex = i225;
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½ï¿½ï¿½Ì•Çï¿½ï¿½ */
+  if (current_x > 1) {
+    i227 = i235;
+    if ((unsigned int)i235 > 255U) {
+      i227 = 255;
     }
-  }
 
-  if (ex == 0) {
-    /* ’Œ‚É‘Î‚µA3•ûŒü’TõÏ‚İ‚©‚ÂA‚·‚×‚Ä•Ç‚ª‚È‚¢ê‡A‚à‚¤ˆê•ûŒü‚Ì•Ç‚ğŠm’è‚³‚¹‚éB */
-    /* –k,“Œ‚É•Ç‚ª‚È‚¢ê‡ */
-    if (g_direction.North <= 7) {
-      i245 = (unsigned char)(1 << g_direction.North);
+    if (g_direction.East <= 7) {
+      i245 = (unsigned char)(1 << g_direction.East);
     } else {
       i245 = 0;
     }
 
+    i227 = (int)((unsigned int)i245 * wall_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
+    }
+
+    ex = (current_y + ((current_x - 2) << 5)) - 1;
+    maze_wall[ex] = (unsigned char)(maze_wall[ex] | i227);
+    if ((unsigned int)i235 > 255U) {
+      i235 = 255;
+    }
+
+    if (g_direction.East <= 7) {
+      i250 = (unsigned char)(1 << g_direction.East);
+    } else {
+      i250 = 0;
+    }
+
+    i227 = (int)((unsigned int)i250 * serch_write[i235 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
+    }
+
+    maze_wall_search[ex] = (unsigned char)(maze_wall_search[ex] | i227);
+  }
+
+  /* ï¿½ï¿½ï¿½İ’nï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ê‡ */
+  for (i227 = 0; i227 < 9; i227++) {
+    varargin_1[i227] = (signed char)((maze_goal->contents[i227] == current_x) *
+      (maze_goal->contents[9 + i227] == current_y));
+  }
+
+  ex = varargin_1[0];
+  for (k = 0; k < 8; k++) {
+    i227 = varargin_1[k + 1];
+    if (ex < i227) {
+      ex = i227;
+    }
+  }
+
+  if (ex == 0) {
+    /* ï¿½ï¿½ï¿½É‘Î‚ï¿½ï¿½A3ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚ï¿½ï¿½ÂAï¿½ï¿½ï¿½×‚Ä•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½è‚³ï¿½ï¿½ï¿½ï¿½B */
+    /* ï¿½k,ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
     if (g_direction.North <= 7) {
       i247 = (unsigned char)(1 << g_direction.North);
     } else {
       i247 = 0;
     }
 
-    if ((maze_wall[i228] & i245) != i247) {
-      if (g_direction.East <= 7) {
-        i249 = (unsigned char)(1 << g_direction.East);
-      } else {
-        i249 = 0;
-      }
+    if (g_direction.North <= 7) {
+      i249 = (unsigned char)(1 << g_direction.North);
+    } else {
+      i249 = 0;
+    }
 
+    if ((maze_wall[i230] & i247) != i249) {
       if (g_direction.East <= 7) {
         i251 = (unsigned char)(1 << g_direction.East);
       } else {
         i251 = 0;
       }
 
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i249) != i251)
-      {
-        /* –k‚Ìƒ}ƒX‚Ì“Œ‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
-        i225 = (int)(current_y + 1U);
-        ex = i225;
-        if ((unsigned int)i225 > 255U) {
-          ex = 255;
-        }
-
-        if (g_direction.East <= 7) {
-          i256 = (unsigned char)(1 << g_direction.East);
-        } else {
-          i256 = 0;
-        }
-
-        if ((maze_wall_search[(ex + i227) - 1] & i256) != 0) {
-          ex = i225;
-          if ((unsigned int)i225 > 255U) {
-            ex = 255;
-          }
-
-          if (g_direction.East <= 7) {
-            i259 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i259 = 0;
-          }
-
-          if (g_direction.East <= 7) {
-            i264 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i264 = 0;
-          }
-
-          if ((maze_wall[(ex + i227) - 1] & i259) != i264) {
-            /* “Œ‚Ìƒ}ƒX‚Ì–k‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
-            ex = (int)(current_x + 1U);
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
-            }
-
-            k = (int)(current_x + 1U);
-            if ((unsigned int)k > 255U) {
-              k = 255;
-            }
-
-            if (g_direction.North <= 7) {
-              i274 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i274 = 0;
-            }
-
-            maze_wall[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + ((k - 1) << 5)) - 1] | i274);
-            ex = (int)(current_x + 1U);
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
-            }
-
-            k = (int)(current_x + 1U);
-            if ((unsigned int)k > 255U) {
-              k = 255;
-            }
-
-            if (g_direction.North <= 7) {
-              i283 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i283 = 0;
-            }
-
-            maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(current_y + ((k - 1) << 5)) - 1] | i283);
-
-            /* —×‚è‡‚¤ƒ}ƒXi“Œ–kƒ}ƒXj‚Ì“ì‚Ì•Ç‚àŠm’è */
-            ex = i225;
-            if ((unsigned int)i225 > 255U) {
-              ex = 255;
-            }
-
-            k = (int)(current_x + 1U);
-            if ((unsigned int)k > 255U) {
-              k = 255;
-            }
-
-            i228 = i225;
-            if ((unsigned int)i225 > 255U) {
-              i228 = 255;
-            }
-
-            i230 = (int)(current_x + 1U);
-            if ((unsigned int)i230 > 255U) {
-              i230 = 255;
-            }
-
-            if (g_direction.South <= 7) {
-              i299 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i299 = 0;
-            }
-
-            maze_wall[(ex + ((k - 1) << 5)) - 1] = (unsigned char)(maze_wall
-              [(i228 + ((i230 - 1) << 5)) - 1] | i299);
-            ex = i225;
-            if ((unsigned int)i225 > 255U) {
-              ex = 255;
-            }
-
-            k = (int)(current_x + 1U);
-            if ((unsigned int)k > 255U) {
-              k = 255;
-            }
-
-            i228 = i225;
-            if ((unsigned int)i225 > 255U) {
-              i228 = 255;
-            }
-
-            i230 = (int)(current_x + 1U);
-            if ((unsigned int)i230 > 255U) {
-              i230 = 255;
-            }
-
-            if (g_direction.South <= 7) {
-              i305 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i305 = 0;
-            }
-
-            maze_wall_search[(ex + ((k - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(i228 + ((i230 - 1) << 5)) - 1] | i305);
-          }
-        }
-
-        /* “Œ‚Ìƒ}ƒX‚Ì–k‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
-        ex = (int)(current_x + 1U);
-        k = ex;
-        if ((unsigned int)ex > 255U) {
-          k = 255;
-        }
-
-        if (g_direction.North <= 7) {
-          i263 = (unsigned char)(1 << g_direction.North);
-        } else {
-          i263 = 0;
-        }
-
-        if ((maze_wall_search[(current_y + ((k - 1) << 5)) - 1] & i263) != 0) {
-          k = ex;
-          if ((unsigned int)ex > 255U) {
-            k = 255;
-          }
-
-          if (g_direction.North <= 7) {
-            i270 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i270 = 0;
-          }
-
-          if (g_direction.North <= 7) {
-            i273 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i273 = 0;
-          }
-
-          if ((maze_wall[(current_y + ((k - 1) << 5)) - 1] & i270) != i273) {
-            /* –k‚Ìƒ}ƒX‚Ì“Œ‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
-            k = i225;
-            if ((unsigned int)i225 > 255U) {
-              k = 255;
-            }
-
-            i228 = i225;
-            if ((unsigned int)i225 > 255U) {
-              i228 = 255;
-            }
-
-            if (g_direction.East <= 7) {
-              i282 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i282 = 0;
-            }
-
-            maze_wall[(k + i227) - 1] = (unsigned char)(maze_wall[(i228 + i227)
-              - 1] | i282);
-            k = i225;
-            if ((unsigned int)i225 > 255U) {
-              k = 255;
-            }
-
-            i228 = i225;
-            if ((unsigned int)i225 > 255U) {
-              i228 = 255;
-            }
-
-            if (g_direction.East <= 7) {
-              i292 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i292 = 0;
-            }
-
-            maze_wall_search[(k + i227) - 1] = (unsigned char)(maze_wall_search
-              [(i228 + i227) - 1] | i292);
-
-            /* —×‚è‡‚¤ƒ}ƒXi“Œ–kƒ}ƒXj‚Ì¼‚Ì•Ç‚àŠm’è */
-            k = i225;
-            if ((unsigned int)i225 > 255U) {
-              k = 255;
-            }
-
-            i228 = ex;
-            if ((unsigned int)ex > 255U) {
-              i228 = 255;
-            }
-
-            i230 = i225;
-            if ((unsigned int)i225 > 255U) {
-              i230 = 255;
-            }
-
-            i233 = ex;
-            if ((unsigned int)ex > 255U) {
-              i233 = 255;
-            }
-
-            if (g_direction.West <= 7) {
-              i304 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i304 = 0;
-            }
-
-            maze_wall[(k + ((i228 - 1) << 5)) - 1] = (unsigned char)(maze_wall
-              [(i230 + ((i233 - 1) << 5)) - 1] | i304);
-            k = i225;
-            if ((unsigned int)i225 > 255U) {
-              k = 255;
-            }
-
-            i228 = ex;
-            if ((unsigned int)ex > 255U) {
-              i228 = 255;
-            }
-
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
-            }
-
-            if (g_direction.West <= 7) {
-              i310 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i310 = 0;
-            }
-
-            maze_wall_search[(k + ((i228 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(i225 + ((ex - 1) << 5)) - 1] | i310);
-          }
-        }
-      }
-    }
-
-    /* –k,¼‚É•Ç‚ª‚È‚¢ê‡ */
-    if (g_direction.North <= 7) {
-      i250 = (unsigned char)(1 << g_direction.North);
-    } else {
-      i250 = 0;
-    }
-
-    if (g_direction.North <= 7) {
-      i252 = (unsigned char)(1 << g_direction.North);
-    } else {
-      i252 = 0;
-    }
-
-    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i250) != i252) {
-      if (g_direction.West <= 7) {
-        i253 = (unsigned char)(1 << g_direction.West);
+      if (g_direction.East <= 7) {
+        i253 = (unsigned char)(1 << g_direction.East);
       } else {
         i253 = 0;
       }
 
-      if (g_direction.West <= 7) {
-        i255 = (unsigned char)(1 << g_direction.West);
-      } else {
-        i255 = 0;
-      }
-
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i253) != i255)
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i251) != i253)
       {
-        /* –k‚Ìƒ}ƒX‚Ì¼‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
-        i225 = (int)(current_y + 1U);
-        if ((unsigned int)i225 > 255U) {
-          i225 = 255;
+        /* ï¿½kï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        i227 = (int)(current_y + 1U);
+        ex = i227;
+        if ((unsigned int)i227 > 255U) {
+          ex = 255;
         }
 
-        if (g_direction.West <= 7) {
-          i261 = (unsigned char)(1 << g_direction.West);
+        if (g_direction.East <= 7) {
+          i258 = (unsigned char)(1 << g_direction.East);
         } else {
-          i261 = 0;
+          i258 = 0;
         }
 
-        if ((maze_wall_search[(i225 + i227) - 1] & i261) != 0) {
-          i225 = (int)(current_y + 1U);
-          if ((unsigned int)i225 > 255U) {
-            i225 = 255;
+        if ((maze_wall_search[(ex + i229) - 1] & i258) != 0) {
+          ex = i227;
+          if ((unsigned int)i227 > 255U) {
+            ex = 255;
           }
 
-          if (g_direction.West <= 7) {
-            i267 = (unsigned char)(1 << g_direction.West);
+          if (g_direction.East <= 7) {
+            i261 = (unsigned char)(1 << g_direction.East);
           } else {
-            i267 = 0;
+            i261 = 0;
           }
 
-          if (g_direction.West <= 7) {
-            i272 = (unsigned char)(1 << g_direction.West);
+          if (g_direction.East <= 7) {
+            i266 = (unsigned char)(1 << g_direction.East);
           } else {
-            i272 = 0;
+            i266 = 0;
           }
 
-          if ((maze_wall[(i225 + i227) - 1] & i267) != i272) {
-            /* ¼‚Ìƒ}ƒX‚Ì–k‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
-            qY = current_x - 1U;
-            if (qY > current_x) {
-              qY = 0U;
-            }
-
-            b_qY = current_x - 1U;
-            if (b_qY > current_x) {
-              b_qY = 0U;
-            }
-
-            if (g_direction.North <= 7) {
-              i281 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i281 = 0;
-            }
-
-            maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i281);
-            qY = current_x - 1U;
-            if (qY > current_x) {
-              qY = 0U;
-            }
-
-            b_qY = current_x - 1U;
-            if (b_qY > current_x) {
-              b_qY = 0U;
-            }
-
-            if (g_direction.North <= 7) {
-              i291 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i291 = 0;
-            }
-
-            maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned
-              char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
-                    i291);
-
-            /* —×‚è‡‚¤ƒ}ƒXi–k¼ƒ}ƒXj‚Ì“ì‚Ì•Ç‚àŠm’è */
-            i225 = (int)(current_y + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            qY = current_x - 1U;
-            if (qY > current_x) {
-              qY = 0U;
-            }
-
-            ex = (int)(current_y + 1U);
+          if ((maze_wall[(ex + i229) - 1] & i261) != i266) {
+            /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            ex = (int)(current_x + 1U);
             if ((unsigned int)ex > 255U) {
               ex = 255;
             }
 
-            b_qY = current_x - 1U;
-            if (b_qY > current_x) {
-              b_qY = 0U;
+            k = (int)(current_x + 1U);
+            if ((unsigned int)k > 255U) {
+              k = 255;
+            }
+
+            if (g_direction.North <= 7) {
+              i276 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i276 = 0;
+            }
+
+            maze_wall[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(current_y + ((k - 1) << 5)) - 1] | i276);
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            k = (int)(current_x + 1U);
+            if ((unsigned int)k > 255U) {
+              k = 255;
+            }
+
+            if (g_direction.North <= 7) {
+              i285 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i285 = 0;
+            }
+
+            maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(current_y + ((k - 1) << 5)) - 1] | i285);
+
+            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ï¿½ï¿½kï¿½}ï¿½Xï¿½jï¿½Ì“ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            ex = i227;
+            if ((unsigned int)i227 > 255U) {
+              ex = 255;
+            }
+
+            k = (int)(current_x + 1U);
+            if ((unsigned int)k > 255U) {
+              k = 255;
+            }
+
+            i230 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i230 = 255;
+            }
+
+            i232 = (int)(current_x + 1U);
+            if ((unsigned int)i232 > 255U) {
+              i232 = 255;
             }
 
             if (g_direction.South <= 7) {
@@ -15588,416 +15484,152 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
               i301 = 0;
             }
 
-            maze_wall[(i225 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i301);
-            i225 = (int)(current_y + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            qY = current_x - 1U;
-            if (qY > current_x) {
-              qY = 0U;
-            }
-
-            ex = (int)(current_y + 1U);
-            if ((unsigned int)ex > 255U) {
+            maze_wall[(ex + ((k - 1) << 5)) - 1] = (unsigned char)(maze_wall
+              [(i230 + ((i232 - 1) << 5)) - 1] | i301);
+            ex = i227;
+            if ((unsigned int)i227 > 255U) {
               ex = 255;
             }
 
-            b_qY = current_x - 1U;
-            if (b_qY > current_x) {
-              b_qY = 0U;
+            k = (int)(current_x + 1U);
+            if ((unsigned int)k > 255U) {
+              k = 255;
+            }
+
+            i230 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i230 = 255;
+            }
+
+            i232 = (int)(current_x + 1U);
+            if ((unsigned int)i232 > 255U) {
+              i232 = 255;
             }
 
             if (g_direction.South <= 7) {
-              i309 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i309 = 0;
-            }
-
-            maze_wall_search[(i225 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i309);
-          }
-        }
-
-        /* ¼‚Ìƒ}ƒX‚Ì–k‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
-        qY = current_x - 1U;
-        if (qY > current_x) {
-          qY = 0U;
-        }
-
-        if (g_direction.North <= 7) {
-          i269 = (unsigned char)(1 << g_direction.North);
-        } else {
-          i269 = 0;
-        }
-
-        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i269) !=
-            0) {
-          qY = current_x - 1U;
-          if (qY > current_x) {
-            qY = 0U;
-          }
-
-          if (g_direction.North <= 7) {
-            i276 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i276 = 0;
-          }
-
-          if (g_direction.North <= 7) {
-            i280 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i280 = 0;
-          }
-
-          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i276) != i280)
-          {
-            /* –k‚Ìƒ}ƒX‚Ì¼‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
-            i225 = (int)(current_y + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            ex = (int)(current_y + 1U);
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
-            }
-
-            if (g_direction.West <= 7) {
-              i290 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i290 = 0;
-            }
-
-            maze_wall[(i225 + i227) - 1] = (unsigned char)(maze_wall[(ex + i227)
-              - 1] | i290);
-            i225 = (int)(current_y + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            ex = (int)(current_y + 1U);
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
-            }
-
-            if (g_direction.West <= 7) {
-              i298 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i298 = 0;
-            }
-
-            maze_wall_search[(i225 + i227) - 1] = (unsigned char)
-              (maze_wall_search[(ex + i227) - 1] | i298);
-
-            /* —×‚è‡‚¤ƒ}ƒXi–k¼ƒ}ƒXj‚Ì“Œ‚Ì•Ç‚àŠm’è */
-            i225 = (int)(current_y + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            qY = current_x - 1U;
-            if (qY > current_x) {
-              qY = 0U;
-            }
-
-            ex = (int)(current_y + 1U);
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
-            }
-
-            b_qY = current_x - 1U;
-            if (b_qY > current_x) {
-              b_qY = 0U;
-            }
-
-            if (g_direction.East <= 7) {
-              i307 = (unsigned char)(1 << g_direction.East);
+              i307 = (unsigned char)(1 << g_direction.South);
             } else {
               i307 = 0;
             }
 
-            maze_wall[(i225 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i307);
-            i225 = (int)(current_y + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            qY = current_x - 1U;
-            if (qY > current_x) {
-              qY = 0U;
-            }
-
-            ex = (int)(current_y + 1U);
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
-            }
-
-            b_qY = current_x - 1U;
-            if (b_qY > current_x) {
-              b_qY = 0U;
-            }
-
-            if (g_direction.East <= 7) {
-              i314 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i314 = 0;
-            }
-
-            maze_wall_search[(i225 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i314);
+            maze_wall_search[(ex + ((k - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(i230 + ((i232 - 1) << 5)) - 1] | i307);
           }
         }
-      }
-    }
 
-    /* “ì,“Œ‚É•Ç‚ª‚È‚¢ê‡ */
-    if (g_direction.East <= 7) {
-      i254 = (unsigned char)(1 << g_direction.East);
-    } else {
-      i254 = 0;
-    }
-
-    if (g_direction.East <= 7) {
-      i257 = (unsigned char)(1 << g_direction.East);
-    } else {
-      i257 = 0;
-    }
-
-    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i254) != i257) {
-      if (g_direction.South <= 7) {
-        i258 = (unsigned char)(1 << g_direction.South);
-      } else {
-        i258 = 0;
-      }
-
-      if (g_direction.South <= 7) {
-        i262 = (unsigned char)(1 << g_direction.South);
-      } else {
-        i262 = 0;
-      }
-
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i258) != i262)
-      {
-        /* “ì‚Ìƒ}ƒX‚Ì“Œ‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
-        qY = current_y - 1U;
-        if (qY > current_y) {
-          qY = 0U;
+        /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        ex = (int)(current_x + 1U);
+        k = ex;
+        if ((unsigned int)ex > 255U) {
+          k = 255;
         }
 
-        if (g_direction.East <= 7) {
-          i268 = (unsigned char)(1 << g_direction.East);
+        if (g_direction.North <= 7) {
+          i265 = (unsigned char)(1 << g_direction.North);
         } else {
-          i268 = 0;
+          i265 = 0;
         }
 
-        if ((maze_wall_search[((int)qY + i227) - 1] & i268) != 0) {
-          qY = current_y - 1U;
-          if (qY > current_y) {
-            qY = 0U;
+        if ((maze_wall_search[(current_y + ((k - 1) << 5)) - 1] & i265) != 0) {
+          k = ex;
+          if ((unsigned int)ex > 255U) {
+            k = 255;
           }
 
-          if (g_direction.East <= 7) {
-            i275 = (unsigned char)(1 << g_direction.East);
+          if (g_direction.North <= 7) {
+            i272 = (unsigned char)(1 << g_direction.North);
+          } else {
+            i272 = 0;
+          }
+
+          if (g_direction.North <= 7) {
+            i275 = (unsigned char)(1 << g_direction.North);
           } else {
             i275 = 0;
           }
 
-          if (g_direction.East <= 7) {
-            i279 = (unsigned char)(1 << g_direction.East);
-          } else {
-            i279 = 0;
-          }
-
-          if ((maze_wall[((int)qY + i227) - 1] & i275) != i279) {
-            /* “Œ‚Ìƒ}ƒX‚Ì“ì‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
-            i225 = (int)(current_x + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
+          if ((maze_wall[(current_y + ((k - 1) << 5)) - 1] & i272) != i275) {
+            /* ï¿½kï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            k = i227;
+            if ((unsigned int)i227 > 255U) {
+              k = 255;
             }
 
-            ex = (int)(current_x + 1U);
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
+            i230 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i230 = 255;
             }
 
-            if (g_direction.South <= 7) {
-              i289 = (unsigned char)(1 << g_direction.South);
+            if (g_direction.East <= 7) {
+              i284 = (unsigned char)(1 << g_direction.East);
             } else {
-              i289 = 0;
+              i284 = 0;
             }
 
-            maze_wall[(current_y + ((i225 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + ((ex - 1) << 5)) - 1] | i289);
-            i225 = (int)(current_x + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
+            maze_wall[(k + i229) - 1] = (unsigned char)(maze_wall[(i230 + i229)
+              - 1] | i284);
+            k = i227;
+            if ((unsigned int)i227 > 255U) {
+              k = 255;
             }
 
-            ex = (int)(current_x + 1U);
-            if ((unsigned int)ex > 255U) {
-              ex = 255;
+            i230 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i230 = 255;
             }
 
-            if (g_direction.South <= 7) {
-              i297 = (unsigned char)(1 << g_direction.South);
+            if (g_direction.East <= 7) {
+              i294 = (unsigned char)(1 << g_direction.East);
             } else {
-              i297 = 0;
+              i294 = 0;
             }
 
-            maze_wall_search[(current_y + ((i225 - 1) << 5)) - 1] = (unsigned
-              char)(maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] | i297);
+            maze_wall_search[(k + i229) - 1] = (unsigned char)(maze_wall_search
+              [(i230 + i229) - 1] | i294);
 
-            /* —×‚è‡‚¤ƒ}ƒXi“ì“Œƒ}ƒXj‚Ì–k‚Ì•Ç‚àŠm’è */
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
+            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ï¿½ï¿½kï¿½}ï¿½Xï¿½jï¿½Ìï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            k = i227;
+            if ((unsigned int)i227 > 255U) {
+              k = 255;
             }
 
-            i225 = (int)(current_x + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            b_qY = current_y - 1U;
-            if (b_qY > current_y) {
-              b_qY = 0U;
-            }
-
-            ex = (int)(current_x + 1U);
+            i230 = ex;
             if ((unsigned int)ex > 255U) {
-              ex = 255;
+              i230 = 255;
             }
 
-            if (g_direction.North <= 7) {
-              i306 = (unsigned char)(1 << g_direction.North);
+            i232 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i232 = 255;
+            }
+
+            i235 = ex;
+            if ((unsigned int)ex > 255U) {
+              i235 = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i306 = (unsigned char)(1 << g_direction.West);
             } else {
               i306 = 0;
             }
 
-            maze_wall[((int)qY + ((i225 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i306);
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
+            maze_wall[(k + ((i230 - 1) << 5)) - 1] = (unsigned char)(maze_wall
+              [(i232 + ((i235 - 1) << 5)) - 1] | i306);
+            k = i227;
+            if ((unsigned int)i227 > 255U) {
+              k = 255;
             }
 
-            i225 = (int)(current_x + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            b_qY = current_y - 1U;
-            if (b_qY > current_y) {
-              b_qY = 0U;
-            }
-
-            ex = (int)(current_x + 1U);
+            i230 = ex;
             if ((unsigned int)ex > 255U) {
-              ex = 255;
+              i230 = 255;
             }
 
-            if (g_direction.North <= 7) {
-              i313 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i313 = 0;
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
             }
 
-            maze_wall_search[((int)qY + ((i225 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i313);
-          }
-        }
-
-        /* “Œ‚Ìƒ}ƒX‚Ì“ì‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
-        i225 = (int)(current_x + 1U);
-        if ((unsigned int)i225 > 255U) {
-          i225 = 255;
-        }
-
-        if (g_direction.South <= 7) {
-          i278 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i278 = 0;
-        }
-
-        if ((maze_wall_search[(current_y + ((i225 - 1) << 5)) - 1] & i278) != 0)
-        {
-          i225 = (int)(current_x + 1U);
-          if ((unsigned int)i225 > 255U) {
-            i225 = 255;
-          }
-
-          if (g_direction.South <= 7) {
-            i285 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i285 = 0;
-          }
-
-          if (g_direction.South <= 7) {
-            i288 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i288 = 0;
-          }
-
-          if ((maze_wall[(current_y + ((i225 - 1) << 5)) - 1] & i285) != i288) {
-            /* “ì‚Ìƒ}ƒX‚Ì“Œ‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
-            }
-
-            b_qY = current_y - 1U;
-            if (b_qY > current_y) {
-              b_qY = 0U;
-            }
-
-            if (g_direction.East <= 7) {
-              i296 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i296 = 0;
-            }
-
-            maze_wall[((int)qY + i227) - 1] = (unsigned char)(maze_wall[((int)
-              b_qY + i227) - 1] | i296);
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
-            }
-
-            b_qY = current_y - 1U;
-            if (b_qY > current_y) {
-              b_qY = 0U;
-            }
-
-            if (g_direction.East <= 7) {
-              i303 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i303 = 0;
-            }
-
-            maze_wall_search[((int)qY + i227) - 1] = (unsigned char)
-              (maze_wall_search[((int)b_qY + i227) - 1] | i303);
-
-            /* —×‚è‡‚¤ƒ}ƒXi“ì“Œƒ}ƒXj‚Ì¼‚Ì•Ç‚ªŠm’èB’TõÏ‚İ‚Æ‚·‚é */
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
-            }
-
-            i225 = (int)(current_x + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
-            }
-
-            b_qY = current_y - 1U;
-            if (b_qY > current_y) {
-              b_qY = 0U;
-            }
-
-            ex = (int)(current_x + 1U);
             if ((unsigned int)ex > 255U) {
               ex = 255;
             }
@@ -16008,16 +15640,540 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
               i312 = 0;
             }
 
-            maze_wall[((int)qY + ((i225 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i312);
+            maze_wall_search[(k + ((i230 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(i227 + ((ex - 1) << 5)) - 1] | i312);
+          }
+        }
+      }
+    }
+
+    /* ï¿½k,ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
+    if (g_direction.North <= 7) {
+      i252 = (unsigned char)(1 << g_direction.North);
+    } else {
+      i252 = 0;
+    }
+
+    if (g_direction.North <= 7) {
+      i254 = (unsigned char)(1 << g_direction.North);
+    } else {
+      i254 = 0;
+    }
+
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i252) != i254) {
+      if (g_direction.West <= 7) {
+        i255 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i255 = 0;
+      }
+
+      if (g_direction.West <= 7) {
+        i257 = (unsigned char)(1 << g_direction.West);
+      } else {
+        i257 = 0;
+      }
+
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i255) != i257)
+      {
+        /* ï¿½kï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        i227 = (int)(current_y + 1U);
+        if ((unsigned int)i227 > 255U) {
+          i227 = 255;
+        }
+
+        if (g_direction.West <= 7) {
+          i263 = (unsigned char)(1 << g_direction.West);
+        } else {
+          i263 = 0;
+        }
+
+        if ((maze_wall_search[(i227 + i229) - 1] & i263) != 0) {
+          i227 = (int)(current_y + 1U);
+          if ((unsigned int)i227 > 255U) {
+            i227 = 255;
+          }
+
+          if (g_direction.West <= 7) {
+            i269 = (unsigned char)(1 << g_direction.West);
+          } else {
+            i269 = 0;
+          }
+
+          if (g_direction.West <= 7) {
+            i274 = (unsigned char)(1 << g_direction.West);
+          } else {
+            i274 = 0;
+          }
+
+          if ((maze_wall[(i227 + i229) - 1] & i269) != i274) {
+            /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.North <= 7) {
+              i283 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i283 = 0;
+            }
+
+            maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i283);
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.North <= 7) {
+              i293 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i293 = 0;
+            }
+
+            maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
+                    i293);
+
+            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½kï¿½ï¿½ï¿½}ï¿½Xï¿½jï¿½Ì“ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.South <= 7) {
+              i303 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i303 = 0;
+            }
+
+            maze_wall[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i303);
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.South <= 7) {
+              i311 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i311 = 0;
+            }
+
+            maze_wall_search[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i311);
+          }
+        }
+
+        /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        qY = current_x - 1U;
+        if (qY > current_x) {
+          qY = 0U;
+        }
+
+        if (g_direction.North <= 7) {
+          i271 = (unsigned char)(1 << g_direction.North);
+        } else {
+          i271 = 0;
+        }
+
+        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i271) !=
+            0) {
+          qY = current_x - 1U;
+          if (qY > current_x) {
+            qY = 0U;
+          }
+
+          if (g_direction.North <= 7) {
+            i278 = (unsigned char)(1 << g_direction.North);
+          } else {
+            i278 = 0;
+          }
+
+          if (g_direction.North <= 7) {
+            i282 = (unsigned char)(1 << g_direction.North);
+          } else {
+            i282 = 0;
+          }
+
+          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i278) != i282)
+          {
+            /* ï¿½kï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i292 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i292 = 0;
+            }
+
+            maze_wall[(i227 + i229) - 1] = (unsigned char)(maze_wall[(ex + i229)
+              - 1] | i292);
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i300 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i300 = 0;
+            }
+
+            maze_wall_search[(i227 + i229) - 1] = (unsigned char)
+              (maze_wall_search[(ex + i229) - 1] | i300);
+
+            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½kï¿½ï¿½ï¿½}ï¿½Xï¿½jï¿½Ì“ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i309 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i309 = 0;
+            }
+
+            maze_wall[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i309);
+            i227 = (int)(current_y + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            qY = current_x - 1U;
+            if (qY > current_x) {
+              qY = 0U;
+            }
+
+            ex = (int)(current_y + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i316 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i316 = 0;
+            }
+
+            maze_wall_search[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i316);
+          }
+        }
+      }
+    }
+
+    /* ï¿½ï¿½,ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
+    if (g_direction.East <= 7) {
+      i256 = (unsigned char)(1 << g_direction.East);
+    } else {
+      i256 = 0;
+    }
+
+    if (g_direction.East <= 7) {
+      i259 = (unsigned char)(1 << g_direction.East);
+    } else {
+      i259 = 0;
+    }
+
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i256) != i259) {
+      if (g_direction.South <= 7) {
+        i260 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i260 = 0;
+      }
+
+      if (g_direction.South <= 7) {
+        i264 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i264 = 0;
+      }
+
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i260) != i264)
+      {
+        /* ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        qY = current_y - 1U;
+        if (qY > current_y) {
+          qY = 0U;
+        }
+
+        if (g_direction.East <= 7) {
+          i270 = (unsigned char)(1 << g_direction.East);
+        } else {
+          i270 = 0;
+        }
+
+        if ((maze_wall_search[((int)qY + i229) - 1] & i270) != 0) {
+          qY = current_y - 1U;
+          if (qY > current_y) {
+            qY = 0U;
+          }
+
+          if (g_direction.East <= 7) {
+            i277 = (unsigned char)(1 << g_direction.East);
+          } else {
+            i277 = 0;
+          }
+
+          if (g_direction.East <= 7) {
+            i281 = (unsigned char)(1 << g_direction.East);
+          } else {
+            i281 = 0;
+          }
+
+          if ((maze_wall[((int)qY + i229) - 1] & i277) != i281) {
+            /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.South <= 7) {
+              i291 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i291 = 0;
+            }
+
+            maze_wall[(current_y + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(current_y + ((ex - 1) << 5)) - 1] | i291);
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.South <= 7) {
+              i299 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i299 = 0;
+            }
+
+            maze_wall_search[(current_y + ((i227 - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] | i299);
+
+            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ì“Œï¿½}ï¿½Xï¿½jï¿½Ì–kï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
             }
 
-            i225 = (int)(current_x + 1U);
-            if ((unsigned int)i225 > 255U) {
-              i225 = 255;
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.North <= 7) {
+              i308 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i308 = 0;
+            }
+
+            maze_wall[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i308);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.North <= 7) {
+              i315 = (unsigned char)(1 << g_direction.North);
+            } else {
+              i315 = 0;
+            }
+
+            maze_wall_search[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i315);
+          }
+        }
+
+        /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ì‚ªï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        i227 = (int)(current_x + 1U);
+        if ((unsigned int)i227 > 255U) {
+          i227 = 255;
+        }
+
+        if (g_direction.South <= 7) {
+          i280 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i280 = 0;
+        }
+
+        if ((maze_wall_search[(current_y + ((i227 - 1) << 5)) - 1] & i280) != 0)
+        {
+          i227 = (int)(current_x + 1U);
+          if ((unsigned int)i227 > 255U) {
+            i227 = 255;
+          }
+
+          if (g_direction.South <= 7) {
+            i287 = (unsigned char)(1 << g_direction.South);
+          } else {
+            i287 = 0;
+          }
+
+          if (g_direction.South <= 7) {
+            i290 = (unsigned char)(1 << g_direction.South);
+          } else {
+            i290 = 0;
+          }
+
+          if ((maze_wall[(current_y + ((i227 - 1) << 5)) - 1] & i287) != i290) {
+            /* ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i298 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i298 = 0;
+            }
+
+            maze_wall[((int)qY + i229) - 1] = (unsigned char)(maze_wall[((int)
+              b_qY + i229) - 1] | i298);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i305 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i305 = 0;
+            }
+
+            maze_wall_search[((int)qY + i229) - 1] = (unsigned char)
+              (maze_wall_search[((int)b_qY + i229) - 1] | i305);
+
+            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ì“Œï¿½}ï¿½Xï¿½jï¿½Ìï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Bï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½ */
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
             }
 
             b_qY = current_y - 1U;
@@ -16031,78 +16187,106 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             }
 
             if (g_direction.West <= 7) {
-              i317 = (unsigned char)(1 << g_direction.West);
+              i314 = (unsigned char)(1 << g_direction.West);
             } else {
-              i317 = 0;
+              i314 = 0;
             }
 
-            maze_wall_search[((int)qY + ((i225 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i317);
+            maze_wall[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i314);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            i227 = (int)(current_x + 1U);
+            if ((unsigned int)i227 > 255U) {
+              i227 = 255;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            ex = (int)(current_x + 1U);
+            if ((unsigned int)ex > 255U) {
+              ex = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i319 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i319 = 0;
+            }
+
+            maze_wall_search[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i319);
           }
         }
       }
     }
 
-    /* “ì,¼‚É•Ç‚ª‚È‚¢ê‡ */
+    /* ï¿½ï¿½,ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
     if (g_direction.West <= 7) {
-      i260 = (unsigned char)(1 << g_direction.West);
+      i262 = (unsigned char)(1 << g_direction.West);
     } else {
-      i260 = 0;
+      i262 = 0;
     }
 
     if (g_direction.West <= 7) {
-      i265 = (unsigned char)(1 << g_direction.West);
+      i267 = (unsigned char)(1 << g_direction.West);
     } else {
-      i265 = 0;
+      i267 = 0;
     }
 
-    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i260) != i265) {
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i262) != i267) {
       if (g_direction.South <= 7) {
-        i266 = (unsigned char)(1 << g_direction.South);
+        i268 = (unsigned char)(1 << g_direction.South);
       } else {
-        i266 = 0;
+        i268 = 0;
       }
 
       if (g_direction.South <= 7) {
-        i271 = (unsigned char)(1 << g_direction.South);
+        i273 = (unsigned char)(1 << g_direction.South);
       } else {
-        i271 = 0;
+        i273 = 0;
       }
 
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i266) != i271)
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i268) != i273)
       {
-        /* “ì‚Ìƒ}ƒX‚Ì¼‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
+        /* ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
         qY = current_y - 1U;
         if (qY > current_y) {
           qY = 0U;
         }
 
         if (g_direction.West <= 7) {
-          i277 = (unsigned char)(1 << g_direction.West);
+          i279 = (unsigned char)(1 << g_direction.West);
         } else {
-          i277 = 0;
+          i279 = 0;
         }
 
-        if ((maze_wall_search[((int)qY + i227) - 1] & i277) != 0) {
+        if ((maze_wall_search[((int)qY + i229) - 1] & i279) != 0) {
           qY = current_y - 1U;
           if (qY > current_y) {
             qY = 0U;
           }
 
           if (g_direction.West <= 7) {
-            i284 = (unsigned char)(1 << g_direction.West);
+            i286 = (unsigned char)(1 << g_direction.West);
           } else {
-            i284 = 0;
+            i286 = 0;
           }
 
           if (g_direction.West <= 7) {
-            i287 = (unsigned char)(1 << g_direction.West);
+            i289 = (unsigned char)(1 << g_direction.West);
           } else {
-            i287 = 0;
+            i289 = 0;
           }
 
-          if ((maze_wall[((int)qY + i227) - 1] & i284) != i287) {
-            /* ¼‚Ìƒ}ƒX‚Ì“ì‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
+          if ((maze_wall[((int)qY + i229) - 1] & i286) != i289) {
+            /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
             qY = current_x - 1U;
             if (qY > current_x) {
               qY = 0U;
@@ -16114,13 +16298,13 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             }
 
             if (g_direction.South <= 7) {
-              i295 = (unsigned char)(1 << g_direction.South);
+              i297 = (unsigned char)(1 << g_direction.South);
             } else {
-              i295 = 0;
+              i297 = 0;
             }
 
             maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i295);
+              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i297);
             qY = current_x - 1U;
             if (qY > current_x) {
               qY = 0U;
@@ -16132,16 +16316,16 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             }
 
             if (g_direction.South <= 7) {
-              i302 = (unsigned char)(1 << g_direction.South);
+              i304 = (unsigned char)(1 << g_direction.South);
             } else {
-              i302 = 0;
+              i304 = 0;
             }
 
             maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned
               char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
-                    i302);
+                    i304);
 
-            /* —×‚è‡‚¤ƒ}ƒXi“ì¼ƒ}ƒXj‚Ì–k‚Ì•Ç‚ªŠm’èB’TõÏ‚İ‚Æ‚·‚é */
+            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ì¼ï¿½}ï¿½Xï¿½jï¿½Ì–kï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Bï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½ */
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16163,13 +16347,13 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             }
 
             if (g_direction.North <= 7) {
-              i311 = (unsigned char)(1 << g_direction.North);
+              i313 = (unsigned char)(1 << g_direction.North);
             } else {
-              i311 = 0;
+              i313 = 0;
             }
 
             maze_wall[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i311);
+              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i313);
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16191,139 +16375,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             }
 
             if (g_direction.North <= 7) {
-              i316 = (unsigned char)(1 << g_direction.North);
-            } else {
-              i316 = 0;
-            }
-
-            maze_wall_search[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned
-              char)(maze_wall_search[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] |
-                    i316);
-          }
-        }
-
-        /* ¼‚Ìƒ}ƒX‚Ì“ì‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
-        qY = current_x - 1U;
-        if (qY > current_x) {
-          qY = 0U;
-        }
-
-        if (g_direction.South <= 7) {
-          i286 = (unsigned char)(1 << g_direction.South);
-        } else {
-          i286 = 0;
-        }
-
-        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i286) !=
-            0) {
-          qY = current_x - 1U;
-          if (qY > current_x) {
-            qY = 0U;
-          }
-
-          if (g_direction.South <= 7) {
-            i293 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i293 = 0;
-          }
-
-          if (g_direction.South <= 7) {
-            i294 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i294 = 0;
-          }
-
-          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i293) != i294)
-          {
-            /* “ì‚Ìƒ}ƒX‚Ì¼‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
-            }
-
-            b_qY = current_y - 1U;
-            if (b_qY > current_y) {
-              b_qY = 0U;
-            }
-
-            if (g_direction.West <= 7) {
-              i300 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i300 = 0;
-            }
-
-            maze_wall[((int)qY + i227) - 1] = (unsigned char)(maze_wall[((int)
-              b_qY + i227) - 1] | i300);
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
-            }
-
-            b_qY = current_y - 1U;
-            if (b_qY > current_y) {
-              b_qY = 0U;
-            }
-
-            if (g_direction.West <= 7) {
-              i308 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i308 = 0;
-            }
-
-            maze_wall_search[((int)qY + i227) - 1] = (unsigned char)
-              (maze_wall_search[((int)b_qY + i227) - 1] | i308);
-
-            /* —×‚è‡‚¤ƒ}ƒXi“ì¼ƒ}ƒXj‚Ì“Œ‚Ì•Ç‚ªŠm’èB’TõÏ‚İ‚Æ‚·‚é */
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
-            }
-
-            b_qY = current_x - 1U;
-            if (b_qY > current_x) {
-              b_qY = 0U;
-            }
-
-            c_qY = current_y - 1U;
-            if (c_qY > current_y) {
-              c_qY = 0U;
-            }
-
-            d_qY = current_x - 1U;
-            if (d_qY > current_x) {
-              d_qY = 0U;
-            }
-
-            if (g_direction.East <= 7) {
-              i315 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i315 = 0;
-            }
-
-            maze_wall[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i315);
-            qY = current_y - 1U;
-            if (qY > current_y) {
-              qY = 0U;
-            }
-
-            b_qY = current_x - 1U;
-            if (b_qY > current_x) {
-              b_qY = 0U;
-            }
-
-            c_qY = current_y - 1U;
-            if (c_qY > current_y) {
-              c_qY = 0U;
-            }
-
-            d_qY = current_x - 1U;
-            if (d_qY > current_x) {
-              d_qY = 0U;
-            }
-
-            if (g_direction.East <= 7) {
-              i318 = (unsigned char)(1 << g_direction.East);
+              i318 = (unsigned char)(1 << g_direction.North);
             } else {
               i318 = 0;
             }
@@ -16333,15 +16385,147 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
                     i318);
           }
         }
+
+        /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ì‚ªï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        qY = current_x - 1U;
+        if (qY > current_x) {
+          qY = 0U;
+        }
+
+        if (g_direction.South <= 7) {
+          i288 = (unsigned char)(1 << g_direction.South);
+        } else {
+          i288 = 0;
+        }
+
+        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i288) !=
+            0) {
+          qY = current_x - 1U;
+          if (qY > current_x) {
+            qY = 0U;
+          }
+
+          if (g_direction.South <= 7) {
+            i295 = (unsigned char)(1 << g_direction.South);
+          } else {
+            i295 = 0;
+          }
+
+          if (g_direction.South <= 7) {
+            i296 = (unsigned char)(1 << g_direction.South);
+          } else {
+            i296 = 0;
+          }
+
+          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i295) != i296)
+          {
+            /* ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.West <= 7) {
+              i302 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i302 = 0;
+            }
+
+            maze_wall[((int)qY + i229) - 1] = (unsigned char)(maze_wall[((int)
+              b_qY + i229) - 1] | i302);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_y - 1U;
+            if (b_qY > current_y) {
+              b_qY = 0U;
+            }
+
+            if (g_direction.West <= 7) {
+              i310 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i310 = 0;
+            }
+
+            maze_wall_search[((int)qY + i229) - 1] = (unsigned char)
+              (maze_wall_search[((int)b_qY + i229) - 1] | i310);
+
+            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ì¼ï¿½}ï¿½Xï¿½jï¿½Ì“ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Bï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½ */
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            c_qY = current_y - 1U;
+            if (c_qY > current_y) {
+              c_qY = 0U;
+            }
+
+            d_qY = current_x - 1U;
+            if (d_qY > current_x) {
+              d_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i317 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i317 = 0;
+            }
+
+            maze_wall[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i317);
+            qY = current_y - 1U;
+            if (qY > current_y) {
+              qY = 0U;
+            }
+
+            b_qY = current_x - 1U;
+            if (b_qY > current_x) {
+              b_qY = 0U;
+            }
+
+            c_qY = current_y - 1U;
+            if (c_qY > current_y) {
+              c_qY = 0U;
+            }
+
+            d_qY = current_x - 1U;
+            if (d_qY > current_x) {
+              d_qY = 0U;
+            }
+
+            if (g_direction.East <= 7) {
+              i320 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i320 = 0;
+            }
+
+            maze_wall_search[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] |
+                    i320);
+          }
+        }
       }
     }
   }
 }
 
 /*
- * maze_solve À‹@‚Å‚Ì–À˜H’TõŠÖ”
- * “ü—Í –À˜H•Çî•ñ,–À˜H’Tõî•ñ,–À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,
- * o—Í •Çî•ñ,’Tõî•ñ
+ * maze_solve ï¿½ï¿½ï¿½@ï¿½Å‚Ì–ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½Öï¿½
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,
+ * ï¿½oï¿½ï¿½ ï¿½Çï¿½ï¿½,ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½
  * Arguments    : unsigned char maze_wall[1024]
  *                unsigned char maze_wall_search[1024]
  *                unsigned char maze_row_size
@@ -16392,22 +16576,23 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     b_maze_goal.contents[N] = maze_goal[N];
   }
 
-  /* CŒ¾ŒêŠÖ”ƒCƒ“ƒNƒ‹[ƒh */
-  /* ƒ[ƒJƒ‹•Ï”’è‹` */
-  /*  ƒS[ƒ‹ƒXƒgƒbƒvƒtƒ‰ƒO(0:ˆÚ“®Œp‘±@1:ƒXƒgƒbƒv) */
-  /*  ƒXƒ^[ƒgƒtƒ‰ƒO(0:“®ì’†@1:’â~‚©‚ç‚ÌˆÚ“®ŠJn) */
-  /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO(0:ƒS[ƒ‹’¼Œã‚Å‚È‚¢, 1:ƒS[ƒ‹’¼Œã) */
+  /* Cï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½[ï¿½h */
+  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½ï¿½` */
+  /*  ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½bï¿½vï¿½tï¿½ï¿½ï¿½O(0:ï¿½Ú“ï¿½ï¿½pï¿½ï¿½ï¿½@1:ï¿½Xï¿½gï¿½bï¿½v) */
+  /*  ï¿½Xï¿½^ï¿½[ï¿½gï¿½tï¿½ï¿½ï¿½O(0:ï¿½ï¿½ï¿½ì’†ï¿½@1:ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½Jï¿½n) */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O(0:ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½, 1:ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) */
   wall_flg.contents = 0U;
 
-  /* •Çƒtƒ‰ƒO(1:‘OA2:‰EAi4:Œã‚ë)A8:¶) */
-  /*  ƒOƒ[ƒoƒ‹•Ï”éŒ¾ */
-  /* ƒƒCƒ“figure */
-  /* ƒƒCƒ“axes */
-  /* ƒvƒƒbƒg—p•Ï” */
-  /* Å’ZŒo˜Hƒ‰ƒCƒ“ƒIƒuƒWƒFƒNƒg•Û—p */
-  /* ƒS[ƒ‹ƒ‰ƒCƒ“ƒIƒuƒWƒFƒNƒg•Û—p */
+  /* ï¿½Çƒtï¿½ï¿½ï¿½O(1:ï¿½Oï¿½A2:ï¿½Eï¿½Aï¿½i4:ï¿½ï¿½ï¿½)ï¿½A8:ï¿½ï¿½) */
+  /*  ï¿½Oï¿½ï¿½ï¿½[ï¿½oï¿½ï¿½ï¿½Ïï¿½ï¿½éŒ¾ */
+  /* ï¿½ï¿½ï¿½Cï¿½ï¿½figure */
+  /* ï¿½ï¿½ï¿½Cï¿½ï¿½axes */
+  /*  global vidObj;%ï¿½rï¿½fï¿½Iï¿½p */
+  /* ï¿½vï¿½ï¿½ï¿½bï¿½gï¿½pï¿½Ïï¿½ */
+  /* ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ûï¿½ï¿½p */
+  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ûï¿½ï¿½p */
   /*  global maze_goal; */
-  /* ƒ[ƒJƒ‹•Ï”éŒ¾ */
+  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½éŒ¾ */
   new_goal[0] = 0U;
   new_goal[1] = 0U;
   memset(&contour_map[0], 0, sizeof(unsigned short) << 10);
@@ -16416,19 +16601,19 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     col_num_node[N] = MAX_uint16_T;
   }
 
-  /* ƒm[ƒh‚Ì‘®«’è‹` */
-  /* 0:s•ûŒü, 1:—ñ•ûŒü,@2:ƒZƒNƒVƒ‡ƒ“iƒ}ƒXj */
+  /* ï¿½mï¿½[ï¿½hï¿½Ì‘ï¿½ï¿½ï¿½ï¿½ï¿½` */
+  /* 0:ï¿½sï¿½ï¿½ï¿½ï¿½, 1:ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½@2:ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½iï¿½}ï¿½Xï¿½j */
   matrix_dir.Row = 0U;
   matrix_dir.Col = 1U;
   matrix_dir.section = 2U;
 
-  /* â‘Î•ûŠp’è‹` */
+  /* ï¿½ï¿½Î•ï¿½ï¿½pï¿½ï¿½` */
   g_direction.North = 0U;
   g_direction.East = 1U;
   g_direction.South = 2U;
   g_direction.West = 3U;
 
-  /* Î‚ß‚İ‚Ìâ‘Î•ûŠp’è‹` */
+  /* ï¿½Î‚ßï¿½ï¿½İ‚Ìï¿½Î•ï¿½ï¿½pï¿½ï¿½` */
   g_d_direction.North = 0U;
   g_d_direction.North_East = 1U;
   g_d_direction.East = 2U;
@@ -16438,18 +16623,18 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   g_d_direction.West = 6U;
   g_d_direction.North_West = 7U;
 
-  /* ƒ}ƒEƒX•ûŒü’è‹` */
+  /* ï¿½}ï¿½Eï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
   l_direction.front = 0U;
   l_direction.right = 1U;
   l_direction.back = 2U;
   l_direction.left = 3U;
 
-  /* ˆÚ“®•ûŒü‘®«’è‹` */
-  /* ’¼iorÎ‚ß */
+  /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
+  /* ï¿½ï¿½ï¿½iorï¿½Î‚ï¿½ */
   move_dir_property.straight = 0U;
   move_dir_property.diagonal = 1U;
 
-  /* ƒpƒ^[ƒ“”Ô†’è‹` */
+  /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½` */
   turn_pattern.b_default = 0U;
   turn_pattern.r_45 = 1U;
   turn_pattern.l_45 = 2U;
@@ -16460,41 +16645,41 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   turn_pattern.r_180 = 7U;
   turn_pattern.l_180 = 8U;
 
-  /* •Çî•ñ’è‹` */
+  /* ï¿½Çï¿½ï¿½ï¿½` */
   wall.contents.nowall = 0U;
   wall.contents.wall = 1U;
 
-  /* ’Tõî•ñ’è‹` */
+  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
   search.contents.unknown = 0U;
   search.contents.known = 1U;
 
-  /* ‘–sƒ‚[ƒh’è‹` */
-  /* ’Tõƒ‚[ƒh */
-  /* –¢’Tõ•Çˆµ‚¢ƒ‚[ƒh’è‹` */
-  /* Å’ZŒo˜H“±oƒ‚[ƒh */
-  /* ‘«—§–@‚É‚æ‚é’Tõƒ‚[ƒh@ƒS[ƒ‹or’Tõ */
+  /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½` */
+  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½h */
+  /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Çˆï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½` */
+  /* ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½oï¿½ï¿½ï¿½[ï¿½h */
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½É‚ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½@ï¿½Sï¿½[ï¿½ï¿½orï¿½Tï¿½ï¿½ */
   adachi_search_mode.contents.goal = 0U;
   adachi_search_mode.contents.search = 1U;
 
-  /*  ’Tõ */
+  /*  ï¿½Tï¿½ï¿½ */
   if (run_mode_1 == 0) {
-    /* ƒ}ƒEƒX‚Ì‰ŠúˆÊ’uİ’è */
+    /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½İ’ï¿½ */
     /* for C gen */
-    /* Šeƒtƒ‰ƒO‚ğ’è‹` */
-    /* ’â~’¼Œã */
-    /* ’â~ˆ—‚ğÀ{‚·‚é */
-    /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ÍƒNƒŠƒA */
-    /* ˆêƒ}ƒX‘Oi */
+    /* ï¿½eï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½` */
+    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
+    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ÍƒNï¿½ï¿½ï¿½A */
+    /* ï¿½ï¿½}ï¿½Xï¿½Oï¿½i */
     current_x = 1U;
     current_y = 1U;
     move_step(&current_x, &current_y, g_direction.North);
 
-    /* CŒ¾Œê‚Å‚ÌƒXƒ^[ƒgˆ— */
+    /* Cï¿½ï¿½ï¿½ï¿½Å‚ÌƒXï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ */
     m_start_movement(1, 0, move_dir_property.straight);
 
-    /* ’â~’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
-    /* ƒS[ƒ‹‚ğƒvƒƒbƒg */
-    /* ‘«—§–@‚É‚æ‚é’Tõ */
+    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½É‚ï¿½ï¿½Tï¿½ï¿½ */
     current_dir = g_direction.North;
     search_flag = 0U;
     search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &adachi_search_mode,
@@ -16502,14 +16687,14 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
                   maze_col_size, maze_wall, maze_wall_search, maze_goal,
                   goal_size, &search_flag, 0U, unusedExpr);
 
-    /* ‚Ğ‚Æ‚Ü‚ÃƒS[ƒ‹(’â~) */
-    /* Šeƒtƒ‰ƒO‚ğ’è‹` */
+    /* ï¿½Ğ‚Æ‚Ü‚ÃƒSï¿½[ï¿½ï¿½(ï¿½ï¿½~) */
+    /* ï¿½eï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½` */
     start_flg = 1U;
 
-    /* ’â~’¼Œã */
-    /* ’â~ˆ—‚ğÀ{‚µ‚È‚¢ */
-    /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
-    /* ƒS[ƒ‹‚ğ‚·‚×‚Ä’Tõ */
+    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
+    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½È‚ï¿½ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä’Tï¿½ï¿½ */
     do {
       exitg1 = 0;
       search_flag = 0U;
@@ -16535,17 +16720,17 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
                         maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
                         b_unusedExpr);
 
-        /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
+        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
       } else {
         exitg1 = 1;
       }
     } while (exitg1 == 0);
 
-    /* ‹A˜H’Tõ */
-    /* ‘S–Ê’Tõ */
-    /* –¢’Tõƒ}ƒX‚ª‚È‚­‚È‚é‚Ü‚ÅB */
-    /* Œ»’n“_‚©‚çˆê”Ô‹ß‚¢–¢’Tõƒ}ƒX‚ğ’Tõ */
-    /* Œ»İ’n‚©‚çƒRƒ“ƒ^[ƒ}ƒbƒv‚ğ“WŠJA’TõÏ‚İ‚Å‚È‚¢ƒ}ƒX‚ªŒ©‚Â‚©‚ê‚ÎA‚»‚±‚ğƒS[ƒ‹‚Æ‚·‚éB */
+    /* ï¿½Aï¿½Hï¿½Tï¿½ï¿½ */
+    /* ï¿½Sï¿½Ê’Tï¿½ï¿½ */
+    /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½È‚ï¿½ï¿½È‚ï¿½Ü‚ÅB */
+    /* ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Ô‹ß‚ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½Tï¿½ï¿½ */
+    /* ï¿½ï¿½ï¿½İ’nï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½Wï¿½Jï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚È‚ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½B */
     switch (run_mode_2) {
      case 1:
       do {
@@ -16555,87 +16740,88 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         if (new_goal[0] == 0) {
           exitg1 = 1;
         } else {
-          /* ƒS[ƒ‹‚ğƒvƒƒbƒg */
-          /* Šù‘¶‚ÌƒRƒ“ƒ^[‚ğg—p‚µA’TõB */
+          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
+          /* ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½B */
           b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal,
                           &adachi_search_mode, &current_x, &current_y,
                           &current_dir, maze_row_size, maze_col_size, maze_wall,
                           maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
                           c_unusedExpr);
 
-          /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
+          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
         }
       } while (exitg1 == 0);
 
-      /* V‹KƒS[ƒ‹‚ªŒ©‚Â‚©‚ç‚È‚¢‚Æ‚«A’â~ˆ—‚ğÀ{ */
+      /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
       m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
 
-      /* ’TõI—¹A’â~‚³‚¹‚Ä‚¢‚é‚½‚ßAƒtƒ‰ƒO‚ğ‚½‚Ä‚éB */
+      /* ï¿½Tï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚½ï¿½ßAï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½B */
       start_flg = 1U;
 
-      /* ’â~’¼Œã */
-      /* Å’ZŒo˜H’Tõ */
-      /* Å’Z‚Æ‚È‚è‚¤‚éƒ}ƒX‚Ì–¢’Tõ‚Ì‚İ’Tõ */
+      /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½Å’Zï¿½oï¿½Hï¿½Tï¿½ï¿½ */
+      /* ï¿½Å’Zï¿½Æ‚È‚è‚¤ï¿½ï¿½}ï¿½Xï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½Ì‚İ’Tï¿½ï¿½ */
       break;
 
      case 2:
       do {
         exitg1 = 0;
 
-        /* –¢’Tõ•Ç‚Í‚È‚¢‚à‚Ì‚Æ‚µ‚ÄAƒS[ƒ‹‚©‚çƒXƒ^[ƒg‚Ü‚ÅAƒRƒ“ƒ^[ƒ}ƒbƒv‚ğ“WŠJi’¼ü‚Ìd‚İ‚ ‚èj */
+        /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ç‚Í‚È‚ï¿½ï¿½ï¿½ï¿½Ì‚Æ‚ï¿½ï¿½ÄAï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½^ï¿½[ï¿½gï¿½Ü‚ÅAï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½Wï¿½Jï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Ìdï¿½İ‚ï¿½ï¿½ï¿½j */
         make_map_fustrun(&b_goal_size, &wall, &search, b_maze_goal.contents,
                          maze_wall, maze_wall_search, 0U, contour_map);
 
-        /* ƒ}ƒbƒv‚ğ‚à‚Æ‚ÉAÅ’ZŒo˜H‚ğ“±oBŒo˜Hã‚Ì–¢’Tõƒ}ƒX‚Æ‚»‚Ì”‚ğo—Í */
-        fust_run(&b_goal_size, &wall, maze_wall, maze_wall_search, contour_map,
-                 b_maze_goal.contents, MAX_uint16_T, unexp_square, &search_flag);
+        /* ï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉAï¿½Å’Zï¿½oï¿½Hï¿½ğ“±oï¿½Bï¿½oï¿½Hï¿½ï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Æ‚ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ */
+        fust_run(&b_goal_size, &wall_flg, &wall, maze_wall, maze_wall_search,
+                 contour_map, b_maze_goal.contents, MAX_uint16_T, unexp_square,
+                 &search_flag);
 
-        /* –¢’Tõƒ}ƒX‚ª‚È‚¯‚ê‚ÎAƒuƒŒƒCƒN */
+        /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎAï¿½uï¿½ï¿½ï¿½Cï¿½N */
         if (search_flag == 0) {
           exitg1 = 1;
         } else {
-          /* –¢’Tõƒ}ƒX‚ª‚ ‚éê‡A’Tõ‚·‚éB */
-          /* Œ»İ’n“_‚©‚çƒRƒ“ƒ^[‚ğ“WŠJ‚µAŠY“–‚Ì–¢’Tõ‚ªXV‚³‚ê‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹‚Æ‚µ‚Äo—Í */
+          /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+          /* ï¿½ï¿½ï¿½İ’nï¿½_ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½Wï¿½Jï¿½ï¿½ï¿½Aï¿½Yï¿½ï¿½ï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Äoï¿½ï¿½ */
           make_new_goal_sh(&wall, maze_wall, current_x, current_y, unexp_square,
                            search_flag, contour_map, new_goal);
 
-          /* ƒS[ƒ‹‚ğƒvƒƒbƒg */
-          /* V‹KƒS[ƒ‹‚ÉŒü‚¯A’Tõ */
+          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
+          /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ÉŒï¿½ï¿½ï¿½ï¿½Aï¿½Tï¿½ï¿½ */
           b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal,
                           &adachi_search_mode, &current_x, &current_y,
                           &current_dir, maze_row_size, maze_col_size, maze_wall,
                           maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
                           d_unusedExpr);
 
-          /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
+          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
         }
       } while (exitg1 == 0);
 
-      /* V‹KƒS[ƒ‹‚ªŒ©‚Â‚©‚ç‚È‚¢‚Æ‚«A’â~ˆ—‚ğÀ{ */
+      /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
       m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
 
-      /* ’TõI—¹A’â~‚³‚¹‚Ä‚¢‚é‚½‚ßA’â~ƒtƒ‰ƒO‚ğ—§‚Ä‚éB */
+      /* ï¿½Tï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚½ï¿½ßAï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½B */
       start_flg = 1U;
 
-      /* ’â~’¼Œã */
-      /* ‚»‚Ì‘¼‚Ìê‡–³‹ */
+      /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
+      /* ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½Ìê‡ï¿½ï¿½ï¿½ï¿½ */
       break;
 
      default:
-      /* ’â~‚³‚¹‚È‚¢ */
+      /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ */
       start_flg = 0U;
 
-      /* ’â~’¼Œã‚Å‚È‚¢ */
+      /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ */
       break;
     }
 
-    /* ƒXƒ^[ƒg‚ğ–Ú“I’n‚Æ‚µ‚Ä‘«—§–@‚ÅÄ’Tõ */
-    /* Šeƒtƒ‰ƒO‚ğ’è‹` */
-    /* ’â~ˆ—‚ğÀ{‚·‚é */
-    /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
-    /* ƒXƒ^[ƒg‚ğƒS[ƒ‹‚Éİ’è */
-    /* ƒS[ƒ‹‚ğƒvƒƒbƒg */
-    /* ‘«—§–@‚Å‹A‘î */
+    /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½Ú“Iï¿½nï¿½Æ‚ï¿½ï¿½Ä‘ï¿½ï¿½ï¿½ï¿½@ï¿½ÅÄ’Tï¿½ï¿½ */
+    /* ï¿½eï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½` */
+    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
+    /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½Éİ’ï¿½ */
+    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½Å‹Aï¿½ï¿½ */
     goal_section[0] = 1U;
     goal_section[1] = 1U;
     b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &adachi_search_mode,
@@ -16644,18 +16830,18 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
                     &start_flg, 1U, 1U, 0U, contour_map);
 
     /* for code generation */
-    /* I—¹AƒS[ƒ‹ƒvƒƒbƒg‚ğÁ‚·B */
-    /*     %% Å’Z‘–s */
+    /* ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+    /*     %% ï¿½Å’Zï¿½ï¿½ï¿½s */
   } else {
     if (run_mode_1 == 1) {
       if (run_mode_2 == 0) {
-        /* ’Tõî•ñ‚ğ‚à‚Æ‚É“™‚üMAP‚ğ¶¬ */
-        /* –¢’m•Ç‚Í‰¼‘z•Ç‚ğİ’u‚·‚éB(w_mode.wall) */
+        /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚É“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
+        /* ï¿½ï¿½ï¿½mï¿½Ç‚Í‰ï¿½ï¿½zï¿½Ç‚ï¿½İ’uï¿½ï¿½ï¿½ï¿½B(w_mode.wall) */
         make_map_fustrun(&b_goal_size, &wall, &search, maze_goal, maze_wall,
                          maze_wall_search, 1U, contour_map);
 
-        /* ƒS[ƒ‹‚Ì•`‰æ */
-        /*      %ƒRƒ“ƒ^[ƒ}ƒbƒv‚Ì•`‰æ */
+        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Ì•`ï¿½ï¿½ */
+        /*      %ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½Ì•`ï¿½ï¿½ */
         /*      if coder.target('MATLAB') */
         /*          for l = 1:32 */
         /*              for j = 1:32 */
@@ -16663,50 +16849,50 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         /*              end */
         /*          end */
         /*      end */
-        /* Še‘–sƒtƒ‰ƒO‚ğ’è‹` */
-        /* ’â~’¼Œã */
-        /* ’â~ˆ—‚ğÀ{‚·‚é */
-        /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ÍƒNƒŠƒA */
-        /* ˆêƒ}ƒX‘Oi */
+        /* ï¿½eï¿½ï¿½ï¿½sï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½` */
+        /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
+        /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ */
+        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ÍƒNï¿½ï¿½ï¿½A */
+        /* ï¿½ï¿½}ï¿½Xï¿½Oï¿½i */
         current_x = 1U;
         current_y = 1U;
         move_step(&current_x, &current_y, g_d_direction.North);
 
-        /* CŒ¾Œê‚Å‚ÌƒXƒ^[ƒgˆ— */
+        /* Cï¿½ï¿½ï¿½ï¿½Å‚ÌƒXï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ */
         m_start_movement(1, 0, move_dir_property.straight);
 
-        /* ’â~’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
-        /* Å’Z‹——£‘–s */
+        /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ï¿½Å’Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½s */
         b_fust_run(&b_goal_size, &wall_flg, &wall, maze_wall, contour_map,
                    maze_goal, MAX_uint16_T, current_x, current_y);
 
-        /*  Î‚ß‚Å‚ÌÅ’Z‘–s */
+        /*  ï¿½Î‚ß‚Å‚ÌÅ’Zï¿½ï¿½ï¿½s */
       } else {
         if (run_mode_2 == 1) {
-          /* Å’ZŒo˜H¶¬ */
-          /* ƒS[ƒ‹ƒ}ƒX‚Ìƒm[ƒh‚ğ‚·‚×‚ÄƒS[ƒ‹ƒm[ƒh‚Æ‚µAƒ}ƒbƒv¶¬ */
+          /* ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½ï¿½ */
+          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½×‚ÄƒSï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Æ‚ï¿½ï¿½Aï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ */
           make_map_fustrun_diagonal(&max_length, &wall, &search, maze_goal,
             goal_size, maze_wall, maze_wall_search, row_num_node, col_num_node,
             &start_num);
 
-          /* ƒS[ƒ‹•t‹ß‚Ìƒ‹[ƒgÅ“K‰»‚Ì‚½‚ßAƒ}ƒbƒvÄ¶¬ */
-          /* ƒXƒ^[ƒg‚©‚çƒS[ƒ‹ƒm[ƒh‚Ü‚ÅAƒ‹[ƒg¶¬‚µAƒS[ƒ‹ƒm[ƒhA•ûŒü‚ğŠm’è */
+          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ß‚Ìƒï¿½ï¿½[ï¿½gï¿½Å“Kï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ßAï¿½}ï¿½bï¿½vï¿½Äï¿½ï¿½ï¿½ */
+          /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Ü‚ÅAï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ */
           decide_goal_node_dir(maze_goal, goal_size, row_num_node, col_num_node,
                                new_goal, &search_flag, &goal_dir);
 
-          /* Šm’è‚³‚ê‚½ƒS[ƒ‹ƒm[ƒhA•ûŒü‚©‚çƒS[ƒ‹ƒ}ƒXAƒm[ƒh‚ğÄ’è‹` */
+          /* ï¿½mï¿½è‚³ï¿½ê‚½ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½Aï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Ä’ï¿½` */
           decide_goal_section(maze_goal, new_goal, search_flag, goal_dir,
                               goal_section, goal_node2, &start_flg);
 
-          /* Šm’è‚³‚ê‚½ƒS[ƒ‹ƒ}ƒX‚©‚çAÄ“xƒ}ƒbƒv‚ğ¶¬ */
+          /* ï¿½mï¿½è‚³ï¿½ê‚½ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½Aï¿½Ä“xï¿½}ï¿½bï¿½vï¿½ğ¶ï¿½ */
           new_goal[0] = goal_section[1];
           new_goal[1] = goal_section[0];
 
-          /* x,y‚É•ÏŠ· */
+          /* x,yï¿½É•ÏŠï¿½ */
           b_make_map_fustrun_diagonal(&max_length, &wall, &search, new_goal,
             maze_wall, maze_wall_search, row_num_node, col_num_node, &start_num);
 
-          /* ¶¬‚³‚ê‚½MAP‚ğ‚à‚Æ‚ÉÅ’Z‘–s */
+          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½MAPï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉÅ’Zï¿½ï¿½ï¿½s */
           make_route_diagonal(row_num_node, col_num_node, new_goal, goal_node2,
                               start_flg);
         }

@@ -125,8 +125,6 @@ int16_t i = 0;
   Motor_Initialize();
   Interrupt_Initialize();
 
-
-  printf("while_start\r\n" );
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -166,19 +164,8 @@ int16_t i = 0;
 
 		    case 2:
 		        log_init();
-//		 	    set_mode_ctrl(trace);
-//		 	    set_target_turn_param(search, 0.72, 0);
-//		 	   HAL_Delay(2000);
-//		        start_acceleration();
-		        half_acceleration();
-		        constant_speed();
-		        slalom_clock_90(1);
-		        constant_speed();
-		        for(uint8_t i = 0;i<2;i++){
-					constant_speed();
-		        }
-				half_deceleration();
-				HAL_Delay(2000);
+		        set_mode_ctrl(side_wall);
+		        constant_speed(0.63, straight, 0);
 		    	break;
 
 		  case 3:
@@ -259,7 +246,7 @@ int16_t i = 0;
 		  case 14:	//迷路走行
 
 			  //フェイルセーフ有効化
-			  set_failsafe_flg(1);
+//			  set_failsafe_flg(1);
 			  //決定されたモードで走行
 			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size,
 					  	  maze_data.goal_size,maze_data.maze_goal, run_mode_1,run_mode_2,maze_data.contour_map,maze_data.row_num_node,maze_data.col_num_node);

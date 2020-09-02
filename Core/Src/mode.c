@@ -227,6 +227,5 @@ void maze_run_mode_decide(void)
 	run_mode_2 = l_run_mode_2;
 	run_mode_3 = l_run_mode_3;
 
-
 }
 

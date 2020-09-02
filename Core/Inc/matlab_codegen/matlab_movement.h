@@ -1,22 +1,24 @@
 #ifndef MATLAB_MOVEMENT
 #define MATLAB_MOVEMENT
 
-//‘Oi
+//ï¿½Oï¿½i
 void m_move_front(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//‰EÜ
+//ï¿½Eï¿½ï¿½
 void m_move_right(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//¶Ü
+//ï¿½ï¿½ï¿½ï¿½
 void m_move_left(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//ƒoƒbƒN
+//ï¿½oï¿½bï¿½N
 void m_move_back(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//ƒXƒ^[ƒg“®ì
+//ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void m_start_movement(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//ƒS[ƒ‹‚Ì“®ìi’â~ˆ—j
+//ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½iï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½j
 void m_goal_movement(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
+//å‰é€²_ãƒ­ãƒ³ã‚°
+void m_move_front_long(unsigned char straight_count,unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 #endif
