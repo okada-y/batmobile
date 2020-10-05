@@ -61,7 +61,7 @@ void calc_motor_vol_ctrl(void)
     /*FF制御*/
     //並進方向
     target_move_accel = (get_target_move_speed() - post_target_move_speed) *1000; //目標加速度更新
-    move_FF = ff_gain_a * target_move_accel + ff_gain_v * get_target_move_speed();
+    move_FF = ff_gain_a * target_move_accel + ff_gain_v * get_target_move_speed() + ff_gain_f;
 
     //回転方向
     target_rotation_accel = (get_target_rotation_speed() - post_target_rotation_speed) *1000; //目標回転角加速度更新
@@ -69,8 +69,8 @@ void calc_motor_vol_ctrl(void)
 
 
     /*モータ印加電圧計算*/
-    target_vol_sum_ctrl =  ff_rate_m * move_FF + (1.0) *move_speed_err_PI;
-    target_vol_diff_ctrl = ff_rate_w * rotate_FF  +  (1.0) * rotate_speed_err_PI;
+    target_vol_sum_ctrl =  ff_rate_m * move_FF + (fb_rate_m) *move_speed_err_PI;
+    target_vol_diff_ctrl = ff_rate_w * rotate_FF  +  (fb_rate_w) * rotate_speed_err_PI;
 
     /*パラメータ更新*/
     post_target_rotation_speed = get_target_rotation_speed();

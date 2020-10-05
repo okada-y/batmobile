@@ -12,6 +12,11 @@
 #include "main.h"
 #include "index.h"
 
+typedef enum{
+	p_straight,//直進
+	p_diagonal//斜め
+}e_move_property;//進行方向属性
+
 static run_start run_first_flg = 0;			// 走行開始フラグ 0:走行開始時　1:それ以外
 static wall_flg	front_wall_flg = nowall;	//　前壁の有無フラグ
 static wall_flg	right_wall_flg = nowall;	//　右壁の有無フラグ
@@ -50,7 +55,7 @@ uint8_t rotate_comp_jud ( void )
 void start_acceleration (void)
 {
 	/*加速度等パラメータ、移動距離、終端速度設定*/
-	set_target_turn_param(search, 0.05-0.045, search_move_speed_max);
+	set_target_move_param(search, 0.05-0.045, search_move_speed_max);
 
     /*半区画進むまで待機*/
     while (1)
@@ -61,7 +66,7 @@ void start_acceleration (void)
     		set_ideal_length(0.0);
     		set_move_length(0.0);
     		//終端速度をキープするよう設定
-    		set_target_turn_param(search, 1.0, search_move_speed_max);
+    		set_target_move_param(search, 1.0, search_move_speed_max);
     		break;
     	}
     }
@@ -74,7 +79,7 @@ void half_acceleration (void)
 {
 	/*移動方向、加速モード設定*/
 	/*加速度等パラメータ、移動距離、終端速度設定*/
-	set_target_turn_param(search, 0.045, search_move_speed_max);
+	set_target_move_param(search, 0.045, search_move_speed_max);
 
     /*半区画進むまで待機*/
     while (1)
@@ -85,7 +90,7 @@ void half_acceleration (void)
     		set_ideal_length(0.0);
     		set_move_length(0.0);
     		//終端速度をキープするよう設定
-    		set_target_turn_param(search, 1.0, search_move_speed_max);
+    		set_target_move_param(search, 1.0, search_move_speed_max);
     		break;
     	}
     }
@@ -99,7 +104,7 @@ void half_deceleration (void)
 {
 	/*移動方向、加速モード設定*/
 	/*加速度等パラメータ、移動距離、終端速度設定*/
-	set_target_turn_param(search, 0.045, 0);
+	set_target_move_param(search, 0.045, 0);
 	/*停止時動作設定*/
 	set_speed_under_lim_flg(slow);
 
@@ -116,20 +121,20 @@ void half_deceleration (void)
     		set_ideal_length(0.0);
     		set_move_length(0.0);
     		//終端速度をキープするよう設定
-    		set_target_turn_param(search, 0.0, 0);
+    		set_target_move_param(search, 0.0, 0);
     		break;
     	}
     }
 }
 
-//機能	: 一区画定速
+//機能	: 指定距離、指定速度にて直進
 //引数	: 距離、パラメータセット番号
 //返り値	: なし
-void constant_speed (float length, turn_lib turn_num,float fin_speed)
+void constant_speed (float length, e_movement_pattern_No turn_num,float fin_speed)
 {
 
 	/*加速度等パラメータ、移動距離、終端速度設定*/
-	set_target_turn_param(turn_num, length, fin_speed);
+	set_target_move_param(turn_num, length, fin_speed);
 
 
     /*一区画進むまで待機*/
@@ -141,20 +146,20 @@ void constant_speed (float length, turn_lib turn_num,float fin_speed)
     		set_ideal_length(0.0);
     		set_move_length(0.0);
     		//終端速度をキープするよう設定
-    		set_target_turn_param(turn_num, 3.0, fin_speed);
+    		set_target_move_param(turn_num, 3.0, fin_speed);
     		break;
     	}
     }
 }
 
 //機能	: 一定距離定速
-//引数	: なし
+//引数	: オフセット長さ、速度
 //返り値	: なし
 void constant_speed_offset (float offset_length)
 {
 
 	/*加速度等パラメータ、移動距離、終端速度設定*/
-	set_target_turn_param(search, offset_length, search_move_speed_max);
+	set_target_move_param(search, offset_length, search_move_speed_max);
 
     /*一区画進むまで待機*/
     while (1)
@@ -165,7 +170,7 @@ void constant_speed_offset (float offset_length)
     		set_ideal_length(0.0);
     		set_move_length(0.0);
     		//終端速度をキープするよう設定
-    		set_target_turn_param(search, 1.0, search_move_speed_max);
+    		set_target_move_param(search, 1.0, search_move_speed_max);
     		break;
     	}
     }
@@ -178,7 +183,7 @@ void constant_speed_front_wall_adj(float target_front_wall_length)
 {
 	float temp=0;
 	/*加速度等パラメータ、移動距離、終端速度設定*/
-	set_target_turn_param(search, 1.0, search_move_speed_max);
+	set_target_move_param(search, 1.0, search_move_speed_max);
 
     while (1)
     {
@@ -192,7 +197,41 @@ void constant_speed_front_wall_adj(float target_front_wall_length)
     		set_ideal_length(0.0);
     		set_move_length(0.0);
     		//終端速度をキープするよう設定
-    		set_target_turn_param(search, 1.0, search_move_speed_max);
+    		set_target_move_param(search, 1.0, search_move_speed_max);
+    		break;
+    	}
+    }
+}
+
+//機能	: ターン時のパラメータ（最高角速度、角加速度）をセットし、指定の角度だけ回る。
+//引数	: ターン番号、ターン角度
+//返り値	: なし
+void turn_pattern(e_movement_pattern_No pattern_No,float l_target_angle )
+{
+	//ターンパラメータ、方向を設定する
+	set_target_turn_param ( pattern_No );
+
+	//目標角度に応じてターンモードを設定
+	if (l_target_angle >= 0)
+	{
+		set_rotation_mode(counter_clockwise);
+	}
+	else
+	{
+		set_rotation_mode(clockwise);
+	}
+	//目標回転角度を設定
+	set_target_angle(l_target_angle);
+
+    /*理想角度、実角度をクリア*/
+    set_ideal_angle(0.0);
+    set_rotation_angle(0.0);
+
+    /*目標角度までに達するまで待機*/
+    while (1)
+    {
+    	if(rotate_comp_jud())
+    	{
     		break;
     	}
     }
@@ -206,7 +245,6 @@ void turn_clk_90 (void)
 	/*回転方向設定*/
 	set_rotation_mode(clockwise);
     set_target_angle(-PI/2);
-
     /*理想角度、実角度をクリア*/
     set_ideal_angle(0.0);
     set_rotation_angle(0.0);
@@ -229,7 +267,8 @@ void turn_conclk_90 (void)
 {
 	/*回転方向設定*/
 	set_rotation_mode(counter_clockwise);
-    set_target_angle(PI/2);
+	set_target_angle(PI/2);
+
 
     /*理想角度、実角度をクリア*/
     set_ideal_angle(0.0);
@@ -328,7 +367,7 @@ void set_left_wall_flg ( void )
 //機能	: 時計回り90度のスラローム軌跡
 //引数	: 壁情報
 //返り値	: なし
-void slalom_clock_90 (unsigned char wall_flg)
+void slalom_clock_s90 (unsigned char wall_flg)
 {
 	//前壁の有無で前距離処理を変更する
 	if ((wall_flg & 1) == 1 )//前壁があるとき
@@ -336,25 +375,27 @@ void slalom_clock_90 (unsigned char wall_flg)
 		constant_speed_front_wall_adj(slalom_front_wall_adj);
 	}else{//前壁がないとき
 	//エンコーダによる一定距離移動
-		constant_speed_offset(slalom_clk_90_before_offset);
+		constant_speed_offset(get_offset_length(turn_s90, before_offset) );
 	}
 	//90degターン
-	turn_clk_90();
+	//turn_clk_90();
+	turn_pattern(turn_s90, -PI/2);
+
 
 	/*理想移動距離、実移動距離をクリア*/
 	set_ideal_length(0.0);
 	set_move_length(0.0);
 	//終端速度をキープするよう設定
-	set_target_turn_param(search, 1.0, search_move_speed_max);
+	set_target_move_param(search, 1.0, search_move_speed_max);
 
 	//後距離
-	constant_speed_offset(slalom_clk_90_after_offset);
+	constant_speed_offset(get_offset_length(turn_s90, after_offset));
 }
 
 //機能	: 反時計回り90度のスラローム軌跡
 //引数	: 壁情報
 //返り値	: なし
-void slalom_conclock_90 (unsigned char wall_flg)
+void slalom_conclock_s90 (unsigned char wall_flg)
 {
 	//前壁の有無で前距離処理を変更する
 	if ((wall_flg & 1) == 1 )//前壁があるとき
@@ -362,22 +403,235 @@ void slalom_conclock_90 (unsigned char wall_flg)
 		constant_speed_front_wall_adj(slalom_front_wall_adj);
 	}else{//前壁がないとき
 	//前距離
-		constant_speed_offset(slalom_conclk_90_before_offset);
+		constant_speed_offset(get_offset_length(turn_s90, before_offset));
 	}
 	//90degターン
-	turn_conclk_90();
+	//turn_conclk_90();
+	turn_pattern(turn_s90, PI/2);
 
 	/*理想移動距離、実移動距離をクリア*/
 	set_ideal_length(0.0);
 	set_move_length(0.0);
 	//終端速度をキープするよう設定
-	set_target_turn_param(search, 1.0, search_move_speed_max);
+	set_target_move_param(search, 1.0, search_move_speed_max);
 
 	//後距離
-	constant_speed_offset(slalom_conclk_90_after_offset);
+	constant_speed_offset(get_offset_length(turn_s90, after_offset));
 }
 
+//機能	:時計回り45度のスラローム軌跡
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_clock_45 (unsigned char wall_flg,unsigned char move_dir_property)
+{
+	if(move_dir_property == p_straight) //直進時
+	{
+		//前距離の走行
+		constant_speed(get_offset_length(turn_45, before_offset), turn_45, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+	else//斜めの場合
+	{
+		//後距離の走行
+		constant_speed(get_offset_length(turn_45, after_offset), turn_45, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
 
+	//ターン
+	turn_pattern(turn_45, PI/4);
+
+	if(move_dir_property == p_straight) //直進時
+	{
+		//後距離の走行
+		constant_speed(get_offset_length(turn_45, after_offset), turn_45, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+	else//斜めの場合
+	{
+		//前距離の走行
+		constant_speed(get_offset_length(turn_45, before_offset), turn_45, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+}
+
+//機能	: 反時計回り45度のスラローム軌跡
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_conclock_45 (unsigned char wall_flg,unsigned char move_dir_property)
+{
+	if(move_dir_property == p_straight) //直進時
+	{
+		//前距離の走行
+		constant_speed(get_offset_length(turn_45, before_offset), turn_45, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+	else//斜めの場合
+	{
+		//後距離の走行
+		constant_speed(get_offset_length(turn_45, after_offset), turn_45, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+
+	//ターン
+	turn_pattern(turn_45, -PI/4);
+
+	if(move_dir_property == p_straight) //直進時
+	{
+		//後距離の走行
+		constant_speed(get_offset_length(turn_45, after_offset), turn_45, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+	else//斜めの場合
+	{
+		//前距離の走行
+		constant_speed(get_offset_length(turn_45, before_offset), turn_45, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+}
+
+//機能	:時計回り90度のスラローム軌跡(大廻)
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_clock_90(unsigned char wall_flg,unsigned char move_dir_property)
+{
+	//前距離の走行
+	constant_speed(get_offset_length(turn_90, before_offset), turn_90, get_target_move_speed());//現在の目標速度を終端速度とする
+
+	//ターン
+	turn_pattern(turn_90, PI/2);
+
+	//前距離の走行
+	constant_speed(get_offset_length(turn_90, after_offset), turn_90, get_target_move_speed());//現在の目標速度を終端速度とする
+}
+
+//機能	:反時計回り90度のスラローム軌跡（大廻）
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_conclock_90(unsigned char wall_flg,unsigned char move_dir_property)
+{
+	//前距離の走行
+	constant_speed(get_offset_length(turn_90, before_offset), turn_90, get_target_move_speed());//現在の目標速度を終端速度とする
+
+	//ターン
+	turn_pattern(turn_90, -PI/2);
+
+	//前距離の走行
+	constant_speed(get_offset_length(turn_90, after_offset), turn_90, get_target_move_speed());//現在の目標速度を終端速度とする
+}
+
+//機能	:時計回り90度のスラローム軌跡
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_clock_V90(unsigned char wall_flg,unsigned char move_dir_property)
+{
+	//前距離の走行
+	constant_speed(get_offset_length(turn_V90, before_offset), turn_V90, get_target_move_speed());//現在の目標速度を終端速度とする
+
+	//ターン
+	turn_pattern(turn_V90, PI/2);
+
+	//前距離の走行
+	constant_speed(get_offset_length(turn_V90, after_offset), turn_V90, get_target_move_speed());//現在の目標速度を終端速度とする
+}
+
+//機能	:時計回り90度のスラローム軌跡
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_conclock_V90(unsigned char wall_flg,unsigned char move_dir_property)
+{
+	//前距離の走行
+	constant_speed(get_offset_length(turn_V90, before_offset), turn_V90, get_target_move_speed());//現在の目標速度を終端速度とする
+
+	//ターン
+	turn_pattern(turn_V90, -PI/2);
+
+	//前距離の走行
+	constant_speed(get_offset_length(turn_V90, after_offset), turn_V90, get_target_move_speed());//現在の目標速度を終端速度とする
+}
+
+//機能	:時計回り135度のスラローム軌跡
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_clock_135(unsigned char wall_flg,unsigned char move_dir_property)
+{
+	if(move_dir_property == straight) //直進時
+	{
+		//前距離の走行
+		constant_speed(get_offset_length(turn_135, before_offset), turn_135, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+	else//斜めの場合
+	{
+		//後距離の走行
+		constant_speed(get_offset_length(turn_135, after_offset), turn_135, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+
+	//ターン
+	turn_pattern(turn_135, PI*3/4);
+
+	if(move_dir_property == straight) //直進時
+	{
+		//後距離の走行
+		constant_speed(get_offset_length(turn_135, after_offset), turn_135, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+	else//斜めの場合
+	{
+		//前距離の走行
+		constant_speed(get_offset_length(turn_135, before_offset), turn_135, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+}
+
+//機能	:反時計回り135度のスラローム軌跡
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_conclock_135(unsigned char wall_flg,unsigned char move_dir_property)
+{
+	if(move_dir_property == straight) //直進時
+	{
+		//前距離の走行
+		constant_speed(get_offset_length(turn_135, before_offset), turn_135, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+	else//斜めの場合
+	{
+		//後距離の走行
+		constant_speed(get_offset_length(turn_135, after_offset), turn_135, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+
+	//ターン
+	turn_pattern(turn_135, -PI*3/4);
+
+	if(move_dir_property == straight) //直進時
+	{
+		//後距離の走行
+		constant_speed(get_offset_length(turn_135, after_offset), turn_135, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+	else//斜めの場合
+	{
+		//前距離の走行
+		constant_speed(get_offset_length(turn_135, before_offset), turn_135, get_target_move_speed());//現在の目標速度を終端速度とする
+	}
+}
+
+//機能	:時計回り180度のスラローム軌跡
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_clock_180(unsigned char wall_flg,unsigned char move_dir_property)
+{
+	//前距離の走行
+	constant_speed(get_offset_length(turn_180, before_offset), turn_180, get_target_move_speed());//現在の目標速度を終端速度とする
+
+	//ターン
+	turn_pattern(turn_180, PI);
+
+	//前距離の走行
+	constant_speed(get_offset_length(turn_180, after_offset), turn_180, get_target_move_speed());//現在の目標速度を終端速度とする
+}
+
+//機能	:反時計回り180度のスラローム軌跡
+//引数	: 壁情報,進行方向属性
+//返り値	: なし
+void slalom_conclock_180(unsigned char wall_flg,unsigned char move_dir_property)
+{
+	//前距離の走行
+	constant_speed(get_offset_length(turn_180, before_offset), turn_180, get_target_move_speed());//現在の目標速度を終端速度とする
+
+	//ターン
+	turn_pattern(turn_180, -PI);
+
+	//前距離の走行
+	constant_speed(get_offset_length(turn_180, after_offset), turn_180, get_target_move_speed());//現在の目標速度を終端速度とする
+}
 
 ////////////////////////////////////////
 /* 軌跡生成関数						   */
@@ -440,21 +694,14 @@ void move_right  (unsigned char start_flg,unsigned char wall_flg,unsigned char m
 		if((wall_flg & 1)== 1){
 			front_wall_calibrate();
 		}
-		turn_clk_90();		//時計回りに90度回転
+		//turn_clk_90();		//時計回りに90度回転
+		turn_pattern(turn_s90, -PI/2);
 		set_mode_ctrl(side_wall);
 		half_acceleration();//半区画加速
 		set_mode_ctrl(trace);
 	}
 	if(start_flg == already){
-		// half_deceleration();//半区画減速で中央に停止
-		// if(front_wall_flg == wall){
-		// 	fornt_wall_calibrate();
-		// }
-		// turn_clk_90();		//時計回りに90度回転
-		// set_mode_ctrl(side_wall);
-		// half_acceleration();//半区画加速
-		// set_mode_ctrl(trace);
-		slalom_clock_90 (wall_flg);
+		slalom_clock_s90 (wall_flg);
 	}
 }
 
@@ -467,21 +714,14 @@ void move_left  (unsigned char start_flg,unsigned char wall_flg,unsigned char mo
 		if((wall_flg & 1)== 1){
 			front_wall_calibrate();
 		}
-		turn_conclk_90();	//m反時計回りに90度回転
+		//turn_conclk_90();	//m反時計回りに90度回転
+		turn_pattern(turn_s90, PI/2);
 		set_mode_ctrl(side_wall);
 		half_acceleration();//m半区画加速
 		set_mode_ctrl(trace);
 	}
 	if(start_flg == already){
-		// half_deceleration();//m半区画減速で中央に停止
-		// if(front_wall_flg == wall){
-		// 	fornt_wall_calibrate();
-		// }
-		// turn_conclk_90();	//m反時計回りに90度回転
-		// set_mode_ctrl(side_wall);
-		// half_acceleration();//m半区画加速
-		// set_mode_ctrl(trace);
-		slalom_conclock_90 (wall_flg);
+		slalom_conclock_s90 (wall_flg);
 	}
 }
 
@@ -504,24 +744,30 @@ void move_back(unsigned char start_flg,unsigned char wall_flg,unsigned char move
 			front_wall_calibrate();
 			//右壁があるとき
 			if((wall_flg & 2)== 2){
-				turn_clk_90();
+				//turn_clk_90();
+				turn_pattern(turn_s90, -PI/2);
 				front_wall_calibrate();
-				turn_clk_90();
+				//turn_clk_90();
+				turn_pattern(turn_s90, -PI/2);
 			}
 			//右壁がなく左壁があるとき
 			else if((wall_flg & 8)== 8){
-					turn_conclk_90();
+					//turn_conclk_90();
+					turn_pattern(turn_s90, PI/2);
 					front_wall_calibrate();
-					turn_conclk_90();
+					//turn_conclk_90();
+					turn_pattern(turn_s90, PI/2);
 			}
 			//左右に壁がないとき
 			else {
-				turn_conclk_180();	//反時計回りに180度回転
+				//turn_conclk_180();	//反時計回りに180度回転
+				turn_pattern(turn_s90, PI);
 			}
 		}
 		//前壁がないとき
 		else{
-			turn_conclk_180();	//反時計回りに180度回転
+			//turn_conclk_180();	//反時計回りに180度回転
+			turn_pattern(turn_s90, PI);
 		}
 
 		set_mode_ctrl(side_wall);

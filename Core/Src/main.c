@@ -164,26 +164,15 @@ int16_t i = 0;
 
 		    case 2:
 		        log_init();
-		        set_mode_ctrl(side_wall);
-		        constant_speed(0.63, straight, 0);
+		        move_front_long(8,1,0,0);
+		        half_deceleration();
+		        HAL_Delay(1000);
 		    	break;
 
 		  case 3:
 			  	log_init();
-				/*回転方向設定*/
-			  	set_target_turn_param(search, 0, 0);
-				set_rotation_mode(clockwise);
-			    set_target_angle(-10*PI*2);
-
-			    /*360度回転するまで待機*/
-			    while (1)
-			    {
-			    	if(rotate_comp_jud())
-			    	{
-			    		break;
-			    	}
-			    }
-			    HAL_Delay(4000);
+			  	init_target_turn_param();
+			  	turn_pattern(turn_s90, PI/2);
 			  break;
 
 		  case 4:
@@ -206,10 +195,6 @@ int16_t i = 0;
 
 		  case 6:
 		       log_init();
-		       set_target_turn_param(search, 0.0, 0.0);
-		       while(1){
-
-		       }
 			  break;
 
 		  case 7://モジュールテスト
@@ -246,7 +231,13 @@ int16_t i = 0;
 		  case 14:	//迷路走行
 
 			  //フェイルセーフ有効化
-//			  set_failsafe_flg(1);
+			  //set_failsafe_flg(1);
+			  //探索時、迷路情報を初期化
+			  if (run_mode_1 == search){
+				  maze_init(maze_data.maze_y_size, maze_data.maze_x_size, maze_data.m_wall_tmp, maze_data.m_search_tmp);
+			  }
+			  //走行パラメータの初期化
+			  init_target_turn_param();
 			  //決定されたモードで走行
 			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size,
 					  	  maze_data.goal_size,maze_data.maze_goal, run_mode_1,run_mode_2,maze_data.contour_map,maze_data.row_num_node,maze_data.col_num_node);

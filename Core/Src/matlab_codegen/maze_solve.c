@@ -5,7 +5,7 @@
  * File: maze_solve.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 01-Sep-2020 21:38:28
+ * C/C++ source code generated on  : 04-Sep-2020 15:57:17
  */
 
 /* Include Files */
@@ -16,8 +16,8 @@
 #include "rem.h"
 #include "isequal.h"
 #include "maze_init_data.h"
-#include "matlab_movement.h"
-#include "matlab_IR_sensor.h"
+#include "C:\work\matlab\maze_sim_git\src\C_src\matlab_movement.h"
+#include "C:\work\matlab\maze_sim_git\src\C_src\matlab_IR_sensor.h"
 
 /* Type Definitions */
 #ifndef typedef_coder_internal_ref
@@ -33,7 +33,7 @@ typedef struct {
 #define typedef_coder_internal_ref_1
 
 typedef struct {
-  unsigned char contents[18];
+  unsigned char contents[1024];
 } coder_internal_ref_1;
 
 #endif                                 /*typedef_coder_internal_ref_1*/
@@ -42,10 +42,19 @@ typedef struct {
 #define typedef_coder_internal_ref_2
 
 typedef struct {
-  unsigned short contents;
+  unsigned char contents[18];
 } coder_internal_ref_2;
 
 #endif                                 /*typedef_coder_internal_ref_2*/
+
+#ifndef typedef_coder_internal_ref_3
+#define typedef_coder_internal_ref_3
+
+typedef struct {
+  unsigned short contents;
+} coder_internal_ref_3;
+
+#endif                                 /*typedef_coder_internal_ref_3*/
 
 #ifndef typedef_h_struct_T
 #define typedef_h_struct_T
@@ -57,14 +66,14 @@ typedef struct {
 
 #endif                                 /*typedef_h_struct_T*/
 
-#ifndef typedef_coder_internal_ref_3
-#define typedef_coder_internal_ref_3
+#ifndef typedef_coder_internal_ref_4
+#define typedef_coder_internal_ref_4
 
 typedef struct {
   h_struct_T contents;
-} coder_internal_ref_3;
+} coder_internal_ref_4;
 
-#endif                                 /*typedef_coder_internal_ref_3*/
+#endif                                 /*typedef_coder_internal_ref_4*/
 
 #ifndef typedef_g_struct_T
 #define typedef_g_struct_T
@@ -76,14 +85,14 @@ typedef struct {
 
 #endif                                 /*typedef_g_struct_T*/
 
-#ifndef typedef_coder_internal_ref_4
-#define typedef_coder_internal_ref_4
+#ifndef typedef_coder_internal_ref_5
+#define typedef_coder_internal_ref_5
 
 typedef struct {
   g_struct_T contents;
-} coder_internal_ref_4;
+} coder_internal_ref_5;
 
-#endif                                 /*typedef_coder_internal_ref_4*/
+#endif                                 /*typedef_coder_internal_ref_5*/
 
 #ifndef typedef_f_struct_T
 #define typedef_f_struct_T
@@ -95,45 +104,38 @@ typedef struct {
 
 #endif                                 /*typedef_f_struct_T*/
 
-#ifndef typedef_coder_internal_ref_5
-#define typedef_coder_internal_ref_5
-
-typedef struct {
-  f_struct_T contents;
-} coder_internal_ref_5;
-
-#endif                                 /*typedef_coder_internal_ref_5*/
-
 #ifndef typedef_coder_internal_ref_6
 #define typedef_coder_internal_ref_6
 
 typedef struct {
-  unsigned char contents[1024];
+  f_struct_T contents;
 } coder_internal_ref_6;
 
 #endif                                 /*typedef_coder_internal_ref_6*/
 
 /* Function Declarations */
-static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
-  *wall_flg, const coder_internal_ref_5 *wall, const unsigned char maze_wall
-  [1024], const unsigned short contour_map[1024], const unsigned char maze_goal
-  [18], unsigned short max_length, unsigned char start_x, unsigned char start_y);
-static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
+static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
+  coder_internal_ref *goal_size, coder_internal_ref *wall_flg, const
+  coder_internal_ref_6 *wall, const unsigned char b_maze_wall[1024], const
+  unsigned short contour_map[1024], const unsigned char maze_goal[18], unsigned
+  short max_length, unsigned char start_x, unsigned char start_y);
+static void b_make_map_find(const coder_internal_ref_6 *wall, const unsigned
   char maze_goal[2], const unsigned char maze_wall[1024], unsigned char
   current_x, unsigned char current_y, unsigned short contour_map[1024]);
-static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
-  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
+  coder_internal_ref_6 *wall, const coder_internal_ref_5 *search, const unsigned
   char maze_goal[2], const unsigned char maze_wall[1024], const unsigned char
   maze_wall_search[1024], unsigned short row_num_node[1056], unsigned short
   col_num_node[1056], unsigned short *start_num);
-static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
-  *wall_flg, const coder_internal_ref_4 *search, const coder_internal_ref_1
-  *maze_goal, const coder_internal_ref_3 *adachi_search_mode, unsigned char
-  *current_x, unsigned char *current_y, unsigned char *current_dir, unsigned
-  char maze_row_size, unsigned char maze_col_size, unsigned char maze_wall[1024],
-  unsigned char maze_wall_search[1024], const unsigned char exploration_goal[2],
-  unsigned char *start_flg, unsigned char stop_flg, unsigned char goal_after_flg,
-  unsigned char adachi_s_mode, unsigned short contour_map[1024]);
+static void b_search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
+  *wall_flg, const coder_internal_ref_5 *search, const coder_internal_ref_2
+  *maze_goal, const coder_internal_ref_1 *maze_wall, const coder_internal_ref_4 *
+  adachi_search_mode, unsigned char *current_x, unsigned char *current_y,
+  unsigned char *current_dir, unsigned char maze_row_size, unsigned char
+  maze_col_size, unsigned char b_maze_wall[1024], unsigned char
+  maze_wall_search[1024], const unsigned char exploration_goal[2], unsigned char
+  *start_flg, unsigned char stop_flg, unsigned char goal_after_flg, unsigned
+  char adachi_s_mode, unsigned short contour_map[1024]);
 static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
   char goal_size, const unsigned short row_num_node[1056], const unsigned short
   col_num_node[1056], unsigned char goal_node[2], unsigned char *goal_matrix_dir,
@@ -142,14 +144,15 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   unsigned char goal_node[2], unsigned char goal_matrix_dir, unsigned char
   goal_dir, unsigned char goal_section[2], unsigned char goal_node2[2], unsigned
   char *goal_matrix_dir2);
-static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
-                     *wall_flg, const coder_internal_ref_5 *wall, const unsigned
-                     char maze_wall[1024], const unsigned char maze_wall_search
+static void fust_run(const coder_internal_ref_1 *maze_wall, const
+                     coder_internal_ref *goal_size, coder_internal_ref *wall_flg,
+                     const coder_internal_ref_6 *wall, const unsigned char
+                     b_maze_wall[1024], const unsigned char maze_wall_search
                      [1024], const unsigned short contour_map[1024], const
                      unsigned char maze_goal[18], unsigned short max_length,
                      unsigned char unexp_square[1024], unsigned char
                      *unexp_square_idx);
-static unsigned char fust_run_wallset(const coder_internal_ref_6 *maze_wall,
+static unsigned char fust_run_wallset(const coder_internal_ref_1 *maze_wall,
   unsigned char temp_y, unsigned char temp_x, unsigned char temp_dir);
 static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   unsigned short col_num_node[1056], unsigned char current_move_dir, const
@@ -164,26 +167,26 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
   unsigned char ref_move_mode);
 static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
   unsigned char y);
-static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
+static void make_map_find(const coder_internal_ref_6 *wall, const unsigned char
   maze_goal[18], unsigned char l_goal_size, const unsigned char maze_wall[1024],
   unsigned char current_x, unsigned char current_y, unsigned short contour_map
   [1024]);
 static void make_map_fustrun(const coder_internal_ref *goal_size, const
-  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+  coder_internal_ref_6 *wall, const coder_internal_ref_5 *search, const unsigned
   char maze_goal[18], const unsigned char maze_wall[1024], const unsigned char
   maze_wall_search[1024], unsigned char unknown_wall_flg, unsigned short
   contour_map[1024]);
-static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
-  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
+  coder_internal_ref_6 *wall, const coder_internal_ref_5 *search, const unsigned
   char maze_goal[18], unsigned char goal_size, const unsigned char maze_wall
   [1024], const unsigned char maze_wall_search[1024], unsigned short
   row_num_node[1056], unsigned short col_num_node[1056], unsigned short
   *start_num);
-static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
+static void make_new_goal_all(const coder_internal_ref_6 *wall, const unsigned
   char maze_wall[1024], const unsigned char maze_wall_search[1024], unsigned
   char current_x, unsigned char current_y, unsigned short contour_map[1024],
   unsigned char new_goal[2]);
-static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
+static void make_new_goal_sh(const coder_internal_ref_6 *wall, const unsigned
   char maze_wall[1024], unsigned char current_x, unsigned char current_y, const
   unsigned char unexp_square[1024], unsigned char unexp_square_idx, unsigned
   short contour_map[1024], unsigned char new_goal[2]);
@@ -195,14 +198,15 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
 static void move_straight(unsigned char current_node[2], unsigned char
   *current_node_property, unsigned char *current_move_dir, unsigned char
   *current_move_mode, unsigned char straight_count);
-static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
-  *wall_flg, const coder_internal_ref_4 *search, const coder_internal_ref_1
-  *maze_goal, const coder_internal_ref_3 *adachi_search_mode, unsigned char
-  *current_x, unsigned char *current_y, unsigned char *current_dir, unsigned
-  char maze_row_size, unsigned char maze_col_size, unsigned char maze_wall[1024],
-  unsigned char maze_wall_search[1024], const unsigned char exploration_goal[18],
-  unsigned char l_goal_size, unsigned char *start_flg, unsigned char
-  adachi_s_mode, unsigned short contour_map[1024]);
+static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
+  *wall_flg, const coder_internal_ref_5 *search, const coder_internal_ref_2
+  *maze_goal, const coder_internal_ref_1 *maze_wall, const coder_internal_ref_4 *
+  adachi_search_mode, unsigned char *current_x, unsigned char *current_y,
+  unsigned char *current_dir, unsigned char maze_row_size, unsigned char
+  maze_col_size, unsigned char b_maze_wall[1024], unsigned char
+  maze_wall_search[1024], const unsigned char exploration_goal[18], unsigned
+  char l_goal_size, unsigned char *start_flg, unsigned char adachi_s_mode,
+  unsigned short contour_map[1024]);
 static unsigned char sh_route_unexp_sq_jud(const unsigned char
   temp_unexp_square[1024], unsigned char temp_unexp_square_idx, unsigned char
   temp_y, unsigned char temp_x);
@@ -227,9 +231,9 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
 static void turn_r_45(unsigned char current_node[2], unsigned char
                       *current_node_property, unsigned char *current_move_dir,
                       unsigned char *current_move_mode);
-static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
-                     *wall_flg, const coder_internal_ref_4 *search, const
-                     coder_internal_ref_1 *maze_goal, unsigned char
+static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
+                     *wall_flg, const coder_internal_ref_5 *search, const
+                     coder_internal_ref_2 *maze_goal, unsigned char
                      maze_row_size, unsigned char maze_col_size, unsigned char
                      current_x, unsigned char current_y, unsigned char
                      current_dir, unsigned char maze_wall[1024], unsigned char
@@ -238,12 +242,13 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 /* Function Definitions */
 
 /*
- * ï¿½ï¿½ï¿½Í@ï¿½Çï¿½ï¿½,ï¿½Ç’Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAP,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
- * ï¿½oï¿½ï¿½   ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½ï¿½Wï¿½Aï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½
- * Arguments    : const coder_internal_ref *goal_size
+ * “ü—Í@•Çî•ñ,•Ç’Tõî•ñ,“™‚üMAP,ƒS[ƒ‹À•W,Å‘åŒo˜H’·
+ * o—Í   Å’ZŒo˜Hã‚Ì–¢’Tõƒ}ƒX‚ÌÀ•WA–¢’Tõƒ}ƒX‚Ì”
+ * Arguments    : const coder_internal_ref_1 *maze_wall
+ *                const coder_internal_ref *goal_size
  *                coder_internal_ref *wall_flg
- *                const coder_internal_ref_5 *wall
- *                const unsigned char maze_wall[1024]
+ *                const coder_internal_ref_6 *wall
+ *                const unsigned char b_maze_wall[1024]
  *                const unsigned short contour_map[1024]
  *                const unsigned char maze_goal[18]
  *                unsigned short max_length
@@ -251,12 +256,12 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
  *                unsigned char start_y
  * Return Type  : void
  */
-static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
-  *wall_flg, const coder_internal_ref_5 *wall, const unsigned char maze_wall
-  [1024], const unsigned short contour_map[1024], const unsigned char maze_goal
-  [18], unsigned short max_length, unsigned char start_x, unsigned char start_y)
+static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
+  coder_internal_ref *goal_size, coder_internal_ref *wall_flg, const
+  coder_internal_ref_6 *wall, const unsigned char b_maze_wall[1024], const
+  unsigned short contour_map[1024], const unsigned char maze_goal[18], unsigned
+  short max_length, unsigned char start_x, unsigned char start_y)
 {
-  coder_internal_ref_6 b_maze_wall;
   unsigned char goal_flag;
   unsigned short little;
   unsigned char straight_count;
@@ -275,41 +280,40 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
   int i75;
   unsigned int qY;
   unsigned char switch_expression;
-  memcpy(&b_maze_wall.contents[0], &maze_wall[0], sizeof(unsigned char) << 10);
 
-  /*     %% fust_run ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½s */
-  /* ï¿½Å’Zï¿½oï¿½Hï¿½\ï¿½ï¿½ï¿½pax */
+  /*     %% fust_run Å’ZŒo˜H‘–s */
+  /* Å’ZŒo˜H•\¦—pax */
   /*          global sh_route_ax */
-  /* localï¿½Ïï¿½ï¿½éŒ¾ */
+  /* local•Ï”éŒ¾ */
   goal_flag = 0U;
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O */
+  /* ƒS[ƒ‹”»’èƒtƒ‰ƒO */
   little = max_length;
 
-  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½pè‡’l */
+  /* is•ûŒü‘I’è—pè‡’l */
   straight_count = 0U;
 
-  /*          %ï¿½}ï¿½Eï¿½Xï¿½Ê’uï¿½\ï¿½ï¿½ï¿½pï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g */
+  /*          %ƒ}ƒEƒXˆÊ’u•\¦—pƒIƒuƒWƒFƒNƒg */
   /*          if coder.target('MATLAB') */
   /*              ax = gca; */
   /*              h = hgtransform('Parent',ax); */
   /*          end */
-  /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½İ’ï¿½ */
+  /* ƒ}ƒEƒX‚Ì‰ŠúˆÊ’uİ’è */
   temp_x = start_x;
   temp_y = start_y;
 
-  /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
+  /* ƒ}ƒEƒX‚Ì‰Šú•ûŒü’è‹` */
   temp_dir = g_direction.North;
   next_dir = g_direction.North;
 
-  /* ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½x */
-  /* ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½y */
-  /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ÌÅ’Zï¿½ï¿½ï¿½[ï¿½gï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½(MATLABï¿½Ì‚ï¿½) */
+  /* ’TõŠJnx */
+  /* ’TõŠJny */
+  /* ÀsAŠù‘¶‚ÌÅ’Zƒ‹[ƒg•\¦‚ğíœ‚·‚é(MATLAB‚Ì‚İ) */
   tempk = 0;
   exitg1 = false;
   while ((!exitg1) && (tempk <= max_length - 1)) {
-    /* ï¿½ñ‘–sï¿½ï¿½ï¿½[ï¿½hï¿½Ì‚Æ‚ï¿½ï¿½Aï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½Lï¿½^ï¿½ï¿½ï¿½ï¿½ */
-    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /* ”ñ‘–sƒ‚[ƒh‚Ì‚Æ‚«A”ñ’Tõƒ}ƒX‚ğ‹L˜^‚·‚é */
+    /* Œ»İˆÊ’u‚ªƒS[ƒ‹‚©”»’è */
     i71 = goal_size->contents;
     for (tempi = 0; tempi < i71; tempi++) {
       if ((temp_x == maze_goal[tempi]) && (temp_y == maze_goal[tempi + 9])) {
@@ -318,29 +322,29 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
     }
 
     if (goal_flag == 1) {
-      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Â‘ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
+      /* ƒS[ƒ‹‚©‚Â‘–sA’â~ˆ—‚ğÀ{ */
       if (straight_count > 0) {
-        /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
-        /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        /* ’¼iƒJƒEƒ“ƒ^‚ª—§‚Á‚Ä‚¢‚éê‡ */
+        /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
         m_move_front_long(straight_count, 0, wall_flg->contents,
                           move_dir_property.straight);
 
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
 
-        /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Xï¿½gï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ˆÚ“®ŒãAƒXƒgƒŒ[ƒgƒJƒEƒ“ƒ^‚ğƒNƒŠƒA */
       }
 
-      /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
-      /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+      /* QÆƒ}ƒXAQÆ•ûŒü‚ğXV */
+      /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
       m_goal_movement(0, wall_flg->contents, move_dir_property.straight);
       exitg1 = true;
     } else {
-      /*         %%ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
-      /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
-      /* ï¿½kï¿½ï¿½ï¿½Ì•Ç‚Ì‚ï¿½ï¿½ï¿½È‚ï¿½ */
+      /*         %%is•ûŒü‘I’è */
+      /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
+      /* –k‘¤‚Ì•Ç‚Ì‚ ‚è‚È‚µ */
       i71 = temp_y + ((temp_x - 1) << 5);
-      tempi = b_maze_wall.contents[i71 - 1];
+      tempi = b_maze_wall[i71 - 1];
       if (g_direction.North <= 7) {
         i72 = (unsigned char)(1 << g_direction.North);
       } else {
@@ -349,15 +353,15 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 
       if (((tempi & i72) == wall->contents.nowall) && (contour_map[i71] < little))
       {
-        /* ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½è‡’lï¿½ï¿½ï¿½á‚¯ï¿½ï¿½ÎA */
-        /* è‡’lï¿½ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½mapï¿½lï¿½É•ÏX */
+        /* –k‘¤‚Ì“™‚ümap‚ªè‡’l‚æ‚è’á‚¯‚ê‚ÎA */
+        /* è‡’l‚ğ–k‘¤‚Ì“™‚map’l‚É•ÏX */
         little = contour_map[temp_y + ((temp_x - 1) << 5)];
 
-        /* ï¿½kï¿½ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É•ÏXy */
+        /* –k‘¤‚ğis•ûŒü‚É•ÏXy */
         next_dir = g_direction.North;
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* “Œ‘¤ */
       if (g_direction.East <= 7) {
         i73 = (unsigned char)(1 << g_direction.East);
       } else {
@@ -372,7 +376,7 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
       }
 
-      /* ï¿½ì‘¤ */
+      /* “ì‘¤ */
       if (g_direction.South <= 7) {
         i74 = (unsigned char)(1 << g_direction.South);
       } else {
@@ -387,7 +391,7 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ¼‘¤ */
       if (g_direction.West <= 7) {
         i75 = (unsigned char)(1 << g_direction.West);
       } else {
@@ -402,22 +406,22 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
       }
 
-      /*          %ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Çï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ÄAï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Zï¿½bï¿½g */
+      /*          %‘–sA’Tõ•Çî•ñ‚É‰‚¶‚ÄA•Çƒtƒ‰ƒO‚ğƒZƒbƒg */
       /*          if (Sh_r_mode) */
-      /*              %ï¿½O */
+      /*              %‘O */
       /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir),15)) */
       /*                  wall_flg = bitor(wall_flg,1,'uint8'); */
       /*              end */
-      /*              %ï¿½E */
+      /*              %‰E */
       /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir+1),15)) */
       /*                  wall_flg = bitor(wall_flg,2,'uint8'); */
       /*              end */
-      /*              %ï¿½ï¿½ */
+      /*              %¶ */
       /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir+3),15)) */
       /*                  wall_flg = bitor(wall_flg,8,'uint8'); */
       /*              end */
       /*          end */
-      /*         %%ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ï¿½Æiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+      /*         %%Œ»İ•ûŒü‚Æis•ûŒü‚É‰‚¶‚½ˆ— */
       tempi = (int)(4U + next_dir);
       if ((unsigned int)tempi > 255U) {
         tempi = 255;
@@ -443,55 +447,55 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 
       switch (tempi) {
        case 0:
-        /* ï¿½ï¿½ï¿½iï¿½Ìê‡ï¿½Aï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½g */
+        /* ’¼i‚Ìê‡A’¼iƒJƒEƒ“ƒ^‚ğƒCƒ“ƒNƒŠƒƒ“ƒg */
         i71 = (int)(straight_count + 1U);
         if ((unsigned int)i71 > 255U) {
           i71 = 255;
         }
 
         straight_count = (unsigned char)i71;
-        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+        wall_flg->contents = fust_run_wallset(maze_wall, temp_y, temp_x,
           temp_dir);
 
-        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
-        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+        /* Œ»İQÆƒ}ƒX‚Ì•Çî•ñ‚ğ‹L‰¯ */
+        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
+        /* o—Í Œ»İˆÊ’ux,y */
+        /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+        /* –k‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “Œ‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “ì‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* ¼‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
 
-        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½ï¿½ï¿½Ú“ï¿½ */
+        /* QÆƒ}ƒX‚ğˆÚ“® */
         /*                  %disp("front") */
-        /*                  if (Sh_r_mode) %ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        /*                  if (Sh_r_mode) %‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
         /*                      if ~coder.target('MATLAB') */
         /*                          coder.ceval('m_move_front',start_flg,wall_flg,uint8(move_dir_property.straight)); */
         /*                      end */
-        /*                      %ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /*                      %ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         /*                      start_flg = uint8(0); */
         /*                      wall_flg = uint8(0); */
         /*                  end */
@@ -499,26 +503,26 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 
        case 1:
         if (straight_count > 0) {
-          /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
-          /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+          /* ’¼iƒJƒEƒ“ƒ^‚ª—§‚Á‚Ä‚¢‚éê‡ */
+          /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
           m_move_front_long(straight_count, 0, wall_flg->contents,
                             move_dir_property.straight);
 
-          /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
           wall_flg->contents = 0U;
 
-          /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Xï¿½gï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          /* ˆÚ“®ŒãAƒXƒgƒŒ[ƒgƒJƒEƒ“ƒ^‚ğƒNƒŠƒA */
           straight_count = 0U;
         }
 
-        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+        wall_flg->contents = fust_run_wallset(maze_wall, temp_y, temp_x,
           temp_dir);
 
-        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
-        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /*     %% turn_clk_90deg ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* Œ»İQÆƒ}ƒX‚Ì•Çî•ñ‚ğ‹L‰¯ */
+        /* QÆƒ}ƒXAQÆ•ûŒü‚ğXV */
+        /* “ü—Í Œ»İ•ûŒü */
+        /* o—Í Œ»İ•ûŒü */
+        /*     %% turn_clk_90deg Œvü‚è‚É90“xƒ^[ƒ“‚·‚éŠÖ” */
         i71 = (int)(4U + temp_dir);
         if ((unsigned int)i71 > 255U) {
           i71 = 255;
@@ -531,66 +535,66 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 
         temp_dir = (unsigned char)(i71 % 4);
 
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
-        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
+        /* o—Í Œ»İˆÊ’ux,y */
+        /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+        /* –k‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “Œ‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “ì‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* ¼‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
 
-        /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
         m_move_right(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
 
        case 2:
         if (straight_count > 0) {
-          /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
-          /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+          /* ’¼iƒJƒEƒ“ƒ^‚ª—§‚Á‚Ä‚¢‚éê‡ */
+          /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
           m_move_front_long(straight_count, 0, wall_flg->contents,
                             move_dir_property.straight);
 
-          /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
           wall_flg->contents = 0U;
 
-          /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Xï¿½gï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          /* ˆÚ“®ŒãAƒXƒgƒŒ[ƒgƒJƒEƒ“ƒ^‚ğƒNƒŠƒA */
           straight_count = 0U;
         }
 
-        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+        wall_flg->contents = fust_run_wallset(maze_wall, temp_y, temp_x,
           temp_dir);
 
-        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
-        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /*     %% turn_180deg 180ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+        /* Œ»İQÆƒ}ƒX‚Ì•Çî•ñ‚ğ‹L‰¯ */
+        /* QÆƒ}ƒXAQÆ•ûŒü‚ğXV */
+        /* “ü—Í Œ»İ•ûŒü */
+        /* o—Í Œ»İ•ûŒü */
+        /*     %% turn_180deg 180“xƒ^[ƒ“‚·‚éŠÖ” */
         i71 = (int)(4U + temp_dir);
         if ((unsigned int)i71 > 255U) {
           i71 = 255;
@@ -598,66 +602,66 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 
         temp_dir = (unsigned char)((i71 - 2) % 4);
 
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
-        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
+        /* o—Í Œ»İˆÊ’ux,y */
+        /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+        /* –k‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “Œ‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “ì‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* ¼‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
 
-        /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
         m_move_back(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
 
        case 3:
         if (straight_count > 0) {
-          /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
-          /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+          /* ’¼iƒJƒEƒ“ƒ^‚ª—§‚Á‚Ä‚¢‚éê‡ */
+          /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
           m_move_front_long(straight_count, 0, wall_flg->contents,
                             move_dir_property.straight);
 
-          /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
           wall_flg->contents = 0U;
 
-          /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Xï¿½gï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+          /* ˆÚ“®ŒãAƒXƒgƒŒ[ƒgƒJƒEƒ“ƒ^‚ğƒNƒŠƒA */
           straight_count = 0U;
         }
 
-        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+        wall_flg->contents = fust_run_wallset(maze_wall, temp_y, temp_x,
           temp_dir);
 
-        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
-        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
-        /* ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /*     %% turn_conclk_90deg ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½ï¿½ï¿½Öï¿½ */
+        /* Œ»İQÆƒ}ƒX‚Ì•Çî•ñ‚ğ‹L‰¯ */
+        /* QÆƒ}ƒXAQÆ•ûŒü‚ğXV */
+        /* “ü—Í@Œ»İ•ûŒü */
+        /* o—Í@Œ»İ•ûŒü */
+        /*     %% turn_conclk_90deg ”½Œvü‚è‚É90“x‰ñ‚éŠÖ” */
         i71 = (int)(4U + temp_dir);
         if ((unsigned int)i71 > 255U) {
           i71 = 255;
@@ -665,31 +669,31 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 
         temp_dir = (unsigned char)((i71 - 1) % 4);
 
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
-        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
+        /* o—Í Œ»İˆÊ’ux,y */
+        /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+        /* –k‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “Œ‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “ì‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* ¼‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
@@ -697,10 +701,10 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
 
         /* disp("left") */
-        /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        /* ‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
         m_move_left(0, wall_flg->contents, move_dir_property.straight);
 
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
       }
@@ -709,16 +713,12 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
       tempk++;
     }
   }
-
-  /*          pause(0.01) */
-  /*      writeVideo(vidObj, getframe(gcf)); */
-  /* limitrate nocallbacks */
 }
 
 /*
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
- * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
- * Arguments    : const coder_internal_ref_5 *wall
+ * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”)
+ * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * Arguments    : const coder_internal_ref_6 *wall
  *                const unsigned char maze_goal[2]
  *                const unsigned char maze_wall[1024]
  *                unsigned char current_x
@@ -726,7 +726,7 @@ static void b_fust_run(const coder_internal_ref *goal_size, coder_internal_ref
  *                unsigned short contour_map[1024]
  * Return Type  : void
  */
-static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
+static void b_make_map_find(const coder_internal_ref_6 *wall, const unsigned
   char maze_goal[2], const unsigned char maze_wall[1024], unsigned char
   current_x, unsigned char current_y, unsigned short contour_map[1024])
 {
@@ -734,177 +734,177 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
   unsigned char contor_renew_square_temp[2048];
   unsigned char contor_renew_square_idx;
   unsigned char contor_renew_square_idx_temp;
-  int i17;
+  int i21;
   unsigned short tempi;
   bool exitg1;
   unsigned char change_flag;
   int tempn;
-  int i18;
-  int i19;
-  int i20;
-  int i21;
   int i22;
   int i23;
   int i24;
-  unsigned int qY;
   int i25;
+  int i26;
+  int i27;
+  int i28;
+  unsigned int qY;
+  int i29;
 
-  /*     %%  make_map_find ï¿½Çï¿½ñ‚©‚ç“™ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
-  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /*     %%  make_map_find •Çî•ñ‚©‚ç“™‚üMAP‚ğ¶¬ */
+  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
+  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
+  /* XVÀ•W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* XVÀ•WXV—p */
   contor_renew_square_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_square_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
-  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
-  /* 16bitï¿½É‚ï¿½ï¿½×‚ï¿½ */
-  for (i17 = 0; i17 < 1024; i17++) {
-    contour_map[i17] = MAX_uint16_T;
+  /* XVÀ•WXV—p */
+  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
+  /* 32ƒ}ƒX•ªmap‚ğ•Û */
+  /* 16bit‚É‚·‚×‚« */
+  for (i21 = 0; i21 < 1024; i21++) {
+    contour_map[i21] = MAX_uint16_T;
   }
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½0ï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /* ƒS[ƒ‹À•W‚É0‚ğ“ü—Í */
   contour_map[(maze_goal[1] + ((maze_goal[0] - 1) << 5)) - 1] = 0U;
   contor_renew_square[0] = maze_goal[1];
   contor_renew_square[1024] = maze_goal[0];
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
-    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
+    /* •à”ƒJƒEƒ“ƒg‚Í0~max_length */
+    /* mapXVŠm”F—pƒtƒ‰ƒO */
     change_flag = 0U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
-    i17 = contor_renew_square_idx;
-    for (tempn = 0; tempn < i17; tempn++) {
-      /* ï¿½kï¿½ï¿½ */
+    /* XV‚³‚ê‚½À•W‚É‘Î‚µA•à”map‚ğXV */
+    i21 = contor_renew_square_idx;
+    for (tempn = 0; tempn < i21; tempn++) {
+      /* –k‘¤ */
       /* if (bitand(maze_wall(row(tempn),col(tempn)),bitshift(uint8(1),g_direction.North)) == wall.nowall) */
       if (g_direction.North <= 7) {
-        i18 = (unsigned char)(1 << g_direction.North);
+        i22 = (unsigned char)(1 << g_direction.North);
       } else {
-        i18 = 0;
+        i22 = 0;
       }
 
       if ((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
-              1024] - 1) << 5)) - 1] & i18) == wall->contents.nowall) {
-        /* ï¿½kï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-        i19 = (int)(contor_renew_square[tempn] + 1U);
-        i20 = i19;
-        if ((unsigned int)i19 > 255U) {
-          i20 = 255;
+              1024] - 1) << 5)) - 1] & i22) == wall->contents.nowall) {
+        /* –k‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        i23 = (int)(contor_renew_square[tempn] + 1U);
+        i24 = i23;
+        if ((unsigned int)i23 > 255U) {
+          i24 = 255;
         }
 
-        if (contour_map[(i20 + ((contor_renew_square[tempn + 1024] - 1) << 5)) -
+        if (contour_map[(i24 + ((contor_renew_square[tempn + 1024] - 1) << 5)) -
             1] == 65535) {
-          i20 = i19;
-          if ((unsigned int)i19 > 255U) {
-            i20 = 255;
+          i24 = i23;
+          if ((unsigned int)i23 > 255U) {
+            i24 = 255;
           }
 
-          contour_map[(i20 + ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
+          contour_map[(i24 + ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
             = (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
-          if ((unsigned int)i19 > 255U) {
-            i19 = 255;
-          }
-
-          contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
-            char)i19;
-          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
-            contor_renew_square[tempn + 1024];
-
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-          i19 = (int)(contor_renew_square_idx_temp + 1U);
-          if ((unsigned int)i19 > 255U) {
-            i19 = 255;
-          }
-
-          contor_renew_square_idx_temp = (unsigned char)i19;
-        }
-      }
-
-      /* ï¿½ï¿½ï¿½ï¿½ */
-      contor_renew_square_idx = contor_renew_square[tempn + 1024];
-      i19 = (contor_renew_square_idx - 1) << 5;
-      i20 = maze_wall[(contor_renew_square[tempn] + i19) - 1];
-      if (g_direction.East <= 7) {
-        i21 = (unsigned char)(1 << g_direction.East);
-      } else {
-        i21 = 0;
-      }
-
-      if ((i20 & i21) == wall->contents.nowall) {
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-        i22 = (int)(contor_renew_square[tempn + 1024] + 1U);
-        i23 = i22;
-        if ((unsigned int)i22 > 255U) {
-          i23 = 255;
-        }
-
-        if (contour_map[(contor_renew_square[tempn] + ((i23 - 1) << 5)) - 1] ==
-            65535) {
-          i23 = i22;
-          if ((unsigned int)i22 > 255U) {
+          /* XVƒ}ƒX‚ğXV */
+          if ((unsigned int)i23 > 255U) {
             i23 = 255;
           }
 
-          contour_map[(contor_renew_square[tempn] + ((i23 - 1) << 5)) - 1] =
-            (unsigned short)(tempi + 1);
-          change_flag = 1U;
-
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
-          contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
-            contor_renew_square[tempn];
-          if ((unsigned int)i22 > 255U) {
-            i22 = 255;
-          }
-
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
+            char)i23;
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
-            (unsigned char)i22;
+            contor_renew_square[tempn + 1024];
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-          i22 = (int)(contor_renew_square_idx_temp + 1U);
-          if ((unsigned int)i22 > 255U) {
-            i22 = 255;
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          i23 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i23 > 255U) {
+            i23 = 255;
           }
 
-          contor_renew_square_idx_temp = (unsigned char)i22;
+          contor_renew_square_idx_temp = (unsigned char)i23;
         }
       }
 
-      /* ï¿½ì‘¤ */
-      if (g_direction.South <= 7) {
-        i24 = (unsigned char)(1 << g_direction.South);
+      /* “Œ‘¤ */
+      contor_renew_square_idx = contor_renew_square[tempn + 1024];
+      i23 = (contor_renew_square_idx - 1) << 5;
+      i24 = maze_wall[(contor_renew_square[tempn] + i23) - 1];
+      if (g_direction.East <= 7) {
+        i25 = (unsigned char)(1 << g_direction.East);
       } else {
-        i24 = 0;
+        i25 = 0;
       }
 
-      if ((i20 & i24) == wall->contents.nowall) {
-        /* ï¿½ì‘¤ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+      if ((i24 & i25) == wall->contents.nowall) {
+        /* “Œ‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        i26 = (int)(contor_renew_square[tempn + 1024] + 1U);
+        i27 = i26;
+        if ((unsigned int)i26 > 255U) {
+          i27 = 255;
+        }
+
+        if (contour_map[(contor_renew_square[tempn] + ((i27 - 1) << 5)) - 1] ==
+            65535) {
+          i27 = i26;
+          if ((unsigned int)i26 > 255U) {
+            i27 = 255;
+          }
+
+          contour_map[(contor_renew_square[tempn] + ((i27 - 1) << 5)) - 1] =
+            (unsigned short)(tempi + 1);
+          change_flag = 1U;
+
+          /* XVƒ}ƒX‚ğXV */
+          contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
+            contor_renew_square[tempn];
+          if ((unsigned int)i26 > 255U) {
+            i26 = 255;
+          }
+
+          contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
+            (unsigned char)i26;
+
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          i26 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i26 > 255U) {
+            i26 = 255;
+          }
+
+          contor_renew_square_idx_temp = (unsigned char)i26;
+        }
+      }
+
+      /* “ì‘¤ */
+      if (g_direction.South <= 7) {
+        i28 = (unsigned char)(1 << g_direction.South);
+      } else {
+        i28 = 0;
+      }
+
+      if ((i24 & i28) == wall->contents.nowall) {
+        /* “ì‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
         qY = contor_renew_square[tempn] - 1U;
         if (qY > contor_renew_square[tempn]) {
           qY = 0U;
         }
 
-        if (contour_map[((int)qY + i19) - 1] == 65535) {
+        if (contour_map[((int)qY + i23) - 1] == 65535) {
           qY = contor_renew_square[tempn] - 1U;
           if (qY > contor_renew_square[tempn]) {
             qY = 0U;
           }
 
-          contour_map[((int)qY + i19) - 1] = (unsigned short)(tempi + 1);
+          contour_map[((int)qY + i23) - 1] = (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+          /* XVƒ}ƒX‚ğXV */
           qY = contor_renew_square[tempn] - 1U;
           if (qY > contor_renew_square[tempn]) {
             qY = 0U;
@@ -915,25 +915,25 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square_idx;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-          i19 = (int)(contor_renew_square_idx_temp + 1U);
-          if ((unsigned int)i19 > 255U) {
-            i19 = 255;
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          i23 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i23 > 255U) {
+            i23 = 255;
           }
 
-          contor_renew_square_idx_temp = (unsigned char)i19;
+          contor_renew_square_idx_temp = (unsigned char)i23;
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ¼‘¤ */
       if (g_direction.West <= 7) {
-        i25 = (unsigned char)(1 << g_direction.West);
+        i29 = (unsigned char)(1 << g_direction.West);
       } else {
-        i25 = 0;
+        i29 = 0;
       }
 
-      if ((i20 & i25) == wall->contents.nowall) {
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+      if ((i24 & i29) == wall->contents.nowall) {
+        /* ¼‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
         qY = contor_renew_square_idx - 1U;
         if (qY > contor_renew_square_idx) {
           qY = 0U;
@@ -950,7 +950,7 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+          /* XVƒ}ƒX‚ğXV */
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
             contor_renew_square[tempn];
           qY = contor_renew_square_idx - 1U;
@@ -961,27 +961,27 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             (unsigned char)qY;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-          i19 = (int)(contor_renew_square_idx_temp + 1U);
-          if ((unsigned int)i19 > 255U) {
-            i19 = 255;
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          i23 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i23 > 255U) {
+            i23 = 255;
           }
 
-          contor_renew_square_idx_temp = (unsigned char)i19;
+          contor_renew_square_idx_temp = (unsigned char)i23;
         }
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
-    for (i17 = 0; i17 < 2048; i17++) {
-      contor_renew_square[i17] = contor_renew_square_temp[i17];
-      contor_renew_square_temp[i17] = 0U;
+    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    for (i21 = 0; i21 < 2048; i21++) {
+      contor_renew_square[i21] = contor_renew_square_temp[i21];
+      contor_renew_square_temp[i21] = 0U;
     }
 
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍŒï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
+    /* XV‚ª‚È‚¢A‚à‚µ‚­‚ÍŒ»İˆÊ’u‚ªXV‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
     if ((change_flag == 0) || (contour_map[(current_y + ((current_x - 1) << 5))
          - 1] != 65535)) {
       exitg1 = true;
@@ -992,12 +992,12 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
 }
 
 /*
- * ï¿½ï¿½ï¿½mï¿½Ç‚Ì—Ìˆï¿½Í‰ï¿½ï¿½zï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄNï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½),ï¿½ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
- * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
- * Arguments    : coder_internal_ref_2 *max_length
- *                const coder_internal_ref_5 *wall
- *                const coder_internal_ref_4 *search
+ * –¢’m•Ç‚Ì—Ìˆæ‚Í‰¼‘z•Ç‚ğ‚¨‚¢‚ÄN“ü‚µ‚È‚¢B
+ * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”),–À˜H’Tõî•ñ(16i”)
+ * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * Arguments    : coder_internal_ref_3 *max_length
+ *                const coder_internal_ref_6 *wall
+ *                const coder_internal_ref_5 *search
  *                const unsigned char maze_goal[2]
  *                const unsigned char maze_wall[1024]
  *                const unsigned char maze_wall_search[1024]
@@ -1006,8 +1006,8 @@ static void b_make_map_find(const coder_internal_ref_5 *wall, const unsigned
  *                unsigned short *start_num
  * Return Type  : void
  */
-static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
-  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
+  coder_internal_ref_6 *wall, const coder_internal_ref_5 *search, const unsigned
   char maze_goal[2], const unsigned char maze_wall[1024], const unsigned char
   maze_wall_search[1024], unsigned short row_num_node[1056], unsigned short
   col_num_node[1056], unsigned short *start_num)
@@ -1101,42 +1101,42 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   int i222;
   int i223;
 
-  /*     %% make_map_fustrun_diagonal ï¿½Å’Zï¿½ï¿½ï¿½sï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
-  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½İ’ï¿½ */
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½mï¿½[ï¿½h(ï¿½s)ï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /*     %% make_map_fustrun_diagonal Å’Z‘–s—p“™‚üMAP‚ğ¶¬ */
+  /* ƒ[ƒJƒ‹•Ï”İ’è */
+  /* ƒRƒ“ƒ^[XVƒm[ƒh(s)•ÛŠÇ—p */
+  /* XVÀ•W */
+  /* XVÀ•WXV—p */
   contor_renew_node_row_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_node_row_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½iï¿½ï¿½jï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•WXV—p */
+  /* ƒRƒ“ƒ^[XVƒm[ƒhi—ñj•ÛŠÇ—p */
+  /* XVÀ•W */
   memset(&contor_renew_node_row[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_row_temp[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_col[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_col_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* XVÀ•WXV—p */
   contor_renew_node_col_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_node_col_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
-  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
+  /* XVÀ•WXV—p */
+  /* ƒpƒ‰ƒ[ƒ^İ’è */
+  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
   max_length->contents = 1024U;
 
-  /*  ï¿½ï¿½ï¿½[ï¿½gï¿½Ìdï¿½İİ’ï¿½ */
-  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ìƒmï¿½[ï¿½hï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
-  /* ï¿½ï¿½ï¿½ï¿½MAP */
-  /*  %ï¿½Xï¿½Vï¿½pMAP */
+  /*  ƒ‹[ƒg‚Ìd‚İİ’è */
+  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ìƒm[ƒh‚Émax_length‚ğ“ü—Í) */
+  /* •à”MAP */
+  /*  %XV—pMAP */
   /*  row_num_node_temp = ones(33,32,'uint16')*uint16(65535); */
   /*  col_num_node_temp = ones(32,33,'uint16')*uint16(65535); */
-  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ûï¿½ï¿½pï¿½mï¿½[ï¿½hï¿½ì¬ */
+  /* is•ûŒü•Û—pƒm[ƒhì¬ */
   for (i154 = 0; i154 < 1056; i154++) {
     row_num_node[i154] = MAX_uint16_T;
     col_num_node[i154] = MAX_uint16_T;
@@ -1144,11 +1144,11 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     col_dir_node[i154] = 0U;
   }
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
+  /* ƒS[ƒ‹ƒZƒNƒVƒ‡ƒ“‚ªŠm’è‚µ‚Ä‚¢‚éê‡ */
   *start_num = MAX_uint16_T;
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½Éƒ}ï¿½bï¿½vï¿½ï¿½Wï¿½J */
-  /* ï¿½kï¿½ï¿½ */
+  /* ƒS[ƒ‹ƒ}ƒX‚©‚çA“Œ¼“ì–k‚Éƒ}ƒbƒv‚ğ“WŠJ */
+  /* –k•Ç */
   i154 = maze_goal[0] - 1;
   i155 = (maze_goal[1] + (i154 << 5)) - 1;
   if (g_direction.North <= 7) {
@@ -1158,7 +1158,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   }
 
   if ((maze_wall[i155] & i156) == 0) {
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+    /* •à”XV */
     i157 = (int)(maze_goal[1] + 1U);
     i158 = i157;
     if ((unsigned int)i157 > 255U) {
@@ -1168,7 +1168,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     row_num_node_tmp = 33 * i154;
     row_num_node[(i158 + row_num_node_tmp) - 1] = 3U;
 
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+    /* •ûŒü’Ç‰Á */
     i154 = i157;
     if ((unsigned int)i157 > 255U) {
       i154 = 255;
@@ -1181,7 +1181,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       row_dir_node[(i154 + row_num_node_tmp) - 1] = 0U;
     }
 
-    /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+    /* XVƒm[ƒh‚ğXV */
     if ((unsigned int)i157 > 255U) {
       i157 = 255;
     }
@@ -1189,11 +1189,11 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     contor_renew_node_row[0] = (unsigned char)i157;
     contor_renew_node_row[1024] = maze_goal[0];
 
-    /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+    /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
     contor_renew_node_row_idx = 2U;
   }
 
-  /* ï¿½ï¿½ï¿½ï¿½ */
+  /* “Œ•Ç */
   if (g_direction.East <= 7) {
     i159 = (unsigned char)(1 << g_direction.East);
   } else {
@@ -1201,7 +1201,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   }
 
   if ((maze_wall[i155] & i159) == 0) {
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+    /* •à”XV */
     i154 = (int)(maze_goal[0] + 1U);
     i157 = i154;
     if ((unsigned int)i154 > 255U) {
@@ -1210,7 +1210,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
     col_num_node[(maze_goal[1] + ((i157 - 1) << 5)) - 1] = 3U;
 
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+    /* •ûŒü’Ç‰Á */
     i157 = i154;
     if ((unsigned int)i154 > 255U) {
       i157 = 255;
@@ -1223,7 +1223,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       col_dir_node[(maze_goal[1] + ((i157 - 1) << 5)) - 1] = 0U;
     }
 
-    /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+    /* XVƒm[ƒh‚ğXV */
     contor_renew_node_col[0] = maze_goal[1];
     if ((unsigned int)i154 > 255U) {
       i154 = 255;
@@ -1231,11 +1231,11 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
     contor_renew_node_col[1024] = (unsigned char)i154;
 
-    /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+    /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
     contor_renew_node_col_idx = 2U;
   }
 
-  /* ï¿½ï¿½ï¿½ */
+  /* “ì•Ç */
   if (g_direction.South <= 7) {
     i160 = (unsigned char)(1 << g_direction.South);
   } else {
@@ -1243,11 +1243,11 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   }
 
   if ((maze_wall[i155] & i160) == 0) {
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+    /* •à”XV */
     row_num_node_tmp = (maze_goal[1] + 33 * (maze_goal[0] - 1)) - 1;
     row_num_node[row_num_node_tmp] = 3U;
 
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+    /* •ûŒü’Ç‰Á */
     if (g_d_direction.South <= 7) {
       i162 = (unsigned char)(1 << g_d_direction.South);
     } else {
@@ -1257,15 +1257,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     row_dir_node[row_num_node_tmp] = (unsigned char)
       (row_dir_node[row_num_node_tmp] | i162);
 
-    /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+    /* XVƒm[ƒh‚ğXV */
     contor_renew_node_row[contor_renew_node_row_idx - 1] = maze_goal[1];
     contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[0];
 
-    /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+    /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
     contor_renew_node_row_idx++;
   }
 
-  /* ï¿½ï¿½ï¿½ï¿½ */
+  /* ¼•Ç */
   if (g_direction.West <= 7) {
     i161 = (unsigned char)(1 << g_direction.West);
   } else {
@@ -1273,10 +1273,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   }
 
   if ((maze_wall[i155] & i161) == 0) {
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+    /* •à”XV */
     col_num_node[i155] = 3U;
 
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+    /* •ûŒü’Ç‰Á */
     if (g_d_direction.West <= 7) {
       i163 = (unsigned char)(1 << g_d_direction.West);
     } else {
@@ -1285,15 +1285,15 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
     col_dir_node[i155] = (unsigned char)(col_dir_node[i155] | i163);
 
-    /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+    /* XVƒm[ƒh‚ğXV */
     contor_renew_node_col[contor_renew_node_col_idx - 1] = maze_goal[1];
     contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[0];
 
-    /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+    /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
     contor_renew_node_col_idx++;
   }
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
+  /* ƒS[ƒ‹ƒZƒNƒVƒ‡ƒ“‚ªŠm’è‚µ‚Ä‚¢‚È‚¢ê‡ */
   row_num_node_tmp = max_length->contents;
   qY = row_num_node_tmp - 1U;
   if (qY > (unsigned int)row_num_node_tmp) {
@@ -1303,17 +1303,17 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   i = 0U;
   exitg1 = false;
   while ((!exitg1) && (i <= (unsigned short)qY)) {
-    /* ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ì•ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
+    /* XVŠm”F—p‚Ì•à”ƒJƒEƒ“ƒg‚Í0~max_length */
     change_flag = 0U;
 
-    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
-    /* Row_Edgeï¿½Ìï¿½ï¿½ï¿½[33ï¿½s,32ï¿½ï¿½] */
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
+    /* mapXVŠm”F—pƒtƒ‰ƒO */
+    /* Row_Edge‚Ìˆ—[33s,32—ñ] */
+    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
     i154 = contor_renew_node_row_idx;
     for (row_num_node_tmp = 0; row_num_node_tmp <= i154 - 2; row_num_node_tmp++)
     {
-      /* ï¿½kï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       i155 = contor_renew_node_row[row_num_node_tmp + 1024] - 1;
       i157 = (contor_renew_node_row[row_num_node_tmp] + (i155 << 5)) - 1;
       if (g_direction.North <= 7) {
@@ -1330,7 +1330,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (((maze_wall_search[i157] & i165) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚ ‚é */
           i155 *= 33;
           i157 = (contor_renew_node_row[row_num_node_tmp] + i155) - 1;
           if (g_d_direction.North <= 7) {
@@ -1340,7 +1340,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((row_dir_node[i157] & i170) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i157 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
             if ((unsigned int)i157 > 255U) {
               i157 = 255;
@@ -1354,7 +1354,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (row_num_node[(i157 + i155) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1370,7 +1370,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i155 + 33 * (contor_renew_node_row[row_num_node_tmp
                 + 1024] - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1387,10 +1387,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1401,7 +1401,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1409,7 +1409,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
@@ -1426,7 +1426,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[(i155 + 33 *
                                 (contor_renew_node_row[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
                 if ((unsigned int)i155 > 255U) {
                   i155 = 255;
@@ -1451,9 +1451,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i158 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
             if ((unsigned int)i158 > 255U) {
               i158 = 255;
@@ -1465,7 +1465,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (row_num_node[(i158 + i155) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1481,7 +1481,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i155 + 33 * (contor_renew_node_row[row_num_node_tmp
                 + 1024] - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1498,10 +1498,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1512,7 +1512,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1520,7 +1520,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i155 = (int)(contor_renew_node_row[row_num_node_tmp] + 1U);
               i157 = i155;
@@ -1538,7 +1538,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[(i157 + 33 *
                                 (contor_renew_node_row[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i157 = i155;
                 if ((unsigned int)i155 > 255U) {
                   i157 = 255;
@@ -1562,8 +1562,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k“Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       if (g_direction.East <= 7) {
         i167 = (unsigned char)(1 << g_direction.East);
       } else {
@@ -1582,7 +1582,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         if (((maze_wall_search[(contor_renew_node_row[row_num_node_tmp] +
                                 ((contor_renew_node_row[row_num_node_tmp + 1024]
                  - 1) << 5)) - 1] & i169) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.North_East <= 7) {
             i173 = (unsigned char)(1 << g_d_direction.North_East);
           } else {
@@ -1592,7 +1592,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                - 1] & i173) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
             if ((unsigned int)i155 > 255U) {
               i155 = 255;
@@ -1607,7 +1607,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
                    1) << 5)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1623,7 +1623,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1)
                 << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1637,10 +1637,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[row_num_node_tmp];
               i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
@@ -1651,7 +1651,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i155;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1659,7 +1659,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
               if ((unsigned int)i155 > 255U) {
@@ -1675,7 +1675,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155
                      - 1) << 5)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
                 if ((unsigned int)i155 > 255U) {
                   i155 = 255;
@@ -1699,9 +1699,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
             if ((unsigned int)i155 > 255U) {
               i155 = 255;
@@ -1716,7 +1716,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 -
                    1) << 5)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1732,7 +1732,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i155 - 1)
                 << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1746,10 +1746,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[row_num_node_tmp];
               i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
@@ -1760,7 +1760,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i155;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -1768,7 +1768,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i155 = (int)(contor_renew_node_row[row_num_node_tmp + 1024] + 1U);
               i158 = i155;
@@ -1783,7 +1783,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_row[row_num_node_tmp] + ((i158
                      - 1) << 5)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i157 = i155;
                 if ((unsigned int)i155 > 255U) {
                   i157 = 255;
@@ -1806,9 +1806,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ */
-      /* ï¿½ì“Œï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “Œ‘¤‚Í’Œ */
+      /* “ì“Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
       if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
         c_qY = 0U;
@@ -1836,7 +1836,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[((int)c_qY + i155) - 1] & i179) != 0) ==
             search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.South_East <= 7) {
             i182 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
@@ -1846,7 +1846,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                - 1] & i182) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -1866,7 +1866,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] > (int)u9) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -1884,7 +1884,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
                 short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -1902,10 +1902,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -1921,7 +1921,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i157;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -1929,7 +1929,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -1947,7 +1947,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] == (int)b_qY)
               {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -1979,9 +1979,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2001,7 +2001,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] > (int)u9) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2019,7 +2019,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = (unsigned
                 short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2037,10 +2037,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[((int)c_qY + ((i157 - 1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2056,7 +2056,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i157;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -2064,7 +2064,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2082,7 +2082,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[((int)c_qY + ((i157 - 1) << 5)) - 1] == (int)b_qY)
               {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2117,8 +2117,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ì‘¤ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
       if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
         c_qY = 0U;
@@ -2145,7 +2145,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[((int)c_qY + i155) - 1] & i185) != 0) ==
             search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚ ‚é */
           if (g_d_direction.South <= 7) {
             i191 = (unsigned char)(1 << g_d_direction.South);
           } else {
@@ -2155,7 +2155,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                - 1] & i191) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2172,7 +2172,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[((int)c_qY + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
                                1)) - 1] > (int)u9) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2186,7 +2186,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                 - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2203,10 +2203,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2217,7 +2217,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -2225,7 +2225,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2239,7 +2239,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[((int)c_qY + 33 *
                                 (contor_renew_node_row[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2264,9 +2264,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2282,7 +2282,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[((int)c_qY + 33 *
                               (contor_renew_node_row[row_num_node_tmp + 1024] -
                                1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2299,7 +2299,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                             (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                 - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2316,10 +2316,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2330,7 +2330,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -2338,7 +2338,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2355,7 +2355,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[((int)c_qY + 33 *
                                 (contor_renew_node_row[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2383,8 +2383,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ì¼ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
       if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
         c_qY = 0U;
@@ -2411,7 +2411,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[((int)c_qY + i155) - 1] & i198) != 0) ==
             search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.South_West <= 7) {
             i204 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
@@ -2421,7 +2421,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                - 1] & i204) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2435,7 +2435,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[((int)c_qY + i155) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2450,7 +2450,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               col_num_node[((int)c_qY + i155) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2463,10 +2463,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[((int)c_qY + i155) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2477,7 +2477,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -2485,7 +2485,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2500,7 +2500,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (col_num_node[((int)c_qY + i155) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2522,9 +2522,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
             if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
               c_qY = 0U;
@@ -2538,7 +2538,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[((int)c_qY + i155) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2553,7 +2553,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               col_num_node[((int)c_qY + i155) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2566,10 +2566,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[((int)c_qY + i155) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                 c_qY = 0U;
@@ -2580,7 +2580,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -2588,7 +2588,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
               if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
@@ -2603,7 +2603,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (col_num_node[((int)c_qY + i155) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[row_num_node_tmp] - 1U;
                 if (c_qY > contor_renew_node_row[row_num_node_tmp]) {
                   c_qY = 0U;
@@ -2628,8 +2628,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       i155 = (contor_renew_node_row[row_num_node_tmp] + i155) - 1;
       if (g_direction.West <= 7) {
         i200 = (unsigned char)(1 << g_direction.West);
@@ -2645,7 +2645,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (((maze_wall_search[i155] & i203) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.North_West <= 7) {
             i207 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
@@ -2655,7 +2655,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                              (contor_renew_node_row[row_num_node_tmp + 1024] - 1))
                - 1] & i207) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                  (contor_renew_node_row[row_num_node_tmp + 1024]
                                   - 1)) - 1] + 4U;
@@ -2666,7 +2666,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (col_num_node[(contor_renew_node_row[row_num_node_tmp] +
                               ((contor_renew_node_row[row_num_node_tmp + 1024] -
                                 1) << 5)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
                                     1024] - 1)) - 1] + 4U;
@@ -2676,7 +2676,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               col_num_node[i155] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               if (g_d_direction.North_West <= 7) {
                 col_dir_node[i155] = (unsigned char)(1 <<
                   g_d_direction.North_West);
@@ -2684,16 +2684,16 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[i155] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[row_num_node_tmp];
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -2701,7 +2701,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
@@ -2713,7 +2713,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (col_num_node[(contor_renew_node_row[row_num_node_tmp] +
                                 ((contor_renew_node_row[row_num_node_tmp + 1024]
                                   - 1) << 5)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 if (g_d_direction.North_West <= 7) {
                   i217 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
@@ -2724,9 +2724,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                  (contor_renew_node_row[row_num_node_tmp + 1024]
                                   - 1)) - 1] + 18U;
@@ -2735,7 +2735,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[i155] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
                                     1024] - 1)) - 1] + 18U;
@@ -2745,7 +2745,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               col_num_node[i155] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               if (g_d_direction.North_West <= 7) {
                 col_dir_node[i155] = (unsigned char)(1 <<
                   g_d_direction.North_West);
@@ -2753,16 +2753,16 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[i155] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[row_num_node_tmp];
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -2770,7 +2770,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
@@ -2780,7 +2780,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (col_num_node[i155] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 if (g_d_direction.North_West <= 7) {
                   i216 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
@@ -2795,14 +2795,14 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /* Col_Edgeï¿½Ìï¿½ï¿½ï¿½[32ï¿½s,33ï¿½ï¿½] */
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
+    /* Col_Edge‚Ìˆ—[32s,33—ñ] */
+    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
     i154 = contor_renew_node_col_idx;
     for (row_num_node_tmp = 0; row_num_node_tmp <= i154 - 2; row_num_node_tmp++)
     {
-      /* ï¿½kï¿½ï¿½ï¿½Í•ï¿½ */
-      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k‘¤‚Í•Ç */
+      /* –k“Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       i155 = (contor_renew_node_col[row_num_node_tmp] +
               ((contor_renew_node_col[row_num_node_tmp + 1024] - 1) << 5)) - 1;
       if (g_direction.North <= 7) {
@@ -2819,7 +2819,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (((maze_wall_search[i155] & i168) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.North_East <= 7) {
             i172 = (unsigned char)(1 << g_d_direction.North_East);
           } else {
@@ -2827,7 +2827,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((col_dir_node[i155] & i172) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
             if ((unsigned int)i155 > 255U) {
               i155 = 255;
@@ -2844,7 +2844,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[(i155 + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
                                1)) - 1] > (int)u9) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -2857,7 +2857,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i155 + 33 * (contor_renew_node_col[row_num_node_tmp
                 + 1024] - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -2874,10 +2874,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -2888,7 +2888,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_col[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -2896,7 +2896,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
@@ -2910,7 +2910,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[(i155 + 33 *
                                 (contor_renew_node_col[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
                 if ((unsigned int)i155 > 255U) {
                   i155 = 255;
@@ -2935,9 +2935,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
             i157 = i155;
             if ((unsigned int)i155 > 255U) {
@@ -2954,7 +2954,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             i158 = 33 * (contor_renew_node_col[row_num_node_tmp + 1024] - 1);
             if (row_num_node[(i157 + i158) - 1] > (int)u9) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i157 = i155;
               if ((unsigned int)i155 > 255U) {
                 i157 = 255;
@@ -2966,7 +2966,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               row_num_node[(i157 + i158) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i157 = i155;
               if ((unsigned int)i155 > 255U) {
                 i157 = 255;
@@ -2979,10 +2979,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 row_dir_node[(i157 + i158) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
               }
@@ -2992,7 +2992,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_col[row_num_node_tmp + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -3000,7 +3000,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i157 = i155;
               if ((unsigned int)i155 > 255U) {
@@ -3012,7 +3012,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (row_num_node[(i157 + i158) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i157 = i155;
                 if ((unsigned int)i155 > 255U) {
                   i157 = 255;
@@ -3033,8 +3033,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       contor_renew_node_row_idx = contor_renew_node_col[row_num_node_tmp + 1024];
       i155 = (contor_renew_node_col[row_num_node_tmp] +
               ((contor_renew_node_row_idx - 1) << 5)) - 1;
@@ -3052,7 +3052,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (((maze_wall_search[i155] & i174) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.East <= 7) {
             i177 = (unsigned char)(1 << g_d_direction.East);
           } else {
@@ -3060,7 +3060,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((col_dir_node[i155] & i177) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
             if ((unsigned int)i157 > 255U) {
               i157 = 255;
@@ -3075,7 +3075,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 -
                    1) << 5)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3091,7 +3091,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157 - 1)
                 << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3105,10 +3105,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
@@ -3119,7 +3119,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i157;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3127,7 +3127,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
               if ((unsigned int)i157 > 255U) {
@@ -3143,7 +3143,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i157
                      - 1) << 5)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
                 if ((unsigned int)i157 > 255U) {
                   i157 = 255;
@@ -3167,9 +3167,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i157 = (int)(contor_renew_node_col[row_num_node_tmp + 1024] + 1U);
             i158 = i157;
             if ((unsigned int)i157 > 255U) {
@@ -3185,7 +3185,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 -
                    1) << 5)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i158 = i157;
               if ((unsigned int)i157 > 255U) {
                 i158 = 255;
@@ -3201,7 +3201,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158 - 1)
                 << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i158 = i157;
               if ((unsigned int)i157 > 255U) {
                 i158 = 255;
@@ -3215,10 +3215,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               if ((unsigned int)i157 > 255U) {
@@ -3228,7 +3228,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i157;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3236,7 +3236,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i158 = i157;
               if ((unsigned int)i157 > 255U) {
@@ -3252,7 +3252,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + ((i158
                      - 1) << 5)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i158 = i157;
                 if ((unsigned int)i157 > 255U) {
                   i158 = 255;
@@ -3275,8 +3275,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ì“Œï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì“Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       if (g_direction.South <= 7) {
         i176 = (unsigned char)(1 << g_direction.South);
       } else {
@@ -3295,7 +3295,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] +
                                 ((contor_renew_node_col[row_num_node_tmp + 1024]
                  - 1) << 5)) - 1] & i178) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.South_East <= 7) {
             i181 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
@@ -3305,7 +3305,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((col_dir_node[(contor_renew_node_col[row_num_node_tmp] +
                              ((contor_renew_node_col[row_num_node_tmp + 1024] -
                                1) << 5)) - 1] & i181) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                  ((contor_renew_node_col[row_num_node_tmp + 1024]
               - 1) << 5)) - 1] + 4U;
@@ -3316,7 +3316,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
                                1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
                 1024] - 1) << 5)) - 1] + 4U;
@@ -3328,7 +3328,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                             (contor_renew_node_col[row_num_node_tmp + 1024] - 1))
                 - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               if (g_d_direction.South_East <= 7) {
                 row_dir_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               (contor_renew_node_col[row_num_node_tmp + 1024] -
@@ -3340,16 +3340,16 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                                1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row_idx;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3357,7 +3357,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
@@ -3369,7 +3369,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                                 (contor_renew_node_col[row_num_node_tmp + 1024]
                                  - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 if (g_d_direction.South_East <= 7) {
                   i196 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
@@ -3385,9 +3385,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                  ((contor_renew_node_col[row_num_node_tmp + 1024]
               - 1) << 5)) - 1] + 18U;
@@ -3398,7 +3398,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             i157 = (contor_renew_node_col[row_num_node_tmp] + 33 *
                     (contor_renew_node_col[row_num_node_tmp + 1024] - 1)) - 1;
             if (row_num_node[i157] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
                 1024] - 1) << 5)) - 1] + 18U;
@@ -3408,7 +3408,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               row_num_node[i157] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               if (g_d_direction.South_East <= 7) {
                 row_dir_node[i157] = (unsigned char)(1 <<
                   g_d_direction.South_East);
@@ -3416,16 +3416,16 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 row_dir_node[i157] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row_idx;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3433,7 +3433,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               b_qY = col_num_node[i155] + 18U;
               if (b_qY > 65535U) {
@@ -3441,7 +3441,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (row_num_node[i157] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 if (g_d_direction.South_East <= 7) {
                   i197 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
@@ -3455,9 +3455,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ì‘¤ï¿½Í’ï¿½ */
-      /* ï¿½ì¼ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì‘¤‚Í’Œ */
+      /* “ì¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row_idx - 1U;
       if (c_qY > contor_renew_node_row_idx) {
         c_qY = 0U;
@@ -3485,7 +3485,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
                  c_qY - 1) << 5)) - 1] & i187) != 0) == search->contents.known)
         {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.South_West <= 7) {
             i195 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
@@ -3493,7 +3493,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((col_dir_node[i155] & i195) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = contor_renew_node_row_idx - 1U;
             if (c_qY > contor_renew_node_row_idx) {
               c_qY = 0U;
@@ -3508,7 +3508,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3524,7 +3524,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 * ((int)
                 c_qY - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3539,10 +3539,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                               ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3553,7 +3553,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3561,7 +3561,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
@@ -3577,7 +3577,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                                 ((int)c_qY - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row_idx - 1U;
                 if (c_qY > contor_renew_node_row_idx) {
                   c_qY = 0U;
@@ -3601,9 +3601,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = contor_renew_node_row_idx - 1U;
             if (c_qY > contor_renew_node_row_idx) {
               c_qY = 0U;
@@ -3616,7 +3616,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                               ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3632,7 +3632,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 * ((int)
                 c_qY - 1)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3647,10 +3647,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                               ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3661,7 +3661,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3669,7 +3669,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
@@ -3683,7 +3683,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(contor_renew_node_col[row_num_node_tmp] + 33 *
                                 ((int)c_qY - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row_idx - 1U;
                 if (c_qY > contor_renew_node_row_idx) {
                   c_qY = 0U;
@@ -3710,8 +3710,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* ¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row_idx - 1U;
       if (c_qY > contor_renew_node_row_idx) {
         c_qY = 0U;
@@ -3739,7 +3739,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
                  c_qY - 1) << 5)) - 1] & i201) != 0) == search->contents.known)
         {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.West <= 7) {
             i206 = (unsigned char)(1 << g_d_direction.West);
           } else {
@@ -3747,7 +3747,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((col_dir_node[i155] & i206) != 0) {
-            /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = contor_renew_node_row_idx - 1U;
             if (c_qY > contor_renew_node_row_idx) {
               c_qY = 0U;
@@ -3762,7 +3762,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                    c_qY - 1) << 5)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3778,7 +3778,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                 c_qY - 1) << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3793,10 +3793,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   c_qY - 1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3807,7 +3807,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3815,7 +3815,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
@@ -3831,7 +3831,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                      c_qY - 1) << 5)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row_idx - 1U;
                 if (c_qY > contor_renew_node_row_idx) {
                   c_qY = 0U;
@@ -3855,9 +3855,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = contor_renew_node_row_idx - 1U;
             if (c_qY > contor_renew_node_row_idx) {
               c_qY = 0U;
@@ -3872,7 +3872,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                    c_qY - 1) << 5)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3888,7 +3888,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                 c_qY - 1) << 5)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
                 c_qY = 0U;
@@ -3903,10 +3903,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   c_qY - 1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[row_num_node_tmp];
               c_qY = contor_renew_node_row_idx - 1U;
@@ -3917,7 +3917,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i157 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i157 > 255U) {
                 i157 = 255;
@@ -3925,7 +3925,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i157;
 
-              /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row_idx - 1U;
               if (c_qY > contor_renew_node_row_idx) {
@@ -3939,7 +3939,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[row_num_node_tmp] + (((int)
                      c_qY - 1) << 5)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row_idx - 1U;
                 if (c_qY > contor_renew_node_row_idx) {
                   c_qY = 0U;
@@ -3966,8 +3966,8 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row_idx - 1U;
       if (c_qY > contor_renew_node_row_idx) {
         c_qY = 0U;
@@ -3995,7 +3995,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         if (((maze_wall_search[(contor_renew_node_col[row_num_node_tmp] + (((int)
                  c_qY - 1) << 5)) - 1] & i208) != 0) == search->contents.known)
         {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.North_West <= 7) {
             i209 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
@@ -4005,7 +4005,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((col_dir_node[(contor_renew_node_col[row_num_node_tmp] +
                              ((contor_renew_node_col[row_num_node_tmp + 1024] -
                                1) << 5)) - 1] & i209) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
             if ((unsigned int)i155 > 255U) {
               i155 = 255;
@@ -4024,7 +4024,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4045,7 +4045,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4063,10 +4063,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4082,7 +4082,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4090,7 +4090,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
@@ -4111,7 +4111,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY)
               {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
                 if ((unsigned int)i155 > 255U) {
                   i155 = 255;
@@ -4143,9 +4143,9 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
             if ((unsigned int)i157 > 255U) {
               i157 = 255;
@@ -4162,7 +4162,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (row_num_node[(i157 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4183,7 +4183,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4201,10 +4201,10 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 row_dir_node[(i155 + 33 * ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4220,7 +4220,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i155 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i155 > 255U) {
                 i155 = 255;
@@ -4228,7 +4228,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i155;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i157 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
               if ((unsigned int)i157 > 255U) {
@@ -4247,7 +4247,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(i157 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY)
               {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i155 = (int)(contor_renew_node_col[row_num_node_tmp] + 1U);
                 if ((unsigned int)i155 > 255U) {
                   i155 = 255;
@@ -4283,7 +4283,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
+    /* ƒS[ƒ‹XVƒm[ƒh‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
     contor_renew_node_col_idx = contor_renew_node_col_idx_temp;
     contor_renew_node_col_idx_temp = 1U;
     for (i154 = 0; i154 < 2048; i154++) {
@@ -4296,7 +4296,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     contor_renew_node_row_idx = contor_renew_node_row_idx_temp;
     contor_renew_node_row_idx_temp = 1U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½(ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½Ì•ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½Xï¿½V) */
+    /* XV‚ª‚È‚¯‚ê‚ÎI—¹(ƒXƒ^[ƒg’n“_‚Ì•à”ƒ}ƒbƒv‚ğXV) */
     if (change_flag == 0) {
       b_qY = row_num_node[1] + 3U;
       if (b_qY > 65535U) {
@@ -4312,19 +4312,20 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 }
 
 /*
- * ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Ç‚Ì’Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W
- * ï¿½oï¿½ï¿½  ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½,ï¿½Çï¿½ï¿½,ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½
- * Arguments    : const coder_internal_ref_5 *wall
+ * “ü—Í@Œ»İˆÊ’ux,y,Œ»İ•ûŒü,–À˜Hs•ûŒüƒTƒCƒY,–À˜H—ñ•ûŒüƒTƒCƒY,–À˜H•Çî•ñ,–À˜H•Ç‚Ì’Tõî•ñ,ƒS[ƒ‹À•W
+ * o—Í  Œ»İˆÊ’ux,y,Œ»İ•ûŒü,•Çî•ñ,’Tõî•ñ
+ * Arguments    : const coder_internal_ref_6 *wall
  *                coder_internal_ref *wall_flg
- *                const coder_internal_ref_4 *search
- *                const coder_internal_ref_1 *maze_goal
- *                const coder_internal_ref_3 *adachi_search_mode
+ *                const coder_internal_ref_5 *search
+ *                const coder_internal_ref_2 *maze_goal
+ *                const coder_internal_ref_1 *maze_wall
+ *                const coder_internal_ref_4 *adachi_search_mode
  *                unsigned char *current_x
  *                unsigned char *current_y
  *                unsigned char *current_dir
  *                unsigned char maze_row_size
  *                unsigned char maze_col_size
- *                unsigned char maze_wall[1024]
+ *                unsigned char b_maze_wall[1024]
  *                unsigned char maze_wall_search[1024]
  *                const unsigned char exploration_goal[2]
  *                unsigned char *start_flg
@@ -4334,15 +4335,17 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
  *                unsigned short contour_map[1024]
  * Return Type  : void
  */
-static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
-  *wall_flg, const coder_internal_ref_4 *search, const coder_internal_ref_1
-  *maze_goal, const coder_internal_ref_3 *adachi_search_mode, unsigned char
-  *current_x, unsigned char *current_y, unsigned char *current_dir, unsigned
-  char maze_row_size, unsigned char maze_col_size, unsigned char maze_wall[1024],
-  unsigned char maze_wall_search[1024], const unsigned char exploration_goal[2],
-  unsigned char *start_flg, unsigned char stop_flg, unsigned char goal_after_flg,
-  unsigned char adachi_s_mode, unsigned short contour_map[1024])
+static void b_search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
+  *wall_flg, const coder_internal_ref_5 *search, const coder_internal_ref_2
+  *maze_goal, const coder_internal_ref_1 *maze_wall, const coder_internal_ref_4 *
+  adachi_search_mode, unsigned char *current_x, unsigned char *current_y,
+  unsigned char *current_dir, unsigned char maze_row_size, unsigned char
+  maze_col_size, unsigned char b_maze_wall[1024], unsigned char
+  maze_wall_search[1024], const unsigned char exploration_goal[2], unsigned char
+  *start_flg, unsigned char stop_flg, unsigned char goal_after_flg, unsigned
+  char adachi_s_mode, unsigned short contour_map[1024])
 {
+  unsigned char straight_count;
   unsigned char goal_flg;
   unsigned char contour_flg;
   int exitg1;
@@ -4350,73 +4353,79 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   int q0;
   unsigned int qY;
 
-  /*     %% search_adachi ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½Å‚Ì’Tï¿½ï¿½ */
-  /* localï¿½Ïï¿½ï¿½éŒ¾ */
+  /*     %% search_adachi ‘«—§–@‚Å‚Ì’Tõ */
+  /* local•Ï”éŒ¾ */
+  straight_count = 0U;
   goal_flg = 0U;
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O */
-  /* ï¿½Çï¿½ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ïï¿½ */
+  /* ƒS[ƒ‹”»’èƒtƒ‰ƒO */
+  /* •Çî•ñXVŠm”F—p•Ï” */
   contour_flg = 0U;
 
-  /*      search_start_x = current_x %ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½x */
-  /*      search_start_y = current_y %ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½y */
-  /* ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ì» */
-  b_make_map_find(wall, exploration_goal, maze_wall, *current_x, *current_y,
+  /*      search_start_x = current_x %’TõŠJnx */
+  /*      search_start_y = current_y %’TõŠJny */
+  /* ‰‰ñ‚ÌƒRƒ“ƒ^[ƒ}ƒbƒvì» */
+  b_make_map_find(wall, exploration_goal, b_maze_wall, *current_x, *current_y,
                   contour_map);
   do {
     exitg1 = 0;
 
-    /* ï¿½Çï¿½ï¿½æ“¾ */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í•Çï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ */
+    /* •Çî•ñæ“¾ */
+    /* ƒS[ƒ‹’¼Œã‚Í•Çî•ñ‚ğXV‚µ‚È‚¢ */
     if (goal_after_flg != 1) {
-      next_dir = maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
-      wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size, *
-               current_x, *current_y, *current_dir, maze_wall, maze_wall_search);
+      /* Šù’m‹æŠÔ‰Á‘¬‚Å‚È‚¯‚ê‚ÎA•Çî•ñ‚ğæ“¾‚µ‚È‚¢ */
+      if (straight_count == 0) {
+        next_dir = b_maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
+        wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size,
+                 *current_x, *current_y, *current_dir, b_maze_wall,
+                 maze_wall_search);
 
-      /* ï¿½Çï¿½ñ‚ªXï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½B */
-      if (next_dir != maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1]) {
-        contour_flg = 1U;
+        /* •Çî•ñ‚ªXV‚³‚ê‚ê‚ÎAƒRƒ“ƒ^[XV‚Ìƒtƒ‰ƒO‚ğ—§‚Ä‚éB */
+        if (next_dir != b_maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1])
+        {
+          contour_flg = 1U;
+        }
       }
     } else {
-      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Æ‚ï¿½ */
+      /* ƒS[ƒ‹’¼Œã‚Ì‚Æ‚« */
       goal_after_flg = 0U;
 
-      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+      /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
     }
 
-    /*  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½ï¿½ */
-    /* ï¿½Çï¿½ï¿½É•ÏXï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ì‚ï¿½ */
+    /*  “™‚üMAP¶¬ */
+    /* •Çî•ñ‚É•ÏX‚ª‚ ‚Á‚½ê‡‚Ì‚İ */
     if (contour_flg != 0) {
-      b_make_map_find(wall, exploration_goal, maze_wall, *current_x, *current_y,
-                      contour_map);
+      b_make_map_find(wall, exploration_goal, b_maze_wall, *current_x,
+                      *current_y, contour_map);
     }
 
-    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /* Œ»İˆÊ’u‚ªƒS[ƒ‹‚©”»’è */
     if ((*current_x == exploration_goal[0]) && (*current_y == exploration_goal[1]))
     {
       goal_flg = 1U;
     }
 
-    /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½Ìê‡ï¿½Aï¿½ÎÛ‚Ìƒ}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä’Tï¿½ï¿½ï¿½Ï‚İ‚Ì‚Æ‚ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+    /* ’Tõƒ‚[ƒh‚Ìê‡A‘ÎÛ‚Ìƒ}ƒX‚ª‚·‚×‚Ä’TõÏ‚İ‚Ì‚Æ‚«AƒS[ƒ‹ƒtƒ‰ƒO‚ğ—§‚Ä‚é */
     if (adachi_s_mode == adachi_search_mode->contents.search) {
       goal_flg = 1U;
 
-      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ë‚µï¿½Aï¿½uï¿½ï¿½ï¿½Cï¿½N */
+      /* ƒS[ƒ‹À•W‚ª–¢’Tõ‚Å‚ ‚ê‚ÎAƒtƒ‰ƒO‚ğ‚¨‚ë‚µAƒuƒŒƒCƒN */
       if (maze_wall_search[(exploration_goal[1] + ((exploration_goal[0] - 1) <<
             5)) - 1] != 15) {
         goal_flg = 0U;
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /* ƒS[ƒ‹ˆ— */
     if (goal_flg == 1) {
       exitg1 = 1;
     } else {
-      /*  ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
-      /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
-      next_dir = get_nextdir2(*current_x, *current_y, maze_wall, contour_map);
+      /*  is•ûŒü‘I’è */
+      /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
+      next_dir = get_nextdir2(*current_x, *current_y, b_maze_wall, contour_map);
 
-      /*  ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ï¿½Æiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+      /*  Œ»İ•ûŒü‚Æis•ûŒü‚É‰‚¶‚½ˆ— */
       q0 = (int)(4U + next_dir);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
@@ -4442,57 +4451,155 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
 
       switch (q0) {
        case 0:
+        /* ’¼i§ŒäA•Çƒtƒ‰ƒO‚ğŒ»İQÆˆÊ’u‚ÅXV */
+        if (straight_count > 0) {
+          wall_flg->contents = fust_run_wallset(maze_wall, *current_y,
+            *current_x, *current_dir);
+        }
+
+        /* QÆˆÊ’u‚ğŸ‰ñ‚ÌQÆˆÊ’u‚É•ÏX */
         move_step(current_x, current_y, *current_dir);
 
-        /* disp("front") */
-        m_move_front(*start_flg, wall_flg->contents, move_dir_property.straight);
+        /* ˆÚ“®æ‚ª’TõÏ‚İ‚Å‚ ‚é‚È‚çAƒXƒgƒŒ[ƒgƒJƒEƒ“ƒ^‚ğƒCƒ“ƒNƒŠƒƒ“ƒg */
+        if (maze_wall_search[(*current_y + ((*current_x - 1) << 5)) - 1] == 15)
+        {
+          q0 = (int)(straight_count + 1U);
+          if ((unsigned int)q0 > 255U) {
+            q0 = 255;
+          }
 
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
-        *start_flg = 0U;
+          straight_count = (unsigned char)q0;
 
-        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
-        wall_flg->contents = 0U;
+          /* ’TõÏ‚İ‚Å‚È‚¢ê‡ */
+        } else {
+          /* ’¼üƒJƒEƒ“ƒ^‚ª‚ ‚éê‡AˆÚ“® */
+          /* Œ»İ•ûŒü‚à’¼i‚È‚Ì‚ÅA’¼iƒJƒEƒ“ƒ^+1‚¾‚¯ˆÚ“®‚·‚éB */
+          if (straight_count > 0) {
+            q0 = (int)(straight_count + 1U);
+            if ((unsigned int)q0 > 255U) {
+              q0 = 255;
+            }
+
+            m_move_front_long((unsigned char)q0, *start_flg, wall_flg->contents,
+                              move_dir_property.straight);
+            straight_count = 0U;
+
+            /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+            *start_flg = 0U;
+
+            /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+            wall_flg->contents = 0U;
+          } else {
+            /* ’¼iƒJƒEƒ“ƒ^‚ª‚È‚¢ê‡ */
+            m_move_front(*start_flg, wall_flg->contents,
+                         move_dir_property.straight);
+
+            /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+            *start_flg = 0U;
+
+            /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+            wall_flg->contents = 0U;
+          }
+        }
         break;
 
        case 1:
+        /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚éê‡AˆÚ“® */
+        if (straight_count > 0) {
+          /* ‘O‰ñˆÊ’u‚Å‚Ì•Çƒtƒ‰ƒO‚ğg—p‚µAƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiC) */
+          m_move_front_long(straight_count, *start_flg, wall_flg->contents,
+                            move_dir_property.straight);
+          straight_count = 0U;
+
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          *start_flg = 0U;
+
+          /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          wall_flg->contents = 0U;
+
+          /* Œ»İQÆˆÊ’u‚Å•Çƒtƒ‰ƒO‚ğXV */
+          wall_flg->contents = fust_run_wallset(maze_wall, *current_y,
+            *current_x, *current_dir);
+        }
+
+        /* ƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiC) */
+        m_move_right(*start_flg, wall_flg->contents, move_dir_property.straight);
+
+        /* QÆˆÊ’uA•ûŒü‚ğXV */
         turn_clk_90deg(current_dir);
         move_step(current_x, current_y, *current_dir);
 
-        /* disp("right") */
-        m_move_right(*start_flg, wall_flg->contents, move_dir_property.straight);
-
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
         *start_flg = 0U;
 
-        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
 
        case 2:
+        /* disp("back") */
+        /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚éê‡AˆÚ“® */
+        if (straight_count > 0) {
+          /* ‘O‰ñˆÊ’u‚Å‚Ì•Çƒtƒ‰ƒO‚ğg—p‚µAƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiC) */
+          m_move_front_long(straight_count, *start_flg, wall_flg->contents,
+                            move_dir_property.straight);
+          straight_count = 0U;
+
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          *start_flg = 0U;
+
+          /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          wall_flg->contents = 0U;
+
+          /* Œ»İQÆˆÊ’u‚Å•Çƒtƒ‰ƒO‚ğXV */
+          wall_flg->contents = fust_run_wallset(maze_wall, *current_y,
+            *current_x, *current_dir);
+        }
+
+        /* ƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiCj */
+        m_move_back(*start_flg, wall_flg->contents, move_dir_property.straight);
+
+        /* QÆˆÊ’uA•ûŒü‚ğXV */
         turn_180deg(current_dir);
         move_step(current_x, current_y, *current_dir);
 
-        /* disp("back") */
-        m_move_back(*start_flg, wall_flg->contents, move_dir_property.straight);
-
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
         *start_flg = 0U;
 
-        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
 
        case 3:
+        /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚éê‡AˆÚ“® */
+        if (straight_count > 0) {
+          /* ‘O‰ñˆÊ’u‚Å‚Ì•Çƒtƒ‰ƒO‚ğg—p‚µAƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiC) */
+          m_move_front_long(straight_count, *start_flg, wall_flg->contents,
+                            move_dir_property.straight);
+          straight_count = 0U;
+
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          *start_flg = 0U;
+
+          /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          wall_flg->contents = 0U;
+
+          /* Œ»İQÆˆÊ’u‚Å•Çƒtƒ‰ƒO‚ğXV */
+          wall_flg->contents = fust_run_wallset(maze_wall, *current_y,
+            *current_x, *current_dir);
+        }
+
+        /* ƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiCj */
+        m_move_left(*start_flg, wall_flg->contents, move_dir_property.straight);
+
+        /* QÆˆÊ’uA•ûŒü‚ğXV */
         turn_conclk_90deg(current_dir);
         move_step(current_x, current_y, *current_dir);
 
-        /* disp("left") */
-        m_move_left(*start_flg, wall_flg->contents, move_dir_property.straight);
-
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
         *start_flg = 0U;
 
-        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
       }
@@ -4501,17 +4608,29 @@ static void b_search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
     }
   } while (exitg1 == 0);
 
+  /* ’¼iƒJƒEƒ“ƒ^•ªˆÚ“® */
+  if (straight_count > 0) {
+    m_move_front_long(straight_count, *start_flg, wall_flg->contents,
+                      move_dir_property.straight);
+
+    /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+    *start_flg = 0U;
+
+    /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+    wall_flg->contents = 0U;
+  }
+
   if (stop_flg == 1) {
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
-    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
+    /* ƒS[ƒ‹’â~ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é‚Æ‚« */
+    /* ’â~“®ì‚ğÀ{ */
     m_goal_movement(*start_flg, wall_flg->contents, move_dir_property.straight);
   }
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ì‚³ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ÜIï¿½ï¿½ */
+  /* ƒS[ƒ‹’â~ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚È‚¯‚ê‚ÎA“®ì‚³‚¹‚½‚Ü‚ÜI—¹ */
 }
 
 /*
- * ï¿½Xï¿½^ï¿½[ï¿½gï¿½mï¿½[ï¿½h,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½
+ * ƒXƒ^[ƒgƒm[ƒh,•ûŒü‚ğİ’è
  * Arguments    : const unsigned char maze_goal[18]
  *                unsigned char goal_size
  *                const unsigned short row_num_node[1056]
@@ -4542,31 +4661,31 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
   unsigned int qY;
   unsigned short u8;
 
-  /*     %% decide_goal_node_dir ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Aï¿½ï¿½ï¿½ï¿½Ñ•ï¿½ï¿½ï¿½ï¿½ÌŠmï¿½ï¿½ */
-  /*  ï¿½Î‚ß‚ÌƒRï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚È‚ï¿½mï¿½[ï¿½hï¿½ÆAï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½ï¿½ï¿½pï¿½xï¿½ï¿½ï¿½mï¿½è‚·ï¿½ï¿½B */
+  /*     %% decide_goal_node_dir ƒS[ƒ‹ƒm[ƒhA‚¨‚æ‚Ñ•ûŒü‚ÌŠm’è */
+  /*  Î‚ß‚ÌƒRƒ“ƒ^[ƒ}ƒbƒv‚©‚çAƒS[ƒ‹‚Æ‚È‚éƒm[ƒh‚ÆAƒS[ƒ‹‚Ìi“üŠp“x‚ğŠm’è‚·‚éB */
   *goal_matrix_dir = matrix_dir.Row;
 
-  /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½mï¿½[ï¿½hï¿½Ísï¿½ï¿½ï¿½ï¿½ */
-  /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½}ï¿½Xï¿½Ì–kï¿½Ìƒmï¿½[ï¿½h */
+  /* ƒXƒ^[ƒgƒm[ƒh‚Ís•ûŒü */
+  /* ƒXƒ^[ƒgƒ}ƒX‚Ì–k‚Ìƒm[ƒh */
   next_matrix_dir = matrix_dir.Row;
 
-  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½j */
+  /* is•ûŒüæ‚Ìƒm[ƒh•ûŒüi‰¼j */
   goal_node[0] = 2U;
   next_node_idx_0 = 2U;
   goal_node[1] = 1U;
   next_node_idx_1 = 1U;
 
-  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½W */
+  /* is•ûŒüæ‚Ìƒm[ƒhÀ•W */
   *goal_dir = g_d_direction.North;
 
-  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Åï¿½ï¿½Ì‰ï¿½ï¿½Ì’lï¿½Í–kï¿½ï¿½ï¿½ï¿½ï¿½j */
+  /* is•ûŒüiÅ‰‚Ì‰¼‚Ì’l‚Í–kŒü‚«j */
   map_min = MAX_uint16_T;
   i150 = goal_size;
   do {
     exitg1 = 0;
     goal_flag = 0U;
     for (i = 0; i < i150; i++) {
-      /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
+      /* Œ»İ‚Ìƒm[ƒh‚ªs•ûŒü‚Ì */
       if (*goal_matrix_dir == matrix_dir.Row) {
         /*  %x */
         if (maze_goal[i] == goal_node[1]) {
@@ -4585,9 +4704,9 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
           }
 
           if (guard1) {
-            /* yï¿½ï¿½ï¿½Wï¿½Ìˆï¿½v */
-            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½}ï¿½bï¿½vï¿½lï¿½ï¿½65535ï¿½Å‚ï¿½ï¿½ï¿½ï¿½)ï¿½Aï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½iï¿½Î‚ßNï¿½ï¿½ï¿½ï¿½ï¿½j */
-            /* ï¿½kï¿½ï¿½ */
+            /* yÀ•W‚Ìˆê’v */
+            /* is•ûŒüæ‚É•Ç‚ª‚ ‚ê‚Î(ƒ}ƒbƒv’l‚ª65535‚Å‚ ‚ê‚Î)Ais•ûŒü‚ğ•ÏX‚·‚éiÎ‚ßN“üj */
+            /* –k“Œ */
             guard2 = false;
             guard3 = false;
             guard4 = false;
@@ -4601,7 +4720,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               {
                 *goal_dir = g_d_direction.North;
 
-                /* ï¿½ì“Œ */
+                /* “ì“Œ */
               } else {
                 guard4 = true;
               }
@@ -4624,7 +4743,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                 if (col_num_node[((int)qY + ((i151 - 1) << 5)) - 1] == 65535) {
                   *goal_dir = g_d_direction.South;
 
-                  /* ï¿½ì¼ */
+                  /* “ì¼ */
                 } else {
                   guard3 = true;
                 }
@@ -4644,7 +4763,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                     65535) {
                   *goal_dir = g_d_direction.South;
 
-                  /* ï¿½kï¿½ï¿½ */
+                  /* –k¼ */
                 } else {
                   guard2 = true;
                 }
@@ -4659,12 +4778,12 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               *goal_dir = g_d_direction.North;
             }
 
-            /* ï¿½tï¿½ï¿½ï¿½O */
+            /* ƒtƒ‰ƒO */
             goal_flag = 1U;
           }
         }
 
-        /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
+        /* Œ»İ‚Ìƒm[ƒh‚ª—ñ•ûŒü‚Ì */
       } else {
         /*  %x */
         guard1 = false;
@@ -4682,9 +4801,9 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
         }
 
         if (guard1 && (maze_goal[i + 9] == goal_node[0])) {
-          /* yï¿½ï¿½ï¿½Wï¿½Ìˆï¿½v */
-          /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½}ï¿½bï¿½vï¿½lï¿½ï¿½65535ï¿½Å‚ï¿½ï¿½ï¿½ï¿½)ï¿½Aï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½iï¿½Î‚ßNï¿½ï¿½ï¿½ï¿½ï¿½j */
-          /* ï¿½kï¿½ï¿½ */
+          /* yÀ•W‚Ìˆê’v */
+          /* is•ûŒüæ‚É•Ç‚ª‚ ‚ê‚Î(ƒ}ƒbƒv’l‚ª65535‚Å‚ ‚ê‚Î)Ais•ûŒü‚ğ•ÏX‚·‚éiÎ‚ßN“üj */
+          /* –k“Œ */
           guard2 = false;
           guard3 = false;
           if (*goal_dir == g_d_direction.North_East) {
@@ -4696,7 +4815,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
             if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] == 65535) {
               *goal_dir = g_d_direction.East;
 
-              /* ï¿½ì“Œ */
+              /* “ì“Œ */
             } else {
               guard3 = true;
             }
@@ -4709,7 +4828,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                  [(goal_node[0] + 33 * (goal_node[1] - 1)) - 1] == 65535)) {
               *goal_dir = g_d_direction.East;
 
-              /* ï¿½ì¼ */
+              /* “ì¼ */
             } else if (*goal_dir == g_d_direction.South_West) {
               qY = goal_node[1] - 1U;
               if (qY > goal_node[1]) {
@@ -4720,7 +4839,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               {
                 *goal_dir = g_d_direction.West;
 
-                /* ï¿½kï¿½ï¿½ */
+                /* –k¼ */
               } else {
                 guard2 = true;
               }
@@ -4745,7 +4864,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
             }
           }
 
-          /* ï¿½tï¿½ï¿½ï¿½O */
+          /* ƒtƒ‰ƒO */
           goal_flag = 1U;
         }
       }
@@ -4757,13 +4876,13 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
     /*              disp(current_matrix_dir) */
     /*              disp("current_dir_dgnd") */
     /*              disp(current_dir_dgnd) */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½Ìï¿½ */
-    /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Æ‚ï¿½ï¿½A */
-    /* ï¿½ï¿½ï¿½İ‚Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½B */
+    /* ƒS[ƒ‹ƒm[ƒh”»’è‚Ì */
+    /* Œ»İ‚Ìƒm[ƒh‚ğƒS[ƒ‹ƒm[ƒh‚Æ‚µA */
+    /* Œ»İ‚Ì•ûŒü‚ğƒS[ƒ‹‚Ì•ûŒü‚Æ‚·‚éB */
     if (goal_flag == 1) {
       exitg1 = 1;
     } else {
-      /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dï¿½ï¿½Iï¿½Éiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ */
+      /* Œ»İ‚Ìƒm[ƒh‚Ì•ûŒü‚©‚ç—Dæ“I‚Éis•ûŒü‚ğŠm’è */
       for (i = 0; i < 8; i++) {
         i151 = *goal_dir + i;
         if (i151 > 255) {
@@ -4772,7 +4891,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
         goal_flag = (unsigned char)(i151 % 8);
 
-        /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
+        /* Œ»İ‚Ìƒm[ƒh‚ªs•ûŒü‚Ì */
         if (*goal_matrix_dir == matrix_dir.Row) {
           if (goal_flag == g_d_direction.North) {
             i151 = (int)(goal_node[0] + 1U);
@@ -4781,7 +4900,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
             }
 
             if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               i151 = (int)(goal_node[0] + 1U);
               if ((unsigned int)i151 > 255U) {
                 i151 = 255;
@@ -4789,10 +4908,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               map_min = row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1];
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
               *goal_dir = g_d_direction.North;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               next_matrix_dir = matrix_dir.Row;
               i151 = (int)(goal_node[0] + 1U);
               if ((unsigned int)i151 > 255U) {
@@ -4810,7 +4929,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
             if (col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1] < map_min)
             {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               i151 = (int)(goal_node[1] + 1U);
               if ((unsigned int)i151 > 255U) {
                 i151 = 255;
@@ -4818,10 +4937,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               map_min = col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1];
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
               *goal_dir = g_d_direction.North_East;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               next_matrix_dir = matrix_dir.Col;
               next_node_idx_0 = goal_node[0];
               i151 = (int)(goal_node[1] + 1U);
@@ -4844,7 +4963,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               }
 
               if (col_num_node[((int)qY + ((i151 - 1) << 5)) - 1] < map_min) {
-                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                /* Å¬’l‚ğXV */
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
                   qY = 0U;
@@ -4857,10 +4976,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = col_num_node[((int)qY + ((i151 - 1) << 5)) - 1];
 
-                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
                 *goal_dir = g_d_direction.South_East;
 
-                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                 next_matrix_dir = matrix_dir.Col;
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
@@ -4883,7 +5002,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               if (row_num_node[((int)qY + 33 * (goal_node[1] - 1)) - 1] <
                   map_min) {
-                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                /* Å¬’l‚ğXV */
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
                   qY = 0U;
@@ -4891,10 +5010,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = row_num_node[((int)qY + 33 * (goal_node[1] - 1)) - 1];
 
-                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
                 *goal_dir = g_d_direction.South;
 
-                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                 next_matrix_dir = matrix_dir.Row;
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
@@ -4912,7 +5031,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               if (col_num_node[((int)qY + ((goal_node[1] - 1) << 5)) - 1] <
                   map_min) {
-                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                /* Å¬’l‚ğXV */
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
                   qY = 0U;
@@ -4920,10 +5039,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = col_num_node[((int)qY + ((goal_node[1] - 1) << 5)) - 1];
 
-                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
                 *goal_dir = g_d_direction.South_West;
 
-                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                 next_matrix_dir = matrix_dir.Col;
                 qY = goal_node[0] - 1U;
                 if (qY > goal_node[0]) {
@@ -4936,25 +5055,25 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
             } else if ((goal_flag != g_d_direction.West) && (goal_flag ==
                         g_d_direction.North_West) && (col_num_node[(goal_node[0]
               + ((goal_node[1] - 1) << 5)) - 1] < map_min)) {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               map_min = col_num_node[(goal_node[0] + ((goal_node[1] - 1) << 5))
                 - 1];
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
               *goal_dir = g_d_direction.North_West;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               next_matrix_dir = matrix_dir.Col;
               next_node_idx_0 = goal_node[0];
               next_node_idx_1 = goal_node[1];
             } else {
-              /* ï¿½ï¿½ */
+              /* ’Œ */
             }
           } else {
-            /* ï¿½ï¿½ */
+            /* ’Œ */
           }
 
-          /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
+          /* Œ»İ‚Ìƒm[ƒh‚ª—ñ•ûŒü‚Ì */
         } else if (goal_flag != g_d_direction.North) {
           if (goal_flag == g_d_direction.North_East) {
             i151 = (int)(goal_node[0] + 1U);
@@ -4963,7 +5082,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
             }
 
             if (row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1] < map_min) {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               i151 = (int)(goal_node[0] + 1U);
               if ((unsigned int)i151 > 255U) {
                 i151 = 255;
@@ -4971,10 +5090,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               map_min = row_num_node[(i151 + 33 * (goal_node[1] - 1)) - 1];
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k“ŒŒü‚«‚É */
               *goal_dir = g_d_direction.North_East;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               next_matrix_dir = matrix_dir.Row;
               i151 = (int)(goal_node[0] + 1U);
               if ((unsigned int)i151 > 255U) {
@@ -4992,7 +5111,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
             if (col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1] < map_min)
             {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               i151 = (int)(goal_node[1] + 1U);
               if ((unsigned int)i151 > 255U) {
                 i151 = 255;
@@ -5000,10 +5119,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               map_min = col_num_node[(goal_node[0] + ((i151 - 1) << 5)) - 1];
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ“ŒŒï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ŒŒü‚«‚É */
               *goal_dir = g_d_direction.East;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               next_matrix_dir = matrix_dir.Col;
               next_node_idx_0 = goal_node[0];
               i151 = (int)(goal_node[1] + 1U);
@@ -5016,13 +5135,13 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
           } else if (goal_flag == g_d_direction.South_East) {
             u8 = row_num_node[(goal_node[0] + 33 * (goal_node[1] - 1)) - 1];
             if (u8 < map_min) {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               map_min = u8;
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì“ŒŒü‚«‚É */
               *goal_dir = g_d_direction.South_East;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               next_matrix_dir = matrix_dir.Row;
               next_node_idx_0 = goal_node[0];
               next_node_idx_1 = goal_node[1];
@@ -5036,7 +5155,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               if (row_num_node[(goal_node[0] + 33 * ((int)qY - 1)) - 1] <
                   map_min) {
-                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                /* Å¬’l‚ğXV */
                 qY = goal_node[1] - 1U;
                 if (qY > goal_node[1]) {
                   qY = 0U;
@@ -5044,10 +5163,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = row_num_node[(goal_node[0] + 33 * ((int)qY - 1)) - 1];
 
-                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì¼Œü‚«‚É */
                 *goal_dir = g_d_direction.South_West;
 
-                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                 next_matrix_dir = matrix_dir.Row;
                 next_node_idx_0 = goal_node[0];
                 qY = goal_node[1] - 1U;
@@ -5065,7 +5184,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
               if (col_num_node[(goal_node[0] + (((int)qY - 1) << 5)) - 1] <
                   map_min) {
-                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                /* Å¬’l‚ğXV */
                 qY = goal_node[1] - 1U;
                 if (qY > goal_node[1]) {
                   qY = 0U;
@@ -5073,10 +5192,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                 map_min = col_num_node[(goal_node[0] + (((int)qY - 1) << 5)) - 1];
 
-                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ¼Œï¿½ï¿½ï¿½ï¿½ï¿½ */
+                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ¼Œü‚«‚É */
                 *goal_dir = g_d_direction.West;
 
-                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                 next_matrix_dir = matrix_dir.Col;
                 next_node_idx_0 = goal_node[0];
                 qY = goal_node[1] - 1U;
@@ -5099,7 +5218,7 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
                 }
 
                 if (row_num_node[(i151 + 33 * ((int)qY - 1)) - 1] < map_min) {
-                  /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                  /* Å¬’l‚ğXV */
                   i151 = (int)(goal_node[0] + 1U);
                   if ((unsigned int)i151 > 255U) {
                     i151 = 255;
@@ -5112,10 +5231,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
 
                   map_min = row_num_node[(i151 + 33 * ((int)qY - 1)) - 1];
 
-                  /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                  /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k¼Œü‚«‚É */
                   *goal_dir = g_d_direction.North_West;
 
-                  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                  /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                   next_matrix_dir = matrix_dir.Row;
                   i151 = (int)(goal_node[0] + 1U);
                   if ((unsigned int)i151 > 255U) {
@@ -5133,10 +5252,10 @@ static void decide_goal_node_dir(const unsigned char maze_goal[18], unsigned
               }
             }
           } else {
-            /* ï¿½ï¿½ */
+            /* ’Œ */
           }
         } else {
-          /* ï¿½ï¿½ */
+          /* ’Œ */
         }
       }
 
@@ -5173,9 +5292,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
   bool temp1[18];
   signed char varargin_1[9];
 
-  /*     %% decide_goal_section ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ÌŠmï¿½ï¿½ */
-  /*  ï¿½mï¿½è‚³ï¿½ê‚½ï¿½Sï¿½[ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ÆAï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½ï¿½ï¿½pï¿½xï¿½ï¿½ï¿½ï¿½A */
-  /*  ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½mï¿½è‚·ï¿½ï¿½B */
+  /*     %% decide_goal_section ƒS[ƒ‹ƒ}ƒX‚ÌŠm’è */
+  /*  Šm’è‚³‚ê‚½ƒS[ƒ‹‚Ìƒm[ƒh‚ÆAƒS[ƒ‹‚Ìi“üŠp“x‚©‚çA */
+  /*  ƒS[ƒ‹ƒ}ƒX‚ğŠm’è‚·‚éB */
   /* (y,x) */
   goal_section[0] = 1U;
   goal_node2[0] = 1U;
@@ -5211,7 +5330,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
       }
     }
 
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ï¿½È‚Ì‚Å‚È‚ï¿½ */
+    /* —ñ•ûŒü‚Í’Œ‚È‚Ì‚Å‚È‚µ */
   } else if (goal_dir == g_d_direction.North_East) {
     if (goal_matrix_dir == matrix_dir.Row) {
       i152 = (int)(goal_node[1] + 1U);
@@ -5397,7 +5516,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
       }
     }
   } else if (goal_dir == g_d_direction.East) {
-    /* ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ï¿½È‚Ì‚Å‚È‚ï¿½ */
+    /* s•ûŒü‚Í’Œ‚È‚Ì‚Å‚È‚µ */
     if (goal_matrix_dir == matrix_dir.Col) {
       i152 = (int)(goal_node[1] + 1U);
       if ((unsigned int)i152 > 255U) {
@@ -5896,7 +6015,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
       }
     }
   } else if (goal_dir == g_d_direction.West) {
-    /* ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ï¿½È‚Ì‚Å‚È‚ï¿½ */
+    /* s•ûŒü‚Í’Œ‚È‚Ì‚Å‚È‚µ */
     if (goal_matrix_dir == matrix_dir.Col) {
       qY = goal_node[1] - 2U;
       if (qY > goal_node[1]) {
@@ -6105,9 +6224,9 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
               qY = 0U;
             }
 
-            /* ï¿½ï¿½ï¿½Íï¿½ï¿½Wï¿½Ì”zï¿½ï¿½ï¿½ï¿½ì¬ */
-            /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
-            /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½Æ”ï¿½r */
+            /* “ü—ÍÀ•W‚Ì”z—ñ‚ğì¬ */
+            /* ƒS[ƒ‹”»’èŠÖ” */
+            /* ƒS[ƒ‹À•W‚Æ”äŠr */
             for (i152 = 0; i152 < 9; i152++) {
               uv0[i152] = (unsigned char)qY;
               uv0[9 + i152] = goal_node[0];
@@ -6117,7 +6236,7 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
               temp1[i152] = (maze_goal[i152] == uv0[i152]);
             }
 
-            /* x,yï¿½Æ‚ï¿½ï¿½Éˆï¿½vï¿½ï¿½ï¿½é‚©ï¿½mï¿½Fï¿½Aï¿½ï¿½vï¿½È‚ï¿½1ï¿½ï¿½Ô‚ï¿½ */
+            /* x,y‚Æ‚à‚Éˆê’v‚·‚é‚©Šm”FAˆê’v‚È‚ç1‚ğ•Ô‚· */
             for (i152 = 0; i152 < 9; i152++) {
               varargin_1[i152] = (signed char)(temp1[i152] * temp1[9 + i152]);
             }
@@ -6170,12 +6289,13 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
 }
 
 /*
- * ï¿½ï¿½ï¿½Í@ï¿½Çï¿½ï¿½,ï¿½Ç’Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAP,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
- * ï¿½oï¿½ï¿½   ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½ï¿½Wï¿½Aï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½
- * Arguments    : const coder_internal_ref *goal_size
+ * “ü—Í@•Çî•ñ,•Ç’Tõî•ñ,“™‚üMAP,ƒS[ƒ‹À•W,Å‘åŒo˜H’·
+ * o—Í   Å’ZŒo˜Hã‚Ì–¢’Tõƒ}ƒX‚ÌÀ•WA–¢’Tõƒ}ƒX‚Ì”
+ * Arguments    : const coder_internal_ref_1 *maze_wall
+ *                const coder_internal_ref *goal_size
  *                coder_internal_ref *wall_flg
- *                const coder_internal_ref_5 *wall
- *                const unsigned char maze_wall[1024]
+ *                const coder_internal_ref_6 *wall
+ *                const unsigned char b_maze_wall[1024]
  *                const unsigned char maze_wall_search[1024]
  *                const unsigned short contour_map[1024]
  *                const unsigned char maze_goal[18]
@@ -6184,9 +6304,10 @@ static void decide_goal_section(const unsigned char maze_goal[18], const
  *                unsigned char *unexp_square_idx
  * Return Type  : void
  */
-static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
-                     *wall_flg, const coder_internal_ref_5 *wall, const unsigned
-                     char maze_wall[1024], const unsigned char maze_wall_search
+static void fust_run(const coder_internal_ref_1 *maze_wall, const
+                     coder_internal_ref *goal_size, coder_internal_ref *wall_flg,
+                     const coder_internal_ref_6 *wall, const unsigned char
+                     b_maze_wall[1024], const unsigned char maze_wall_search
                      [1024], const unsigned short contour_map[1024], const
                      unsigned char maze_goal[18], unsigned short max_length,
                      unsigned char unexp_square[1024], unsigned char
@@ -6194,86 +6315,81 @@ static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 {
   unsigned char goal_flag;
   unsigned short little;
-  int i53;
-  coder_internal_ref_6 b_maze_wall;
   unsigned char temp_x;
   unsigned char temp_y;
   unsigned char temp_dir;
   unsigned char next_dir;
   int tempk;
   bool exitg1;
-  int i54;
-  int i55;
-  int b_unexp_square_idx;
-  int i56;
   int i57;
-  unsigned short u3;
   int i58;
   int i59;
+  int b_unexp_square_idx;
+  int i60;
+  int i61;
+  unsigned short u3;
+  int i62;
+  int i63;
   unsigned int qY;
   unsigned char switch_expression;
 
-  /*     %% fust_run ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½s */
-  /* ï¿½Å’Zï¿½oï¿½Hï¿½\ï¿½ï¿½ï¿½pax */
+  /*     %% fust_run Å’ZŒo˜H‘–s */
+  /* Å’ZŒo˜H•\¦—pax */
   /*          global sh_route_ax */
-  /* localï¿½Ïï¿½ï¿½éŒ¾ */
+  /* local•Ï”éŒ¾ */
   goal_flag = 0U;
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O */
+  /* ƒS[ƒ‹”»’èƒtƒ‰ƒO */
   little = max_length;
 
-  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½pè‡’l */
-  for (i53 = 0; i53 < 1024; i53++) {
-    b_maze_wall.contents[i53] = maze_wall[i53];
-    unexp_square[i53] = 0U;
-  }
-
+  /* is•ûŒü‘I’è—pè‡’l */
+  memset(&unexp_square[0], 0, sizeof(unsigned char) << 10);
   *unexp_square_idx = 0U;
 
-  /*          %ï¿½}ï¿½Eï¿½Xï¿½Ê’uï¿½\ï¿½ï¿½ï¿½pï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g */
+  /*          %ƒ}ƒEƒXˆÊ’u•\¦—pƒIƒuƒWƒFƒNƒg */
   /*          if coder.target('MATLAB') */
   /*              ax = gca; */
   /*              h = hgtransform('Parent',ax); */
   /*          end */
-  /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½İ’ï¿½ */
+  /* ƒ}ƒEƒX‚Ì‰ŠúˆÊ’uİ’è */
   temp_x = 1U;
   temp_y = 1U;
 
-  /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
+  /* ƒ}ƒEƒX‚Ì‰Šú•ûŒü’è‹` */
   temp_dir = g_direction.North;
   next_dir = g_direction.North;
 
-  /* ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½x */
-  /* ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½y */
-  /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ÌÅ’Zï¿½ï¿½ï¿½[ï¿½gï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½(MATLABï¿½Ì‚ï¿½) */
+  /* ’TõŠJnx */
+  /* ’TõŠJny */
+  /* ÀsAŠù‘¶‚ÌÅ’Zƒ‹[ƒg•\¦‚ğíœ‚·‚é(MATLAB‚Ì‚İ) */
   tempk = 0;
   exitg1 = false;
   while ((!exitg1) && (tempk <= max_length - 1)) {
-    /* ï¿½ñ‘–sï¿½ï¿½ï¿½[ï¿½hï¿½Ì‚Æ‚ï¿½ï¿½Aï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½Lï¿½^ï¿½ï¿½ï¿½ï¿½ */
-    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-    i53 = temp_y + ((temp_x - 1) << 5);
-    i54 = i53 - 1;
-    if (maze_wall_search[i54] != 15) {
-      /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½Lï¿½^ï¿½ï¿½ï¿½ï¿½Bï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
-      i55 = (int)(*unexp_square_idx + 1U);
-      b_unexp_square_idx = i55;
-      if ((unsigned int)i55 > 255U) {
+    /* ”ñ‘–sƒ‚[ƒh‚Ì‚Æ‚«A”ñ’Tõƒ}ƒX‚ğ‹L˜^‚·‚é */
+    /* Œ»İˆÊ’u‚ª–¢’Tõƒ}ƒX‚©”»’è */
+    i57 = temp_y + ((temp_x - 1) << 5);
+    i58 = i57 - 1;
+    if (maze_wall_search[i58] != 15) {
+      /* –¢’Tõƒ}ƒX‚Å‚ ‚ê‚ÎA‹L˜^‚·‚éBƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á‚³‚¹‚éB */
+      i59 = (int)(*unexp_square_idx + 1U);
+      b_unexp_square_idx = i59;
+      if ((unsigned int)i59 > 255U) {
         b_unexp_square_idx = 255;
       }
 
       b_unexp_square_idx--;
       unexp_square[b_unexp_square_idx] = temp_y;
       unexp_square[512 + b_unexp_square_idx] = temp_x;
-      if ((unsigned int)i55 > 255U) {
-        i55 = 255;
+      if ((unsigned int)i59 > 255U) {
+        i59 = 255;
       }
 
-      *unexp_square_idx = (unsigned char)i55;
+      *unexp_square_idx = (unsigned char)i59;
     }
 
-    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-    i55 = goal_size->contents;
-    for (b_unexp_square_idx = 0; b_unexp_square_idx < i55; b_unexp_square_idx++)
+    /* Œ»İˆÊ’u‚ªƒS[ƒ‹‚©”»’è */
+    i59 = goal_size->contents;
+    for (b_unexp_square_idx = 0; b_unexp_square_idx < i59; b_unexp_square_idx++)
     {
       if ((temp_x == maze_goal[b_unexp_square_idx]) && (temp_y ==
            maze_goal[b_unexp_square_idx + 9])) {
@@ -6282,37 +6398,37 @@ static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
     }
 
     if (goal_flag == 1) {
-      /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
-      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Â‘ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
+      /* QÆƒ}ƒXAQÆ•ûŒü‚ğXV */
+      /* ƒS[ƒ‹‚©‚Â‘–sA’â~ˆ—‚ğÀ{ */
       exitg1 = true;
     } else {
-      /*         %%ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
-      /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
-      /* ï¿½kï¿½ï¿½ï¿½Ì•Ç‚Ì‚ï¿½ï¿½ï¿½È‚ï¿½ */
+      /*         %%is•ûŒü‘I’è */
+      /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
+      /* –k‘¤‚Ì•Ç‚Ì‚ ‚è‚È‚µ */
       if (g_direction.North <= 7) {
-        i56 = (unsigned char)(1 << g_direction.North);
+        i60 = (unsigned char)(1 << g_direction.North);
       } else {
-        i56 = 0;
+        i60 = 0;
       }
 
-      if (((b_maze_wall.contents[i54] & i56) == wall->contents.nowall) &&
-          (contour_map[i53] < little)) {
-        /* ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½è‡’lï¿½ï¿½ï¿½á‚¯ï¿½ï¿½ÎA */
-        /* è‡’lï¿½ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½mapï¿½lï¿½É•ÏX */
+      if (((b_maze_wall[i58] & i60) == wall->contents.nowall) &&
+          (contour_map[i57] < little)) {
+        /* –k‘¤‚Ì“™‚ümap‚ªè‡’l‚æ‚è’á‚¯‚ê‚ÎA */
+        /* è‡’l‚ğ–k‘¤‚Ì“™‚map’l‚É•ÏX */
         little = contour_map[temp_y + ((temp_x - 1) << 5)];
 
-        /* ï¿½kï¿½ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É•ÏXy */
+        /* –k‘¤‚ğis•ûŒü‚É•ÏXy */
         next_dir = g_direction.North;
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* “Œ‘¤ */
       if (g_direction.East <= 7) {
-        i57 = (unsigned char)(1 << g_direction.East);
+        i61 = (unsigned char)(1 << g_direction.East);
       } else {
-        i57 = 0;
+        i61 = 0;
       }
 
-      if ((b_maze_wall.contents[(temp_y + ((temp_x - 1) << 5)) - 1] & i57) ==
+      if ((b_maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i61) ==
           wall->contents.nowall) {
         u3 = contour_map[(temp_y + (temp_x << 5)) - 1];
         if (u3 < little) {
@@ -6321,30 +6437,30 @@ static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
       }
 
-      /* ï¿½ì‘¤ */
+      /* “ì‘¤ */
       if (g_direction.South <= 7) {
-        i58 = (unsigned char)(1 << g_direction.South);
+        i62 = (unsigned char)(1 << g_direction.South);
       } else {
-        i58 = 0;
+        i62 = 0;
       }
 
-      if ((b_maze_wall.contents[(temp_y + ((temp_x - 1) << 5)) - 1] & i58) ==
+      if ((b_maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i62) ==
           wall->contents.nowall) {
-        u3 = contour_map[i53 - 2];
+        u3 = contour_map[i57 - 2];
         if (u3 < little) {
           little = u3;
           next_dir = g_direction.South;
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ¼‘¤ */
       if (g_direction.West <= 7) {
-        i59 = (unsigned char)(1 << g_direction.West);
+        i63 = (unsigned char)(1 << g_direction.West);
       } else {
-        i59 = 0;
+        i63 = 0;
       }
 
-      if ((b_maze_wall.contents[(temp_y + ((temp_x - 1) << 5)) - 1] & i59) ==
+      if ((b_maze_wall[(temp_y + ((temp_x - 1) << 5)) - 1] & i63) ==
           wall->contents.nowall) {
         u3 = contour_map[(temp_y + ((temp_x - 2) << 5)) - 1];
         if (u3 < little) {
@@ -6353,22 +6469,22 @@ static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         }
       }
 
-      /*          %ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Çï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ÄAï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Zï¿½bï¿½g */
+      /*          %‘–sA’Tõ•Çî•ñ‚É‰‚¶‚ÄA•Çƒtƒ‰ƒO‚ğƒZƒbƒg */
       /*          if (Sh_r_mode) */
-      /*              %ï¿½O */
+      /*              %‘O */
       /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir),15)) */
       /*                  wall_flg = bitor(wall_flg,1,'uint8'); */
       /*              end */
-      /*              %ï¿½E */
+      /*              %‰E */
       /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir+1),15)) */
       /*                  wall_flg = bitor(wall_flg,2,'uint8'); */
       /*              end */
-      /*              %ï¿½ï¿½ */
+      /*              %¶ */
       /*              if bitand(maze_wall(temp_y,temp_x),rem(bitshift(uint8(1),temp_dir+3),15)) */
       /*                  wall_flg = bitor(wall_flg,8,'uint8'); */
       /*              end */
       /*          end */
-      /*         %%ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ï¿½Æiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+      /*         %%Œ»İ•ûŒü‚Æis•ûŒü‚É‰‚¶‚½ˆ— */
       b_unexp_square_idx = (int)(4U + next_dir);
       if ((unsigned int)b_unexp_square_idx > 255U) {
         b_unexp_square_idx = 255;
@@ -6394,100 +6510,100 @@ static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
 
       switch (b_unexp_square_idx) {
        case 0:
-        /* ï¿½ï¿½ï¿½iï¿½Ìê‡ï¿½Aï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½g */
-        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+        /* ’¼i‚Ìê‡A’¼iƒJƒEƒ“ƒ^‚ğƒCƒ“ƒNƒŠƒƒ“ƒg */
+        wall_flg->contents = fust_run_wallset(maze_wall, temp_y, temp_x,
           temp_dir);
 
-        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
-        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+        /* Œ»İQÆƒ}ƒX‚Ì•Çî•ñ‚ğ‹L‰¯ */
+        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
+        /* o—Í Œ»İˆÊ’ux,y */
+        /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+        /* –k‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “Œ‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “ì‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* ¼‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
           /* disp("west_step") */
         }
 
-        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½ï¿½ï¿½Ú“ï¿½ */
+        /* QÆƒ}ƒX‚ğˆÚ“® */
         /*                  %disp("front") */
-        /*                  if (Sh_r_mode) %ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ACï¿½Ì“ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ */
+        /*                  if (Sh_r_mode) %‘–sƒ‚[ƒhAC‚Ì“®ìŠÖ”‚ğŒÄ‚Ño‚µ */
         /*                      if ~coder.target('MATLAB') */
         /*                          coder.ceval('m_move_front',start_flg,wall_flg,uint8(move_dir_property.straight)); */
         /*                      end */
-        /*                      %ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½Æ•Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /*                      %ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚Æ•Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         /*                      start_flg = uint8(0); */
         /*                      wall_flg = uint8(0); */
         /*                  end */
         break;
 
        case 1:
-        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+        wall_flg->contents = fust_run_wallset(maze_wall, temp_y, temp_x,
           temp_dir);
 
-        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
-        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /*     %% turn_clk_90deg ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        i53 = (int)(4U + temp_dir);
-        if ((unsigned int)i53 > 255U) {
-          i53 = 255;
+        /* Œ»İQÆƒ}ƒX‚Ì•Çî•ñ‚ğ‹L‰¯ */
+        /* QÆƒ}ƒXAQÆ•ûŒü‚ğXV */
+        /* “ü—Í Œ»İ•ûŒü */
+        /* o—Í Œ»İ•ûŒü */
+        /*     %% turn_clk_90deg Œvü‚è‚É90“xƒ^[ƒ“‚·‚éŠÖ” */
+        i57 = (int)(4U + temp_dir);
+        if ((unsigned int)i57 > 255U) {
+          i57 = 255;
         }
 
-        i53++;
-        if ((unsigned int)i53 > 255U) {
-          i53 = 255;
+        i57++;
+        if ((unsigned int)i57 > 255U) {
+          i57 = 255;
         }
 
-        temp_dir = (unsigned char)(i53 % 4);
+        temp_dir = (unsigned char)(i57 % 4);
 
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
-        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
+        /* o—Í Œ»İˆÊ’ux,y */
+        /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+        /* –k‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “Œ‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “ì‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* ¼‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
@@ -6496,46 +6612,46 @@ static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         break;
 
        case 2:
-        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+        wall_flg->contents = fust_run_wallset(maze_wall, temp_y, temp_x,
           temp_dir);
 
-        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
-        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /*     %% turn_180deg 180ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        i53 = (int)(4U + temp_dir);
-        if ((unsigned int)i53 > 255U) {
-          i53 = 255;
+        /* Œ»İQÆƒ}ƒX‚Ì•Çî•ñ‚ğ‹L‰¯ */
+        /* QÆƒ}ƒXAQÆ•ûŒü‚ğXV */
+        /* “ü—Í Œ»İ•ûŒü */
+        /* o—Í Œ»İ•ûŒü */
+        /*     %% turn_180deg 180“xƒ^[ƒ“‚·‚éŠÖ” */
+        i57 = (int)(4U + temp_dir);
+        if ((unsigned int)i57 > 255U) {
+          i57 = 255;
         }
 
-        temp_dir = (unsigned char)((i53 - 2) % 4);
+        temp_dir = (unsigned char)((i57 - 2) % 4);
 
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
-        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
+        /* o—Í Œ»İˆÊ’ux,y */
+        /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+        /* –k‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “Œ‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “ì‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* ¼‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
@@ -6544,46 +6660,46 @@ static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
         break;
 
        case 3:
-        wall_flg->contents = fust_run_wallset(&b_maze_wall, temp_y, temp_x,
+        wall_flg->contents = fust_run_wallset(maze_wall, temp_y, temp_x,
           temp_dir);
 
-        /* ï¿½ï¿½ï¿½İQï¿½Æƒ}ï¿½Xï¿½Ì•Çï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ */
-        /* ï¿½Qï¿½Æƒ}ï¿½Xï¿½Aï¿½Qï¿½Æ•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
-        /* ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /*     %% turn_conclk_90deg ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½ï¿½ï¿½Öï¿½ */
-        i53 = (int)(4U + temp_dir);
-        if ((unsigned int)i53 > 255U) {
-          i53 = 255;
+        /* Œ»İQÆƒ}ƒX‚Ì•Çî•ñ‚ğ‹L‰¯ */
+        /* QÆƒ}ƒXAQÆ•ûŒü‚ğXV */
+        /* “ü—Í@Œ»İ•ûŒü */
+        /* o—Í@Œ»İ•ûŒü */
+        /*     %% turn_conclk_90deg ”½Œvü‚è‚É90“x‰ñ‚éŠÖ” */
+        i57 = (int)(4U + temp_dir);
+        if ((unsigned int)i57 > 255U) {
+          i57 = 255;
         }
 
-        temp_dir = (unsigned char)((i53 - 1) % 4);
+        temp_dir = (unsigned char)((i57 - 1) % 4);
 
-        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ */
-        /* ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y */
-        /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-        /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+        /* “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü */
+        /* o—Í Œ»İˆÊ’ux,y */
+        /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+        /* –k‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.North) {
           temp_y++;
 
           /* disp("north_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “Œ‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.East) {
           temp_x++;
 
           /* disp("east_step") */
         }
 
-        /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* “ì‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.South) {
           temp_y--;
 
           /* disp("south_step") */
         }
 
-        /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+        /* ¼‚Éˆêƒ}ƒX */
         if (temp_dir == g_direction.West) {
           temp_x--;
 
@@ -6598,73 +6714,69 @@ static void fust_run(const coder_internal_ref *goal_size, coder_internal_ref
       tempk++;
     }
   }
-
-  /*          pause(0.01) */
-  /*      writeVideo(vidObj, getframe(gcf)); */
-  /* limitrate nocallbacks */
 }
 
 /*
- * Arguments    : const coder_internal_ref_6 *maze_wall
+ * Arguments    : const coder_internal_ref_1 *maze_wall
  *                unsigned char temp_y
  *                unsigned char temp_x
  *                unsigned char temp_dir
  * Return Type  : unsigned char
  */
-static unsigned char fust_run_wallset(const coder_internal_ref_6 *maze_wall,
+static unsigned char fust_run_wallset(const coder_internal_ref_1 *maze_wall,
   unsigned char temp_y, unsigned char temp_x, unsigned char temp_dir)
 {
   unsigned char wall_flg;
-  int i60;
+  int i17;
   int b_temp_dir;
-  int i61;
-  int i62;
-  int i63;
+  int i18;
+  int i19;
+  int i20;
 
-  /* ï¿½Å’Zï¿½ï¿½ï¿½Ì•Çï¿½ï¿½æ“¾ï¿½Öï¿½ */
+  /*     %% Šù’m•Ç‚Ì•Çî•ñæ“¾ŠÖ” */
   wall_flg = 0U;
 
-  /* ï¿½O */
-  i60 = maze_wall->contents[(temp_y + ((temp_x - 1) << 5)) - 1];
+  /* ‘O */
+  i17 = maze_wall->contents[(temp_y + ((temp_x - 1) << 5)) - 1];
   if (temp_dir <= 7) {
     b_temp_dir = (unsigned char)(1 << temp_dir);
   } else {
     b_temp_dir = 0;
   }
 
-  if ((i60 & (b_temp_dir % 15)) != 0) {
+  if ((i17 & (b_temp_dir % 15)) != 0) {
     wall_flg = 1U;
   }
 
-  /* ï¿½E */
-  i61 = (int)(temp_dir + 1U);
-  if ((unsigned int)i61 > 255U) {
-    i61 = 255;
+  /* ‰E */
+  i18 = (int)(temp_dir + 1U);
+  if ((unsigned int)i18 > 255U) {
+    i18 = 255;
   }
 
-  if ((unsigned char)i61 <= 7) {
-    i62 = (unsigned char)(1 << (unsigned char)i61);
+  if ((unsigned char)i18 <= 7) {
+    i19 = (unsigned char)(1 << (unsigned char)i18);
   } else {
-    i62 = 0;
+    i19 = 0;
   }
 
-  if ((i60 & (i62 % 15)) != 0) {
+  if ((i17 & (i19 % 15)) != 0) {
     wall_flg = (unsigned char)(wall_flg | 2);
   }
 
-  /* ï¿½ï¿½ */
-  i61 = (int)(temp_dir + 3U);
-  if ((unsigned int)i61 > 255U) {
-    i61 = 255;
+  /* ¶ */
+  i18 = (int)(temp_dir + 3U);
+  if ((unsigned int)i18 > 255U) {
+    i18 = 255;
   }
 
-  if ((unsigned char)i61 <= 7) {
-    i63 = (unsigned char)(1 << (unsigned char)i61);
+  if ((unsigned char)i18 <= 7) {
+    i20 = (unsigned char)(1 << (unsigned char)i18);
   } else {
-    i63 = 0;
+    i20 = 0;
   }
 
-  if ((i60 & (i63 % 15)) != 0) {
+  if ((i17 & (i20 % 15)) != 0) {
     wall_flg = (unsigned char)(wall_flg | 8);
   }
 
@@ -6672,7 +6784,7 @@ static unsigned char fust_run_wallset(const coder_internal_ref_6 *maze_wall,
 }
 
 /*
- * ï¿½oï¿½Í•Ïï¿½ï¿½ï¿½`
+ * o—Í•Ï”’è‹`
  * Arguments    : const unsigned short row_num_node[1056]
  *                const unsigned short col_num_node[1056]
  *                unsigned char current_move_dir
@@ -6704,13 +6816,13 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   int i225;
   unsigned short u10;
 
-  /*     %% get_next_dir_diagonal ï¿½Î‚ß—Lï¿½Å‚Ìiï¿½sï¿½ï¿½ï¿½ï¿½,ï¿½sï¿½ï¿½æ“¾ */
+  /*     %% get_next_dir_diagonal Î‚ß—L‚Å‚Ìis•ûŒü,sææ“¾ */
   *next_dir = g_d_direction.North;
   next_node[0] = 1U;
   next_node[1] = 1U;
   *next_node_property = matrix_dir.Row;
 
-  /* ï¿½ï¿½ï¿½İ‚ÌƒGï¿½bï¿½Wï¿½ÍƒSï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ */
+  /* Œ»İ‚ÌƒGƒbƒW‚ÍƒS[ƒ‹ƒm[ƒh‚© */
   p = false;
   b_p = true;
   k = 0;
@@ -6729,8 +6841,8 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   }
 
   if (p && (current_matrix_dir == goal_matrix_dir2)) {
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Ìê‡ */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìê‡ */
+    /* ƒS[ƒ‹ƒm[ƒh‚Ìê‡ */
+    /* ƒS[ƒ‹ƒm[ƒh‚ªs•ûŒü‚Ìê‡ */
     if (goal_matrix_dir2 == matrix_dir.Row) {
       if ((goal_section[1] == goal_node2[0]) && (goal_section[0] == goal_node2[1]))
       {
@@ -6749,7 +6861,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
         *next_node_property = matrix_dir.section;
       }
     } else {
-      /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìê‡ */
+      /* ƒS[ƒ‹ƒm[ƒh‚ª—ñ•ûŒü‚Ìê‡ */
       if ((goal_section[1] == goal_node2[0]) && (goal_section[0] == goal_node2[1]))
       {
         *next_dir = g_d_direction.East;
@@ -6769,11 +6881,11 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
       }
     }
   } else {
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Å‚È‚ï¿½ï¿½ê‡ */
-    /* è‡’lï¿½ï¿½ï¿½` */
+    /* ƒS[ƒ‹ƒm[ƒh‚Å‚È‚¢ê‡ */
+    /* è‡’l‚ğ’è‹` */
     map_min = MAX_uint16_T;
 
-    /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dï¿½ï¿½Iï¿½Éiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ */
+    /* Œ»İ‚Ìƒm[ƒh‚Ì•ûŒü‚©‚ç—Dæ“I‚Éis•ûŒü‚ğŠm’è */
     for (k = 0; k < 8; k++) {
       i224 = current_move_dir + k;
       if (i224 > 255) {
@@ -6782,7 +6894,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
       temp = (unsigned char)(i224 % 8);
 
-      /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
+      /* Œ»İ‚Ìƒm[ƒh‚ªs•ûŒü‚Ì */
       if (current_matrix_dir == matrix_dir.Row) {
         if (temp == g_d_direction.North) {
           i224 = (int)(current_node[0] + 1U);
@@ -6792,7 +6904,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
           }
 
           if (row_num_node[(i225 + 33 * (current_node[1] - 1)) - 1] < map_min) {
-            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            /* Å¬’l‚ğXV */
             i225 = i224;
             if ((unsigned int)i224 > 255U) {
               i225 = 255;
@@ -6800,10 +6912,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
             map_min = row_num_node[(i225 + 33 * (current_node[1] - 1)) - 1];
 
-            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–kŒü‚«‚É */
             *next_dir = g_d_direction.North;
 
-            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
             *next_node_property = matrix_dir.Row;
             if ((unsigned int)i224 > 255U) {
               i224 = 255;
@@ -6821,7 +6933,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
           if (col_num_node[(current_node[0] + ((i225 - 1) << 5)) - 1] < map_min)
           {
-            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            /* Å¬’l‚ğXV */
             i225 = i224;
             if ((unsigned int)i224 > 255U) {
               i225 = 255;
@@ -6829,10 +6941,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
             map_min = col_num_node[(current_node[0] + ((i225 - 1) << 5)) - 1];
 
-            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ“Œ–kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“Œ–kŒü‚«‚É */
             *next_dir = g_d_direction.North_East;
 
-            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
             *next_node_property = matrix_dir.Col;
             next_node[0] = current_node[0];
             if ((unsigned int)i224 > 255U) {
@@ -6854,7 +6966,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
             }
 
             if (col_num_node[((int)qY + ((i224 - 1) << 5)) - 1] < map_min) {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
                 qY = 0U;
@@ -6867,10 +6979,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
               map_min = col_num_node[((int)qY + ((i224 - 1) << 5)) - 1];
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì“ŒŒü‚«‚É */
               *next_dir = g_d_direction.South_East;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               *next_node_property = matrix_dir.Col;
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
@@ -6893,7 +7005,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
             if (row_num_node[((int)qY + 33 * (current_node[1] - 1)) - 1] <
                 map_min) {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
                 qY = 0U;
@@ -6901,10 +7013,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
               map_min = row_num_node[((int)qY + 33 * (current_node[1] - 1)) - 1];
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ìŒü‚«‚É */
               *next_dir = g_d_direction.South;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               *next_node_property = matrix_dir.Row;
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
@@ -6922,7 +7034,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
             if (col_num_node[((int)qY + ((current_node[1] - 1) << 5)) - 1] <
                 map_min) {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
                 qY = 0U;
@@ -6931,10 +7043,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
               map_min = col_num_node[((int)qY + ((current_node[1] - 1) << 5)) -
                 1];
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì¼Œü‚«‚É */
               *next_dir = g_d_direction.South_West;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               *next_node_property = matrix_dir.Col;
               qY = current_node[0] - 1U;
               if (qY > current_node[0]) {
@@ -6949,25 +7061,25 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
             u10 = col_num_node[(current_node[0] + ((current_node[1] - 1) << 5))
               - 1];
             if (u10 < map_min) {
-              /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+              /* Å¬’l‚ğXV */
               map_min = u10;
 
-              /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+              /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k¼Œü‚«‚É */
               *next_dir = g_d_direction.North_West;
 
-              /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+              /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
               *next_node_property = matrix_dir.Col;
               next_node[0] = current_node[0];
               next_node[1] = current_node[1];
             }
           } else {
-            /* ï¿½ï¿½ */
+            /* ’Œ */
           }
         } else {
-          /* ï¿½ï¿½ */
+          /* ’Œ */
         }
 
-        /* ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ */
+        /* Œ»İ‚Ìƒm[ƒh‚ªs•ûŒü‚Ì */
       } else if (temp != g_d_direction.North) {
         if (temp == g_d_direction.North_East) {
           i224 = (int)(current_node[0] + 1U);
@@ -6976,7 +7088,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
           }
 
           if (row_num_node[(i224 + 33 * (current_node[1] - 1)) - 1] < map_min) {
-            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            /* Å¬’l‚ğXV */
             i224 = (int)(current_node[0] + 1U);
             if ((unsigned int)i224 > 255U) {
               i224 = 255;
@@ -6984,10 +7096,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
             map_min = row_num_node[(i224 + 33 * (current_node[1] - 1)) - 1];
 
-            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k“ŒŒü‚«‚É */
             *next_dir = g_d_direction.North_East;
 
-            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
             *next_node_property = matrix_dir.Row;
             i224 = (int)(current_node[0] + 1U);
             if ((unsigned int)i224 > 255U) {
@@ -7005,7 +7117,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
           if (col_num_node[(current_node[0] + ((i224 - 1) << 5)) - 1] < map_min)
           {
-            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            /* Å¬’l‚ğXV */
             i224 = (int)(current_node[1] + 1U);
             if ((unsigned int)i224 > 255U) {
               i224 = 255;
@@ -7013,10 +7125,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
             map_min = col_num_node[(current_node[0] + ((i224 - 1) << 5)) - 1];
 
-            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ“ŒŒï¿½ï¿½ï¿½ï¿½ï¿½ */
+            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ŒŒü‚«‚É */
             *next_dir = g_d_direction.East;
 
-            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
             *next_node_property = matrix_dir.Col;
             next_node[0] = current_node[0];
             i224 = (int)(current_node[1] + 1U);
@@ -7029,13 +7141,13 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
         } else if (temp == g_d_direction.South_East) {
           u10 = row_num_node[(current_node[0] + 33 * (current_node[1] - 1)) - 1];
           if (u10 < map_min) {
-            /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+            /* Å¬’l‚ğXV */
             map_min = u10;
 
-            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+            /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì“ŒŒü‚«‚É */
             *next_dir = g_d_direction.South_East;
 
-            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+            /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
             *next_node_property = matrix_dir.Row;
             next_node[0] = current_node[0];
             next_node[1] = current_node[1];
@@ -7055,7 +7167,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
               if (row_num_node[(current_node[0] + 33 * ((int)qY - 1)) - 1] <
                   map_min) {
-                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                /* Å¬’l‚ğXV */
                 qY = current_node[1] - 1U;
                 if (qY > current_node[1]) {
                   qY = 0U;
@@ -7064,10 +7176,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                 map_min = row_num_node[(current_node[0] + 33 * ((int)qY - 1)) -
                   1];
 
-                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ“ì¼Œü‚«‚É */
                 *next_dir = g_d_direction.South_West;
 
-                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                 *next_node_property = matrix_dir.Row;
                 next_node[0] = current_node[0];
                 qY = current_node[1] - 1U;
@@ -7092,7 +7204,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
               if (col_num_node[(current_node[0] + (((int)qY - 1) << 5)) - 1] <
                   map_min) {
-                /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                /* Å¬’l‚ğXV */
                 qY = current_node[1] - 1U;
                 if (qY > current_node[1]) {
                   qY = 0U;
@@ -7101,10 +7213,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                 map_min = col_num_node[(current_node[0] + (((int)qY - 1) << 5))
                   - 1];
 
-                /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ğ¼Œï¿½ï¿½ï¿½ï¿½ï¿½ */
+                /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ¼Œü‚«‚É */
                 *next_dir = g_d_direction.West;
 
-                /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                 *next_node_property = matrix_dir.Col;
                 next_node[0] = current_node[0];
                 qY = current_node[1] - 1U;
@@ -7134,7 +7246,7 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
                 }
 
                 if (row_num_node[(i224 + 33 * ((int)qY - 1)) - 1] < map_min) {
-                  /* ï¿½Åï¿½ï¿½lï¿½ï¿½ï¿½Xï¿½V */
+                  /* Å¬’l‚ğXV */
                   i224 = (int)(current_node[0] + 1U);
                   if ((unsigned int)i224 > 255U) {
                     i224 = 255;
@@ -7147,10 +7259,10 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
                   map_min = row_num_node[(i224 + 33 * ((int)qY - 1)) - 1];
 
-                  /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                  /* Œ»İƒm[ƒh‚Ìis•ûŒü‚ğ–k¼Œü‚«‚É */
                   *next_dir = g_d_direction.North_West;
 
-                  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Aï¿½sï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+                  /* is•ûŒüæ‚ÌÀ•WAs—ñ‚Ì•ûŒü‚ğXV */
                   *next_node_property = matrix_dir.Row;
                   i224 = (int)(current_node[0] + 1U);
                   if ((unsigned int)i224 > 255U) {
@@ -7169,18 +7281,18 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
             }
           }
         } else {
-          /* ï¿½ï¿½ */
+          /* ’Œ */
         }
       } else {
-        /* ï¿½ï¿½ */
+        /* ’Œ */
       }
     }
   }
 }
 
 /*
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ’nx,y,ï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
- *  ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½Ìiï¿½sï¿½ï¿½ï¿½p
+ * “ü—Í Œ»İ’nx,y,•Çî•ñ,“™‚ümap,Å‘åŒo˜H’·
+ *  o—Í Ÿ‚Ìis•ûŠp
  * Arguments    : unsigned char current_x
  *                unsigned char current_y
  *                const unsigned char maze_wall[1024]
@@ -7201,14 +7313,14 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
   int i15;
   int i16;
 
-  /*     %% get_nextdir2 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½çŸï¿½ÉŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
-  /* ï¿½oï¿½Í‚Ìï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /*     %% get_nextdir2 “™‚ümap‚©‚çŸ‚ÉŒü‚©‚¤•ûŒü‚ğ‘I‘ğ */
+  /* o—Í‚Ì‰Šú‰» */
   next_dir = 0U;
   little = MAX_uint16_T;
 
-  /*     %%ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
-  /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
-  /* ï¿½kï¿½ï¿½ï¿½Ì•Ç‚Ì‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /*     %%is•ûŒü‘I’è */
+  /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
+  /* –k‘¤‚Ì•Ç‚Ì‚ ‚è‚È‚µ”»’è */
   i11 = current_y + ((current_x - 1) << 5);
   i12 = maze_wall[i11 - 1];
   if (g_direction.North <= 7) {
@@ -7218,15 +7330,15 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
   }
 
   if (((i12 & i13) == 0) && (contour_map[i11] < 65535)) {
-    /* ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½è‡’lï¿½ï¿½ï¿½á‚¯ï¿½ï¿½ÎA */
-    /* è‡’lï¿½ï¿½kï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½mapï¿½lï¿½É•ÏX */
+    /* –k‘¤‚Ì“™‚ümap‚ªè‡’l‚æ‚è’á‚¯‚ê‚ÎA */
+    /* è‡’l‚ğ–k‘¤‚Ì“™‚map’l‚É•ÏX */
     little = contour_map[current_y + ((current_x - 1) << 5)];
 
-    /* ï¿½kï¿½ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É•ÏXy */
+    /* –k‘¤‚ğis•ûŒü‚É•ÏXy */
     next_dir = g_direction.North;
   }
 
-  /* ï¿½ï¿½ï¿½ï¿½ */
+  /* “Œ‘¤ */
   if (g_direction.East <= 7) {
     i14 = (unsigned char)(1 << g_direction.East);
   } else {
@@ -7241,7 +7353,7 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
     }
   }
 
-  /* ï¿½ì‘¤ */
+  /* “ì‘¤ */
   if (g_direction.South <= 7) {
     i15 = (unsigned char)(1 << g_direction.South);
   } else {
@@ -7256,7 +7368,7 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
     }
   }
 
-  /* ï¿½ï¿½ï¿½ï¿½ */
+  /* ¼‘¤ */
   if (g_direction.West <= 7) {
     i16 = (unsigned char)(1 << g_direction.West);
   } else {
@@ -7273,7 +7385,7 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
 }
 
 /*
- * ï¿½ï¿½ï¿½ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ôï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
+ * ù‰ñƒpƒ^[ƒ“”Ô†‚Ì‰Šú‰»
  * Arguments    : const double move_dir_buffer[3]
  *                unsigned char ref_move_mode
  * Return Type  : unsigned char
@@ -7283,12 +7395,12 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
 {
   unsigned char turn_pattern_num;
 
-  /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½ğ”»’è‚·ï¿½ï¿½Öï¿½ */
+  /* ƒpƒ^[ƒ“‚ğ”»’è‚·‚éŠÖ” */
   turn_pattern_num = turn_pattern.b_default;
 
-  /* ï¿½ï¿½ï¿½iï¿½ï¿½ */
+  /* ’¼i */
   if (ref_move_mode == move_dir_property.straight) {
-    /* ï¿½ï¿½ï¿½ï¿½45ï¿½xï¿½Ü‚ï¿½ï¿½ï¿½Æ‚ï¿½(ï¿½Eï¿½Üƒpï¿½^ï¿½[ï¿½ï¿½) */
+    /* Ÿ‚ª45“x‚Ü‚ª‚é‚Æ‚«(‰EÜƒpƒ^[ƒ“) */
     if (move_dir_buffer[0] == 1.0) {
       if (move_dir_buffer[1] == 1.0) {
         turn_pattern_num = turn_pattern.r_45;
@@ -7306,7 +7418,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½-45ï¿½xï¿½Ü‚ï¿½ï¿½ï¿½Æ‚ï¿½(ï¿½ï¿½ï¿½Üƒpï¿½^ï¿½[ï¿½ï¿½) */
+      /* Ÿ‚ª-45“x‚Ü‚ª‚é‚Æ‚«(¶Üƒpƒ^[ƒ“) */
     } else {
       if (move_dir_buffer[0] == 7.0) {
         if (move_dir_buffer[1] == 7.0) {
@@ -7327,10 +7439,10 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
       }
     }
 
-    /* ï¿½Î‚ß‚Ìï¿½ */
+    /* Î‚ß‚Ì */
   } else {
     if (ref_move_mode == move_dir_property.diagonal) {
-      /* ï¿½Eï¿½Üƒpï¿½^ï¿½[ï¿½ï¿½ */
+      /* ‰EÜƒpƒ^[ƒ“ */
       if (move_dir_buffer[0] == 1.0) {
         turn_pattern_num = turn_pattern.r_45;
       } else if (move_dir_buffer[0] == 2.0) {
@@ -7342,7 +7454,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
           }
         }
 
-        /* ï¿½ï¿½ï¿½Üƒpï¿½^ï¿½[ï¿½ï¿½ */
+        /* ¶Üƒpƒ^[ƒ“ */
       } else if (move_dir_buffer[0] == 7.0) {
         turn_pattern_num = turn_pattern.l_45;
       } else {
@@ -7363,7 +7475,7 @@ static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
 }
 
 /*
- * ï¿½ï¿½ï¿½Íï¿½ï¿½Wï¿½Ì”zï¿½ï¿½ï¿½ï¿½ì¬
+ * “ü—ÍÀ•W‚Ì”z—ñ‚ğì¬
  * Arguments    : const unsigned char maze_goal[18]
  *                unsigned char x
  *                unsigned char y
@@ -7379,8 +7491,8 @@ static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
   signed char varargin_1[9];
   int k;
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½Æ”ï¿½r */
+  /* ƒS[ƒ‹”»’èŠÖ” */
+  /* ƒS[ƒ‹À•W‚Æ”äŠr */
   for (i153 = 0; i153 < 9; i153++) {
     uv1[i153] = x;
     uv1[9 + i153] = y;
@@ -7390,7 +7502,7 @@ static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
     temp1[i153] = (maze_goal[i153] == uv1[i153]);
   }
 
-  /* x,yï¿½Æ‚ï¿½ï¿½Éˆï¿½vï¿½ï¿½ï¿½é‚©ï¿½mï¿½Fï¿½Aï¿½ï¿½vï¿½È‚ï¿½1ï¿½ï¿½Ô‚ï¿½ */
+  /* x,y‚Æ‚à‚Éˆê’v‚·‚é‚©Šm”FAˆê’v‚È‚ç1‚ğ•Ô‚· */
   for (i153 = 0; i153 < 9; i153++) {
     varargin_1[i153] = (signed char)(temp1[i153] * temp1[9 + i153]);
   }
@@ -7407,9 +7519,9 @@ static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
 }
 
 /*
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
- * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
- * Arguments    : const coder_internal_ref_5 *wall
+ * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”)
+ * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * Arguments    : const coder_internal_ref_6 *wall
  *                const unsigned char maze_goal[18]
  *                unsigned char l_goal_size
  *                const unsigned char maze_wall[1024]
@@ -7418,7 +7530,7 @@ static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
  *                unsigned short contour_map[1024]
  * Return Type  : void
  */
-static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
+static void make_map_find(const coder_internal_ref_6 *wall, const unsigned char
   maze_goal[18], unsigned char l_goal_size, const unsigned char maze_wall[1024],
   unsigned char current_x, unsigned char current_y, unsigned short contour_map
   [1024])
@@ -7442,35 +7554,35 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
   unsigned int qY;
   int i10;
 
-  /*     %%  make_map_find ï¿½Çï¿½ñ‚©‚ç“™ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
-  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /*     %%  make_map_find •Çî•ñ‚©‚ç“™‚üMAP‚ğ¶¬ */
+  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
+  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
+  /* XVÀ•W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* XVÀ•WXV—p */
   contor_renew_square_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_square_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
-  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
-  /* 16bitï¿½É‚ï¿½ï¿½×‚ï¿½ */
+  /* XVÀ•WXV—p */
+  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
+  /* 32ƒ}ƒX•ªmap‚ğ•Û */
+  /* 16bit‚É‚·‚×‚« */
   for (i2 = 0; i2 < 1024; i2++) {
     contour_map[i2] = MAX_uint16_T;
   }
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½0ï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /* ƒS[ƒ‹À•W‚É0‚ğ“ü—Í */
   i2 = l_goal_size;
   for (temp = 0; temp < i2; temp++) {
     contor_renew_square_idx = maze_goal[temp + 9];
     contour_map[(contor_renew_square_idx + ((maze_goal[temp] - 1) << 5)) - 1] =
       0U;
 
-    /* ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½W = ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /* ‰‰ñ‚ÌXVÀ•W = ƒS[ƒ‹À•W@‚ğ“ü—Í */
     contor_renew_square[temp] = contor_renew_square_idx;
     contor_renew_square[1024 + temp] = maze_goal[temp];
     contor_renew_square_idx = (unsigned char)(1 + temp);
@@ -7479,14 +7591,14 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
-    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
+    /* •à”ƒJƒEƒ“ƒg‚Í0~max_length */
+    /* mapXVŠm”F—pƒtƒ‰ƒO */
     change_flag = 0U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
+    /* XV‚³‚ê‚½À•W‚É‘Î‚µA•à”map‚ğXV */
     i2 = contor_renew_square_idx;
     for (temp = 0; temp < i2; temp++) {
-      /* ï¿½kï¿½ï¿½ */
+      /* –k‘¤ */
       /* if (bitand(maze_wall(row(tempn),col(tempn)),bitshift(uint8(1),g_direction.North)) == wall.nowall) */
       if (g_direction.North <= 7) {
         i3 = (unsigned char)(1 << g_direction.North);
@@ -7496,7 +7608,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
 
       if ((maze_wall[(contor_renew_square[temp] + ((contor_renew_square[temp +
               1024] - 1) << 5)) - 1] & i3) == wall->contents.nowall) {
-        /* ï¿½kï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        /* –k‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
         i4 = (int)(contor_renew_square[temp] + 1U);
         i5 = i4;
         if ((unsigned int)i4 > 255U) {
@@ -7514,7 +7626,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+          /* XVƒ}ƒX‚ğXV */
           if ((unsigned int)i4 > 255U) {
             i4 = 255;
           }
@@ -7524,7 +7636,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square[temp + 1024];
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
           i4 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i4 > 255U) {
             i4 = 255;
@@ -7534,7 +7646,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* “Œ‘¤ */
       contor_renew_square_idx = contor_renew_square[temp + 1024];
       i4 = (contor_renew_square_idx - 1) << 5;
       i5 = maze_wall[(contor_renew_square[temp] + i4) - 1];
@@ -7545,7 +7657,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
       }
 
       if ((i5 & i6) == wall->contents.nowall) {
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        /* “Œ‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
         i7 = (int)(contor_renew_square[temp + 1024] + 1U);
         i8 = i7;
         if ((unsigned int)i7 > 255U) {
@@ -7563,7 +7675,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+          /* XVƒ}ƒX‚ğXV */
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
             contor_renew_square[temp];
           if ((unsigned int)i7 > 255U) {
@@ -7573,7 +7685,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             (unsigned char)i7;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
           i7 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i7 > 255U) {
             i7 = 255;
@@ -7583,7 +7695,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
         }
       }
 
-      /* ï¿½ì‘¤ */
+      /* “ì‘¤ */
       if (g_direction.South <= 7) {
         i9 = (unsigned char)(1 << g_direction.South);
       } else {
@@ -7591,7 +7703,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
       }
 
       if ((i5 & i9) == wall->contents.nowall) {
-        /* ï¿½ì‘¤ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        /* “ì‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
         qY = contor_renew_square[temp] - 1U;
         if (qY > contor_renew_square[temp]) {
           qY = 0U;
@@ -7606,7 +7718,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contour_map[((int)qY + i4) - 1] = (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+          /* XVƒ}ƒX‚ğXV */
           qY = contor_renew_square[temp] - 1U;
           if (qY > contor_renew_square[temp]) {
             qY = 0U;
@@ -7617,7 +7729,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square_idx;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
           i4 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i4 > 255U) {
             i4 = 255;
@@ -7627,7 +7739,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ¼‘¤ */
       if (g_direction.West <= 7) {
         i10 = (unsigned char)(1 << g_direction.West);
       } else {
@@ -7635,7 +7747,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
       }
 
       if ((i5 & i10) == wall->contents.nowall) {
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        /* ¼‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
         qY = contor_renew_square_idx - 1U;
         if (qY > contor_renew_square_idx) {
           qY = 0U;
@@ -7652,7 +7764,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
             (unsigned short)(tempi + 1);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+          /* XVƒ}ƒX‚ğXV */
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
             contor_renew_square[temp];
           qY = contor_renew_square_idx - 1U;
@@ -7663,7 +7775,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             (unsigned char)qY;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
           i4 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i4 > 255U) {
             i4 = 255;
@@ -7674,7 +7786,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
+    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
     for (i2 = 0; i2 < 2048; i2++) {
       contor_renew_square[i2] = contor_renew_square_temp[i2];
       contor_renew_square_temp[i2] = 0U;
@@ -7683,7 +7795,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍŒï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
+    /* XV‚ª‚È‚¢A‚à‚µ‚­‚ÍŒ»İˆÊ’u‚ªXV‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
     if ((change_flag == 0) || (contour_map[(current_y + ((current_x - 1) << 5))
          - 1] != 65535)) {
       exitg1 = true;
@@ -7694,12 +7806,12 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
 }
 
 /*
- * ï¿½ï¿½ï¿½mï¿½Ç‚Ì—Ìˆï¿½Í‰ï¿½ï¿½zï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄNï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½),ï¿½ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
- * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
+ * –¢’m•Ç‚Ì—Ìˆæ‚Í‰¼‘z•Ç‚ğ‚¨‚¢‚ÄN“ü‚µ‚È‚¢B
+ * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”),–À˜H’Tõî•ñ(16i”)
+ * o—Í “™‚ümap,Å‘åŒo˜H’·
  * Arguments    : const coder_internal_ref *goal_size
- *                const coder_internal_ref_5 *wall
- *                const coder_internal_ref_4 *search
+ *                const coder_internal_ref_6 *wall
+ *                const coder_internal_ref_5 *search
  *                const unsigned char maze_goal[18]
  *                const unsigned char maze_wall[1024]
  *                const unsigned char maze_wall_search[1024]
@@ -7708,7 +7820,7 @@ static void make_map_find(const coder_internal_ref_5 *wall, const unsigned char
  * Return Type  : void
  */
 static void make_map_fustrun(const coder_internal_ref *goal_size, const
-  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+  coder_internal_ref_6 *wall, const coder_internal_ref_5 *search, const unsigned
   char maze_goal[18], const unsigned char maze_wall[1024], const unsigned char
   maze_wall_search[1024], unsigned char unknown_wall_flg, unsigned short
   contour_map[1024])
@@ -7717,18 +7829,14 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
   unsigned char contor_renew_square_temp[2048];
   unsigned char contor_renew_square_idx;
   unsigned char contor_renew_square_idx_temp;
-  int i33;
+  int i37;
   unsigned char move_dir_map[1024];
   int tempn;
   unsigned short tempi;
   bool exitg1;
   int contour_map_tmp;
-  int i34;
-  unsigned char change_flag;
-  int i35;
-  int i36;
-  int i37;
   int i38;
+  unsigned char change_flag;
   int i39;
   int i40;
   int i41;
@@ -7739,89 +7847,93 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
   int i46;
   int i47;
   int i48;
-  unsigned int u2;
-  unsigned int qY;
   int i49;
   int i50;
   int i51;
   int i52;
+  unsigned int u2;
+  unsigned int qY;
+  int i53;
+  int i54;
+  int i55;
+  int i56;
 
-  /*     %% make_map_fustrun ï¿½Å’Zï¿½ï¿½ï¿½sï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /*     %% make_map_fustrun Å’Z‘–s—p“™‚üMAP‚ğ¶¬ */
+  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
+  /* XVÀ•W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* XVÀ•WXV—p */
   contor_renew_square_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_square_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½İ’ï¿½ */
-  /* ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
-  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
-  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
-  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
-  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½âŠ®ï¿½pï¿½Ïï¿½ï¿½ï¿½` */
-  for (i33 = 0; i33 < 1024; i33++) {
-    contour_map[i33] = MAX_uint16_T;
-    move_dir_map[i33] = 0U;
+  /* XVÀ•WXV—p */
+  /* ƒ[ƒJƒ‹•Ï”İ’è */
+  /* ƒpƒ‰ƒ[ƒ^İ’è */
+  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
+  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
+  /* 32ƒ}ƒX•ªmap‚ğ•Û */
+  /* is•ûŒü•âŠ®—p•Ï”’è‹` */
+  for (i37 = 0; i37 < 1024; i37++) {
+    contour_map[i37] = MAX_uint16_T;
+    move_dir_map[i37] = 0U;
   }
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ */
-  /*  ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½F0ï¿½ï¿½ï¿½ï¿½ï¿½ */
-  /*  ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ : 1+2+4+8(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½×‚ï¿½)=15 */
-  /*  ï¿½ï¿½ï¿½ï¿½ï¿½ */
-  i33 = goal_size->contents;
-  for (tempn = 0; tempn < i33; tempn++) {
+  /* ƒS[ƒ‹À•W‚É */
+  /*  •à”ƒ}ƒbƒvF0‚ğ“ü—Í */
+  /*  is•ûŒü : 1+2+4+8(“Œ¼“ì–k‚·‚×‚Ä)=15 */
+  /*  ‚ğ“ü—Í */
+  i37 = goal_size->contents;
+  for (tempn = 0; tempn < i37; tempn++) {
     contor_renew_square_idx = maze_goal[tempn + 9];
     contour_map_tmp = (contor_renew_square_idx + ((maze_goal[tempn] - 1) << 5))
       - 1;
     contour_map[contour_map_tmp] = 0U;
     if (g_direction.North <= 7) {
-      i34 = (unsigned char)(1 << g_direction.North);
+      i38 = (unsigned char)(1 << g_direction.North);
     } else {
-      i34 = 0;
+      i38 = 0;
     }
 
     if (g_direction.East <= 7) {
-      i35 = (unsigned char)(1 << g_direction.East);
+      i39 = (unsigned char)(1 << g_direction.East);
     } else {
-      i35 = 0;
+      i39 = 0;
     }
 
-    i36 = (int)((unsigned int)i34 + i35);
-    if ((unsigned int)i36 > 255U) {
-      i36 = 255;
+    i40 = (int)((unsigned int)i38 + i39);
+    if ((unsigned int)i40 > 255U) {
+      i40 = 255;
     }
 
     if (g_direction.South <= 7) {
-      i37 = (unsigned char)(1 << g_direction.South);
+      i41 = (unsigned char)(1 << g_direction.South);
     } else {
-      i37 = 0;
+      i41 = 0;
     }
 
-    i36 = (int)((unsigned int)i36 + i37);
-    if ((unsigned int)i36 > 255U) {
-      i36 = 255;
+    i40 = (int)((unsigned int)i40 + i41);
+    if ((unsigned int)i40 > 255U) {
+      i40 = 255;
     }
 
     if (g_direction.West <= 7) {
-      i40 = (unsigned char)(1 << g_direction.West);
+      i44 = (unsigned char)(1 << g_direction.West);
     } else {
-      i40 = 0;
+      i44 = 0;
     }
 
-    i36 = (int)((unsigned int)i36 + i40);
-    if ((unsigned int)i36 > 255U) {
-      i36 = 255;
+    i40 = (int)((unsigned int)i40 + i44);
+    if ((unsigned int)i40 > 255U) {
+      i40 = 255;
     }
 
-    move_dir_map[contour_map_tmp] = (unsigned char)i36;
+    move_dir_map[contour_map_tmp] = (unsigned char)i40;
 
-    /* ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½W = ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /* ‰‰ñ‚ÌXVÀ•W = ƒS[ƒ‹À•W@‚ğ“ü—Í */
     contor_renew_square[tempn] = contor_renew_square_idx;
     contor_renew_square[1024 + tempn] = maze_goal[tempn];
     contor_renew_square_idx = (unsigned char)(1 + tempn);
@@ -7830,44 +7942,44 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ì•ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
+    /* XVŠm”F—p‚Ì•à”ƒJƒEƒ“ƒg‚Í0~max_length */
     change_flag = 0U;
 
-    /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ÌƒNï¿½ï¿½ï¿½A */
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
-    i33 = contor_renew_square_idx;
-    for (tempn = 0; tempn < i33; tempn++) {
-      /* ï¿½kï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & (ï¿½Tï¿½ï¿½ï¿½Ï‚ï¿½ || ~ï¿½ï¿½ï¿½mï¿½Çƒtï¿½ï¿½ï¿½O)ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+    /* XVƒtƒ‰ƒO‚ÌƒNƒŠƒA */
+    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
+    i37 = contor_renew_square_idx;
+    for (tempn = 0; tempn < i37; tempn++) {
+      /* –k‘¤ */
+      /* •Ç‚ª–³‚¢ & (’TõÏ‚İ || ~–¢’m•Çƒtƒ‰ƒO)‚Å‚ ‚é‚Æ‚« */
       if (g_direction.North <= 7) {
-        i38 = (unsigned char)(1 << g_direction.North);
+        i42 = (unsigned char)(1 << g_direction.North);
       } else {
-        i38 = 0;
+        i42 = 0;
       }
 
       if (((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
-               + 1024] - 1) << 5)) - 1] & i38) != 0) == wall->contents.nowall) {
+               + 1024] - 1) << 5)) - 1] & i42) != 0) == wall->contents.nowall) {
         if (g_direction.North <= 7) {
-          i39 = (unsigned char)(1 << g_direction.North);
+          i43 = (unsigned char)(1 << g_direction.North);
         } else {
-          i39 = 0;
+          i43 = 0;
         }
 
         if ((((maze_wall_search[(contor_renew_square[tempn] +
-                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i39) != 0)
+                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i43) != 0)
              == search->contents.known) || (unknown_wall_flg == 0)) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚ ‚é */
           contor_renew_square_idx = contor_renew_square[tempn + 1024];
-          i36 = (contor_renew_square_idx - 1) << 5;
-          contour_map_tmp = (contor_renew_square[tempn] + i36) - 1;
+          i40 = (contor_renew_square_idx - 1) << 5;
+          contour_map_tmp = (contor_renew_square[tempn] + i40) - 1;
           if (g_direction.North <= 7) {
-            i43 = (unsigned char)(1 << g_direction.North);
+            i47 = (unsigned char)(1 << g_direction.North);
           } else {
-            i43 = 0;
+            i47 = 0;
           }
 
-          if ((move_dir_map[contour_map_tmp] & i43) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒ}ï¿½Xï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+          if ((move_dir_map[contour_map_tmp] & i47) != 0) {
+            /* ‚©‚Â–k‚Ìƒ}ƒX‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
             if ((unsigned int)contour_map_tmp > 255U) {
               contour_map_tmp = 255;
@@ -7881,8 +7993,8 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               qY = 65535U;
             }
 
-            if (contour_map[(contour_map_tmp + i36) - 1] > (int)qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+            if (contour_map[(contour_map_tmp + i40) - 1] > (int)qY) {
+              /* •à”MAPXV */
               contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
               if ((unsigned int)contour_map_tmp > 255U) {
                 contour_map_tmp = 255;
@@ -7892,51 +8004,51 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                 u2 = 65535U;
               }
 
-              contour_map[(contour_map_tmp + i36) - 1] = (unsigned short)u2;
+              contour_map[(contour_map_tmp + i40) - 1] = (unsigned short)u2;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               contour_map_tmp = (int)(contor_renew_square[tempn] + 1U);
               if ((unsigned int)contour_map_tmp > 255U) {
                 contour_map_tmp = 255;
               }
 
               if (g_direction.North <= 7) {
-                move_dir_map[(contour_map_tmp + i36) - 1] = (unsigned char)(1 <<
+                move_dir_map[(contour_map_tmp + i40) - 1] = (unsigned char)(1 <<
                   g_direction.North);
               } else {
-                move_dir_map[(contour_map_tmp + i36) - 1] = 0U;
+                move_dir_map[(contour_map_tmp + i40) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
-              i36 = (int)(contor_renew_square[tempn] + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX‚ğXV */
+              i40 = (int)(contor_renew_square[tempn] + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
-                (unsigned char)i36;
+                (unsigned char)i40;
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 contor_renew_square_idx;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-              i36 = (int)(contor_renew_square_idx_temp + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              i40 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
-              contor_renew_square_idx_temp = (unsigned char)i36;
+              contor_renew_square_idx_temp = (unsigned char)i40;
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒ}ï¿½Xï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
-            i46 = (int)(contor_renew_square[tempn] + 1U);
-            i47 = i46;
-            if ((unsigned int)i46 > 255U) {
-              i47 = 255;
+            /* ‚©‚Â–k‚Ìƒ}ƒX‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            i50 = (int)(contor_renew_square[tempn] + 1U);
+            i51 = i50;
+            if ((unsigned int)i50 > 255U) {
+              i51 = 255;
             }
 
             u2 = contour_map[contour_map_tmp] + 5U;
@@ -7945,10 +8057,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               qY = 65535U;
             }
 
-            if (contour_map[(i47 + i36) - 1] > (int)qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
-              contour_map_tmp = i46;
-              if ((unsigned int)i46 > 255U) {
+            if (contour_map[(i51 + i40) - 1] > (int)qY) {
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              contour_map_tmp = i50;
+              if ((unsigned int)i50 > 255U) {
                 contour_map_tmp = 255;
               }
 
@@ -7956,79 +8068,79 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                 u2 = 65535U;
               }
 
-              contour_map[(contour_map_tmp + i36) - 1] = (unsigned short)u2;
+              contour_map[(contour_map_tmp + i40) - 1] = (unsigned short)u2;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
-              contour_map_tmp = i46;
-              if ((unsigned int)i46 > 255U) {
+              /* ˆÚ“®•ûŒüMAPXV */
+              contour_map_tmp = i50;
+              if ((unsigned int)i50 > 255U) {
                 contour_map_tmp = 255;
               }
 
               if (g_direction.North <= 7) {
-                move_dir_map[(contour_map_tmp + i36) - 1] = (unsigned char)(1 <<
+                move_dir_map[(contour_map_tmp + i40) - 1] = (unsigned char)(1 <<
                   g_direction.North);
               } else {
-                move_dir_map[(contour_map_tmp + i36) - 1] = 0U;
+                move_dir_map[(contour_map_tmp + i40) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
-              if ((unsigned int)i46 > 255U) {
-                i46 = 255;
+              /* XVƒ}ƒX‚ğXV */
+              if ((unsigned int)i50 > 255U) {
+                i50 = 255;
               }
 
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
-                (unsigned char)i46;
+                (unsigned char)i50;
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 contor_renew_square_idx;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-              i36 = (int)(contor_renew_square_idx_temp + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              i40 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
-              contor_renew_square_idx_temp = (unsigned char)i36;
+              contor_renew_square_idx_temp = (unsigned char)i40;
             }
           }
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & (ï¿½Tï¿½ï¿½ï¿½Ï‚ï¿½|| ~ï¿½ï¿½ï¿½mï¿½Çƒtï¿½ï¿½ï¿½O)ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & (’TõÏ‚İ|| ~–¢’m•Çƒtƒ‰ƒO)‚Å‚ ‚é‚Æ‚« */
       if (g_direction.East <= 7) {
-        i41 = (unsigned char)(1 << g_direction.East);
+        i45 = (unsigned char)(1 << g_direction.East);
       } else {
-        i41 = 0;
+        i45 = 0;
       }
 
       if (((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
-               + 1024] - 1) << 5)) - 1] & i41) != 0) == wall->contents.nowall) {
+               + 1024] - 1) << 5)) - 1] & i45) != 0) == wall->contents.nowall) {
         if (g_direction.East <= 7) {
-          i42 = (unsigned char)(1 << g_direction.East);
+          i46 = (unsigned char)(1 << g_direction.East);
         } else {
-          i42 = 0;
+          i46 = 0;
         }
 
         if ((((maze_wall_search[(contor_renew_square[tempn] +
-                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i42) != 0)
+                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i46) != 0)
              == search->contents.known) || (unknown_wall_flg == 0)) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚ ‚é */
           if (g_direction.East <= 7) {
-            i45 = (unsigned char)(1 << g_direction.East);
+            i49 = (unsigned char)(1 << g_direction.East);
           } else {
-            i45 = 0;
+            i49 = 0;
           }
 
           if ((move_dir_map[(contor_renew_square[tempn] +
                              ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
-               & i45) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒ}ï¿½Xï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
-            i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
-            if ((unsigned int)i36 > 255U) {
-              i36 = 255;
+               & i49) != 0) {
+            /* ‚©‚Â“Œ‚Ìƒ}ƒX‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
+            i40 = (int)(contor_renew_square[tempn + 1024] + 1U);
+            if ((unsigned int)i40 > 255U) {
+              i40 = 255;
             }
 
             u2 = contour_map[(contor_renew_square[tempn] +
@@ -8038,14 +8150,14 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               u2 = 65535U;
             }
 
-            if (contour_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1]
+            if (contour_map[(contor_renew_square[tempn] + ((i40 - 1) << 5)) - 1]
                 > (int)u2) {
-              /*                                  %ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½ï¿½MAPï¿½Xï¿½V */
+              /*                                  %XVŠm”F—p‚ÌMAPXV */
               /*                                  contour_refine_map(row(tempn),col(tempn)+1) = contour_refine_map(row(tempn),col(tempn))+uint16(1); */
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
-              i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* •à”MAPXV */
+              i40 = (int)(contor_renew_square[tempn + 1024] + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
               u2 = contour_map[(contor_renew_square[tempn] +
@@ -8055,52 +8167,52 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                 u2 = 65535U;
               }
 
-              contour_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1] =
+              contour_map[(contor_renew_square[tempn] + ((i40 - 1) << 5)) - 1] =
                 (unsigned short)u2;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
-              i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* ˆÚ“®•ûŒüMAPXV */
+              i40 = (int)(contor_renew_square[tempn + 1024] + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
               if (g_direction.East <= 7) {
-                move_dir_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1]
+                move_dir_map[(contor_renew_square[tempn] + ((i40 - 1) << 5)) - 1]
                   = (unsigned char)(1 << g_direction.East);
               } else {
-                move_dir_map[(contor_renew_square[tempn] + ((i36 - 1) << 5)) - 1]
+                move_dir_map[(contor_renew_square[tempn] + ((i40 - 1) << 5)) - 1]
                   = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒ}ƒX‚ğXV */
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
                 contor_renew_square[tempn];
-              i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              i40 = (int)(contor_renew_square[tempn + 1024] + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
-                (unsigned char)i36;
+                (unsigned char)i40;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-              i36 = (int)(contor_renew_square_idx_temp + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              i40 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
-              contor_renew_square_idx_temp = (unsigned char)i36;
+              contor_renew_square_idx_temp = (unsigned char)i40;
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
-            i36 = (int)(contor_renew_square[tempn + 1024] + 1U);
-            contour_map_tmp = i36;
-            if ((unsigned int)i36 > 255U) {
+            /* ‚©‚Â“Œ‚Ìƒ}ƒX‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
+            i40 = (int)(contor_renew_square[tempn + 1024] + 1U);
+            contour_map_tmp = i40;
+            if ((unsigned int)i40 > 255U) {
               contour_map_tmp = 255;
             }
 
@@ -8113,11 +8225,11 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[(contor_renew_square[tempn] + ((contour_map_tmp - 1)
                   << 5)) - 1] > (int)u2) {
-              /*                                  %ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½ï¿½MAPï¿½Xï¿½V */
+              /*                                  %XVŠm”F—p‚ÌMAPXV */
               /*                                  contour_refine_map(contor_renew_square(tempn,1),contor_renew_square(tempn,2)+1) = contour_refine_map(contor_renew_square(tempn,1),contor_renew_square(tempn,2))+uint16(1); */
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
-              contour_map_tmp = i36;
-              if ((unsigned int)i36 > 255U) {
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
+              contour_map_tmp = i40;
+              if ((unsigned int)i40 > 255U) {
                 contour_map_tmp = 255;
               }
 
@@ -8131,9 +8243,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[(contor_renew_square[tempn] + ((contour_map_tmp - 1) <<
                 5)) - 1] = (unsigned short)u2;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
-              contour_map_tmp = i36;
-              if ((unsigned int)i36 > 255U) {
+              /* ˆÚ“®•ûŒüMAPXV */
+              contour_map_tmp = i40;
+              if ((unsigned int)i40 > 255U) {
                 contour_map_tmp = 255;
               }
 
@@ -8145,61 +8257,61 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒ}ƒX‚ğXV */
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
                 contor_renew_square[tempn];
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
-                (unsigned char)i36;
+                (unsigned char)i40;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-              i36 = (int)(contor_renew_square_idx_temp + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              i40 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
-              contor_renew_square_idx_temp = (unsigned char)i36;
+              contor_renew_square_idx_temp = (unsigned char)i40;
             }
           }
         }
       }
 
-      /* ï¿½ì‘¤ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ &  (ï¿½Tï¿½ï¿½ï¿½Ï‚ï¿½|| ~ï¿½ï¿½ï¿½mï¿½Çƒtï¿½ï¿½ï¿½O)ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì‘¤ */
+      /* •Ç‚ª–³‚¢ &  (’TõÏ‚İ|| ~–¢’m•Çƒtƒ‰ƒO)‚Å‚ ‚é‚Æ‚« */
       if (g_direction.South <= 7) {
-        i44 = (unsigned char)(1 << g_direction.South);
+        i48 = (unsigned char)(1 << g_direction.South);
       } else {
-        i44 = 0;
+        i48 = 0;
       }
 
       if (((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
-               + 1024] - 1) << 5)) - 1] & i44) != 0) == wall->contents.nowall) {
+               + 1024] - 1) << 5)) - 1] & i48) != 0) == wall->contents.nowall) {
         if (g_direction.South <= 7) {
-          i48 = (unsigned char)(1 << g_direction.South);
+          i52 = (unsigned char)(1 << g_direction.South);
         } else {
-          i48 = 0;
+          i52 = 0;
         }
 
         if ((((maze_wall_search[(contor_renew_square[tempn] +
-                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i48) != 0)
+                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i52) != 0)
              == search->contents.known) || (unknown_wall_flg == 0)) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚ ‚é */
           if (g_direction.South <= 7) {
-            i50 = (unsigned char)(1 << g_direction.South);
+            i54 = (unsigned char)(1 << g_direction.South);
           } else {
-            i50 = 0;
+            i54 = 0;
           }
 
           if ((move_dir_map[(contor_renew_square[tempn] +
                              ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
-               & i50) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒ}ï¿½Xï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+               & i54) != 0) {
+            /* ‚©‚Â“ì‚Ìƒ}ƒX‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -8214,9 +8326,9 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
                   5)) - 1] > (int)u2) {
-              /*                                  %ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½ï¿½MAPï¿½Xï¿½V */
+              /*                                  %XVŠm”F—p‚ÌMAPXV */
               /*                                  contour_refine_map(row(tempn)-1,col(tempn)) = contour_refine_map(row(tempn),col(tempn))+uint16(1); */
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8232,7 +8344,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
                 5)) - 1] = (unsigned short)u2;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8246,10 +8358,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒ}ƒX‚ğXV */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8260,18 +8372,18 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 contor_renew_square[tempn + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-              i36 = (int)(contor_renew_square_idx_temp + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              i40 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
-              contor_renew_square_idx_temp = (unsigned char)i36;
+              contor_renew_square_idx_temp = (unsigned char)i40;
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒ}ï¿½Xï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì‚Ìƒ}ƒX‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -8286,7 +8398,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
                   5)) - 1] > (int)u2) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8302,7 +8414,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[((int)qY + ((contor_renew_square[tempn + 1024] - 1) <<
                 5)) - 1] = (unsigned short)u2;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8316,10 +8428,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒ}ƒX‚ğXV */
               qY = contor_renew_square[tempn] - 1U;
               if (qY > contor_renew_square[tempn]) {
                 qY = 0U;
@@ -8330,48 +8442,48 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 contor_renew_square[tempn + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-              i36 = (int)(contor_renew_square_idx_temp + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              i40 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
-              contor_renew_square_idx_temp = (unsigned char)i36;
+              contor_renew_square_idx_temp = (unsigned char)i40;
             }
           }
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ &  (ï¿½Tï¿½ï¿½ï¿½Ï‚ï¿½|| ~ï¿½ï¿½ï¿½mï¿½Çƒtï¿½ï¿½ï¿½O)ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* ¼‘¤ */
+      /* •Ç‚ª–³‚¢ &  (’TõÏ‚İ|| ~–¢’m•Çƒtƒ‰ƒO)‚Å‚ ‚é‚Æ‚« */
       if (g_direction.West <= 7) {
-        i49 = (unsigned char)(1 << g_direction.West);
+        i53 = (unsigned char)(1 << g_direction.West);
       } else {
-        i49 = 0;
+        i53 = 0;
       }
 
       if (((maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
-               + 1024] - 1) << 5)) - 1] & i49) != 0) == wall->contents.nowall) {
+               + 1024] - 1) << 5)) - 1] & i53) != 0) == wall->contents.nowall) {
         if (g_direction.West <= 7) {
-          i51 = (unsigned char)(1 << g_direction.West);
+          i55 = (unsigned char)(1 << g_direction.West);
         } else {
-          i51 = 0;
+          i55 = 0;
         }
 
         if ((((maze_wall_search[(contor_renew_square[tempn] +
-                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i51) != 0)
+                ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1] & i55) != 0)
              == search->contents.known) || (unknown_wall_flg == 0)) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚ ‚é */
           if (g_direction.West <= 7) {
-            i52 = (unsigned char)(1 << g_direction.West);
+            i56 = (unsigned char)(1 << g_direction.West);
           } else {
-            i52 = 0;
+            i56 = 0;
           }
 
           if ((move_dir_map[(contor_renew_square[tempn] +
                              ((contor_renew_square[tempn + 1024] - 1) << 5)) - 1]
-               & i52) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒ}ï¿½Xï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+               & i56) != 0) {
+            /* ‚©‚Â–k‚Ìƒ}ƒX‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             contour_map_tmp = contor_renew_square[tempn + 1024];
             qY = contour_map_tmp - 1U;
             if (qY > (unsigned int)contour_map_tmp) {
@@ -8387,7 +8499,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
                 - 1] > (int)u2) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               contour_map_tmp = contor_renew_square[tempn + 1024];
               qY = contour_map_tmp - 1U;
               if (qY > (unsigned int)contour_map_tmp) {
@@ -8404,7 +8516,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) -
                 1] = (unsigned short)u2;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               contour_map_tmp = contor_renew_square[tempn + 1024];
               qY = contour_map_tmp - 1U;
               if (qY > (unsigned int)contour_map_tmp) {
@@ -8419,10 +8531,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒ}ƒX‚ğXV */
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
                 contor_renew_square[tempn];
               contour_map_tmp = contor_renew_square[tempn + 1024];
@@ -8434,18 +8546,18 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 (unsigned char)qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-              i36 = (int)(contor_renew_square_idx_temp + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              i40 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
-              contor_renew_square_idx_temp = (unsigned char)i36;
+              contor_renew_square_idx_temp = (unsigned char)i40;
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒ}ï¿½Xï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k‚Ìƒ}ƒX‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             contour_map_tmp = contor_renew_square[tempn + 1024];
             qY = contour_map_tmp - 1U;
             if (qY > (unsigned int)contour_map_tmp) {
@@ -8461,7 +8573,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 
             if (contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5))
                 - 1] > (int)u2) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               contour_map_tmp = contor_renew_square[tempn + 1024];
               qY = contour_map_tmp - 1U;
               if (qY > (unsigned int)contour_map_tmp) {
@@ -8478,7 +8590,7 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contour_map[(contor_renew_square[tempn] + (((int)qY - 1) << 5)) -
                 1] = (unsigned short)u2;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               contour_map_tmp = contor_renew_square[tempn + 1024];
               qY = contour_map_tmp - 1U;
               if (qY > (unsigned int)contour_map_tmp) {
@@ -8493,10 +8605,10 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
                   - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒ}ƒX‚ğXV */
               contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
                 contor_renew_square[tempn];
               contour_map_tmp = contor_renew_square[tempn + 1024];
@@ -8508,29 +8620,29 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
               contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
                 (unsigned char)qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-              i36 = (int)(contor_renew_square_idx_temp + 1U);
-              if ((unsigned int)i36 > 255U) {
-                i36 = 255;
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+              i40 = (int)(contor_renew_square_idx_temp + 1U);
+              if ((unsigned int)i40 > 255U) {
+                i40 = 255;
               }
 
-              contor_renew_square_idx_temp = (unsigned char)i36;
+              contor_renew_square_idx_temp = (unsigned char)i40;
             }
           }
         }
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
-    for (i33 = 0; i33 < 2048; i33++) {
-      contor_renew_square[i33] = contor_renew_square_temp[i33];
-      contor_renew_square_temp[i33] = 0U;
+    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
+    for (i37 = 0; i37 < 2048; i37++) {
+      contor_renew_square[i37] = contor_renew_square_temp[i37];
+      contor_renew_square_temp[i37] = 0U;
     }
 
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ || ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
+    /* XV‚ª‚È‚¯‚ê‚Î || ƒXƒ^[ƒg’n“_‚ªXV‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
     if ((change_flag == 0) || (contour_map[0] != 65535)) {
       exitg1 = true;
     } else {
@@ -8540,12 +8652,12 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
 }
 
 /*
- * ï¿½ï¿½ï¿½mï¿½Ç‚Ì—Ìˆï¿½Í‰ï¿½ï¿½zï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄNï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½),ï¿½ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½(16ï¿½iï¿½ï¿½)
- * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½map,ï¿½Å‘ï¿½oï¿½Hï¿½ï¿½
- * Arguments    : coder_internal_ref_2 *max_length
- *                const coder_internal_ref_5 *wall
- *                const coder_internal_ref_4 *search
+ * –¢’m•Ç‚Ì—Ìˆæ‚Í‰¼‘z•Ç‚ğ‚¨‚¢‚ÄN“ü‚µ‚È‚¢B
+ * “ü—Í –À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,–À˜Hî•ñ(16i”),–À˜H’Tõî•ñ(16i”)
+ * o—Í “™‚ümap,Å‘åŒo˜H’·
+ * Arguments    : coder_internal_ref_3 *max_length
+ *                const coder_internal_ref_6 *wall
+ *                const coder_internal_ref_5 *search
  *                const unsigned char maze_goal[18]
  *                unsigned char goal_size
  *                const unsigned char maze_wall[1024]
@@ -8555,8 +8667,8 @@ static void make_map_fustrun(const coder_internal_ref *goal_size, const
  *                unsigned short *start_num
  * Return Type  : void
  */
-static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
-  coder_internal_ref_5 *wall, const coder_internal_ref_4 *search, const unsigned
+static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
+  coder_internal_ref_6 *wall, const coder_internal_ref_5 *search, const unsigned
   char maze_goal[18], unsigned char goal_size, const unsigned char maze_wall
   [1024], const unsigned char maze_wall_search[1024], unsigned short
   row_num_node[1056], unsigned short col_num_node[1056], unsigned short
@@ -8658,42 +8770,42 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   int i148;
   int i149;
 
-  /*     %% make_map_fustrun_diagonal ï¿½Å’Zï¿½ï¿½ï¿½sï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
-  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½İ’ï¿½ */
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½mï¿½[ï¿½h(ï¿½s)ï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /*     %% make_map_fustrun_diagonal Å’Z‘–s—p“™‚üMAP‚ğ¶¬ */
+  /* ƒ[ƒJƒ‹•Ï”İ’è */
+  /* ƒRƒ“ƒ^[XVƒm[ƒh(s)•ÛŠÇ—p */
+  /* XVÀ•W */
+  /* XVÀ•WXV—p */
   contor_renew_node_row_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_node_row_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½iï¿½ï¿½jï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•WXV—p */
+  /* ƒRƒ“ƒ^[XVƒm[ƒhi—ñj•ÛŠÇ—p */
+  /* XVÀ•W */
   memset(&contor_renew_node_row[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_row_temp[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_col[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_node_col_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* XVÀ•WXV—p */
   contor_renew_node_col_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_node_col_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
-  /*  ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½ */
+  /* XVÀ•WXV—p */
+  /* ƒpƒ‰ƒ[ƒ^İ’è */
+  /*  –À˜Hƒpƒ‰ƒ[ƒ^İ’è */
   max_length->contents = 1024U;
 
-  /*  ï¿½ï¿½ï¿½[ï¿½gï¿½Ìdï¿½İİ’ï¿½ */
-  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ìƒmï¿½[ï¿½hï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
-  /* ï¿½ï¿½ï¿½ï¿½MAP */
-  /*  %ï¿½Xï¿½Vï¿½pMAP */
+  /*  ƒ‹[ƒg‚Ìd‚İİ’è */
+  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ìƒm[ƒh‚Émax_length‚ğ“ü—Í) */
+  /* •à”MAP */
+  /*  %XV—pMAP */
   /*  row_num_node_temp = ones(33,32,'uint16')*uint16(65535); */
   /*  col_num_node_temp = ones(32,33,'uint16')*uint16(65535); */
-  /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ûï¿½ï¿½pï¿½mï¿½[ï¿½hï¿½ì¬ */
+  /* is•ûŒü•Û—pƒm[ƒhì¬ */
   for (q0 = 0; q0 < 1056; q0++) {
     row_num_node[q0] = MAX_uint16_T;
     col_num_node[q0] = MAX_uint16_T;
@@ -8701,11 +8813,11 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     col_dir_node[q0] = 0U;
   }
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ê‡ */
+  /* ƒS[ƒ‹ƒZƒNƒVƒ‡ƒ“‚ªŠm’è‚µ‚Ä‚¢‚éê‡ */
   *start_num = MAX_uint16_T;
   if (goal_size == 1) {
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½Éƒ}ï¿½bï¿½vï¿½ï¿½Wï¿½J */
-    /* ï¿½kï¿½ï¿½ */
+    /* ƒS[ƒ‹ƒ}ƒX‚©‚çA“Œ¼“ì–k‚Éƒ}ƒbƒv‚ğ“WŠJ */
+    /* –k•Ç */
     q0 = maze_goal[0] - 1;
     i76 = (maze_goal[9] + (q0 << 5)) - 1;
     if (g_direction.North <= 7) {
@@ -8715,7 +8827,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     }
 
     if ((maze_wall[i76] & i77) == 0) {
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      /* •à”XV */
       i78 = (int)(maze_goal[9] + 1U);
       i79 = i78;
       if ((unsigned int)i78 > 255U) {
@@ -8725,7 +8837,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       row_num_node_tmp = 33 * q0;
       row_num_node[(i79 + row_num_node_tmp) - 1] = 3U;
 
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+      /* •ûŒü’Ç‰Á */
       q0 = i78;
       if ((unsigned int)i78 > 255U) {
         q0 = 255;
@@ -8738,7 +8850,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         row_dir_node[(q0 + row_num_node_tmp) - 1] = 0U;
       }
 
-      /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+      /* XVƒm[ƒh‚ğXV */
       if ((unsigned int)i78 > 255U) {
         i78 = 255;
       }
@@ -8746,11 +8858,11 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       contor_renew_node_row[0] = (unsigned char)i78;
       contor_renew_node_row[1024] = maze_goal[0];
 
-      /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+      /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
       contor_renew_node_row_idx = 2U;
     }
 
-    /* ï¿½ï¿½ï¿½ï¿½ */
+    /* “Œ•Ç */
     if (g_direction.East <= 7) {
       i80 = (unsigned char)(1 << g_direction.East);
     } else {
@@ -8758,7 +8870,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     }
 
     if ((maze_wall[i76] & i80) == 0) {
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      /* •à”XV */
       q0 = (int)(maze_goal[0] + 1U);
       i78 = q0;
       if ((unsigned int)q0 > 255U) {
@@ -8767,7 +8879,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
       col_num_node[(maze_goal[9] + ((i78 - 1) << 5)) - 1] = 3U;
 
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+      /* •ûŒü’Ç‰Á */
       i78 = q0;
       if ((unsigned int)q0 > 255U) {
         i78 = 255;
@@ -8780,7 +8892,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         col_dir_node[(maze_goal[9] + ((i78 - 1) << 5)) - 1] = 0U;
       }
 
-      /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+      /* XVƒm[ƒh‚ğXV */
       contor_renew_node_col[0] = maze_goal[9];
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
@@ -8788,11 +8900,11 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
       contor_renew_node_col[1024] = (unsigned char)q0;
 
-      /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+      /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
       contor_renew_node_col_idx = 2U;
     }
 
-    /* ï¿½ï¿½ï¿½ */
+    /* “ì•Ç */
     if (g_direction.South <= 7) {
       i83 = (unsigned char)(1 << g_direction.South);
     } else {
@@ -8800,11 +8912,11 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     }
 
     if ((maze_wall[i76] & i83) == 0) {
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      /* •à”XV */
       row_num_node_tmp = (maze_goal[9] + 33 * (maze_goal[0] - 1)) - 1;
       row_num_node[row_num_node_tmp] = 3U;
 
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+      /* •ûŒü’Ç‰Á */
       if (g_d_direction.South <= 7) {
         i87 = (unsigned char)(1 << g_d_direction.South);
       } else {
@@ -8814,15 +8926,15 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       row_dir_node[row_num_node_tmp] = (unsigned char)
         (row_dir_node[row_num_node_tmp] | i87);
 
-      /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+      /* XVƒm[ƒh‚ğXV */
       contor_renew_node_row[contor_renew_node_row_idx - 1] = maze_goal[9];
       contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[0];
 
-      /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+      /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
       contor_renew_node_row_idx++;
     }
 
-    /* ï¿½ï¿½ï¿½ï¿½ */
+    /* ¼•Ç */
     if (g_direction.West <= 7) {
       i85 = (unsigned char)(1 << g_direction.West);
     } else {
@@ -8830,10 +8942,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     }
 
     if ((maze_wall[i76] & i85) == 0) {
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+      /* •à”XV */
       col_num_node[i76] = 3U;
 
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+      /* •ûŒü’Ç‰Á */
       if (g_d_direction.West <= 7) {
         i89 = (unsigned char)(1 << g_d_direction.West);
       } else {
@@ -8842,23 +8954,23 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
       col_dir_node[i76] = (unsigned char)(col_dir_node[i76] | i89);
 
-      /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+      /* XVƒm[ƒh‚ğXV */
       contor_renew_node_col[contor_renew_node_col_idx - 1] = maze_goal[9];
       contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[0];
 
-      /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+      /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
       contor_renew_node_col_idx++;
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
+    /* ƒS[ƒ‹ƒZƒNƒVƒ‡ƒ“‚ªŠm’è‚µ‚Ä‚¢‚È‚¢ê‡ */
   } else {
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ */
-    /*  ï¿½ï¿½ï¿½ï¿½ï¿½F0ï¿½ï¿½ï¿½ï¿½ï¿½ */
-    /*  ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ : ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Î‘Sï¿½ï¿½ï¿½ï¿½=0b11111111=255 */
-    /*  ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /* ƒS[ƒ‹ƒm[ƒh‚É */
+    /*  •à”F0‚ğ“ü—Í */
+    /*  is•ûŒü : •Ç‚ª‚È‚¯‚ê‚Î‘S•ûŒü=0b11111111=255 */
+    /*  ‚ğ“ü—Í */
     q0 = goal_size;
     for (n = 0; n < q0; n++) {
-      /* ï¿½kï¿½ï¿½ */
+      /* –k•Ç */
       i76 = maze_goal[n] - 1;
       u6 = maze_goal[n + 9];
       i78 = (u6 + (i76 << 5)) - 1;
@@ -8869,7 +8981,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
 
       if ((maze_wall[i78] & i81) == 0) {
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* •à”XV */
         i79 = (int)(maze_goal[n + 9] + 1U);
         i82 = i79;
         if ((unsigned int)i79 > 255U) {
@@ -8879,7 +8991,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         row_num_node_tmp = 33 * i76;
         row_num_node[(i82 + row_num_node_tmp) - 1] = 0U;
 
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* •ûŒüXV */
         i76 = i79;
         if ((unsigned int)i79 > 255U) {
           i76 = 255;
@@ -8887,7 +8999,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         row_dir_node[(i76 + row_num_node_tmp) - 1] = MAX_uint8_T;
 
-        /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+        /* XVƒm[ƒh‚ğXV */
         if ((unsigned int)i79 > 255U) {
           i79 = 255;
         }
@@ -8896,7 +9008,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           i79;
         contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[n];
 
-        /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+        /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
         i76 = (int)(contor_renew_node_row_idx + 1U);
         if ((unsigned int)i76 > 255U) {
           i76 = 255;
@@ -8905,7 +9017,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         contor_renew_node_row_idx = (unsigned char)i76;
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* “Œ•Ç */
       if (g_direction.East <= 7) {
         i84 = (unsigned char)(1 << g_direction.East);
       } else {
@@ -8913,7 +9025,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
 
       if ((maze_wall[i78] & i84) == 0) {
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* •à”XV */
         i76 = (int)(maze_goal[n] + 1U);
         i79 = i76;
         if ((unsigned int)i76 > 255U) {
@@ -8922,7 +9034,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         col_num_node[(u6 + ((i79 - 1) << 5)) - 1] = 0U;
 
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* •ûŒüXV */
         i79 = i76;
         if ((unsigned int)i76 > 255U) {
           i79 = 255;
@@ -8930,7 +9042,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         col_dir_node[(u6 + ((i79 - 1) << 5)) - 1] = MAX_uint8_T;
 
-        /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+        /* XVƒm[ƒh‚ğXV */
         contor_renew_node_col[contor_renew_node_col_idx - 1] = u6;
         if ((unsigned int)i76 > 255U) {
           i76 = 255;
@@ -8939,7 +9051,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         contor_renew_node_col[contor_renew_node_col_idx + 1023] = (unsigned char)
           i76;
 
-        /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+        /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
         i76 = (int)(contor_renew_node_col_idx + 1U);
         if ((unsigned int)i76 > 255U) {
           i76 = 255;
@@ -8948,7 +9060,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         contor_renew_node_col_idx = (unsigned char)i76;
       }
 
-      /* ï¿½ï¿½ï¿½ */
+      /* “ì•Ç */
       if (g_direction.South <= 7) {
         i86 = (unsigned char)(1 << g_direction.South);
       } else {
@@ -8956,18 +9068,18 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
 
       if ((maze_wall[i78] & i86) == 0) {
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* •à”XV */
         row_num_node_tmp = (u6 + 33 * (maze_goal[n] - 1)) - 1;
         row_num_node[row_num_node_tmp] = 0U;
 
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* •ûŒüXV */
         row_dir_node[row_num_node_tmp] = MAX_uint8_T;
 
-        /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+        /* XVƒm[ƒh‚ğXV */
         contor_renew_node_row[contor_renew_node_row_idx - 1] = u6;
         contor_renew_node_row[contor_renew_node_row_idx + 1023] = maze_goal[n];
 
-        /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+        /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
         i76 = (int)(contor_renew_node_row_idx + 1U);
         if ((unsigned int)i76 > 255U) {
           i76 = 255;
@@ -8976,7 +9088,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         contor_renew_node_row_idx = (unsigned char)i76;
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
+      /* ¼•Ç */
       if (g_direction.West <= 7) {
         i88 = (unsigned char)(1 << g_direction.West);
       } else {
@@ -8984,17 +9096,17 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
 
       if ((maze_wall[i78] & i88) == 0) {
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* •à”XV */
         col_num_node[i78] = 0U;
 
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+        /* •ûŒüXV */
         col_dir_node[i78] = MAX_uint8_T;
 
-        /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+        /* XVƒm[ƒh‚ğXV */
         contor_renew_node_col[contor_renew_node_col_idx - 1] = u6;
         contor_renew_node_col[contor_renew_node_col_idx + 1023] = maze_goal[n];
 
-        /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+        /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
         i76 = (int)(contor_renew_node_col_idx + 1U);
         if ((unsigned int)i76 > 255U) {
           i76 = 255;
@@ -9004,7 +9116,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /*      %ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½pï¿½Ïï¿½(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½È‚ï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½v) */
+    /*      %XV”»’è—p•Ï”(d‚İ‚Ã‚¯‚È‚µ‚Ì•à”ƒ}ƒbƒv) */
     /*      row_num_node_temp = row_num_node; */
     /*      col_num_node_temp = col_num_node; */
   }
@@ -9018,16 +9130,16 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
   i = 0U;
   exitg1 = false;
   while ((!exitg1) && (i <= (unsigned short)qY)) {
-    /* ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ì•ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
+    /* XVŠm”F—p‚Ì•à”ƒJƒEƒ“ƒg‚Í0~max_length */
     change_flag = 0U;
 
-    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
-    /* Row_Edgeï¿½Ìï¿½ï¿½ï¿½[33ï¿½s,32ï¿½ï¿½] */
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
+    /* mapXVŠm”F—pƒtƒ‰ƒO */
+    /* Row_Edge‚Ìˆ—[33s,32—ñ] */
+    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
     q0 = contor_renew_node_row_idx;
     for (n = 0; n <= q0 - 2; n++) {
-      /* ï¿½kï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       i76 = contor_renew_node_row[n + 1024] - 1;
       i78 = (contor_renew_node_row[n] + (i76 << 5)) - 1;
       if (g_direction.North <= 7) {
@@ -9044,7 +9156,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (((maze_wall_search[i78] & i91) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚ ‚é */
           i76 *= 33;
           i78 = (contor_renew_node_row[n] + i76) - 1;
           if (g_d_direction.North <= 7) {
@@ -9054,7 +9166,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((row_dir_node[i78] & i96) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i78 = (int)(contor_renew_node_row[n] + 1U);
             if ((unsigned int)i78 > 255U) {
               i78 = 255;
@@ -9068,7 +9180,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (row_num_node[(i78 + i76) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i76 = (int)(contor_renew_node_row[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9084,7 +9196,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1)) -
                 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i76 = (int)(contor_renew_node_row[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9098,10 +9210,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i76 = (int)(contor_renew_node_row[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9112,7 +9224,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9120,7 +9232,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i76 = (int)(contor_renew_node_row[n] + 1U);
               if ((unsigned int)i76 > 255U) {
@@ -9136,7 +9248,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1))
                   - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i76 = (int)(contor_renew_node_row[n] + 1U);
                 if ((unsigned int)i76 > 255U) {
                   i76 = 255;
@@ -9159,9 +9271,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–kŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i79 = (int)(contor_renew_node_row[n] + 1U);
             if ((unsigned int)i79 > 255U) {
               i79 = 255;
@@ -9173,7 +9285,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (row_num_node[(i79 + i76) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i76 = (int)(contor_renew_node_row[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9189,7 +9301,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i76 + 33 * (contor_renew_node_row[n + 1024] - 1)) -
                 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i76 = (int)(contor_renew_node_row[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9203,10 +9315,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i76 = (int)(contor_renew_node_row[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9217,7 +9329,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9225,7 +9337,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i76 = (int)(contor_renew_node_row[n] + 1U);
               i78 = i76;
@@ -9242,7 +9354,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(i78 + 33 * (contor_renew_node_row[n + 1024] - 1))
                   - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i78 = i76;
                 if ((unsigned int)i76 > 255U) {
                   i78 = 255;
@@ -9264,8 +9376,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k“Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       if (g_direction.East <= 7) {
         i93 = (unsigned char)(1 << g_direction.East);
       } else {
@@ -9283,7 +9395,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         if (((maze_wall_search[(contor_renew_node_row[n] +
                                 ((contor_renew_node_row[n + 1024] - 1) << 5)) -
               1] & i95) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.North_East <= 7) {
             i99 = (unsigned char)(1 << g_d_direction.North_East);
           } else {
@@ -9293,7 +9405,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
                              (contor_renew_node_row[n + 1024] - 1)) - 1] & i99)
               != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
             if ((unsigned int)i76 > 255U) {
               i76 = 255;
@@ -9308,7 +9420,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] >
                 (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9324,7 +9436,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
                 (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9338,10 +9450,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[n];
               i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
@@ -9352,7 +9464,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i76;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9360,7 +9472,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
               if ((unsigned int)i76 > 255U) {
@@ -9376,7 +9488,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1]
                   == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
                 if ((unsigned int)i76 > 255U) {
                   i76 = 255;
@@ -9399,9 +9511,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
             if ((unsigned int)i76 > 255U) {
               i76 = 255;
@@ -9416,7 +9528,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] >
                 (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9432,7 +9544,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_row[n] + ((i76 - 1) << 5)) - 1] =
                 (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9446,10 +9558,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[n];
               i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
@@ -9460,7 +9572,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i76;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -9468,7 +9580,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i76 = (int)(contor_renew_node_row[n + 1024] + 1U);
               i79 = i76;
@@ -9483,7 +9595,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_row[n] + ((i79 - 1) << 5)) - 1]
                   == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i78 = i76;
                 if ((unsigned int)i76 > 255U) {
                   i78 = 255;
@@ -9505,9 +9617,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ */
-      /* ï¿½ì“Œï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “Œ‘¤‚Í’Œ */
+      /* “ì“Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row[n] - 1U;
       if (c_qY > contor_renew_node_row[n]) {
         c_qY = 0U;
@@ -9535,7 +9647,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[((int)c_qY + i76) - 1] & i105) != 0) ==
             search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.South_East <= 7) {
             i108 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
@@ -9545,7 +9657,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
                              (contor_renew_node_row[n + 1024] - 1)) - 1] & i108)
               != 0) {
-            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -9565,7 +9677,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] > (int)u7) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9583,7 +9695,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9601,10 +9713,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9620,7 +9732,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i78;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -9628,7 +9740,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -9646,7 +9758,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] == (int)b_qY)
               {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -9678,9 +9790,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -9700,7 +9812,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] > (int)u7) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9718,7 +9830,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9736,10 +9848,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[((int)c_qY + ((i78 - 1) << 5)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9755,7 +9867,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i78;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -9763,7 +9875,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -9781,7 +9893,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[((int)c_qY + ((i78 - 1) << 5)) - 1] == (int)b_qY)
               {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -9816,8 +9928,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ì‘¤ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row[n] - 1U;
       if (c_qY > contor_renew_node_row[n]) {
         c_qY = 0U;
@@ -9844,7 +9956,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[((int)c_qY + i76) - 1] & i111) != 0) ==
             search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚ ‚é */
           if (g_d_direction.South <= 7) {
             i117 = (unsigned char)(1 << g_d_direction.South);
           } else {
@@ -9854,7 +9966,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
                              (contor_renew_node_row[n + 1024] - 1)) - 1] & i117)
               != 0) {
-            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -9870,7 +9982,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                   - 1)) - 1] > (int)u7) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9883,7 +9995,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024] -
                 1)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9897,10 +10009,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9911,7 +10023,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -9919,7 +10031,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -9932,7 +10044,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                     - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -9955,9 +10067,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ìŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -9972,7 +10084,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                   - 1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -9988,7 +10100,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024] -
                 1)) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10002,10 +10114,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10016,7 +10128,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -10024,7 +10136,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -10040,7 +10152,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[((int)c_qY + 33 * (contor_renew_node_row[n + 1024]
                     - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -10066,8 +10178,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ì¼ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = contor_renew_node_row[n] - 1U;
       if (c_qY > contor_renew_node_row[n]) {
         c_qY = 0U;
@@ -10094,7 +10206,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[((int)c_qY + i76) - 1] & i124) != 0) ==
             search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.South_West <= 7) {
             i130 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
@@ -10104,7 +10216,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
                              (contor_renew_node_row[n + 1024] - 1)) - 1] & i130)
               != 0) {
-            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -10118,7 +10230,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[((int)c_qY + i76) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10133,7 +10245,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               col_num_node[((int)c_qY + i76) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10146,10 +10258,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[((int)c_qY + i76) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10160,7 +10272,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -10168,7 +10280,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -10183,7 +10295,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (col_num_node[((int)c_qY + i76) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -10205,9 +10317,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = contor_renew_node_row[n] - 1U;
             if (c_qY > contor_renew_node_row[n]) {
               c_qY = 0U;
@@ -10221,7 +10333,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[((int)c_qY + i76) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10236,7 +10348,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               col_num_node[((int)c_qY + i76) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10249,10 +10361,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[((int)c_qY + i76) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
                 c_qY = 0U;
@@ -10263,7 +10375,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -10271,7 +10383,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = contor_renew_node_row[n] - 1U;
               if (c_qY > contor_renew_node_row[n]) {
@@ -10286,7 +10398,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (col_num_node[((int)c_qY + i76) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = contor_renew_node_row[n] - 1U;
                 if (c_qY > contor_renew_node_row[n]) {
                   c_qY = 0U;
@@ -10311,8 +10423,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       i76 = (contor_renew_node_row[n] + i76) - 1;
       if (g_direction.West <= 7) {
         i126 = (unsigned char)(1 << g_direction.West);
@@ -10328,7 +10440,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (((maze_wall_search[i76] & i129) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.North_West <= 7) {
             i133 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
@@ -10338,7 +10450,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((row_dir_node[(contor_renew_node_row[n] + 33 *
                              (contor_renew_node_row[n + 1024] - 1)) - 1] & i133)
               != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                  (contor_renew_node_row[n + 1024] - 1)) - 1] +
               4U;
@@ -10349,7 +10461,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (col_num_node[(contor_renew_node_row[n] +
                               ((contor_renew_node_row[n + 1024] - 1) << 5)) - 1]
                 > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
                 4U;
@@ -10359,7 +10471,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               col_num_node[i76] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               if (g_d_direction.North_West <= 7) {
                 col_dir_node[i76] = (unsigned char)(1 <<
                   g_d_direction.North_West);
@@ -10367,16 +10479,16 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[i76] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[n];
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -10384,7 +10496,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
@@ -10396,7 +10508,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (col_num_node[(contor_renew_node_row[n] +
                                 ((contor_renew_node_row[n + 1024] - 1) << 5)) -
                   1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 if (g_d_direction.North_West <= 7) {
                   i143 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
@@ -10407,9 +10519,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                  (contor_renew_node_row[n + 1024] - 1)) - 1] +
               18U;
@@ -10418,7 +10530,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (col_num_node[i76] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
                 18U;
@@ -10428,7 +10540,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               col_num_node[i76] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               if (g_d_direction.North_West <= 7) {
                 col_dir_node[i76] = (unsigned char)(1 <<
                   g_d_direction.North_West);
@@ -10436,16 +10548,16 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 col_dir_node[i76] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_row[n];
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 contor_renew_node_row[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -10453,7 +10565,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
@@ -10463,7 +10575,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (col_num_node[i76] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 if (g_d_direction.North_West <= 7) {
                   i142 = (unsigned char)(1 << g_d_direction.North_West);
                 } else {
@@ -10478,13 +10590,13 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /* Col_Edgeï¿½Ìï¿½ï¿½ï¿½[32ï¿½s,33ï¿½ï¿½] */
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½mapï¿½ï¿½ï¿½Xï¿½V */
+    /* Col_Edge‚Ìˆ—[32s,33—ñ] */
+    /* ŒŸõ‚µ‚½À•W‚É‘Î‚µA•à”map‚ğXV */
     q0 = contor_renew_node_col_idx;
     for (n = 0; n <= q0 - 2; n++) {
-      /* ï¿½kï¿½ï¿½ï¿½Í•ï¿½ */
-      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k‘¤‚Í•Ç */
+      /* –k“Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       i76 = (contor_renew_node_col[n] + ((contor_renew_node_col[n + 1024] - 1) <<
               5)) - 1;
       if (g_direction.North <= 7) {
@@ -10501,7 +10613,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (((maze_wall_search[i76] & i94) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.North_East <= 7) {
             i98 = (unsigned char)(1 << g_d_direction.North_East);
           } else {
@@ -10509,7 +10621,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((col_dir_node[i76] & i98) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i76 = (int)(contor_renew_node_col[n] + 1U);
             if ((unsigned int)i76 > 255U) {
               i76 = 255;
@@ -10525,7 +10637,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
                 - 1] > (int)u7) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -10538,7 +10650,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1)) -
                 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -10552,10 +10664,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -10566,7 +10678,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_col[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -10574,7 +10686,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
@@ -10587,7 +10699,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(i76 + 33 * (contor_renew_node_col[n + 1024] - 1))
                   - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i76 = (int)(contor_renew_node_col[n] + 1U);
                 if ((unsigned int)i76 > 255U) {
                   i76 = 255;
@@ -10610,9 +10722,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–k“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i76 = (int)(contor_renew_node_col[n] + 1U);
             i78 = i76;
             if ((unsigned int)i76 > 255U) {
@@ -10629,7 +10741,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             i79 = 33 * (contor_renew_node_col[n + 1024] - 1);
             if (row_num_node[(i78 + i79) - 1] > (int)u7) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i78 = i76;
               if ((unsigned int)i76 > 255U) {
                 i78 = 255;
@@ -10641,7 +10753,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               row_num_node[(i78 + i79) - 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i78 = i76;
               if ((unsigned int)i76 > 255U) {
                 i78 = 255;
@@ -10654,10 +10766,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 row_dir_node[(i78 + i79) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
               }
@@ -10667,7 +10779,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 contor_renew_node_col[n + 1024];
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -10675,7 +10787,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i78 = i76;
               if ((unsigned int)i76 > 255U) {
@@ -10687,7 +10799,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (row_num_node[(i78 + i79) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i78 = i76;
                 if ((unsigned int)i76 > 255U) {
                   i78 = 255;
@@ -10708,8 +10820,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       u6 = contor_renew_node_col[n + 1024];
       i76 = (contor_renew_node_col[n] + ((u6 - 1) << 5)) - 1;
       if (g_direction.East <= 7) {
@@ -10726,7 +10838,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
 
         if (((maze_wall_search[i76] & i100) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.East <= 7) {
             i103 = (unsigned char)(1 << g_d_direction.East);
           } else {
@@ -10734,7 +10846,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((col_dir_node[i76] & i103) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
             if ((unsigned int)i78 > 255U) {
               i78 = 255;
@@ -10749,7 +10861,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] >
                 (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -10765,7 +10877,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1] =
                 (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -10779,10 +10891,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[n];
               i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
@@ -10793,7 +10905,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i78;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -10801,7 +10913,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
               if ((unsigned int)i78 > 255U) {
@@ -10817,7 +10929,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[n] + ((i78 - 1) << 5)) - 1]
                   == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
                 if ((unsigned int)i78 > 255U) {
                   i78 = 255;
@@ -10840,9 +10952,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i78 = (int)(contor_renew_node_col[n + 1024] + 1U);
             i79 = i78;
             if ((unsigned int)i78 > 255U) {
@@ -10858,7 +10970,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] >
                 (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i79 = i78;
               if ((unsigned int)i78 > 255U) {
                 i79 = 255;
@@ -10874,7 +10986,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1] =
                 (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i79 = i78;
               if ((unsigned int)i78 > 255U) {
                 i79 = 255;
@@ -10888,10 +11000,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[n];
               if ((unsigned int)i78 > 255U) {
@@ -10901,7 +11013,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)i78;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -10909,7 +11021,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i79 = i78;
               if ((unsigned int)i78 > 255U) {
@@ -10925,7 +11037,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[n] + ((i79 - 1) << 5)) - 1]
                   == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i79 = i78;
                 if ((unsigned int)i78 > 255U) {
                   i79 = 255;
@@ -10947,8 +11059,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ì“Œï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì“Œ‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       if (g_direction.South <= 7) {
         i102 = (unsigned char)(1 << g_direction.South);
       } else {
@@ -10966,7 +11078,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         if (((maze_wall_search[(contor_renew_node_col[n] +
                                 ((contor_renew_node_col[n + 1024] - 1) << 5)) -
               1] & i104) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚ ‚é */
           if (g_d_direction.South_East <= 7) {
             i107 = (unsigned char)(1 << g_d_direction.South_East);
           } else {
@@ -10976,7 +11088,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((col_dir_node[(contor_renew_node_col[n] +
                              ((contor_renew_node_col[n + 1024] - 1) << 5)) - 1]
                & i107) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             b_qY = col_num_node[(contor_renew_node_col[n] +
                                  ((contor_renew_node_col[n + 1024] - 1) << 5)) -
               1] + 4U;
@@ -10987,7 +11099,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             if (row_num_node[(contor_renew_node_col[n] + 33 *
                               (contor_renew_node_col[n + 1024] - 1)) - 1] > (int)
                 b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
                 - 1] + 4U;
@@ -10999,7 +11111,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                             (contor_renew_node_col[n + 1024] - 1)) - 1] =
                 (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               if (g_d_direction.South_East <= 7) {
                 row_dir_node[(contor_renew_node_col[n] + 33 *
                               (contor_renew_node_col[n + 1024] - 1)) - 1] =
@@ -11009,16 +11121,16 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                               (contor_renew_node_col[n + 1024] - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[n];
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 u6;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -11026,7 +11138,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
@@ -11038,7 +11150,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               if (row_num_node[(contor_renew_node_col[n] + 33 *
                                 (contor_renew_node_col[n + 1024] - 1)) - 1] ==
                   (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 if (g_d_direction.South_East <= 7) {
                   i122 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
@@ -11052,9 +11164,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì“Œï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ì“ŒŒü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             b_qY = col_num_node[(contor_renew_node_col[n] +
                                  ((contor_renew_node_col[n + 1024] - 1) << 5)) -
               1] + 18U;
@@ -11065,7 +11177,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             i78 = (contor_renew_node_col[n] + 33 * (contor_renew_node_col[n +
                     1024] - 1)) - 1;
             if (row_num_node[i78] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
                 - 1] + 18U;
@@ -11075,7 +11187,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               row_num_node[i78] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               if (g_d_direction.South_East <= 7) {
                 row_dir_node[i78] = (unsigned char)(1 <<
                   g_d_direction.South_East);
@@ -11083,16 +11195,16 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 row_dir_node[i78] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[n];
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 u6;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -11100,7 +11212,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ì“Œï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì“Œ‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               b_qY = col_num_node[i76] + 18U;
               if (b_qY > 65535U) {
@@ -11108,7 +11220,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (row_num_node[i78] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 if (g_d_direction.South_East <= 7) {
                   i123 = (unsigned char)(1 << g_d_direction.South_East);
                 } else {
@@ -11122,9 +11234,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ì‘¤ï¿½Í’ï¿½ */
-      /* ï¿½ì¼ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* “ì‘¤‚Í’Œ */
+      /* “ì¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = u6 - 1U;
       if (c_qY > u6) {
         c_qY = 0U;
@@ -11151,7 +11263,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
               - 1] & i113) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.South_West <= 7) {
             i121 = (unsigned char)(1 << g_d_direction.South_West);
           } else {
@@ -11159,7 +11271,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((col_dir_node[i76] & i121) != 0) {
-            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = u6 - 1U;
             if (c_qY > u6) {
               c_qY = 0U;
@@ -11174,7 +11286,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
                 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11190,7 +11302,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) - 1]
                 = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11204,10 +11316,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[n];
               c_qY = u6 - 1U;
@@ -11218,7 +11330,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -11226,7 +11338,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = u6 - 1U;
               if (c_qY > u6) {
@@ -11242,7 +11354,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1))
                   - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = u6 - 1U;
                 if (c_qY > u6) {
                   c_qY = 0U;
@@ -11265,9 +11377,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª“ì¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = u6 - 1U;
             if (c_qY > u6) {
               c_qY = 0U;
@@ -11280,7 +11392,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) -
                 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11296,7 +11408,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1)) - 1]
                 = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11310,10 +11422,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp - 1] =
                 contor_renew_node_col[n];
               c_qY = u6 - 1U;
@@ -11324,7 +11436,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -11332,7 +11444,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Â“ì¼ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â“ì¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = u6 - 1U;
               if (c_qY > u6) {
@@ -11346,7 +11458,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (row_num_node[(contor_renew_node_col[n] + 33 * ((int)c_qY - 1))
                   - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = u6 - 1U;
                 if (c_qY > u6) {
                   c_qY = 0U;
@@ -11372,8 +11484,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* ¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = u6 - 1U;
       if (c_qY > u6) {
         c_qY = 0U;
@@ -11400,7 +11512,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
               - 1] & i127) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.West <= 7) {
             i132 = (unsigned char)(1 << g_d_direction.West);
           } else {
@@ -11408,7 +11520,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           }
 
           if ((col_dir_node[i76] & i132) != 0) {
-            /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             c_qY = u6 - 1U;
             if (c_qY > u6) {
               c_qY = 0U;
@@ -11423,7 +11535,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                 - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11439,7 +11551,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) -
                 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11453,10 +11565,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[n];
               c_qY = u6 - 1U;
@@ -11467,7 +11579,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -11475,7 +11587,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = u6 - 1U;
               if (c_qY > u6) {
@@ -11491,7 +11603,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                   - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = u6 - 1U;
                 if (c_qY > u6) {
                   c_qY = 0U;
@@ -11514,9 +11626,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             c_qY = u6 - 1U;
             if (c_qY > u6) {
               c_qY = 0U;
@@ -11531,7 +11643,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
             if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                 - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11547,7 +11659,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5)) -
                 1] = (unsigned short)b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               c_qY = u6 - 1U;
               if (c_qY > u6) {
                 c_qY = 0U;
@@ -11561,10 +11673,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                   - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp - 1] =
                 contor_renew_node_col[n];
               c_qY = u6 - 1U;
@@ -11575,7 +11687,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_col_temp[contor_renew_node_col_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i78 = (int)(contor_renew_node_col_idx_temp + 1U);
               if ((unsigned int)i78 > 255U) {
                 i78 = 255;
@@ -11583,7 +11695,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_col_idx_temp = (unsigned char)i78;
 
-              /* ï¿½ï¿½ï¿½Âï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               c_qY = u6 - 1U;
               if (c_qY > u6) {
@@ -11597,7 +11709,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               if (col_num_node[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
                   - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 c_qY = u6 - 1U;
                 if (c_qY > u6) {
                   c_qY = 0U;
@@ -11623,8 +11735,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
         }
       }
 
-      /* ï¿½kï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ & ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /* –k¼‘¤ */
+      /* •Ç‚ª–³‚¢ & ’TõÏ‚İ‚Å‚ ‚é‚Æ‚« */
       c_qY = u6 - 1U;
       if (c_qY > u6) {
         c_qY = 0U;
@@ -11651,7 +11763,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
         if (((maze_wall_search[(contor_renew_node_col[n] + (((int)c_qY - 1) << 5))
               - 1] & i134) != 0) == search->contents.known) {
-          /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é */
+          /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚ ‚é */
           if (g_d_direction.North_West <= 7) {
             i135 = (unsigned char)(1 << g_d_direction.North_West);
           } else {
@@ -11661,7 +11773,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
           if ((col_dir_node[(contor_renew_node_col[n] +
                              ((contor_renew_node_col[n + 1024] - 1) << 5)) - 1]
                & i135) != 0) {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½È’lï¿½Ìê‡ */
+            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚æ‚è‚à‘å‚«‚È’l‚Ìê‡ */
             i76 = (int)(contor_renew_node_col[n] + 1U);
             if ((unsigned int)i76 > 255U) {
               i76 = 255;
@@ -11680,7 +11792,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* •à”MAPXV */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11701,7 +11813,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11719,10 +11831,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11738,7 +11850,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11746,7 +11858,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
@@ -11766,7 +11878,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i76 = (int)(contor_renew_node_col[n] + 1U);
                 if ((unsigned int)i76 > 255U) {
                   i76 = 255;
@@ -11798,9 +11910,9 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
             }
 
-            /* ï¿½ï¿½ï¿½Âiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ */
+            /* ‚©‚Âis•ûŒü‚ª–k¼Œü‚«‚Å‚È‚¢‚Æ‚« */
           } else {
-            /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì•ï¿½ï¿½ï¿½MAPï¿½lï¿½ï¿½ï¿½Aï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ */
+            /* ‚©‚Â–k¼‚Ìƒm[ƒh‚Ì•à”MAP’l‚ªAXV—\’è’l‚æ‚è‘å‚«‚¢ê‡ */
             i78 = (int)(contor_renew_node_col[n] + 1U);
             if ((unsigned int)i78 > 255U) {
               i78 = 255;
@@ -11817,7 +11929,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
             }
 
             if (row_num_node[(i78 + 33 * ((int)c_qY - 1)) - 1] > (int)b_qY) {
-              /* ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V(ï¿½dï¿½İ‚Ã‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+              /* •à”MAPXV(d‚İ‚Ã‚¯‚ ‚è) */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11838,7 +11950,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               row_num_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = (unsigned short)
                 b_qY;
 
-              /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½Xï¿½V */
+              /* ˆÚ“®•ûŒüMAPXV */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11856,10 +11968,10 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
                 row_dir_node[(i76 + 33 * ((int)c_qY - 1)) - 1] = 0U;
               }
 
-              /* ï¿½Xï¿½Vï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+              /* XVƒtƒ‰ƒO‚ğ—§‚Ä‚é */
               change_flag = 1U;
 
-              /* ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½V */
+              /* XVƒm[ƒh‚ğXV */
               i76 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11875,7 +11987,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               contor_renew_node_row_temp[contor_renew_node_row_idx_temp + 1023] =
                 (unsigned char)c_qY;
 
-              /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+              /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
               i76 = (int)(contor_renew_node_row_idx_temp + 1U);
               if ((unsigned int)i76 > 255U) {
                 i76 = 255;
@@ -11883,7 +11995,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 
               contor_renew_node_row_idx_temp = (unsigned char)i76;
 
-              /* ï¿½ï¿½ï¿½Â–kï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Xï¿½Vï¿½\ï¿½ï¿½lï¿½Æ“ï¿½ï¿½ï¿½ï¿½ê‡ */
+              /* ‚©‚Â–k¼‚Ìƒm[ƒh‚ªXV—\’è’l‚Æ“¯‚¶ê‡ */
             } else {
               i78 = (int)(contor_renew_node_col[n] + 1U);
               if ((unsigned int)i78 > 255U) {
@@ -11901,7 +12013,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
               }
 
               if (row_num_node[(i78 + 33 * ((int)c_qY - 1)) - 1] == (int)b_qY) {
-                /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‰ï¿½ */
+                /* ˆÚ“®•ûŒü‚ğ’Ç‰Á */
                 i76 = (int)(contor_renew_node_col[n] + 1U);
                 if ((unsigned int)i76 > 255U) {
                   i76 = 255;
@@ -11937,7 +12049,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½mï¿½[ï¿½hï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
+    /* ƒS[ƒ‹XVƒm[ƒh‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
     contor_renew_node_col_idx = contor_renew_node_col_idx_temp;
     contor_renew_node_col_idx_temp = 1U;
     for (q0 = 0; q0 < 2048; q0++) {
@@ -11950,7 +12062,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
     contor_renew_node_row_idx = contor_renew_node_row_idx_temp;
     contor_renew_node_row_idx_temp = 1U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½(ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½Ì•ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½Xï¿½V) */
+    /* XV‚ª‚È‚¯‚ê‚ÎI—¹(ƒXƒ^[ƒg’n“_‚Ì•à”ƒ}ƒbƒv‚ğXV) */
     if (change_flag == 0) {
       b_qY = row_num_node[1] + 3U;
       if (b_qY > 65535U) {
@@ -11966,8 +12078,8 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
 }
 
 /*
- * ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½
- * Arguments    : const coder_internal_ref_5 *wall
+ * –À˜Hƒpƒ‰ƒ[ƒ^İ’è
+ * Arguments    : const coder_internal_ref_6 *wall
  *                const unsigned char maze_wall[1024]
  *                const unsigned char maze_wall_search[1024]
  *                unsigned char current_x
@@ -11976,7 +12088,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_2 *max_length, const
  *                unsigned char new_goal[2]
  * Return Type  : void
  */
-static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
+static void make_new_goal_all(const coder_internal_ref_6 *wall, const unsigned
   char maze_wall[1024], const unsigned char maze_wall_search[1024], unsigned
   char current_x, unsigned char current_y, unsigned short contour_map[1024],
   unsigned char new_goal[2])
@@ -11991,88 +12103,88 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
   unsigned char change_flag;
   int tempn;
   bool exitg2;
-  int i26;
+  int i30;
   bool guard1 = false;
   bool guard2 = false;
   bool guard3 = false;
-  int i27;
-  int i28;
-  int i29;
-  int i30;
   int i31;
   int i32;
+  int i33;
+  int i34;
+  int i35;
+  int i36;
   unsigned int u1;
   unsigned int qY;
 
-  /*     %% make_new_goal_all ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½ÌƒSï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B(ï¿½Sï¿½Ê’Tï¿½ï¿½ï¿½p) */
-  /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½iï¿½[ï¿½pï¿½Ïï¿½ */
+  /*     %% make_new_goal_all Œ»İˆÊ’u‚©‚çV‹K‚ÌƒS[ƒ‹‚ğì‚éB(‘S–Ê’Tõ—p) */
+  /* V‹KƒS[ƒ‹À•WŠi”[—p•Ï” */
   new_goal[0] = 0U;
   new_goal[1] = 0U;
 
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
+  /* XVÀ•W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* XVÀ•WXV—p */
   contor_renew_square_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_square_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
-  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
-  /* 16bitï¿½É‚ï¿½ï¿½×‚ï¿½ */
+  /* XVÀ•WXV—p */
+  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
+  /* 32ƒ}ƒX•ªmap‚ğ•Û */
+  /* 16bit‚É‚·‚×‚« */
   for (q0 = 0; q0 < 1024; q0++) {
     contour_map[q0] = MAX_uint16_T;
   }
 
-  /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç‚µï¿½Aï¿½ï¿½ï¿½Ê‰Â”\ï¿½Èï¿½Ô‚É‚ï¿½ï¿½ï¿½B */
+  /* ƒXƒ^[ƒg’n“_‚Ì•à”‚ğ1‚¾‚¯Œ¸‚ç‚µA”»•Ê‰Â”\‚Èó‘Ô‚É‚·‚éB */
   contour_map[(current_y + ((current_x - 1) << 5)) - 1] = 65534U;
 
-  /* ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½W = ï¿½ï¿½ï¿½İˆÊ’uï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /* ‰‰ñ‚ÌXVÀ•W = Œ»İˆÊ’u@‚ğ“ü—Í */
   contor_renew_square[0] = current_y;
   contor_renew_square[1024] = current_x;
 
-  /* ï¿½ï¿½ï¿½İ‚ÌˆÊ’uï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½Wï¿½Jï¿½B */
-  /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ê’uï¿½ÉƒRï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½ï¿½Wï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Î‚ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+  /* Œ»İ‚ÌˆÊ’u‚©‚çƒRƒ“ƒ^[‚ğ“WŠJB */
+  /* –¢’TõˆÊ’u‚ÉƒRƒ“ƒ^[‚ª“WŠJ‚³‚ê‚ê‚Î‚»‚±‚ğV‹KƒS[ƒ‹‚Æ‚µAI—¹‚·‚éB */
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
-    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
+    /* •à”ƒJƒEƒ“ƒg‚Í0~max_length */
+    /* mapXVŠm”F—pƒtƒ‰ƒO */
     change_flag = 0U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½Wï¿½J */
+    /* XV‚³‚ê‚½À•W‚É‘Î‚µAƒRƒ“ƒ^[ƒ}ƒbƒv‚ğ“WŠJ */
     tempn = 0;
     exitg2 = false;
     while ((!exitg2) && (tempn <= contor_renew_square_idx - 1)) {
-      /* ï¿½kï¿½ï¿½ */
+      /* –k‘¤ */
       q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
         1024] - 1) << 5)) - 1];
       if (g_direction.North <= 7) {
-        i26 = (unsigned char)(1 << g_direction.North);
+        i30 = (unsigned char)(1 << g_direction.North);
       } else {
-        i26 = 0;
+        i30 = 0;
       }
 
       guard1 = false;
       guard2 = false;
       guard3 = false;
-      if ((q0 & i26) == wall->contents.nowall) {
-        /* ï¿½kï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-        i27 = (int)(contor_renew_square[tempn] + 1U);
-        if ((unsigned int)i27 > 255U) {
-          i27 = 255;
+      if ((q0 & i30) == wall->contents.nowall) {
+        /* –k‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
+        i31 = (int)(contor_renew_square[tempn] + 1U);
+        if ((unsigned int)i31 > 255U) {
+          i31 = 255;
         }
 
-        i28 = (contor_renew_square[tempn + 1024] - 1) << 5;
-        if (contour_map[(i27 + i28) - 1] == 65535) {
-          i27 = (int)(contor_renew_square[tempn] + 1U);
-          i30 = i27;
-          if ((unsigned int)i27 > 255U) {
-            i30 = 255;
+        i32 = (contor_renew_square[tempn + 1024] - 1) << 5;
+        if (contour_map[(i31 + i32) - 1] == 65535) {
+          i31 = (int)(contor_renew_square[tempn] + 1U);
+          i34 = i31;
+          if ((unsigned int)i31 > 255U) {
+            i34 = 255;
           }
 
           u1 = tempi + 2U;
@@ -12080,41 +12192,41 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
             u1 = 65535U;
           }
 
-          contour_map[(i30 + i28) - 1] = (unsigned short)(65535 - (int)u1);
+          contour_map[(i34 + i32) - 1] = (unsigned short)(65535 - (int)u1);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
-          i30 = i27;
-          if ((unsigned int)i27 > 255U) {
-            i30 = 255;
+          /* XVƒ}ƒX‚ğXV */
+          i34 = i31;
+          if ((unsigned int)i31 > 255U) {
+            i34 = 255;
           }
 
           contor_renew_square_temp[contor_renew_square_idx_temp - 1] = (unsigned
-            char)i30;
+            char)i34;
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square[tempn + 1024];
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-          i30 = (int)(contor_renew_square_idx_temp + 1U);
-          if ((unsigned int)i30 > 255U) {
-            i30 = 255;
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+          i34 = (int)(contor_renew_square_idx_temp + 1U);
+          if ((unsigned int)i34 > 255U) {
+            i34 = 255;
           }
 
-          contor_renew_square_idx_temp = (unsigned char)i30;
+          contor_renew_square_idx_temp = (unsigned char)i34;
 
-          /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
-          i30 = i27;
-          if ((unsigned int)i27 > 255U) {
-            i30 = 255;
+          /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
+          i34 = i31;
+          if ((unsigned int)i31 > 255U) {
+            i34 = 255;
           }
 
-          if (maze_wall_search[(i30 + i28) - 1] != 15) {
+          if (maze_wall_search[(i34 + i32) - 1] != 15) {
             new_goal[0] = contor_renew_square[tempn + 1024];
-            if ((unsigned int)i27 > 255U) {
-              i27 = 255;
+            if ((unsigned int)i31 > 255U) {
+              i31 = 255;
             }
 
-            new_goal[1] = (unsigned char)i27;
+            new_goal[1] = (unsigned char)i31;
             exitg2 = true;
           } else {
             guard3 = true;
@@ -12127,26 +12239,26 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard3) {
-        /* ï¿½ï¿½ï¿½ï¿½ */
+        /* “Œ‘¤ */
         if (g_direction.East <= 7) {
-          i29 = (unsigned char)(1 << g_direction.East);
+          i33 = (unsigned char)(1 << g_direction.East);
         } else {
-          i29 = 0;
+          i33 = 0;
         }
 
-        if ((q0 & i29) == wall->contents.nowall) {
-          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        if ((q0 & i33) == wall->contents.nowall) {
+          /* “Œ‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
           q0 = (int)(contor_renew_square[tempn + 1024] + 1U);
-          i27 = q0;
+          i31 = q0;
           if ((unsigned int)q0 > 255U) {
-            i27 = 255;
+            i31 = 255;
           }
 
-          if (contour_map[(contor_renew_square[tempn] + ((i27 - 1) << 5)) - 1] ==
+          if (contour_map[(contor_renew_square[tempn] + ((i31 - 1) << 5)) - 1] ==
               65535) {
-            i27 = q0;
+            i31 = q0;
             if ((unsigned int)q0 > 255U) {
-              i27 = 255;
+              i31 = 255;
             }
 
             u1 = tempi + 2U;
@@ -12154,36 +12266,36 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
               u1 = 65535U;
             }
 
-            contour_map[(contor_renew_square[tempn] + ((i27 - 1) << 5)) - 1] =
+            contour_map[(contor_renew_square[tempn] + ((i31 - 1) << 5)) - 1] =
               (unsigned short)(65535 - (int)u1);
             change_flag = 1U;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+            /* XVƒ}ƒX‚ğXV */
             contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
               contor_renew_square[tempn];
-            i27 = q0;
+            i31 = q0;
             if ((unsigned int)q0 > 255U) {
-              i27 = 255;
+              i31 = 255;
             }
 
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
-              (unsigned char)i27;
+              (unsigned char)i31;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-            i27 = (int)(contor_renew_square_idx_temp + 1U);
-            if ((unsigned int)i27 > 255U) {
-              i27 = 255;
+            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+            i31 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)i31 > 255U) {
+              i31 = 255;
             }
 
-            contor_renew_square_idx_temp = (unsigned char)i27;
+            contor_renew_square_idx_temp = (unsigned char)i31;
 
-            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
-            i27 = q0;
+            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
+            i31 = q0;
             if ((unsigned int)q0 > 255U) {
-              i27 = 255;
+              i31 = 255;
             }
 
-            if (maze_wall_search[(contor_renew_square[tempn] + ((i27 - 1) << 5))
+            if (maze_wall_search[(contor_renew_square[tempn] + ((i31 - 1) << 5))
                 - 1] != 15) {
               if ((unsigned int)q0 > 255U) {
                 q0 = 255;
@@ -12204,17 +12316,17 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard2) {
-        /* ï¿½ì‘¤ */
+        /* “ì‘¤ */
         q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
           + 1024] - 1) << 5)) - 1];
         if (g_direction.South <= 7) {
-          i31 = (unsigned char)(1 << g_direction.South);
+          i35 = (unsigned char)(1 << g_direction.South);
         } else {
-          i31 = 0;
+          i35 = 0;
         }
 
-        if ((q0 & i31) == wall->contents.nowall) {
-          /* ï¿½ì‘¤ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        if ((q0 & i35) == wall->contents.nowall) {
+          /* “ì‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
           qY = contor_renew_square[tempn] - 1U;
           if (qY > contor_renew_square[tempn]) {
             qY = 0U;
@@ -12236,7 +12348,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
               - 1] = (unsigned short)(65535 - (int)u1);
             change_flag = 1U;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+            /* XVƒ}ƒX‚ğXV */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -12247,15 +12359,15 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               contor_renew_square[tempn + 1024];
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
-            i27 = (int)(contor_renew_square_idx_temp + 1U);
-            if ((unsigned int)i27 > 255U) {
-              i27 = 255;
+            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
+            i31 = (int)(contor_renew_square_idx_temp + 1U);
+            if ((unsigned int)i31 > 255U) {
+              i31 = 255;
             }
 
-            contor_renew_square_idx_temp = (unsigned char)i27;
+            contor_renew_square_idx_temp = (unsigned char)i31;
 
-            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -12283,15 +12395,15 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard1) {
-        /* ï¿½ï¿½ï¿½ï¿½ */
+        /* ¼‘¤ */
         if (g_direction.West <= 7) {
-          i32 = (unsigned char)(1 << g_direction.West);
+          i36 = (unsigned char)(1 << g_direction.West);
         } else {
-          i32 = 0;
+          i36 = 0;
         }
 
-        if ((q0 & i32) == wall->contents.nowall) {
-          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        if ((q0 & i36) == wall->contents.nowall) {
+          /* ¼‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
           q0 = contor_renew_square[tempn + 1024];
           qY = q0 - 1U;
           if (qY > (unsigned int)q0) {
@@ -12315,7 +12427,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
               = (unsigned short)(65535 - (int)u1);
             change_flag = 1U;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+            /* XVƒ}ƒX‚ğXV */
             contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
               contor_renew_square[tempn];
             q0 = contor_renew_square[tempn + 1024];
@@ -12327,7 +12439,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               (unsigned char)qY;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
             q0 = (int)(contor_renew_square_idx_temp + 1U);
             if ((unsigned int)q0 > 255U) {
               q0 = 255;
@@ -12335,7 +12447,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
 
             contor_renew_square_idx_temp = (unsigned char)q0;
 
-            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
             q0 = contor_renew_square[tempn + 1024];
             qY = q0 - 1U;
             if (qY > (unsigned int)q0) {
@@ -12365,7 +12477,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
+    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
     for (q0 = 0; q0 < 2048; q0++) {
       contor_renew_square[q0] = contor_renew_square_temp[q0];
       contor_renew_square_temp[q0] = 0U;
@@ -12374,7 +12486,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍƒSï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
+    /* XV‚ª‚È‚¢A‚à‚µ‚­‚ÍƒS[ƒ‹‚ªİ’è‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
     if ((change_flag == 0) || (new_goal[0] != 0)) {
       /* disp(tempi) */
       exitg1 = true;
@@ -12385,8 +12497,8 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
 }
 
 /*
- * ï¿½ï¿½ï¿½Hï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½İ’ï¿½
- * Arguments    : const coder_internal_ref_5 *wall
+ * –À˜Hƒpƒ‰ƒ[ƒ^İ’è
+ * Arguments    : const coder_internal_ref_6 *wall
  *                const unsigned char maze_wall[1024]
  *                unsigned char current_x
  *                unsigned char current_y
@@ -12396,7 +12508,7 @@ static void make_new_goal_all(const coder_internal_ref_5 *wall, const unsigned
  *                unsigned char new_goal[2]
  * Return Type  : void
  */
-static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
+static void make_new_goal_sh(const coder_internal_ref_6 *wall, const unsigned
   char maze_wall[1024], unsigned char current_x, unsigned char current_y, const
   unsigned char unexp_square[1024], unsigned char unexp_square_idx, unsigned
   short contour_map[1024], unsigned char new_goal[2])
@@ -12424,51 +12536,51 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
   unsigned int u4;
   unsigned int qY;
 
-  /*     %% make_new_goal_sh ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½ÌƒSï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B(ï¿½Å’Zï¿½oï¿½Hï¿½Tï¿½ï¿½ï¿½p) */
-  /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½iï¿½[ï¿½pï¿½Ïï¿½ */
+  /*     %% make_new_goal_sh Œ»İˆÊ’u‚©‚çV‹K‚ÌƒS[ƒ‹¶¬‚·‚éB(Å’ZŒo˜H’Tõ—p) */
+  /* V‹KƒS[ƒ‹À•WŠi”[—p•Ï” */
   new_goal[0] = 0U;
   new_goal[1] = 0U;
 
-  /* ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÛŠÇ—p */
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* ƒRƒ“ƒ^[XVƒ}ƒX•ÛŠÇ—p */
+  /* XVÀ•W */
   memset(&contor_renew_square[0], 0, sizeof(unsigned char) << 11);
   memset(&contor_renew_square_temp[0], 0, sizeof(unsigned char) << 11);
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
+  /* XVÀ•WXV—p */
   contor_renew_square_idx = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½W */
+  /* XVÀ•W */
   contor_renew_square_idx_temp = 1U;
 
-  /* ï¿½Xï¿½Vï¿½ï¿½ï¿½Wï¿½Xï¿½Vï¿½p */
-  /* MAPï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×‚Ä‚Ì—vï¿½fï¿½ï¿½max_lengthï¿½ï¿½ï¿½ï¿½ï¿½) */
-  /* 32ï¿½}ï¿½Xï¿½ï¿½mapï¿½ï¿½Ûï¿½ */
-  /* 16bitï¿½É‚ï¿½ï¿½×‚ï¿½ */
+  /* XVÀ•WXV—p */
+  /* MAP‚Ì‰Šú‰»(‚·‚×‚Ä‚Ì—v‘f‚Émax_length‚ğ“ü—Í) */
+  /* 32ƒ}ƒX•ªmap‚ğ•Û */
+  /* 16bit‚É‚·‚×‚« */
   for (q0 = 0; q0 < 1024; q0++) {
     contour_map[q0] = MAX_uint16_T;
   }
 
-  /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½nï¿½_ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç‚µï¿½Aï¿½ï¿½ï¿½Ê‰Â”\ï¿½Èï¿½Ô‚É‚ï¿½ï¿½ï¿½B */
+  /* ƒXƒ^[ƒg’n“_‚Ì•à”‚ğ1‚¾‚¯Œ¸‚ç‚µA”»•Ê‰Â”\‚Èó‘Ô‚É‚·‚éB */
   contour_map[(current_y + ((current_x - 1) << 5)) - 1] = 65534U;
 
-  /* ï¿½ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½W = ï¿½ï¿½ï¿½İˆÊ’uï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ */
+  /* ‰‰ñ‚ÌXVÀ•W = Œ»İˆÊ’u@‚ğ“ü—Í */
   contor_renew_square[0] = current_y;
   contor_renew_square[1024] = current_x;
 
-  /* ï¿½ï¿½ï¿½İ‚ÌˆÊ’uï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½Wï¿½Jï¿½B */
-  /* ï¿½Å’Zï¿½oï¿½Hï¿½ÉƒRï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½ï¿½Wï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Î‚ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+  /* Œ»İ‚ÌˆÊ’u‚©‚çƒRƒ“ƒ^[‚ğ“WŠJB */
+  /* Å’ZŒo˜H‚ÉƒRƒ“ƒ^[‚ª“WŠJ‚³‚ê‚ê‚Î‚»‚±‚ğV‹KƒS[ƒ‹‚Æ‚µAI—¹‚·‚éB */
   tempi = 0U;
   exitg1 = false;
   while ((!exitg1) && (tempi < 65535)) {
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½0~max_length */
-    /* mapï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½tï¿½ï¿½ï¿½O */
+    /* •à”ƒJƒEƒ“ƒg‚Í0~max_length */
+    /* mapXVŠm”F—pƒtƒ‰ƒO */
     change_flag = 0U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Wï¿½É‘Î‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½Wï¿½J */
+    /* XV‚³‚ê‚½À•W‚É‘Î‚µAƒRƒ“ƒ^[ƒ}ƒbƒv‚ğ“WŠJ */
     tempn = 0;
     exitg2 = false;
     while ((!exitg2) && (tempn <= contor_renew_square_idx - 1)) {
-      /* ï¿½kï¿½ï¿½ */
+      /* –k‘¤ */
       q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn +
         1024] - 1) << 5)) - 1];
       if (g_direction.North <= 7) {
@@ -12481,7 +12593,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       guard2 = false;
       guard3 = false;
       if ((q0 & i64) == wall->contents.nowall) {
-        /* ï¿½kï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        /* –k‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
         i65 = (int)(contor_renew_square[tempn] + 1U);
         if ((unsigned int)i65 > 255U) {
           i65 = 255;
@@ -12503,7 +12615,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
           contour_map[(i68 + i66) - 1] = (unsigned short)(65535 - (int)u4);
           change_flag = 1U;
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+          /* XVƒ}ƒX‚ğXV */
           i66 = i65;
           if ((unsigned int)i65 > 255U) {
             i66 = 255;
@@ -12514,7 +12626,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
           contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
             contor_renew_square[tempn + 1024];
 
-          /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+          /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
           i66 = (int)(contor_renew_square_idx_temp + 1U);
           if ((unsigned int)i66 > 255U) {
             i66 = 255;
@@ -12522,7 +12634,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
 
           contor_renew_square_idx_temp = (unsigned char)i66;
 
-          /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+          /* XV‚µ‚½’n“_‚ªÅ’ZŒo˜H–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
           i66 = i65;
           if ((unsigned int)i65 > 255U) {
             i66 = 255;
@@ -12548,7 +12660,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard3) {
-        /* ï¿½ï¿½ï¿½ï¿½ */
+        /* “Œ‘¤ */
         if (g_direction.East <= 7) {
           i67 = (unsigned char)(1 << g_direction.East);
         } else {
@@ -12556,7 +12668,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
         }
 
         if ((q0 & i67) == wall->contents.nowall) {
-          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+          /* “Œ‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
           q0 = (int)(contor_renew_square[tempn + 1024] + 1U);
           i65 = q0;
           if ((unsigned int)q0 > 255U) {
@@ -12579,7 +12691,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
               (unsigned short)(65535 - (int)u4);
             change_flag = 1U;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+            /* XVƒ}ƒX‚ğXV */
             contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
               contor_renew_square[tempn];
             i65 = q0;
@@ -12590,7 +12702,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               (unsigned char)i65;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
             i65 = (int)(contor_renew_square_idx_temp + 1U);
             if ((unsigned int)i65 > 255U) {
               i65 = 255;
@@ -12598,7 +12710,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
 
             contor_renew_square_idx_temp = (unsigned char)i65;
 
-            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
             i65 = q0;
             if ((unsigned int)q0 > 255U) {
               i65 = 255;
@@ -12625,7 +12737,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard2) {
-        /* ï¿½ì‘¤ */
+        /* “ì‘¤ */
         q0 = maze_wall[(contor_renew_square[tempn] + ((contor_renew_square[tempn
           + 1024] - 1) << 5)) - 1];
         if (g_direction.South <= 7) {
@@ -12635,7 +12747,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
         }
 
         if ((q0 & i69) == wall->contents.nowall) {
-          /* ï¿½ì‘¤ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+          /* “ì‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
           qY = contor_renew_square[tempn] - 1U;
           if (qY > contor_renew_square[tempn]) {
             qY = 0U;
@@ -12657,7 +12769,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
               - 1] = (unsigned short)(65535 - (int)u4);
             change_flag = 1U;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+            /* XVƒ}ƒX‚ğXV */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -12668,7 +12780,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               contor_renew_square[tempn + 1024];
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
             i65 = (int)(contor_renew_square_idx_temp + 1U);
             if ((unsigned int)i65 > 255U) {
               i65 = 255;
@@ -12676,7 +12788,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
 
             contor_renew_square_idx_temp = (unsigned char)i65;
 
-            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
             qY = contor_renew_square[tempn] - 1U;
             if (qY > contor_renew_square[tempn]) {
               qY = 0U;
@@ -12704,7 +12816,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       }
 
       if (guard1) {
-        /* ï¿½ï¿½ï¿½ï¿½ */
+        /* ¼‘¤ */
         if (g_direction.West <= 7) {
           i70 = (unsigned char)(1 << g_direction.West);
         } else {
@@ -12712,7 +12824,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
         }
 
         if ((q0 & i70) == wall->contents.nowall) {
-          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½fï¿½Aï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Îï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+          /* ¼‘¤‚ÌMAP‚ªXV‚³‚ê‚Ä‚¢‚é‚©”»’fA‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‘‚«‚İ */
           q0 = contor_renew_square[tempn + 1024];
           qY = q0 - 1U;
           if (qY > (unsigned int)q0) {
@@ -12736,7 +12848,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
               = (unsigned short)(65535 - (int)u4);
             change_flag = 1U;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ï¿½ï¿½Xï¿½V */
+            /* XVƒ}ƒX‚ğXV */
             contor_renew_square_temp[contor_renew_square_idx_temp - 1] =
               contor_renew_square[tempn];
             q0 = contor_renew_square[tempn + 1024];
@@ -12748,7 +12860,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
             contor_renew_square_temp[contor_renew_square_idx_temp + 1023] =
               (unsigned char)qY;
 
-            /* ï¿½Xï¿½Vï¿½}ï¿½Xï¿½pï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ğ‘‰ï¿½ */
+            /* XVƒ}ƒX—pƒCƒ“ƒfƒbƒNƒX‚ğ‘‰Á */
             q0 = (int)(contor_renew_square_idx_temp + 1U);
             if ((unsigned int)q0 > 255U) {
               q0 = 255;
@@ -12756,7 +12868,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
 
             contor_renew_square_idx_temp = (unsigned char)q0;
 
-            /* ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ìˆï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½_ï¿½Æ‚ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Wï¿½Jï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
+            /* XV‚µ‚½’n“_‚ª–¢’Tõ—Ìˆæ‚Å‚ ‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹“_‚Æ‚µAƒRƒ“ƒ^[“WŠJ‚ğI—¹‚·‚éB */
             q0 = contor_renew_square[tempn + 1024];
             qY = q0 - 1U;
             if (qY > (unsigned int)q0) {
@@ -12786,7 +12898,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½}ï¿½Xï¿½ÌXï¿½Vï¿½ÆƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ÌƒNï¿½ï¿½ï¿½A */
+    /* ƒS[ƒ‹XVƒ}ƒX‚ÌXV‚ÆƒCƒ“ƒfƒbƒNƒX‚ÌƒNƒŠƒA */
     for (q0 = 0; q0 < 2048; q0++) {
       contor_renew_square[q0] = contor_renew_square_temp[q0];
       contor_renew_square_temp[q0] = 0U;
@@ -12795,7 +12907,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
     contor_renew_square_idx = (unsigned char)(contor_renew_square_idx_temp - 1);
     contor_renew_square_idx_temp = 1U;
 
-    /* ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍƒSï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
+    /* XV‚ª‚È‚¢A‚à‚µ‚­‚ÍƒS[ƒ‹‚ªİ’è‚³‚ê‚Ä‚¢‚ê‚ÎI—¹ */
     if ((change_flag == 0) || (new_goal[0] != 0)) {
       /* disp(tempi) */
       exitg1 = true;
@@ -12806,7 +12918,7 @@ static void make_new_goal_sh(const coder_internal_ref_5 *wall, const unsigned
 }
 
 /*
- * ï¿½Xï¿½^ï¿½[ï¿½gï¿½mï¿½[ï¿½hï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
+ * ƒXƒ^[ƒgƒm[ƒh‚Ì‰Šú‰»
  * Arguments    : const unsigned short row_num_node[1056]
  *                const unsigned short col_num_node[1056]
  *                const unsigned char goal_section[2]
@@ -12843,35 +12955,35 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
   unsigned int qY;
   unsigned char b_next_move_dir;
 
-  /*     %% make_route_diagonal ï¿½Î‚ß—Lï¿½Å‚ÌÅ’Zï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½s */
+  /*     %% make_route_diagonal Î‚ß—L‚Å‚ÌÅ’Zƒ‹[ƒg¶¬A‘–s */
   current_node[0] = 1U;
   current_node[1] = 1U;
 
-  /* ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½Xï¿½Ì“ï¿½Ìƒmï¿½[ï¿½h */
+  /* ‰Šúƒ}ƒX‚Ì“ì‚Ìƒm[ƒh */
   current_node_property = matrix_dir.Row;
 
-  /* ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½Ì‘ï¿½ï¿½ï¿½ï¿½Ísï¿½ï¿½ï¿½ï¿½ */
+  /* “ì‚Ìƒm[ƒh‚Ì‘®«‚Ís•ûŒü */
   current_move_dir = g_d_direction.North;
 
-  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Í–k */
+  /* ‰Šú‚Ìis•ûŒü‚Í–k */
   current_move_mode = move_dir_property.straight;
 
-  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í’ï¿½ï¿½iï¿½iï¿½Î‚ß‚Å‚È‚ï¿½ï¿½j */
+  /* ‰Šú‚Ìis•ûŒü‘®«‚Í’¼iiÎ‚ß‚Å‚È‚¢j */
   straight_count = 0U;
 
-  /* ï¿½ï¿½ï¿½iï¿½pï¿½ÌƒJï¿½Eï¿½ï¿½ï¿½^ */
-  /* ï¿½ï¿½ï¿½ï¿½Ì‚İï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½Å’ï¿½ */
-  /* ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½Xï¿½Ì–kï¿½Ìƒmï¿½[ï¿½h */
-  /* ï¿½kï¿½Ìƒmï¿½[ï¿½hï¿½Ì‘ï¿½ï¿½ï¿½ï¿½Ísï¿½ï¿½ï¿½ï¿½ */
-  /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ */
-  /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½İ‚Ìƒmï¿½[ï¿½hï¿½Éİ’ï¿½ */
+  /* ’¼i—p‚ÌƒJƒEƒ“ƒ^ */
+  /* ‰‰ñ‚Ì‚İŸ‚Ìƒm[ƒh‚ğŒÅ’è */
+  /* ‰Šúƒ}ƒX‚Ì–k‚Ìƒm[ƒh */
+  /* –k‚Ìƒm[ƒh‚Ì‘®«‚Ís•ûŒü */
+  /* Šî€ƒm[ƒhÀ•W‚ğŸ‚Ìƒm[ƒh‚É */
+  /* Šî€ƒm[ƒh‚ÌˆÚ“®•ûŒüAƒ‚[ƒh‚ğŒ»İ‚Ìƒm[ƒh‚Éİ’è */
   ref_move_dir = g_d_direction.North;
   ref_move_mode = move_dir_property.straight;
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Â‚Ü‚Åƒï¿½ï¿½[ï¿½v */
+  /* ƒS[ƒ‹ƒtƒ‰ƒO‚ª‚½‚Â‚Ü‚Åƒ‹[ƒv */
   goal_flag = 0;
 
-  /* ï¿½Î‚ßï¿½ï¿½İ‚Ìiï¿½sï¿½ï¿½ï¿½@ï¿½Iï¿½ï¿½ */
+  /* Î‚ß‚İ‚Ìis•û–@‘I‘ğ */
   next_node[0] = 2U;
   next_node[1] = 1U;
   get_next_dir_diagonal(row_num_node, col_num_node, g_d_direction.North,
@@ -12883,9 +12995,9 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
     /*          disp(["next_move_dir=",num2str(next_move_dir)]) */
     /*          disp(["ref_move_dir=",num2str(ref_move_dir)]) */
-    /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½çŒ©ï¿½ÄAï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Æ‚ï¿½ */
+    /* Šî€ƒm[ƒh‚©‚çŒ©‚ÄAis•ûŒü‚ª“¯ˆê‚Ì‚Æ‚« */
     if (ref_move_dir == next_move_dir) {
-      /*              disp("ï¿½ï¿½ï¿½i") */
+      /*              disp("’¼i") */
       i = (int)(straight_count + 1U);
       if ((unsigned int)i > 255U) {
         i = 255;
@@ -12893,12 +13005,12 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
       straight_count = (unsigned char)i;
 
-      /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½g */
-      /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½B */
+      /* ’¼iƒJƒEƒ“ƒ^‚ğƒCƒ“ƒNƒŠƒƒ“ƒg */
+      /* Šî€ƒm[ƒh‚ğˆÚ“®‚·‚éB */
       ref_node_property = next_node_property;
       ref_move_dir = next_move_dir;
 
-      /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½Å‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½ */
+      /* Šî€ƒm[ƒh‚ªƒS[ƒ‹‚Å‚ ‚é‚©”»’è */
       p = false;
       b_p = true;
       k = 0;
@@ -12919,7 +13031,7 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
       if ((p && (next_node_property == goal_node_property)) ||
           ((next_node_property == matrix_dir.section) && (goal_section[1] ==
             b_next_node[0]) && (goal_section[0] == b_next_node[1]))) {
-        /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Å‚ï¿½ï¿½éï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Ìƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½B */
+        /* Œ»İˆÊ’u‚ªƒm[ƒh‚Å‚ ‚éAƒS[ƒ‹i“ü‚Ìƒpƒ^[ƒ“‚ğŒˆ’è‚·‚éB */
         p = false;
         b_p = true;
         k = 0;
@@ -12938,50 +13050,50 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         }
 
         if (p && (next_node_property == goal_node_property)) {
-          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Ìê‡ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Ìƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½B */
+          /* ƒS[ƒ‹‚Ìê‡AƒS[ƒ‹i“ü‚Ìƒpƒ^[ƒ“‚ğŒˆ’è‚·‚éB */
           get_next_dir_diagonal(row_num_node, col_num_node, next_move_dir,
                                 b_next_node, next_node_property, goal_node2,
                                 goal_node_property, goal_section,
                                 &b_next_move_dir, next_node,
                                 &b_next_node_property);
 
-          /* ï¿½ï¿½ï¿½iï¿½Ìê‡ï¿½iï¿½ï¿½ï¿½iï¿½Nï¿½ï¿½ï¿½j */
+          /* ’¼i‚Ìê‡i’¼iN“üj */
           if (next_move_dir == b_next_move_dir) {
-            /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ğ‘‰ï¿½ */
+            /* ƒS[ƒ‹•ªƒJƒEƒ“ƒ^‚ğ‘‰Á */
             i = (int)((unsigned char)i + 1U);
             if ((unsigned int)i > 255U) {
               i = 255;
             }
 
-            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½ï¿½ï¿½ç’¼ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B */
+            /* Œ»İƒm[ƒh‚©‚ç’¼iƒJƒEƒ“ƒ^•ªˆÚ“®‚·‚éŠÖ”B */
             move_straight(current_node, &current_node_property,
                           &current_move_dir, &current_move_mode, (unsigned char)
                           i);
             straight_count = 0U;
 
-            /*                          disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½") */
+            /*                          disp("ƒS[ƒ‹’¼üN“ü") */
             /*                          disp(current_node) */
-            /* ï¿½^ï¿½[ï¿½ï¿½ï¿½Ìê‡ï¿½iï¿½Î‚ßNï¿½ï¿½ï¿½j */
-            /* 45ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½Ì‚İ‘zï¿½ï¿½(ï¿½ï¿½Âï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åƒ^ï¿½[ï¿½ï¿½ï¿½Ìï¿½Ş‚ï¿½ï¿½ï¿½ï¿½ï¿½) */
+            /* ƒ^[ƒ“‚Ìê‡iÎ‚ßN“üj */
+            /* 45“xƒ^[ƒ“‚Ì‚İ‘z’è(ˆê‚Âæ‚ÌˆÚ“®•ûŒü‚Åƒ^[ƒ“‚Ìí—Ş‚ªŒˆ’è) */
           } else {
-            /*                          disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½O") */
+            /*                          disp("ƒS[ƒ‹’¼i‘O") */
             /*                          disp(current_node) */
-            /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎˆÚ“ï¿½ */
-            /* ï¿½Oï¿½Õ‚ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
-            /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½ï¿½ï¿½ç’¼ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B */
+            /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚ê‚ÎˆÚ“® */
+            /* ‹OÕ‚ğƒvƒƒbƒg */
+            /* Œ»İƒm[ƒh‚©‚ç’¼iƒJƒEƒ“ƒ^•ªˆÚ“®‚·‚éŠÖ”B */
             move_straight(current_node, &current_node_property,
                           &current_move_dir, &current_move_mode, (unsigned char)
                           i);
             straight_count = 0U;
 
-            /*                          disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½") */
+            /*                          disp("ƒS[ƒ‹’¼iŒã") */
             /*                          disp(current_node) */
-            /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìƒoï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+            /* is•ûŒü‚Ìƒoƒbƒtƒ@‚ğƒNƒŠƒA */
             move_dir_buffer[1] = 0.0;
             move_dir_buffer[2] = 0.0;
 
-            /* 1ï¿½Âï¿½Ü‚Å‚Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½^ï¿½[ï¿½ï¿½ï¿½Ìƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-            /* ï¿½ï¿½ï¿½İiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½Î“Iï¿½ÈˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½bï¿½tï¿½@ */
+            /* 1‚Âæ‚Ü‚Å‚Ìis•ûŒü‚©‚çAƒ^[ƒ“‚Ìƒpƒ^[ƒ“‚ğŒˆ’è */
+            /* Œ»İis•ûŒü‚©‚ç‚Ì‘Š‘Î“I‚ÈˆÚ“®•ûŒü‚ğƒoƒbƒtƒ@ */
             if (b_next_move_dir > 127) {
               b_next_move_dir = 127U;
             }
@@ -12993,13 +13105,13 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
             move_dir_buffer[0] = (b_next_move_dir - turn_pattern_num) & 7;
 
-            /* ï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½Ş‚ğ”»’è‚·ï¿½ï¿½ */
+            /* ƒ^[ƒ“‚Ìí—Ş‚ğ”»’è‚·‚é */
             turn_pattern_num = get_turn_pattern_num(move_dir_buffer,
               ref_move_mode);
 
-            /* ï¿½^ï¿½[ï¿½ï¿½ï¿½Ì‹Oï¿½Õ‚ï¿½`ï¿½æ‚·ï¿½ï¿½ */
-            /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½Gï¿½ï¿½ï¿½[ */
-            /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ */
+            /* ƒ^[ƒ“‚Ì‹OÕ‚ğ•`‰æ‚·‚é */
+            /* ƒpƒ^[ƒ“‚ªŒˆ‚Ü‚ç‚È‚©‚Á‚½ê‡AƒGƒ‰[ */
+            /* ƒpƒ^[ƒ“‚É‰‚¶‚½ˆÚ“®ˆ— */
             if (turn_pattern_num == turn_pattern.r_45) {
               turn_r_45(current_node, &current_node_property, &current_move_dir,
                         &current_move_mode);
@@ -13011,50 +13123,50 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
             }
           }
 
-          /* ï¿½Qï¿½ÆˆÊ’uï¿½ï¿½ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
+          /* QÆˆÊ’u‚ªƒZƒNƒVƒ‡ƒ“‚Å‚ ‚é‚Æ‚« */
         } else {
-          /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½B */
-          /*                      disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½iï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½j") */
-          /* ï¿½Oï¿½Õ‚ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
-          /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½ï¿½ï¿½ç’¼ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B */
+          /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚ê‚ÎAˆÚ“®‚·‚éB */
+          /*                      disp("ƒS[ƒ‹’¼iiƒZƒNƒVƒ‡ƒ“j") */
+          /* ‹OÕ‚ğƒvƒƒbƒg */
+          /* Œ»İƒm[ƒh‚©‚ç’¼iƒJƒEƒ“ƒ^•ªˆÚ“®‚·‚éŠÖ”B */
           move_straight(current_node, &current_node_property, &current_move_dir,
                         &current_move_mode, (unsigned char)i);
           straight_count = 0U;
         }
 
-        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
-        /*                  disp("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½") */
+        /* ƒS[ƒ‹ˆ—‚ª‚¨‚í‚Á‚½‚çƒtƒ‰ƒO‚ğ—§‚Ä‚é */
+        /*                  disp("ƒS[ƒ‹Œã") */
         /*                  disp(straight_count) */
         /*                  disp(current_node) */
         goal_flag = 1;
       }
 
-      /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½çŒ©ï¿½ÄAï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù‚È‚ï¿½(ï¿½È‚ï¿½ï¿½ï¿½)ï¿½Æ‚ï¿½ */
+      /* Šî€ƒm[ƒh‚©‚çŒ©‚ÄAis•ûŒü‚ªˆÙ‚È‚é(‹È‚ª‚é)‚Æ‚« */
     } else {
-      /*              disp("ï¿½^ï¿½[ï¿½ï¿½") */
-      /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ */
+      /*              disp("ƒ^[ƒ“") */
+      /* ’¼iƒJƒEƒ“ƒ^‚ ‚é‚Æ‚« */
       if (straight_count > 0) {
-        /* ï¿½Oï¿½Õ‚ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
-        /* ï¿½ï¿½ï¿½İƒmï¿½[ï¿½hï¿½ï¿½ï¿½ç’¼ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½B */
+        /* ‹OÕ‚ğƒvƒƒbƒg */
+        /* Œ»İƒm[ƒh‚©‚ç’¼iƒJƒEƒ“ƒ^•ªˆÚ“®‚·‚éŠÖ”B */
         move_straight(current_node, &current_node_property, &current_move_dir,
                       &current_move_mode, straight_count);
         straight_count = 0U;
 
-        /*                  disp("ï¿½^ï¿½[ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^") */
+        /*                  disp("ƒ^[ƒ“‘O’¼iƒJƒEƒ“ƒ^") */
         /*                  disp(straight_count) */
         /*                  disp(current_node) */
       }
 
-      /* ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ìƒoï¿½bï¿½tï¿½@ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+      /* is•ûŒü‚Ìƒoƒbƒtƒ@‚ğƒNƒŠƒA */
       move_dir_buffer[0] = 0.0;
       move_dir_buffer[1] = 0.0;
       move_dir_buffer[2] = 0.0;
 
-      /* 3ï¿½Âï¿½Ü‚Å‚Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½^ï¿½[ï¿½ï¿½ï¿½Ìƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+      /* 3‚Âæ‚Ü‚Å‚Ìis•ûŒü‚©‚çAƒ^[ƒ“‚Ìƒpƒ^[ƒ“‚ğŒˆ’è */
       i = 0;
       exitg2 = false;
       while ((!exitg2) && (i < 3)) {
-        /* ï¿½ï¿½ï¿½İiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½Î“Iï¿½ÈˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½bï¿½tï¿½@ */
+        /* Œ»İis•ûŒü‚©‚ç‚Ì‘Š‘Î“I‚ÈˆÚ“®•ûŒü‚ğƒoƒbƒtƒ@ */
         /*                  disp(["current_move_dir",num2str(current_move_dir)]) */
         /*                  disp(["next_move_dir",num2str(next_move_dir)]) */
         turn_pattern_num = next_move_dir;
@@ -13069,15 +13181,15 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
         move_dir_buffer[i] = (turn_pattern_num - b_next_node_property) & 7;
 
-        /* ï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½Ş‚ğ”»’è‚·ï¿½ï¿½ */
+        /* ƒ^[ƒ“‚Ìí—Ş‚ğ”»’è‚·‚é */
         turn_pattern_num = get_turn_pattern_num(move_dir_buffer, ref_move_mode);
 
-        /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
+        /* ƒpƒ^[ƒ“‚ªŠm’è‚µ‚Ä‚¢‚ê‚ÎI—¹ */
         if (turn_pattern_num != 0) {
-          /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ì‹Oï¿½Õ‚ï¿½`ï¿½ï¿½ */
+          /* ƒpƒ^[ƒ“‚Ì‹OÕ‚ğ•`‰æ */
           exitg2 = true;
         } else {
-          /* ï¿½ï¿½ï¿½Ìiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½ */
+          /* Ÿ‚Ìis•ûŒü‚ğŒˆ’è‚·‚é */
           next_node[0] = b_next_node[0];
           next_node[1] = b_next_node[1];
           get_next_dir_diagonal(row_num_node, col_num_node, next_move_dir,
@@ -13085,12 +13197,12 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
                                 goal_node_property, goal_section, &next_move_dir,
                                 b_next_node, &next_node_property);
 
-          /* 3ï¿½ï¿½Ú‚Åƒpï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½Gï¿½ï¿½ï¿½[ */
+          /* 3‰ñ–Ú‚Åƒpƒ^[ƒ“‚ªŒˆ‚Ü‚ç‚È‚©‚Á‚½ê‡AƒGƒ‰[ */
           i++;
         }
       }
 
-      /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ÄˆÚ“ï¿½ */
+      /* ƒpƒ^[ƒ“‚É‰‚¶‚ÄˆÚ“® */
       if (turn_pattern_num == turn_pattern.r_45) {
         turn_r_45(current_node, &current_node_property, &current_move_dir,
                   &current_move_mode);
@@ -13098,8 +13210,8 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         turn_l_45(current_node, &current_node_property, &current_move_dir,
                   &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.r_90) {
-        /* ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
-        /*  ï¿½E90ï¿½x */
+        /* ’¼iƒpƒ^[ƒ“‚Ì */
+        /*  ‰E90“x */
         if (current_move_mode == move_dir_property.straight) {
           if (current_move_dir == g_d_direction.North) {
             i = (int)(current_node[0] + 1U);
@@ -13157,7 +13269,7 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
             }
           }
 
-          /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½iV90ï¿½j */
+          /* Î‚ßƒpƒ^[ƒ“‚ÌiV90j */
         } else {
           if (current_move_mode == move_dir_property.diagonal) {
             if (current_move_dir == g_d_direction.North_East) {
@@ -13215,8 +13327,8 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         turn_l_135(current_node, &current_node_property, &current_move_dir,
                    &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.r_180) {
-        /* ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
-        /*  ï¿½E180ï¿½x */
+        /* ’¼iƒpƒ^[ƒ“‚Ì */
+        /*  ‰E180“x */
         if (current_move_mode == move_dir_property.straight) {
           if (current_move_dir == g_d_direction.North) {
             i = (int)(current_node[0] + 1U);
@@ -13286,7 +13398,7 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
             }
           }
 
-          /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
+          /* Î‚ßƒpƒ^[ƒ“‚Ì */
         }
       } else {
         if (turn_pattern_num == turn_pattern.l_180) {
@@ -13295,27 +13407,27 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         }
       }
 
-      /*              disp("ï¿½^ï¿½[ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½mï¿½[ï¿½h") */
+      /*              disp("ƒ^[ƒ“I—¹Aƒm[ƒh") */
       /*              disp(current_node) */
       /*              disp(goal_node2) */
-      /* ï¿½Ú“ï¿½ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½ğ”»’ï¿½ */
+      /* ˆÚ“®ŒãAƒS[ƒ‹‚ğ”»’è */
       if (isequal(current_node, goal_node2) && (current_node_property ==
            goal_node_property)) {
         goal_flag = 1;
       }
 
-      /* ï¿½î€ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Ú“ï¿½ */
+      /* Šî€ƒm[ƒh‚ğˆÚ“® */
       ref_node_property = next_node_property;
       ref_move_dir = current_move_dir;
       ref_move_mode = current_move_mode;
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÎIï¿½ï¿½ */
+    /* ƒS[ƒ‹ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ê‚ÎI—¹ */
     if (goal_flag == 1) {
       exitg1 = 1;
     } else {
-      /* ï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ */
-      /* ï¿½Î‚ßï¿½ï¿½İ‚Ìiï¿½sï¿½ï¿½ï¿½@ï¿½Iï¿½ï¿½ */
+      /* Ÿ‚ÌˆÚ“®•ûŒü‚ğæ“¾ */
+      /* Î‚ß‚İ‚Ìis•û–@‘I‘ğ */
       next_node[0] = b_next_node[0];
       next_node[1] = b_next_node[1];
       get_next_dir_diagonal(row_num_node, col_num_node, ref_move_dir, next_node,
@@ -13323,15 +13435,15 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
                             goal_section, &next_move_dir, b_next_node,
                             &next_node_property);
 
-      /*          disp("ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½") */
+      /*          disp("Ÿis•ûŒü") */
       /*          disp(next_move_dir) */
     }
   } while (exitg1 == 0);
 }
 
 /*
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
- * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İˆÊ’ux,y
+ * “ü—Í Œ»İˆÊ’ux,y,Œ»İ•ûŒü
+ * o—Í Œ»İˆÊ’ux,y
  * Arguments    : unsigned char *temp_x
  *                unsigned char *temp_y
  *                unsigned char temp_dir
@@ -13343,8 +13455,8 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
   int q0;
   unsigned int qY;
 
-  /*     %% move_step ï¿½Pï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½Öï¿½ */
-  /* ï¿½kï¿½Éˆï¿½}ï¿½X */
+  /*     %% move_step ‚Pƒ}ƒX‚¾‚¯‘Oi‚·‚éŠÖ” */
+  /* –k‚Éˆêƒ}ƒX */
   if (temp_dir == g_direction.North) {
     q0 = (int)(*temp_y + 1U);
     if ((unsigned int)q0 > 255U) {
@@ -13356,7 +13468,7 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
     /* disp("north_step") */
   }
 
-  /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+  /* “Œ‚Éˆêƒ}ƒX */
   if (temp_dir == g_direction.East) {
     q0 = (int)(*temp_x + 1U);
     if ((unsigned int)q0 > 255U) {
@@ -13368,7 +13480,7 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
     /* disp("east_step") */
   }
 
-  /* ï¿½ï¿½Éˆï¿½}ï¿½X */
+  /* “ì‚Éˆêƒ}ƒX */
   if (temp_dir == g_direction.South) {
     q0 = *temp_y;
     qY = q0 - 1U;
@@ -13381,7 +13493,7 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
     /* disp("south_step") */
   }
 
-  /* ï¿½ï¿½ï¿½Éˆï¿½}ï¿½X */
+  /* ¼‚Éˆêƒ}ƒX */
   if (temp_dir == g_direction.West) {
     q0 = *temp_x;
     qY = q0 - 1U;
@@ -13396,7 +13508,7 @@ static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
 }
 
 /*
- * ï¿½ï¿½ï¿½iï¿½ï¿½
+ * ’¼i
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -13415,8 +13527,8 @@ static void move_straight(unsigned char current_node[2], unsigned char
   unsigned char temp_qr;
   unsigned int qY;
 
-  /*     %% ï¿½Ú“ï¿½ï¿½pï¿½Öï¿½ */
-  /*  ï¿½ï¿½ï¿½i */
+  /*     %% ˆÚ“®—pŠÖ” */
+  /*  ’¼i */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u11 = current_node[1];
@@ -13468,11 +13580,11 @@ static void move_straight(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* ï¿½Î‚ß’ï¿½ï¿½iï¿½Ì‚Æ‚ï¿½ */
+    /* Î‚ß’¼i‚Ì‚Æ‚« */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
-      /* ï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½2ï¿½ÅŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Ü‚ï¿½Aï¿½ï¿½ï¿½Ìï¿½ï¿½vï¿½ï¿½ï¿½vï¿½Z */
-      /* (ï¿½Ú“ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Wï¿½Ìˆï¿½Ê‰ï¿½ï¿½p) */
+      /* ’¼iƒJƒEƒ“ƒ^‚ğ2‚ÅŠ„‚Á‚½¤‚Æ‚ ‚Ü‚èA‚»‚Ì‡Œv‚ğŒvZ */
+      /* (ˆÚ“®æƒm[ƒhÀ•W‚Ìˆê”Ê‰»—p) */
       temp_quotient = (unsigned char)trunc((double)straight_count / 2.0);
       temp_remainder = (unsigned char)(straight_count % 2);
       temp_qr = (unsigned char)(temp_quotient + temp_remainder);
@@ -13682,23 +13794,24 @@ static void move_straight(unsigned char current_node[2], unsigned char
     }
   }
 
-  /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½iï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+  /* ˆÚ“®Š®—¹A’¼iƒJƒEƒ“ƒ^‚ğƒNƒŠƒA */
 }
 
 /*
- * ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Ç‚Ì’Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W
- * ï¿½oï¿½ï¿½  ï¿½ï¿½ï¿½İˆÊ’ux,y,ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½,ï¿½Çï¿½ï¿½,ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½
- * Arguments    : const coder_internal_ref_5 *wall
+ * “ü—Í@Œ»İˆÊ’ux,y,Œ»İ•ûŒü,–À˜Hs•ûŒüƒTƒCƒY,–À˜H—ñ•ûŒüƒTƒCƒY,–À˜H•Çî•ñ,–À˜H•Ç‚Ì’Tõî•ñ,ƒS[ƒ‹À•W
+ * o—Í  Œ»İˆÊ’ux,y,Œ»İ•ûŒü,•Çî•ñ,’Tõî•ñ
+ * Arguments    : const coder_internal_ref_6 *wall
  *                coder_internal_ref *wall_flg
- *                const coder_internal_ref_4 *search
- *                const coder_internal_ref_1 *maze_goal
- *                const coder_internal_ref_3 *adachi_search_mode
+ *                const coder_internal_ref_5 *search
+ *                const coder_internal_ref_2 *maze_goal
+ *                const coder_internal_ref_1 *maze_wall
+ *                const coder_internal_ref_4 *adachi_search_mode
  *                unsigned char *current_x
  *                unsigned char *current_y
  *                unsigned char *current_dir
  *                unsigned char maze_row_size
  *                unsigned char maze_col_size
- *                unsigned char maze_wall[1024]
+ *                unsigned char b_maze_wall[1024]
  *                unsigned char maze_wall_search[1024]
  *                const unsigned char exploration_goal[18]
  *                unsigned char l_goal_size
@@ -13707,15 +13820,17 @@ static void move_straight(unsigned char current_node[2], unsigned char
  *                unsigned short contour_map[1024]
  * Return Type  : void
  */
-static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
-  *wall_flg, const coder_internal_ref_4 *search, const coder_internal_ref_1
-  *maze_goal, const coder_internal_ref_3 *adachi_search_mode, unsigned char
-  *current_x, unsigned char *current_y, unsigned char *current_dir, unsigned
-  char maze_row_size, unsigned char maze_col_size, unsigned char maze_wall[1024],
-  unsigned char maze_wall_search[1024], const unsigned char exploration_goal[18],
-  unsigned char l_goal_size, unsigned char *start_flg, unsigned char
-  adachi_s_mode, unsigned short contour_map[1024])
+static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
+  *wall_flg, const coder_internal_ref_5 *search, const coder_internal_ref_2
+  *maze_goal, const coder_internal_ref_1 *maze_wall, const coder_internal_ref_4 *
+  adachi_search_mode, unsigned char *current_x, unsigned char *current_y,
+  unsigned char *current_dir, unsigned char maze_row_size, unsigned char
+  maze_col_size, unsigned char b_maze_wall[1024], unsigned char
+  maze_wall_search[1024], const unsigned char exploration_goal[18], unsigned
+  char l_goal_size, unsigned char *start_flg, unsigned char adachi_s_mode,
+  unsigned short contour_map[1024])
 {
+  unsigned char straight_count;
   unsigned char goal_flg;
   unsigned char contour_flg;
   int i226;
@@ -13726,42 +13841,47 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
   unsigned int qY;
   *start_flg = 0U;
 
-  /*     %% search_adachi ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½Å‚Ì’Tï¿½ï¿½ */
-  /* localï¿½Ïï¿½ï¿½éŒ¾ */
+  /*     %% search_adachi ‘«—§–@‚Å‚Ì’Tõ */
+  /* local•Ï”éŒ¾ */
+  straight_count = 0U;
   goal_flg = 0U;
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O */
-  /* ï¿½Çï¿½ï¿½Xï¿½Vï¿½mï¿½Fï¿½pï¿½Ïï¿½ */
+  /* ƒS[ƒ‹”»’èƒtƒ‰ƒO */
+  /* •Çî•ñXVŠm”F—p•Ï” */
   contour_flg = 0U;
 
-  /*      search_start_x = current_x %ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½x */
-  /*      search_start_y = current_y %ï¿½Tï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½y */
-  /* ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ì» */
-  make_map_find(wall, exploration_goal, l_goal_size, maze_wall, *current_x,
+  /*      search_start_x = current_x %’TõŠJnx */
+  /*      search_start_y = current_y %’TõŠJny */
+  /* ‰‰ñ‚ÌƒRƒ“ƒ^[ƒ}ƒbƒvì» */
+  make_map_find(wall, exploration_goal, l_goal_size, b_maze_wall, *current_x,
                 *current_y, contour_map);
   i226 = l_goal_size;
   do {
     exitg1 = 0;
 
-    /* ï¿½Çï¿½ï¿½æ“¾ */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í•Çï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½È‚ï¿½ */
-    next_dir = maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
-    wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size,
-             *current_x, *current_y, *current_dir, maze_wall, maze_wall_search);
+    /* •Çî•ñæ“¾ */
+    /* ƒS[ƒ‹’¼Œã‚Í•Çî•ñ‚ğXV‚µ‚È‚¢ */
+    /* Šù’m‹æŠÔ‰Á‘¬‚Å‚È‚¯‚ê‚ÎA•Çî•ñ‚ğæ“¾‚µ‚È‚¢ */
+    if (straight_count == 0) {
+      next_dir = b_maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
+      wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size, *
+               current_x, *current_y, *current_dir, b_maze_wall,
+               maze_wall_search);
 
-    /* ï¿½Çï¿½ñ‚ªXï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½Xï¿½Vï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½B */
-    if (next_dir != maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1]) {
-      contour_flg = 1U;
+      /* •Çî•ñ‚ªXV‚³‚ê‚ê‚ÎAƒRƒ“ƒ^[XV‚Ìƒtƒ‰ƒO‚ğ—§‚Ä‚éB */
+      if (next_dir != b_maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1]) {
+        contour_flg = 1U;
+      }
     }
 
-    /*  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ï¿½ï¿½ï¿½ */
-    /* ï¿½Çï¿½ï¿½É•ÏXï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ì‚ï¿½ */
+    /*  “™‚üMAP¶¬ */
+    /* •Çî•ñ‚É•ÏX‚ª‚ ‚Á‚½ê‡‚Ì‚İ */
     if (contour_flg != 0) {
-      make_map_find(wall, exploration_goal, l_goal_size, maze_wall, *current_x, *
-                    current_y, contour_map);
+      make_map_find(wall, exploration_goal, l_goal_size, b_maze_wall, *current_x,
+                    *current_y, contour_map);
     }
 
-    /* ï¿½ï¿½ï¿½İˆÊ’uï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /* Œ»İˆÊ’u‚ªƒS[ƒ‹‚©”»’è */
     for (i = 0; i < i226; i++) {
       if ((*current_x == exploration_goal[i]) && (*current_y ==
            exploration_goal[i + 9])) {
@@ -13769,13 +13889,13 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
       }
     }
 
-    /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½Ìê‡ï¿½Aï¿½ÎÛ‚Ìƒ}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä’Tï¿½ï¿½ï¿½Ï‚İ‚Ì‚Æ‚ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½ */
+    /* ’Tõƒ‚[ƒh‚Ìê‡A‘ÎÛ‚Ìƒ}ƒX‚ª‚·‚×‚Ä’TõÏ‚İ‚Ì‚Æ‚«AƒS[ƒ‹ƒtƒ‰ƒO‚ğ—§‚Ä‚é */
     if (adachi_s_mode == adachi_search_mode->contents.search) {
       goal_flg = 1U;
       i = 0;
       exitg2 = false;
       while ((!exitg2) && (i <= l_goal_size - 1)) {
-        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ÎAï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ë‚µï¿½Aï¿½uï¿½ï¿½ï¿½Cï¿½N */
+        /* ƒS[ƒ‹À•W‚ª–¢’Tõ‚Å‚ ‚ê‚ÎAƒtƒ‰ƒO‚ğ‚¨‚ë‚µAƒuƒŒƒCƒN */
         if (maze_wall_search[(exploration_goal[i + 9] + ((exploration_goal[i] -
                1) << 5)) - 1] != 15) {
           goal_flg = 0U;
@@ -13786,15 +13906,15 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
       }
     }
 
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    /* ƒS[ƒ‹ˆ— */
     if (goal_flg == 1) {
       exitg1 = 1;
     } else {
-      /*  ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ */
-      /* ï¿½Dï¿½æ‡ï¿½Ê@ï¿½kï¿½Ë“ï¿½ï¿½Ë“ï¿½Ëï¿½ */
-      next_dir = get_nextdir2(*current_x, *current_y, maze_wall, contour_map);
+      /*  is•ûŒü‘I’è */
+      /* —Dæ‡ˆÊ@–kË“ŒË“ìË¼ */
+      next_dir = get_nextdir2(*current_x, *current_y, b_maze_wall, contour_map);
 
-      /*  ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½ï¿½Æiï¿½sï¿½ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+      /*  Œ»İ•ûŒü‚Æis•ûŒü‚É‰‚¶‚½ˆ— */
       i = (int)(4U + next_dir);
       if ((unsigned int)i > 255U) {
         i = 255;
@@ -13820,57 +13940,148 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
 
       switch (i) {
        case 0:
+        /* ’¼i§ŒäA•Çƒtƒ‰ƒO‚ğŒ»İQÆˆÊ’u‚ÅXV */
+        if (straight_count > 0) {
+          wall_flg->contents = fust_run_wallset(maze_wall, *current_y,
+            *current_x, *current_dir);
+        }
+
+        /* QÆˆÊ’u‚ğŸ‰ñ‚ÌQÆˆÊ’u‚É•ÏX */
         move_step(current_x, current_y, *current_dir);
 
-        /* disp("front") */
-        m_move_front(0, wall_flg->contents, move_dir_property.straight);
+        /* ˆÚ“®æ‚ª’TõÏ‚İ‚Å‚ ‚é‚È‚çAƒXƒgƒŒ[ƒgƒJƒEƒ“ƒ^‚ğƒCƒ“ƒNƒŠƒƒ“ƒg */
+        if (maze_wall_search[(*current_y + ((*current_x - 1) << 5)) - 1] == 15)
+        {
+          i = (int)(straight_count + 1U);
+          if ((unsigned int)i > 255U) {
+            i = 255;
+          }
 
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
-        *start_flg = 0U;
+          straight_count = (unsigned char)i;
 
-        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
-        wall_flg->contents = 0U;
+          /* ’TõÏ‚İ‚Å‚È‚¢ê‡ */
+        } else {
+          /* ’¼üƒJƒEƒ“ƒ^‚ª‚ ‚éê‡AˆÚ“® */
+          /* Œ»İ•ûŒü‚à’¼i‚È‚Ì‚ÅA’¼iƒJƒEƒ“ƒ^+1‚¾‚¯ˆÚ“®‚·‚éB */
+          if (straight_count > 0) {
+            i = (int)(straight_count + 1U);
+            if ((unsigned int)i > 255U) {
+              i = 255;
+            }
+
+            m_move_front_long((unsigned char)i, 0, wall_flg->contents,
+                              move_dir_property.straight);
+            straight_count = 0U;
+
+            /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+            *start_flg = 0U;
+
+            /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+            wall_flg->contents = 0U;
+          } else {
+            /* ’¼iƒJƒEƒ“ƒ^‚ª‚È‚¢ê‡ */
+            m_move_front(0, wall_flg->contents, move_dir_property.straight);
+
+            /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+            *start_flg = 0U;
+
+            /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+            wall_flg->contents = 0U;
+          }
+        }
         break;
 
        case 1:
+        /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚éê‡AˆÚ“® */
+        if (straight_count > 0) {
+          /* ‘O‰ñˆÊ’u‚Å‚Ì•Çƒtƒ‰ƒO‚ğg—p‚µAƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiC) */
+          m_move_front_long(straight_count, 0, wall_flg->contents,
+                            move_dir_property.straight);
+          straight_count = 0U;
+
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          wall_flg->contents = 0U;
+
+          /* Œ»İQÆˆÊ’u‚Å•Çƒtƒ‰ƒO‚ğXV */
+          wall_flg->contents = fust_run_wallset(maze_wall, *current_y,
+            *current_x, *current_dir);
+        }
+
+        /* ƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiC) */
+        m_move_right(0, wall_flg->contents, move_dir_property.straight);
+
+        /* QÆˆÊ’uA•ûŒü‚ğXV */
         turn_clk_90deg(current_dir);
         move_step(current_x, current_y, *current_dir);
 
-        /* disp("right") */
-        m_move_right(0, wall_flg->contents, move_dir_property.straight);
-
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
         *start_flg = 0U;
 
-        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
 
        case 2:
+        /* disp("back") */
+        /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚éê‡AˆÚ“® */
+        if (straight_count > 0) {
+          /* ‘O‰ñˆÊ’u‚Å‚Ì•Çƒtƒ‰ƒO‚ğg—p‚µAƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiC) */
+          m_move_front_long(straight_count, 0, wall_flg->contents,
+                            move_dir_property.straight);
+          straight_count = 0U;
+
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          wall_flg->contents = 0U;
+
+          /* Œ»İQÆˆÊ’u‚Å•Çƒtƒ‰ƒO‚ğXV */
+          wall_flg->contents = fust_run_wallset(maze_wall, *current_y,
+            *current_x, *current_dir);
+        }
+
+        /* ƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiCj */
+        m_move_back(0, wall_flg->contents, move_dir_property.straight);
+
+        /* QÆˆÊ’uA•ûŒü‚ğXV */
         turn_180deg(current_dir);
         move_step(current_x, current_y, *current_dir);
 
-        /* disp("back") */
-        m_move_back(0, wall_flg->contents, move_dir_property.straight);
-
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
         *start_flg = 0U;
 
-        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
 
        case 3:
+        /* ’¼iƒJƒEƒ“ƒ^‚ª‚ ‚éê‡AˆÚ“® */
+        if (straight_count > 0) {
+          /* ‘O‰ñˆÊ’u‚Å‚Ì•Çƒtƒ‰ƒO‚ğg—p‚µAƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiC) */
+          m_move_front_long(straight_count, 0, wall_flg->contents,
+                            move_dir_property.straight);
+          straight_count = 0U;
+
+          /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+          wall_flg->contents = 0U;
+
+          /* Œ»İQÆˆÊ’u‚Å•Çƒtƒ‰ƒO‚ğXV */
+          wall_flg->contents = fust_run_wallset(maze_wall, *current_y,
+            *current_x, *current_dir);
+        }
+
+        /* ƒ}ƒEƒX‚ğˆÚ“®‚³‚¹‚éiCj */
+        m_move_left(0, wall_flg->contents, move_dir_property.straight);
+
+        /* QÆˆÊ’uA•ûŒü‚ğXV */
         turn_conclk_90deg(current_dir);
         move_step(current_x, current_y, *current_dir);
 
-        /* disp("left") */
-        m_move_left(0, wall_flg->contents, move_dir_property.straight);
-
-        /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
         *start_flg = 0U;
 
-        /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
+        /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
         wall_flg->contents = 0U;
         break;
       }
@@ -13879,11 +14090,23 @@ static void search_adachi(const coder_internal_ref_5 *wall, coder_internal_ref
     }
   } while (exitg1 == 0);
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ */
-  /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
+  /* ’¼iƒJƒEƒ“ƒ^•ªˆÚ“® */
+  if (straight_count > 0) {
+    m_move_front_long(straight_count, 0, wall_flg->contents,
+                      move_dir_property.straight);
+
+    /* ƒXƒ^[ƒg’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+    *start_flg = 0U;
+
+    /* •Çƒtƒ‰ƒO‚ğƒNƒŠƒA */
+    wall_flg->contents = 0U;
+  }
+
+  /* ƒS[ƒ‹’â~ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é‚Æ‚« */
+  /* ’â~“®ì‚ğÀ{ */
   m_goal_movement(0, wall_flg->contents, move_dir_property.straight);
 
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ì‚³ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ÜIï¿½ï¿½ */
+  /* ƒS[ƒ‹’â~ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚È‚¯‚ê‚ÎA“®ì‚³‚¹‚½‚Ü‚ÜI—¹ */
 }
 
 /*
@@ -13901,13 +14124,13 @@ static unsigned char sh_route_unexp_sq_jud(const unsigned char
   int i;
   bool exitg1;
 
-  /* ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½Öï¿½(ï¿½ï¿½ï¿½ï¿½q) */
-  /* ï¿½oï¿½ï¿½:ï¿½ï¿½ï¿½èŒ‹ï¿½Ê@0,ï¿½ï¿½ï¿½vï¿½È‚ï¿½ï¿½@1,ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ */
+  /* Å’ZŒo˜H–¢’Tõƒ}ƒX‡’v”»’èŠÖ”(“ü‚êq) */
+  /* o—Í:”»’èŒ‹‰Ê@0,‡’v‚È‚µ@1,‡’v‚ ‚è */
   result = 0U;
   i = 0;
   exitg1 = false;
   while ((!exitg1) && (i <= temp_unexp_square_idx - 1)) {
-    /* ï¿½Å’Zï¿½oï¿½Hï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Æ“ï¿½ï¿½Íï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½Îƒtï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚Äƒuï¿½ï¿½ï¿½Cï¿½N */
+    /* Å’ZŒo˜H‚Ì–¢’Tõ‚Ìƒ}ƒX‚Æ“ü—ÍÀ•W‚ªˆê’v‚·‚ê‚Îƒtƒ‰ƒO‚ğ—§‚Ä‚ÄƒuƒŒƒCƒN */
     if ((temp_unexp_square[i] == temp_y) && (temp_unexp_square[i + 512] ==
          temp_x)) {
       result = 1U;
@@ -13921,8 +14144,8 @@ static unsigned char sh_route_unexp_sq_jud(const unsigned char
 }
 
 /*
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
- * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
+ * “ü—Í Œ»İ•ûŒü
+ * o—Í Œ»İ•ûŒü
  * Arguments    : unsigned char *current_dir
  * Return Type  : void
  */
@@ -13930,7 +14153,7 @@ static void turn_180deg(unsigned char *current_dir)
 {
   int i322;
 
-  /*     %% turn_180deg 180ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+  /*     %% turn_180deg 180“xƒ^[ƒ“‚·‚éŠÖ” */
   i322 = (int)(4U + *current_dir);
   if ((unsigned int)i322 > 255U) {
     i322 = 255;
@@ -13940,8 +14163,8 @@ static void turn_180deg(unsigned char *current_dir)
 }
 
 /*
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
- * ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
+ * “ü—Í Œ»İ•ûŒü
+ * o—Í Œ»İ•ûŒü
  * Arguments    : unsigned char *current_dir
  * Return Type  : void
  */
@@ -13949,7 +14172,7 @@ static void turn_clk_90deg(unsigned char *current_dir)
 {
   int i321;
 
-  /*     %% turn_clk_90deg ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½^ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ */
+  /*     %% turn_clk_90deg Œvü‚è‚É90“xƒ^[ƒ“‚·‚éŠÖ” */
   i321 = (int)(4U + *current_dir);
   if ((unsigned int)i321 > 255U) {
     i321 = 255;
@@ -13964,8 +14187,8 @@ static void turn_clk_90deg(unsigned char *current_dir)
 }
 
 /*
- * ï¿½ï¿½ï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
- * ï¿½oï¿½Í@ï¿½ï¿½ï¿½İ•ï¿½ï¿½ï¿½
+ * “ü—Í@Œ»İ•ûŒü
+ * o—Í@Œ»İ•ûŒü
  * Arguments    : unsigned char *current_dir
  * Return Type  : void
  */
@@ -13973,7 +14196,7 @@ static void turn_conclk_90deg(unsigned char *current_dir)
 {
   int i323;
 
-  /*     %% turn_conclk_90deg ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½90ï¿½xï¿½ï¿½ï¿½Öï¿½ */
+  /*     %% turn_conclk_90deg ”½Œvü‚è‚É90“x‰ñ‚éŠÖ” */
   i323 = (int)(4U + *current_dir);
   if ((unsigned int)i323 > 255U) {
     i323 = 255;
@@ -13983,7 +14206,7 @@ static void turn_conclk_90deg(unsigned char *current_dir)
 }
 
 /*
- * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
+ * ’¼iƒpƒ^[ƒ“‚Ì
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -13998,7 +14221,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ï¿½ï¿½135ï¿½x */
+  /*  ¶135“x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u16 = current_node[1];
@@ -14074,7 +14297,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
+    /* Î‚ßƒpƒ^[ƒ“‚Ì */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
@@ -14131,7 +14354,7 @@ static void turn_l_135(unsigned char current_node[2], unsigned char
 }
 
 /*
- * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
+ * ’¼iƒpƒ^[ƒ“‚Ì
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14146,7 +14369,7 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ï¿½ï¿½180ï¿½x */
+  /*  ¶180“x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u17 = current_node[1];
@@ -14222,12 +14445,12 @@ static void turn_l_180(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
+    /* Î‚ßƒpƒ^[ƒ“‚Ì */
   }
 }
 
 /*
- * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
+ * ’¼iƒpƒ^[ƒ“‚Ì
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14242,7 +14465,7 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ï¿½ï¿½45ï¿½x */
+  /*  ¶45“x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u13 = current_node[1];
@@ -14360,7 +14583,7 @@ static void turn_l_45(unsigned char current_node[2], unsigned char
 }
 
 /*
- * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
+ * ’¼iƒpƒ^[ƒ“‚Ì
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14375,7 +14598,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ï¿½ï¿½90ï¿½x */
+  /*  ¶90“x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u14 = current_node[1];
@@ -14439,7 +14662,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½iV90ï¿½j */
+    /* Î‚ßƒpƒ^[ƒ“‚ÌiV90j */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
@@ -14496,7 +14719,7 @@ static void turn_l_90(unsigned char current_node[2], unsigned char
 }
 
 /*
- * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
+ * ’¼iƒpƒ^[ƒ“‚Ì
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14511,7 +14734,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ï¿½E135ï¿½x */
+  /*  ‰E135“x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u15 = current_node[1];
@@ -14587,7 +14810,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
       }
     }
 
-    /* ï¿½Î‚ßƒpï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½ */
+    /* Î‚ßƒpƒ^[ƒ“‚Ì */
   } else {
     if (*current_move_mode == move_dir_property.diagonal) {
       if (*current_move_dir == g_d_direction.North_East) {
@@ -14644,7 +14867,7 @@ static void turn_r_135(unsigned char current_node[2], unsigned char
 }
 
 /*
- * ï¿½ï¿½ï¿½iï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ìï¿½
+ * ’¼iƒpƒ^[ƒ“‚Ì
  * Arguments    : unsigned char current_node[2]
  *                unsigned char *current_node_property
  *                unsigned char *current_move_dir
@@ -14659,7 +14882,7 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
   int q0;
   unsigned int qY;
 
-  /*  ï¿½E45ï¿½x */
+  /*  ‰E45“x */
   if (*current_move_mode == move_dir_property.straight) {
     if (*current_move_dir == g_d_direction.North) {
       u12 = current_node[1];
@@ -14775,14 +14998,14 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
 }
 
 /*
- * matlabï¿½ï¿½Å‚Í‰æ‘œï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½ï¿½Çï¿½ï¿½ï¿½ï¿½Qï¿½Æ‚ï¿½ï¿½ï¿½B
- * ï¿½ï¿½ï¿½ï¿½:ï¿½æ‘œï¿½ï¿½ï¿½ç“¾ï¿½ï¿½ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ç–ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç–ï¿½ï¿½ï¿½,
- *      ï¿½ï¿½ï¿½İ’nï¿½ï¿½ï¿½Wx,y,ï¿½ï¿½ï¿½İiï¿½sï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Ç’Tï¿½ï¿½ï¿½ï¿½ï¿½
- * ï¿½oï¿½ï¿½:ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Ç’Tï¿½ï¿½ï¿½ï¿½ï¿½
- * Arguments    : const coder_internal_ref_5 *wall
+ * matlabã‚Å‚Í‰æ‘œ‚©‚çæ“¾‚µ‚½•Çî•ñ‚ğQÆ‚·‚éB
+ * “ü—Í:‰æ‘œ‚©‚ç“¾‚½–À˜Hî•ñ,–À˜Hs•ûŒü•Ç–‡”,–À˜H—ñ•ûŒü•Ç–‡”,
+ *      Œ»İ’nÀ•Wx,y,Œ»İis•ûŒü,–À˜H•Çî•ñ,–À˜H•Ç’Tõî•ñ
+ * o—Í:–À˜H•Çî•ñ,–À˜H•Ç’Tõî•ñ
+ * Arguments    : const coder_internal_ref_6 *wall
  *                coder_internal_ref *wall_flg
- *                const coder_internal_ref_4 *search
- *                const coder_internal_ref_1 *maze_goal
+ *                const coder_internal_ref_5 *search
+ *                const coder_internal_ref_2 *maze_goal
  *                unsigned char maze_row_size
  *                unsigned char maze_col_size
  *                unsigned char current_x
@@ -14792,9 +15015,9 @@ static void turn_r_45(unsigned char current_node[2], unsigned char
  *                unsigned char maze_wall_search[1024]
  * Return Type  : void
  */
-static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
-                     *wall_flg, const coder_internal_ref_4 *search, const
-                     coder_internal_ref_1 *maze_goal, unsigned char
+static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
+                     *wall_flg, const coder_internal_ref_5 *search, const
+                     coder_internal_ref_2 *maze_goal, unsigned char
                      maze_row_size, unsigned char maze_col_size, unsigned char
                      current_x, unsigned char current_y, unsigned char
                      current_dir, unsigned char maze_wall[1024], unsigned char
@@ -14905,13 +15128,13 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   int i319;
   int i320;
 
-  /*     %%  wall_set ï¿½Çï¿½ï¿½æ“¾ */
-  /* ï¿½Oï¿½ï¿½ï¿½[ï¿½oï¿½ï¿½ï¿½Ïï¿½(matlabï¿½Å‚Í–ï¿½ï¿½Hï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ACï¿½Å‚Í•ÇƒZï¿½ï¿½ï¿½Tï¿½lï¿½ï¿½ï¿½Qï¿½ï¿½) */
+  /*     %%  wall_set •Çî•ñæ“¾ */
+  /* ƒOƒ[ƒoƒ‹•Ï”(matlab‚Å‚Í–À˜Hƒf[ƒ^‚ğAC‚Å‚Í•ÇƒZƒ“ƒT’l‚ğQÆ) */
   /* for matlab */
   /* for C gen */
-  /* ï¿½ÇƒZï¿½ï¿½ï¿½Tè‡’l */
-  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½éŒ¾ */
-  /* ï¿½Çï¿½ñ‘‚ï¿½ï¿½ï¿½ï¿½İ—pï¿½oï¿½bï¿½tï¿½@(N,E,S,W) */
+  /* •ÇƒZƒ“ƒTè‡’l */
+  /* ƒ[ƒJƒ‹•Ï”éŒ¾ */
+  /* •Çî•ñ‘‚«‚İ—pƒoƒbƒtƒ@(N,E,S,W) */
   wall_write[0] = 0U;
   serch_write[0] = 0U;
   wall_write[1] = 0U;
@@ -14921,19 +15144,19 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   wall_write[3] = 0U;
   serch_write[3] = 0U;
 
-  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ñ‘‚ï¿½ï¿½ï¿½ï¿½İ—pï¿½oï¿½bï¿½tï¿½@(N,E,S,W) */
-  /* ï¿½ÇƒZï¿½ï¿½ï¿½TADï¿½lï¿½iï¿½[ï¿½Ïï¿½ */
-  /* ï¿½}ï¿½Eï¿½Xï¿½Ì•ï¿½ï¿½ï¿½ï¿½ÉŠï¿½Ã‚ï¿½ï¿½Çï¿½ï¿½æ“¾ */
-  /* ï¿½}ï¿½Eï¿½Xï¿½Ì•ï¿½ï¿½ï¿½ï¿½Æï¿½Î•ï¿½ï¿½ï¿½ï¿½Ìï¿½=ï¿½}ï¿½Eï¿½Xï¿½Ì•ï¿½ï¿½ï¿½ï¿½Æ‚È‚é‚±ï¿½Æ‚ğ—˜—pï¿½ï¿½ï¿½A */
-  /* ï¿½ï¿½ÎŠpï¿½xï¿½Æï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½B */
-  /* ï¿½Oï¿½ï¿½ï¿½Ì•Ç”ï¿½ï¿½ï¿½ */
+  /* ’Tõî•ñ‘‚«‚İ—pƒoƒbƒtƒ@(N,E,S,W) */
+  /* •ÇƒZƒ“ƒTAD’lŠi”[•Ï” */
+  /* ƒ}ƒEƒX‚Ì•ûŒü‚ÉŠî‚Ã‚­•Çî•ñæ“¾ */
+  /* ƒ}ƒEƒX‚Ì•ûŒü‚Æâ‘Î•ûŒü‚Ì·=ƒ}ƒEƒX‚Ì•ûŒü‚Æ‚È‚é‚±‚Æ‚ğ—˜—p‚µA */
+  /* â‘ÎŠp“x‚Æ®‡‚ğ‚Æ‚éB */
+  /* ‘O•û‚Ì•Ç”»’è */
   /* for Cgen */
-  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½æ“¾ */
+  /* ƒZƒ“ƒT’læ“¾ */
   wall_sensor_front = m_get_front_sensor();
 
-  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉAï¿½Ç‚Ì—Lï¿½ï¿½ï¿½ğ”»’ï¿½ */
+  /* ƒZƒ“ƒT’l‚ğ‚à‚Æ‚ÉA•Ç‚Ì—L–³‚ğ”»’è */
   if (wall_sensor_front > wall_sensor_front_th) {
-    /* ï¿½Çï¿½ï¿½æ“¾ */
+    /* •Çî•ñæ“¾ */
     i227 = (int)(b_rem(current_dir) + 1U);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
@@ -14941,11 +15164,11 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
     wall_write[i227 - 1] = wall->contents.wall;
 
-    /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g */
+    /* •Çƒtƒ‰ƒOƒZƒbƒg */
     wall_flg->contents |= 1;
   }
 
-  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+  /* ’Tõî•ñæXV */
   i227 = (int)(b_rem(current_dir) + 1U);
   if ((unsigned int)i227 > 255U) {
     i227 = 255;
@@ -14953,14 +15176,14 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
   serch_write[i227 - 1] = search->contents.known;
 
-  /* ï¿½Eï¿½Ç”ï¿½ï¿½ï¿½ */
+  /* ‰E•Ç”»’è */
   /* for Cgen */
-  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½æ“¾ */
+  /* ƒZƒ“ƒT’læ“¾ */
   wall_sensor_front = m_get_right_sensor();
 
-  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉAï¿½Ç‚Ì—Lï¿½ï¿½ï¿½ğ”»’ï¿½ */
+  /* ƒZƒ“ƒT’l‚ğ‚à‚Æ‚ÉA•Ç‚Ì—L–³‚ğ”»’è */
   if (wall_sensor_front > wall_sensor_right_th) {
-    /* ï¿½Çï¿½ï¿½æ“¾ */
+    /* •Çî•ñæ“¾ */
     i227 = (int)(current_dir + 1U);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
@@ -14973,11 +15196,11 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
     wall_write[i227 - 1] = wall->contents.wall;
 
-    /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g */
+    /* •Çƒtƒ‰ƒOƒZƒbƒg */
     wall_flg->contents = (unsigned char)(wall_flg->contents | 2);
   }
 
-  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+  /* ’Tõî•ñæXV */
   i227 = (int)(current_dir + 1U);
   if ((unsigned int)i227 > 255U) {
     i227 = 255;
@@ -14990,15 +15213,15 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
   serch_write[i227 - 1] = search->contents.known;
 
-  /* ï¿½ï¿½ï¿½ï¿½Íï¿½ï¿½ğ“¾‚é‚±ï¿½Æ‚ï¿½ï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½Ì‚Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B */
-  /* ï¿½ï¿½ï¿½Ç”ï¿½ï¿½ï¿½ */
+  /* Œã•û‚Íî•ñ‚ğ“¾‚é‚±‚Æ‚ª‚Å‚«‚È‚¢‚Ì‚Åˆ—‚µ‚È‚¢B */
+  /* ¶•Ç”»’è */
   /* for Cgen */
-  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½æ“¾ */
+  /* ƒZƒ“ƒT’læ“¾ */
   wall_sensor_front = m_get_left_sensor();
 
-  /* ï¿½Zï¿½ï¿½ï¿½Tï¿½lï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉAï¿½Ç‚Ì—Lï¿½ï¿½ï¿½ğ”»’ï¿½ */
+  /* ƒZƒ“ƒT’l‚ğ‚à‚Æ‚ÉA•Ç‚Ì—L–³‚ğ”»’è */
   if (wall_sensor_front > wall_sensor_left_th) {
-    /* ï¿½Çï¿½ï¿½æ“¾ */
+    /* •Çî•ñæ“¾ */
     i227 = (int)(current_dir + 3U);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
@@ -15011,11 +15234,11 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
     wall_write[i227 - 1] = wall->contents.wall;
 
-    /* ï¿½Çƒtï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g */
+    /* •Çƒtƒ‰ƒOƒZƒbƒg */
     wall_flg->contents = (unsigned char)(wall_flg->contents | 8);
   }
 
-  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V */
+  /* ’Tõî•ñæXV */
   i227 = (int)(current_dir + 3U);
   if ((unsigned int)i227 > 255U) {
     i227 = 255;
@@ -15028,9 +15251,9 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
   serch_write[i227 - 1] = search->contents.known;
 
-  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ */
-  /* ï¿½Çï¿½ï¿½,ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-  /* ï¿½kï¿½ï¿½ */
+  /* ‚±‚±‚Ü‚Å */
+  /* •Çî•ñ,’Tõî•ñ‚ğ“ü—Í */
+  /* –k‘¤ */
   i227 = (int)(g_direction.North + 1U);
   ex = i227;
   if ((unsigned int)i227 > 255U) {
@@ -15070,7 +15293,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
   maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | ex);
 
-  /* ï¿½ï¿½ï¿½ï¿½ */
+  /* “Œ‘¤ */
   ex = (int)(g_direction.East + 1U);
   i232 = ex;
   if ((unsigned int)ex > 255U) {
@@ -15107,7 +15330,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
   maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i232);
 
-  /* ï¿½ì‘¤ */
+  /* “ì‘¤ */
   i232 = (int)(g_direction.South + 1U);
   i235 = i232;
   if ((unsigned int)i232 > 255U) {
@@ -15144,7 +15367,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
   maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i235);
 
-  /* ï¿½ï¿½ï¿½ï¿½ */
+  /* ¼‘¤ */
   i235 = (int)(g_direction.West + 1U);
   i238 = i235;
   if ((unsigned int)i235 > 255U) {
@@ -15181,8 +15404,8 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
   maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i238);
 
-  /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½Ìï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½ */
-  /* ï¿½kï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ì‘¤ï¿½Ì•Çï¿½ï¿½ */
+  /* —×‚è‡‚¤ƒ}ƒX‚Ìî•ñ‚É‚à“ü—Í */
+  /* –k‘¤‚Ìƒ}ƒX‚Ì“ì‘¤‚Ì•Çî•ñ */
   qY = maze_row_size - 1U;
   if (qY > maze_row_size) {
     qY = 0U;
@@ -15224,7 +15447,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
     maze_wall_search[k] = (unsigned char)(maze_wall_search[k] | i227);
   }
 
-  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Ì•Çï¿½ï¿½ */
+  /* “Œ‘¤‚Ìƒ}ƒX‚Ì¼‘¤‚Ì•Çî•ñ */
   qY = maze_col_size - 1U;
   if (qY > maze_col_size) {
     qY = 0U;
@@ -15267,7 +15490,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
     maze_wall_search[i238] = (unsigned char)(maze_wall_search[i238] | i227);
   }
 
-  /* ï¿½ì‘¤ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½ï¿½ï¿½Ì•Çï¿½ï¿½ */
+  /* “ì‘¤‚Ìƒ}ƒX‚Ì–k‘¤‚Ì•Çî•ñ */
   if (current_y > 1) {
     i227 = i232;
     if ((unsigned int)i232 > 255U) {
@@ -15305,7 +15528,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
     maze_wall_search[ex] = (unsigned char)(maze_wall_search[ex] | i227);
   }
 
-  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½ï¿½ï¿½Ì•Çï¿½ï¿½ */
+  /* ¼‘¤‚Ìƒ}ƒX‚Ì“Œ‘¤‚Ì•Çî•ñ */
   if (current_x > 1) {
     i227 = i235;
     if ((unsigned int)i235 > 255U) {
@@ -15343,7 +15566,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
     maze_wall_search[ex] = (unsigned char)(maze_wall_search[ex] | i227);
   }
 
-  /* ï¿½ï¿½ï¿½İ’nï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ê‡ */
+  /* Œ»İ’n‚ªƒS[ƒ‹‚Å‚È‚¢ê‡ */
   for (i227 = 0; i227 < 9; i227++) {
     varargin_1[i227] = (signed char)((maze_goal->contents[i227] == current_x) *
       (maze_goal->contents[9 + i227] == current_y));
@@ -15358,8 +15581,8 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
   }
 
   if (ex == 0) {
-    /* ï¿½ï¿½ï¿½É‘Î‚ï¿½ï¿½A3ï¿½ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ‚ï¿½ï¿½ÂAï¿½ï¿½ï¿½×‚Ä•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½è‚³ï¿½ï¿½ï¿½ï¿½B */
-    /* ï¿½k,ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
+    /* ’Œ‚É‘Î‚µA3•ûŒü’TõÏ‚İ‚©‚ÂA‚·‚×‚Ä•Ç‚ª‚È‚¢ê‡A‚à‚¤ˆê•ûŒü‚Ì•Ç‚ğŠm’è‚³‚¹‚éB */
+    /* –k,“Œ‚É•Ç‚ª‚È‚¢ê‡ */
     if (g_direction.North <= 7) {
       i247 = (unsigned char)(1 << g_direction.North);
     } else {
@@ -15387,7 +15610,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
       if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i251) != i253)
       {
-        /* ï¿½kï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        /* –k‚Ìƒ}ƒX‚Ì“Œ‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
         i227 = (int)(current_y + 1U);
         ex = i227;
         if ((unsigned int)i227 > 255U) {
@@ -15419,7 +15642,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
 
           if ((maze_wall[(ex + i229) - 1] & i261) != i266) {
-            /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            /* “Œ‚Ìƒ}ƒX‚Ì–k‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
             ex = (int)(current_x + 1U);
             if ((unsigned int)ex > 255U) {
               ex = 255;
@@ -15457,7 +15680,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
               (maze_wall_search[(current_y + ((k - 1) << 5)) - 1] | i285);
 
-            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ï¿½ï¿½kï¿½}ï¿½Xï¿½jï¿½Ì“ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            /* —×‚è‡‚¤ƒ}ƒXi“Œ–kƒ}ƒXj‚Ì“ì‚Ì•Ç‚àŠm’è */
             ex = i227;
             if ((unsigned int)i227 > 255U) {
               ex = 255;
@@ -15517,7 +15740,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
         }
 
-        /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        /* “Œ‚Ìƒ}ƒX‚Ì–k‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
         ex = (int)(current_x + 1U);
         k = ex;
         if ((unsigned int)ex > 255U) {
@@ -15549,7 +15772,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
 
           if ((maze_wall[(current_y + ((k - 1) << 5)) - 1] & i272) != i275) {
-            /* ï¿½kï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            /* –k‚Ìƒ}ƒX‚Ì“Œ‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
             k = i227;
             if ((unsigned int)i227 > 255U) {
               k = 255;
@@ -15587,7 +15810,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             maze_wall_search[(k + i229) - 1] = (unsigned char)(maze_wall_search
               [(i230 + i229) - 1] | i294);
 
-            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ï¿½ï¿½kï¿½}ï¿½Xï¿½jï¿½Ìï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            /* —×‚è‡‚¤ƒ}ƒXi“Œ–kƒ}ƒXj‚Ì¼‚Ì•Ç‚àŠm’è */
             k = i227;
             if ((unsigned int)i227 > 255U) {
               k = 255;
@@ -15647,7 +15870,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
       }
     }
 
-    /* ï¿½k,ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
+    /* –k,¼‚É•Ç‚ª‚È‚¢ê‡ */
     if (g_direction.North <= 7) {
       i252 = (unsigned char)(1 << g_direction.North);
     } else {
@@ -15675,7 +15898,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
       if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i255) != i257)
       {
-        /* ï¿½kï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        /* –k‚Ìƒ}ƒX‚Ì¼‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
         i227 = (int)(current_y + 1U);
         if ((unsigned int)i227 > 255U) {
           i227 = 255;
@@ -15706,7 +15929,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
 
           if ((maze_wall[(i227 + i229) - 1] & i269) != i274) {
-            /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            /* ¼‚Ìƒ}ƒX‚Ì–k‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
             qY = current_x - 1U;
             if (qY > current_x) {
               qY = 0U;
@@ -15745,7 +15968,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
               char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
                     i293);
 
-            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½kï¿½ï¿½ï¿½}ï¿½Xï¿½jï¿½Ì“ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            /* —×‚è‡‚¤ƒ}ƒXi–k¼ƒ}ƒXj‚Ì“ì‚Ì•Ç‚àŠm’è */
             i227 = (int)(current_y + 1U);
             if ((unsigned int)i227 > 255U) {
               i227 = 255;
@@ -15805,7 +16028,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
         }
 
-        /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì–kï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        /* ¼‚Ìƒ}ƒX‚Ì–k‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
         qY = current_x - 1U;
         if (qY > current_x) {
           qY = 0U;
@@ -15838,7 +16061,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
           if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i278) != i282)
           {
-            /* ï¿½kï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            /* –k‚Ìƒ}ƒX‚Ì¼‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
             i227 = (int)(current_y + 1U);
             if ((unsigned int)i227 > 255U) {
               i227 = 255;
@@ -15876,7 +16099,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             maze_wall_search[(i227 + i229) - 1] = (unsigned char)
               (maze_wall_search[(ex + i229) - 1] | i300);
 
-            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½kï¿½ï¿½ï¿½}ï¿½Xï¿½jï¿½Ì“ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            /* —×‚è‡‚¤ƒ}ƒXi–k¼ƒ}ƒXj‚Ì“Œ‚Ì•Ç‚àŠm’è */
             i227 = (int)(current_y + 1U);
             if ((unsigned int)i227 > 255U) {
               i227 = 255;
@@ -15938,7 +16161,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
       }
     }
 
-    /* ï¿½ï¿½,ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
+    /* “ì,“Œ‚É•Ç‚ª‚È‚¢ê‡ */
     if (g_direction.East <= 7) {
       i256 = (unsigned char)(1 << g_direction.East);
     } else {
@@ -15966,7 +16189,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
       if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i260) != i264)
       {
-        /* ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        /* “ì‚Ìƒ}ƒX‚Ì“Œ‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
         qY = current_y - 1U;
         if (qY > current_y) {
           qY = 0U;
@@ -15997,7 +16220,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
 
           if ((maze_wall[((int)qY + i229) - 1] & i277) != i281) {
-            /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            /* “Œ‚Ìƒ}ƒX‚Ì“ì‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
             i227 = (int)(current_x + 1U);
             if ((unsigned int)i227 > 255U) {
               i227 = 255;
@@ -16035,7 +16258,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             maze_wall_search[(current_y + ((i227 - 1) << 5)) - 1] = (unsigned
               char)(maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] | i299);
 
-            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ì“Œï¿½}ï¿½Xï¿½jï¿½Ì–kï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½ */
+            /* —×‚è‡‚¤ƒ}ƒXi“ì“Œƒ}ƒXj‚Ì–k‚Ì•Ç‚àŠm’è */
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16095,7 +16318,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
         }
 
-        /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ì‚ªï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        /* “Œ‚Ìƒ}ƒX‚Ì“ì‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
         i227 = (int)(current_x + 1U);
         if ((unsigned int)i227 > 255U) {
           i227 = 255;
@@ -16127,7 +16350,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
 
           if ((maze_wall[(current_y + ((i227 - 1) << 5)) - 1] & i287) != i290) {
-            /* ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            /* “ì‚Ìƒ}ƒX‚Ì“Œ‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16165,7 +16388,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             maze_wall_search[((int)qY + i229) - 1] = (unsigned char)
               (maze_wall_search[((int)b_qY + i229) - 1] | i305);
 
-            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ì“Œï¿½}ï¿½Xï¿½jï¿½Ìï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Bï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½ */
+            /* —×‚è‡‚¤ƒ}ƒXi“ì“Œƒ}ƒXj‚Ì¼‚Ì•Ç‚ªŠm’èB’TõÏ‚İ‚Æ‚·‚é */
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16227,7 +16450,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
       }
     }
 
-    /* ï¿½ï¿½,ï¿½ï¿½ï¿½É•Ç‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ */
+    /* “ì,¼‚É•Ç‚ª‚È‚¢ê‡ */
     if (g_direction.West <= 7) {
       i262 = (unsigned char)(1 << g_direction.West);
     } else {
@@ -16255,7 +16478,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
       if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i268) != i273)
       {
-        /* ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        /* “ì‚Ìƒ}ƒX‚Ì¼‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
         qY = current_y - 1U;
         if (qY > current_y) {
           qY = 0U;
@@ -16286,7 +16509,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
 
           if ((maze_wall[((int)qY + i229) - 1] & i286) != i289) {
-            /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            /* ¼‚Ìƒ}ƒX‚Ì“ì‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
             qY = current_x - 1U;
             if (qY > current_x) {
               qY = 0U;
@@ -16325,7 +16548,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
               char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
                     i304);
 
-            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ì¼ï¿½}ï¿½Xï¿½jï¿½Ì–kï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Bï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½ */
+            /* —×‚è‡‚¤ƒ}ƒXi“ì¼ƒ}ƒXj‚Ì–k‚Ì•Ç‚ªŠm’èB’TõÏ‚İ‚Æ‚·‚é */
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16386,7 +16609,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
           }
         }
 
-        /* ï¿½ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ì“ì‚ªï¿½Tï¿½ï¿½ï¿½Ï‚İ@ï¿½ï¿½ï¿½Â@ï¿½Ç‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ */
+        /* ¼‚Ìƒ}ƒX‚Ì“ì‚ª’TõÏ‚İ@‚©‚Â@•Ç‚ª‚È‚¢‚Æ‚« */
         qY = current_x - 1U;
         if (qY > current_x) {
           qY = 0U;
@@ -16419,7 +16642,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 
           if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i295) != i296)
           {
-            /* ï¿½ï¿½Ìƒ}ï¿½Xï¿½Ìï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½B */
+            /* “ì‚Ìƒ}ƒX‚Ì¼‚Ì•Ç‚ªŠm’èA’TõÏ‚İ‚Æ‚·‚éB */
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16457,7 +16680,7 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
             maze_wall_search[((int)qY + i229) - 1] = (unsigned char)
               (maze_wall_search[((int)b_qY + i229) - 1] | i310);
 
-            /* ï¿½×‚è‡ï¿½ï¿½ï¿½}ï¿½Xï¿½iï¿½ì¼ï¿½}ï¿½Xï¿½jï¿½Ì“ï¿½ï¿½Ì•Ç‚ï¿½ï¿½mï¿½ï¿½Bï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Æ‚ï¿½ï¿½ï¿½ */
+            /* —×‚è‡‚¤ƒ}ƒXi“ì¼ƒ}ƒXj‚Ì“Œ‚Ì•Ç‚ªŠm’èB’TõÏ‚İ‚Æ‚·‚é */
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16523,9 +16746,9 @@ static void wall_set(const coder_internal_ref_5 *wall, coder_internal_ref
 }
 
 /*
- * maze_solve ï¿½ï¿½ï¿½@ï¿½Å‚Ì–ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½Öï¿½
- * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Hï¿½Çï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Hï¿½cï¿½Tï¿½Cï¿½Y,ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Tï¿½Cï¿½Y,ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W,
- * ï¿½oï¿½ï¿½ ï¿½Çï¿½ï¿½,ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½
+ * maze_solve À‹@‚Å‚Ì–À˜H’TõŠÖ”
+ * “ü—Í –À˜H•Çî•ñ,–À˜H’Tõî•ñ,–À˜HcƒTƒCƒY,–À˜H‰¡ƒTƒCƒY,ƒS[ƒ‹À•W,
+ * o—Í •Çî•ñ,’Tõî•ñ
  * Arguments    : unsigned char maze_wall[1024]
  *                unsigned char maze_wall_search[1024]
  *                unsigned char maze_row_size
@@ -16548,13 +16771,14 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
 {
   coder_internal_ref b_goal_size;
   int N;
-  coder_internal_ref_1 b_maze_goal;
+  coder_internal_ref_1 b_maze_wall;
+  coder_internal_ref_2 b_maze_goal;
   coder_internal_ref wall_flg;
   unsigned char new_goal[2];
-  coder_internal_ref_5 wall;
-  coder_internal_ref_4 search;
-  coder_internal_ref_3 adachi_search_mode;
-  coder_internal_ref_2 max_length;
+  coder_internal_ref_6 wall;
+  coder_internal_ref_5 search;
+  coder_internal_ref_4 adachi_search_mode;
+  coder_internal_ref_3 max_length;
   unsigned short start_num;
   unsigned char current_x;
   unsigned char search_flag;
@@ -16567,8 +16791,8 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   unsigned short unusedExpr[1024];
   int exitg1;
   bool exitg2;
-  unsigned short b_unusedExpr[1024];
   unsigned char unexp_square[1024];
+  unsigned short b_unusedExpr[1024];
   unsigned short c_unusedExpr[1024];
   unsigned short d_unusedExpr[1024];
   b_goal_size.contents = goal_size;
@@ -16576,23 +16800,26 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     b_maze_goal.contents[N] = maze_goal[N];
   }
 
-  /* Cï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½[ï¿½h */
-  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½ï¿½` */
-  /*  ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½bï¿½vï¿½tï¿½ï¿½ï¿½O(0:ï¿½Ú“ï¿½ï¿½pï¿½ï¿½ï¿½@1:ï¿½Xï¿½gï¿½bï¿½v) */
-  /*  ï¿½Xï¿½^ï¿½[ï¿½gï¿½tï¿½ï¿½ï¿½O(0:ï¿½ï¿½ï¿½ì’†ï¿½@1:ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½Jï¿½n) */
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O(0:ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½, 1:ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) */
+  memcpy(&b_maze_wall.contents[0], &maze_wall[0], sizeof(unsigned char) << 10);
+
+  /* CŒ¾ŒêŠÖ”ƒCƒ“ƒNƒ‹[ƒh */
+  /* ƒ[ƒJƒ‹•Ï”’è‹` */
+  /*  ƒS[ƒ‹ƒXƒgƒbƒvƒtƒ‰ƒO(0:ˆÚ“®Œp‘±@1:ƒXƒgƒbƒv) */
+  /*  ƒXƒ^[ƒgƒtƒ‰ƒO(0:“®ì’†@1:’â~‚©‚ç‚ÌˆÚ“®ŠJn) */
+  /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO(0:ƒS[ƒ‹’¼Œã‚Å‚È‚¢, 1:ƒS[ƒ‹’¼Œã) */
   wall_flg.contents = 0U;
 
-  /* ï¿½Çƒtï¿½ï¿½ï¿½O(1:ï¿½Oï¿½A2:ï¿½Eï¿½Aï¿½i4:ï¿½ï¿½ï¿½)ï¿½A8:ï¿½ï¿½) */
-  /*  ï¿½Oï¿½ï¿½ï¿½[ï¿½oï¿½ï¿½ï¿½Ïï¿½ï¿½éŒ¾ */
-  /* ï¿½ï¿½ï¿½Cï¿½ï¿½figure */
-  /* ï¿½ï¿½ï¿½Cï¿½ï¿½axes */
-  /*  global vidObj;%ï¿½rï¿½fï¿½Iï¿½p */
-  /* ï¿½vï¿½ï¿½ï¿½bï¿½gï¿½pï¿½Ïï¿½ */
-  /* ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ûï¿½ï¿½p */
-  /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ûï¿½ï¿½p */
+  /* •Çƒtƒ‰ƒO(1:‘OA2:‰EAi4:Œã‚ë)A8:¶) */
+  /*  ƒOƒ[ƒoƒ‹•Ï”éŒ¾ */
+  /* ƒƒCƒ“figure */
+  /* ƒƒCƒ“axes */
+  /* ƒrƒfƒI—p */
+  /* ƒrƒfƒI—p */
+  /* ƒvƒƒbƒg—p•Ï” */
+  /* Å’ZŒo˜Hƒ‰ƒCƒ“ƒIƒuƒWƒFƒNƒg•Û—p */
+  /* ƒS[ƒ‹ƒ‰ƒCƒ“ƒIƒuƒWƒFƒNƒg•Û—p */
   /*  global maze_goal; */
-  /* ï¿½ï¿½ï¿½[ï¿½Jï¿½ï¿½ï¿½Ïï¿½ï¿½éŒ¾ */
+  /* ƒ[ƒJƒ‹•Ï”éŒ¾ */
   new_goal[0] = 0U;
   new_goal[1] = 0U;
   memset(&contour_map[0], 0, sizeof(unsigned short) << 10);
@@ -16601,19 +16828,19 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     col_num_node[N] = MAX_uint16_T;
   }
 
-  /* ï¿½mï¿½[ï¿½hï¿½Ì‘ï¿½ï¿½ï¿½ï¿½ï¿½` */
-  /* 0:ï¿½sï¿½ï¿½ï¿½ï¿½, 1:ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½@2:ï¿½Zï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½iï¿½}ï¿½Xï¿½j */
+  /* ƒm[ƒh‚Ì‘®«’è‹` */
+  /* 0:s•ûŒü, 1:—ñ•ûŒü,@2:ƒZƒNƒVƒ‡ƒ“iƒ}ƒXj */
   matrix_dir.Row = 0U;
   matrix_dir.Col = 1U;
   matrix_dir.section = 2U;
 
-  /* ï¿½ï¿½Î•ï¿½ï¿½pï¿½ï¿½` */
+  /* â‘Î•ûŠp’è‹` */
   g_direction.North = 0U;
   g_direction.East = 1U;
   g_direction.South = 2U;
   g_direction.West = 3U;
 
-  /* ï¿½Î‚ßï¿½ï¿½İ‚Ìï¿½Î•ï¿½ï¿½pï¿½ï¿½` */
+  /* Î‚ß‚İ‚Ìâ‘Î•ûŠp’è‹` */
   g_d_direction.North = 0U;
   g_d_direction.North_East = 1U;
   g_d_direction.East = 2U;
@@ -16623,18 +16850,18 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   g_d_direction.West = 6U;
   g_d_direction.North_West = 7U;
 
-  /* ï¿½}ï¿½Eï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
+  /* ƒ}ƒEƒX•ûŒü’è‹` */
   l_direction.front = 0U;
   l_direction.right = 1U;
   l_direction.back = 2U;
   l_direction.left = 3U;
 
-  /* ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
-  /* ï¿½ï¿½ï¿½iorï¿½Î‚ï¿½ */
+  /* ˆÚ“®•ûŒü‘®«’è‹` */
+  /* ’¼iorÎ‚ß */
   move_dir_property.straight = 0U;
   move_dir_property.diagonal = 1U;
 
-  /* ï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½` */
+  /* ƒpƒ^[ƒ“”Ô†’è‹` */
   turn_pattern.b_default = 0U;
   turn_pattern.r_45 = 1U;
   turn_pattern.l_45 = 2U;
@@ -16645,56 +16872,57 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   turn_pattern.r_180 = 7U;
   turn_pattern.l_180 = 8U;
 
-  /* ï¿½Çï¿½ï¿½ï¿½` */
+  /* •Çî•ñ’è‹` */
   wall.contents.nowall = 0U;
   wall.contents.wall = 1U;
 
-  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½` */
+  /* ’Tõî•ñ’è‹` */
   search.contents.unknown = 0U;
   search.contents.known = 1U;
 
-  /* ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½` */
-  /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½h */
-  /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Çˆï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½` */
-  /* ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½oï¿½ï¿½ï¿½[ï¿½h */
-  /* ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½É‚ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½@ï¿½Sï¿½[ï¿½ï¿½orï¿½Tï¿½ï¿½ */
+  /* ‘–sƒ‚[ƒh’è‹` */
+  /* ’Tõƒ‚[ƒh */
+  /* –¢’Tõ•Çˆµ‚¢ƒ‚[ƒh’è‹` */
+  /* Å’ZŒo˜H“±oƒ‚[ƒh */
+  /* ‘«—§–@‚É‚æ‚é’Tõƒ‚[ƒh@ƒS[ƒ‹or’Tõ */
   adachi_search_mode.contents.goal = 0U;
   adachi_search_mode.contents.search = 1U;
 
-  /*  ï¿½Tï¿½ï¿½ */
+  /*  ’Tõ */
   if (run_mode_1 == 0) {
-    /* ï¿½}ï¿½Eï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½İ’ï¿½ */
+    /* ƒ}ƒEƒX‚Ì‰ŠúˆÊ’uİ’è */
     /* for C gen */
-    /* ï¿½eï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½` */
-    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
-    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ÍƒNï¿½ï¿½ï¿½A */
-    /* ï¿½ï¿½}ï¿½Xï¿½Oï¿½i */
+    /* Šeƒtƒ‰ƒO‚ğ’è‹` */
+    /* ’â~’¼Œã */
+    /* ’â~ˆ—‚ğÀ{‚·‚é */
+    /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ÍƒNƒŠƒA */
+    /* ˆêƒ}ƒX‘Oi */
     current_x = 1U;
     current_y = 1U;
     move_step(&current_x, &current_y, g_direction.North);
 
-    /* Cï¿½ï¿½ï¿½ï¿½Å‚ÌƒXï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ */
+    /* CŒ¾Œê‚Å‚ÌƒXƒ^[ƒgˆ— */
     m_start_movement(1, 0, move_dir_property.straight);
 
-    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½É‚ï¿½ï¿½Tï¿½ï¿½ */
+    /* ’â~’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+    /* ƒS[ƒ‹‚ğƒvƒƒbƒg */
+    /* ‘«—§–@‚É‚æ‚é’Tõ */
     current_dir = g_direction.North;
     search_flag = 0U;
-    search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &adachi_search_mode,
-                  &current_x, &current_y, &current_dir, maze_row_size,
-                  maze_col_size, maze_wall, maze_wall_search, maze_goal,
-                  goal_size, &search_flag, 0U, unusedExpr);
+    search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
+                  &adachi_search_mode, &current_x, &current_y, &current_dir,
+                  maze_row_size, maze_col_size, maze_wall, maze_wall_search,
+                  maze_goal, goal_size, &search_flag, 0U, unusedExpr);
+    memcpy(&b_maze_wall.contents[0], &maze_wall[0], sizeof(unsigned char) << 10);
 
-    /* ï¿½Ğ‚Æ‚Ü‚ÃƒSï¿½[ï¿½ï¿½(ï¿½ï¿½~) */
-    /* ï¿½eï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½` */
+    /* ‚Ğ‚Æ‚Ü‚ÃƒS[ƒ‹(’â~) */
+    /* Šeƒtƒ‰ƒO‚ğ’è‹` */
     start_flg = 1U;
 
-    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
-    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½È‚ï¿½ */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä’Tï¿½ï¿½ */
+    /* ’â~’¼Œã */
+    /* ’â~ˆ—‚ğÀ{‚µ‚È‚¢ */
+    /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
+    /* ƒS[ƒ‹‚ğ‚·‚×‚Ä’Tõ */
     do {
       exitg1 = 0;
       search_flag = 0U;
@@ -16714,134 +16942,150 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
       }
 
       if (search_flag == 1) {
-        b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal,
+        memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned char)
+               << 10);
+        b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
                         &adachi_search_mode, &current_x, &current_y,
-                        &current_dir, maze_row_size, maze_col_size, maze_wall,
+                        &current_dir, maze_row_size, maze_col_size, unexp_square,
                         maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
                         b_unusedExpr);
+        memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned char)
+               << 10);
 
-        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
+        /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
       } else {
         exitg1 = 1;
       }
     } while (exitg1 == 0);
 
-    /* ï¿½Aï¿½Hï¿½Tï¿½ï¿½ */
-    /* ï¿½Sï¿½Ê’Tï¿½ï¿½ */
-    /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½È‚ï¿½ï¿½È‚ï¿½Ü‚ÅB */
-    /* ï¿½ï¿½ï¿½nï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Ô‹ß‚ï¿½ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½Tï¿½ï¿½ */
-    /* ï¿½ï¿½ï¿½İ’nï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½Wï¿½Jï¿½Aï¿½Tï¿½ï¿½ï¿½Ï‚İ‚Å‚È‚ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½B */
+    /* ‹A˜H’Tõ */
+    /* ‘S–Ê’Tõ */
+    /* –¢’Tõƒ}ƒX‚ª‚È‚­‚È‚é‚Ü‚ÅB */
+    /* Œ»’n“_‚©‚çˆê”Ô‹ß‚¢–¢’Tõƒ}ƒX‚ğ’Tõ */
+    /* Œ»İ’n‚©‚çƒRƒ“ƒ^[ƒ}ƒbƒv‚ğ“WŠJA’TõÏ‚İ‚Å‚È‚¢ƒ}ƒX‚ªŒ©‚Â‚©‚ê‚ÎA‚»‚±‚ğƒS[ƒ‹‚Æ‚·‚éB */
     switch (run_mode_2) {
      case 1:
       do {
         exitg1 = 0;
-        make_new_goal_all(&wall, maze_wall, maze_wall_search, current_x,
-                          current_y, contour_map, new_goal);
+        make_new_goal_all(&wall, b_maze_wall.contents, maze_wall_search,
+                          current_x, current_y, contour_map, new_goal);
         if (new_goal[0] == 0) {
           exitg1 = 1;
         } else {
-          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
-          /* ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½Aï¿½Tï¿½ï¿½ï¿½B */
-          b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal,
+          /* ƒS[ƒ‹‚ğƒvƒƒbƒg */
+          /* Šù‘¶‚ÌƒRƒ“ƒ^[‚ğg—p‚µA’TõB */
+          memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned
+                  char) << 10);
+          b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
                           &adachi_search_mode, &current_x, &current_y,
-                          &current_dir, maze_row_size, maze_col_size, maze_wall,
-                          maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
-                          c_unusedExpr);
+                          &current_dir, maze_row_size, maze_col_size,
+                          unexp_square, maze_wall_search, new_goal, &start_flg,
+                          0U, 1U, 1U, c_unusedExpr);
+          memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned
+                  char) << 10);
 
-          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
+          /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
         }
       } while (exitg1 == 0);
 
-      /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
+      /* V‹KƒS[ƒ‹‚ªŒ©‚Â‚©‚ç‚È‚¢‚Æ‚«A’â~ˆ—‚ğÀ{ */
       m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
 
-      /* ï¿½Tï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚½ï¿½ßAï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½B */
+      /* ’TõI—¹A’â~‚³‚¹‚Ä‚¢‚é‚½‚ßAƒtƒ‰ƒO‚ğ‚½‚Ä‚éB */
       start_flg = 1U;
 
-      /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½Å’Zï¿½oï¿½Hï¿½Tï¿½ï¿½ */
-      /* ï¿½Å’Zï¿½Æ‚È‚è‚¤ï¿½ï¿½}ï¿½Xï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½Ì‚İ’Tï¿½ï¿½ */
+      /* ’â~’¼Œã */
+      /* Å’ZŒo˜H’Tõ */
+      /* Å’Z‚Æ‚È‚è‚¤‚éƒ}ƒX‚Ì–¢’Tõ‚Ì‚İ’Tõ */
       break;
 
      case 2:
       do {
         exitg1 = 0;
 
-        /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½Ç‚Í‚È‚ï¿½ï¿½ï¿½ï¿½Ì‚Æ‚ï¿½ï¿½ÄAï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½^ï¿½[ï¿½gï¿½Ü‚ÅAï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½ï¿½Wï¿½Jï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Ìdï¿½İ‚ï¿½ï¿½ï¿½j */
+        /* –¢’Tõ•Ç‚Í‚È‚¢‚à‚Ì‚Æ‚µ‚ÄAƒS[ƒ‹‚©‚çƒXƒ^[ƒg‚Ü‚ÅAƒRƒ“ƒ^[ƒ}ƒbƒv‚ğ“WŠJi’¼ü‚Ìd‚İ‚ ‚èj */
         make_map_fustrun(&b_goal_size, &wall, &search, b_maze_goal.contents,
-                         maze_wall, maze_wall_search, 0U, contour_map);
+                         b_maze_wall.contents, maze_wall_search, 0U, contour_map);
 
-        /* ï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉAï¿½Å’Zï¿½oï¿½Hï¿½ğ“±oï¿½Bï¿½oï¿½Hï¿½ï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½Æ‚ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ */
-        fust_run(&b_goal_size, &wall_flg, &wall, maze_wall, maze_wall_search,
-                 contour_map, b_maze_goal.contents, MAX_uint16_T, unexp_square,
-                 &search_flag);
+        /* ƒ}ƒbƒv‚ğ‚à‚Æ‚ÉAÅ’ZŒo˜H‚ğ“±oBŒo˜Hã‚Ì–¢’Tõƒ}ƒX‚Æ‚»‚Ì”‚ğo—Í */
+        fust_run(&b_maze_wall, &b_goal_size, &wall_flg, &wall,
+                 b_maze_wall.contents, maze_wall_search, contour_map,
+                 b_maze_goal.contents, MAX_uint16_T, unexp_square, &search_flag);
 
-        /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎAï¿½uï¿½ï¿½ï¿½Cï¿½N */
+        /* –¢’Tõƒ}ƒX‚ª‚È‚¯‚ê‚ÎAƒuƒŒƒCƒN */
         if (search_flag == 0) {
           exitg1 = 1;
         } else {
-          /* ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
-          /* ï¿½ï¿½ï¿½İ’nï¿½_ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½ï¿½Wï¿½Jï¿½ï¿½ï¿½Aï¿½Yï¿½ï¿½ï¿½Ì–ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Äoï¿½ï¿½ */
-          make_new_goal_sh(&wall, maze_wall, current_x, current_y, unexp_square,
-                           search_flag, contour_map, new_goal);
+          /* –¢’Tõƒ}ƒX‚ª‚ ‚éê‡A’Tõ‚·‚éB */
+          /* Œ»İ’n“_‚©‚çƒRƒ“ƒ^[‚ğ“WŠJ‚µAŠY“–‚Ì–¢’Tõ‚ªXV‚³‚ê‚ê‚ÎA‚»‚±‚ğV‹KƒS[ƒ‹‚Æ‚µ‚Äo—Í */
+          make_new_goal_sh(&wall, b_maze_wall.contents, current_x, current_y,
+                           unexp_square, search_flag, contour_map, new_goal);
 
-          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
-          /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ÉŒï¿½ï¿½ï¿½ï¿½Aï¿½Tï¿½ï¿½ */
-          b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal,
+          /* ƒS[ƒ‹‚ğƒvƒƒbƒg */
+          /* V‹KƒS[ƒ‹‚ÉŒü‚¯A’Tõ */
+          memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned
+                  char) << 10);
+          b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
                           &adachi_search_mode, &current_x, &current_y,
-                          &current_dir, maze_row_size, maze_col_size, maze_wall,
-                          maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
-                          d_unusedExpr);
+                          &current_dir, maze_row_size, maze_col_size,
+                          unexp_square, maze_wall_search, new_goal, &start_flg,
+                          0U, 1U, 1U, d_unusedExpr);
+          memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned
+                  char) << 10);
 
-          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
+          /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
         }
       } while (exitg1 == 0);
 
-      /* ï¿½Vï¿½Kï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ */
+      /* V‹KƒS[ƒ‹‚ªŒ©‚Â‚©‚ç‚È‚¢‚Æ‚«A’â~ˆ—‚ğÀ{ */
       m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
 
-      /* ï¿½Tï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚½ï¿½ßAï¿½ï¿½~ï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½B */
+      /* ’TõI—¹A’â~‚³‚¹‚Ä‚¢‚é‚½‚ßA’â~ƒtƒ‰ƒO‚ğ—§‚Ä‚éB */
       start_flg = 1U;
 
-      /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
-      /* ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½Ìê‡ï¿½ï¿½ï¿½ï¿½ */
+      /* ’â~’¼Œã */
+      /* ‚»‚Ì‘¼‚Ìê‡–³‹ */
       break;
 
      default:
-      /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ */
+      /* ’â~‚³‚¹‚È‚¢ */
       start_flg = 0U;
 
-      /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ */
+      /* ’â~’¼Œã‚Å‚È‚¢ */
       break;
     }
 
-    /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½Ú“Iï¿½nï¿½Æ‚ï¿½ï¿½Ä‘ï¿½ï¿½ï¿½ï¿½@ï¿½ÅÄ’Tï¿½ï¿½ */
-    /* ï¿½eï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½` */
-    /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ */
-    /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½Éİ’ï¿½ */
-    /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½g */
-    /* ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½Å‹Aï¿½ï¿½ */
+    /* ƒXƒ^[ƒg‚ğ–Ú“I’n‚Æ‚µ‚Ä‘«—§–@‚ÅÄ’Tõ */
+    /* Šeƒtƒ‰ƒO‚ğ’è‹` */
+    /* ’â~ˆ—‚ğÀ{‚·‚é */
+    /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ğ‚½‚Ä‚é */
+    /* ƒXƒ^[ƒg‚ğƒS[ƒ‹‚Éİ’è */
+    /* ƒS[ƒ‹‚ğƒvƒƒbƒg */
+    /* ‘«—§–@‚Å‹A‘î */
+    memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned char) <<
+           10);
     goal_section[0] = 1U;
     goal_section[1] = 1U;
-    b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &adachi_search_mode,
-                    &current_x, &current_y, &current_dir, maze_row_size,
-                    maze_col_size, maze_wall, maze_wall_search, goal_section,
-                    &start_flg, 1U, 1U, 0U, contour_map);
+    b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
+                    &adachi_search_mode, &current_x, &current_y, &current_dir,
+                    maze_row_size, maze_col_size, unexp_square, maze_wall_search,
+                    goal_section, &start_flg, 1U, 1U, 0U, contour_map);
+    memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned char) <<
+           10);
 
     /* for code generation */
-    /* ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B */
-    /*     %% ï¿½Å’Zï¿½ï¿½ï¿½s */
+    /* I—¹AƒS[ƒ‹ƒvƒƒbƒg‚ğÁ‚·B */
+    /*     %% Å’Z‘–s */
   } else {
     if (run_mode_1 == 1) {
       if (run_mode_2 == 0) {
-        /* ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚É“ï¿½ï¿½ï¿½ï¿½ï¿½MAPï¿½ğ¶ï¿½ */
-        /* ï¿½ï¿½ï¿½mï¿½Ç‚Í‰ï¿½ï¿½zï¿½Ç‚ï¿½İ’uï¿½ï¿½ï¿½ï¿½B(w_mode.wall) */
+        /* ’Tõî•ñ‚ğ‚à‚Æ‚É“™‚üMAP‚ğ¶¬ */
+        /* –¢’m•Ç‚Í‰¼‘z•Ç‚ğİ’u‚·‚éB(w_mode.wall) */
         make_map_fustrun(&b_goal_size, &wall, &search, maze_goal, maze_wall,
                          maze_wall_search, 1U, contour_map);
 
-        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½Ì•`ï¿½ï¿½ */
-        /*      %ï¿½Rï¿½ï¿½ï¿½^ï¿½[ï¿½}ï¿½bï¿½vï¿½Ì•`ï¿½ï¿½ */
+        /* ƒS[ƒ‹‚Ì•`‰æ */
+        /*      %ƒRƒ“ƒ^[ƒ}ƒbƒv‚Ì•`‰æ */
         /*      if coder.target('MATLAB') */
         /*          for l = 1:32 */
         /*              for j = 1:32 */
@@ -16849,56 +17093,58 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         /*              end */
         /*          end */
         /*      end */
-        /* ï¿½eï¿½ï¿½ï¿½sï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½` */
-        /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ */
-        /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ */
-        /* ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ÍƒNï¿½ï¿½ï¿½A */
-        /* ï¿½ï¿½}ï¿½Xï¿½Oï¿½i */
+        /* Še‘–sƒtƒ‰ƒO‚ğ’è‹` */
+        /* ’â~’¼Œã */
+        /* ’â~ˆ—‚ğÀ{‚·‚é */
+        /* ƒS[ƒ‹’¼Œãƒtƒ‰ƒO‚ÍƒNƒŠƒA */
+        /* ˆêƒ}ƒX‘Oi */
         current_x = 1U;
         current_y = 1U;
         move_step(&current_x, &current_y, g_d_direction.North);
 
-        /* Cï¿½ï¿½ï¿½ï¿½Å‚ÌƒXï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ */
+        /* CŒ¾Œê‚Å‚ÌƒXƒ^[ƒgˆ— */
         m_start_movement(1, 0, move_dir_property.straight);
 
-        /* ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A */
-        /* ï¿½Å’Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½s */
-        b_fust_run(&b_goal_size, &wall_flg, &wall, maze_wall, contour_map,
-                   maze_goal, MAX_uint16_T, current_x, current_y);
+        /* ’â~’¼Œãƒtƒ‰ƒO‚ğƒNƒŠƒA */
+        /* Å’Z‹——£‘–s */
+        b_fust_run(&b_maze_wall, &b_goal_size, &wall_flg, &wall, maze_wall,
+                   contour_map, maze_goal, MAX_uint16_T, current_x, current_y);
 
-        /*  ï¿½Î‚ß‚Å‚ÌÅ’Zï¿½ï¿½ï¿½s */
+        /*  Î‚ß‚Å‚ÌÅ’Z‘–s */
       } else {
         if (run_mode_2 == 1) {
-          /* ï¿½Å’Zï¿½oï¿½Hï¿½ï¿½ï¿½ï¿½ */
-          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½Ìƒmï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½×‚ÄƒSï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Æ‚ï¿½ï¿½Aï¿½}ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ */
+          /* Å’ZŒo˜H¶¬ */
+          /* ƒS[ƒ‹ƒ}ƒX‚Ìƒm[ƒh‚ğ‚·‚×‚ÄƒS[ƒ‹ƒm[ƒh‚Æ‚µAƒ}ƒbƒv¶¬ */
           make_map_fustrun_diagonal(&max_length, &wall, &search, maze_goal,
             goal_size, maze_wall, maze_wall_search, row_num_node, col_num_node,
             &start_num);
 
-          /* ï¿½Sï¿½[ï¿½ï¿½ï¿½tï¿½ß‚Ìƒï¿½ï¿½[ï¿½gï¿½Å“Kï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ßAï¿½}ï¿½bï¿½vï¿½Äï¿½ï¿½ï¿½ */
-          /* ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Ü‚ÅAï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ */
+          /* ƒS[ƒ‹•t‹ß‚Ìƒ‹[ƒgÅ“K‰»‚Ì‚½‚ßAƒ}ƒbƒvÄ¶¬ */
+          /* ƒXƒ^[ƒg‚©‚çƒS[ƒ‹ƒm[ƒh‚Ü‚ÅAƒ‹[ƒg¶¬‚µAƒS[ƒ‹ƒm[ƒhA•ûŒü‚ğŠm’è */
           decide_goal_node_dir(maze_goal, goal_size, row_num_node, col_num_node,
                                new_goal, &search_flag, &goal_dir);
 
-          /* ï¿½mï¿½è‚³ï¿½ê‚½ï¿½Sï¿½[ï¿½ï¿½ï¿½mï¿½[ï¿½hï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½Aï¿½mï¿½[ï¿½hï¿½ï¿½ï¿½Ä’ï¿½` */
+          /* Šm’è‚³‚ê‚½ƒS[ƒ‹ƒm[ƒhA•ûŒü‚©‚çƒS[ƒ‹ƒ}ƒXAƒm[ƒh‚ğÄ’è‹` */
           decide_goal_section(maze_goal, new_goal, search_flag, goal_dir,
                               goal_section, goal_node2, &start_flg);
 
-          /* ï¿½mï¿½è‚³ï¿½ê‚½ï¿½Sï¿½[ï¿½ï¿½ï¿½}ï¿½Xï¿½ï¿½ï¿½ï¿½Aï¿½Ä“xï¿½}ï¿½bï¿½vï¿½ğ¶ï¿½ */
+          /* Šm’è‚³‚ê‚½ƒS[ƒ‹ƒ}ƒX‚©‚çAÄ“xƒ}ƒbƒv‚ğ¶¬ */
           new_goal[0] = goal_section[1];
           new_goal[1] = goal_section[0];
 
-          /* x,yï¿½É•ÏŠï¿½ */
+          /* x,y‚É•ÏŠ· */
           b_make_map_fustrun_diagonal(&max_length, &wall, &search, new_goal,
             maze_wall, maze_wall_search, row_num_node, col_num_node, &start_num);
 
-          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½MAPï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉÅ’Zï¿½ï¿½ï¿½s */
+          /* ¶¬‚³‚ê‚½MAP‚ğ‚à‚Æ‚ÉÅ’Z‘–s */
           make_route_diagonal(row_num_node, col_num_node, new_goal, goal_node2,
                               start_flg);
         }
       }
     }
   }
+
+  memcpy(&maze_wall[0], &b_maze_wall.contents[0], sizeof(unsigned char) << 10);
 }
 
 /*

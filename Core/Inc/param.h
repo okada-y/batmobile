@@ -32,8 +32,8 @@
 #define Sampling_cycle      (0.001)  //サンプリング周期
 
 /*module_test*/
-#define log_count_lim		(15000)	//データ取得する期間[ms]
-#define log_count_step		(15)	    //データを取得する時間間隔[ms]
+#define log_count_lim		(1000)	//データ取得する期間[ms]
+#define log_count_step		(1)	    //データを取得する時間間隔[ms]
 
 #define DATA_DEFAULT              //測定モード１
 //#define DATA_SIDE                 //測定モード２
@@ -80,9 +80,9 @@
 #define move_speed_slow (0.01)						//停止前速度
 
 //直進
-#define straight_move_accel          (9.0f)      //移動加速度[m/ss]
+#define straight_move_accel          (5.0f)      //移動加速度[m/ss]
 #define straight_rotate_accel         (80*PI)      //角加速度[rad/ss]
-#define straight_move_speed_max      (3.0f)      //最大移動速度[m/s]
+#define straight_move_speed_max      (2.0f)      //最大移動速度[m/s]
 #define straight_rotate_speed_max     (4*PI)      //最大角速度[rad/s]
 #define straight_move_speed_slow     (0.03)      //スロー走行時の速度[m/s]
 
@@ -94,13 +94,16 @@
 #define ff_gain_v_w           (0.043)     //角速度に対するゲイン
 
 #define ff_rate_m (1.0)
-#define ff_gain_a (0.35)
-#define ff_gain_v (2.2)
-#define ff_gain_f (0.0)
+#define ff_gain_a (0.25)
+#define ff_gain_v (1.05)
+#define ff_gain_f (0.2)
 
 //FB制御
-#define move_speed_P		(10.0f)	//移動速度制御のPゲイン
-#define move_speed_I		(120.0f)	//移動速度制御のIゲイン
+#define fb_rate_m (1.0)
+#define fb_rate_w (1.0)
+
+#define move_speed_P		(5.0f)	//移動速度制御のPゲイン
+#define move_speed_I		(50.0f)	//移動速度制御のIゲイン
 #define rotate_speed_P		(0.5f)	//角速度制御のPゲイン
 #define rotate_speed_I		(20.0f)	//角速度制御のIゲイン
 
@@ -109,9 +112,9 @@
 #define rotate_comp_th      (0.001f)    //回転完了の閾値
 
 ///slalom
+
 //#define slalom_front_wall_adj (0.0545) //探索90における前距離補正時の前壁距離
 #define slalom_front_wall_adj (0.0525) //探索90における前距離補正時の前壁距離
-
 
 //90度時計周り
 #define slalom_clk_90_before_offset (0.011)      //前オフセット距離
@@ -121,6 +124,43 @@
 #define slalom_conclk_90_before_offset (0.011)      //前オフセット距離
 #define slalom_conclk_90_after_offset (0.011)       //後オフセット距離
 #define slalom_conclk_90_offset    (0.0573)          //ターン中の並進距離
+
+//探索90
+#define slalom_s90_v_1 (0.3)
+#define slalom_s90_w_1 (4*PI)
+#define slalom_s90_wa_1 (80*PI)
+#define slalom_s90_bo_1 (0.0133)
+#define slalom_s90_ao_1 (0.0133)
+//斜め45
+#define slalom_45_v_1 (0.5)
+#define slalom_45_w_1 (4*PI)
+#define slalom_45_wa_1 (80*PI)
+#define slalom_45_bo_1 (0.016)
+#define slalom_45_ao_1 (0.034)
+//大廻90
+#define slalom_90_v_1 (0.5)
+#define slalom_90_w_1 (3*PI)
+#define slalom_90_wa_1 (80*PI)
+#define slalom_90_bo_1 (0.02725)
+#define slalom_90_ao_1 (0.02725)
+//V90
+#define slalom_v90_v_1 (0.5)
+#define slalom_v90_w_1 (5*PI)
+#define slalom_v90_wa_1 (80*PI)
+#define slalom_v90_bo_1 (0.0152)
+#define slalom_v90_ao_1 (0.0152)
+//斜め135
+#define slalom_135_v_1 (0.5)
+#define slalom_135_w_1 (4*PI)
+#define slalom_135_wa_1 (80*PI)
+#define slalom_135_bo_1 (0.025)
+#define slalom_135_ao_1 (0.0175)
+//大廻90
+#define slalom_180_v_1 (0.5)
+#define slalom_180_w_1 (3.61*PI)
+#define slalom_180_wa_1 (60*PI)
+#define slalom_180_bo_1 (0.031)
+#define slalom_180_ao_1 (0.031)
 
 //adjust
 #define front_sensor_r_ref      (0.016f)	        //前壁補正時の右前距離目標値(1cm)

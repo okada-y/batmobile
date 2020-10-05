@@ -1,16 +1,58 @@
 #ifndef TARGET_H_
 #define TARGET_H_
 
-//ターンライブラリ
+//動作パターン番号
 typedef enum {
-	search	= 0,	//探索
-	straight  = 1,	//既知区間加速
-	turn_45 =2,
-	turn_90 =3,
-	turn_V90 =4,
-	turn_135 =5,
-	turn_180 =6,
-} turn_lib;
+	search,	    //探索直進
+	straight,	//既知区間加速
+	diagonal,	//斜め直進
+	turn_s90,//探索90
+	turn_45, //45
+	turn_90,//大廻90
+	turn_V90,//V90
+	turn_135,//135
+	turn_180,//180
+} e_movement_pattern_No;
+
+//オフセット距離番号
+typedef enum {
+	before_offset,	    //前距離
+	after_offset,	//後距離
+} e_offset_No;
+
+//ターン走行パラメータ
+typedef struct {
+	float offset_befor;
+	float offset_after;
+	float move_v;
+	float turn_w;
+	float turn_wa;
+} t_turn_param_set;
+
+//並進走行パラメータ
+typedef struct {
+	float move_v;
+	float move_a;
+} t_move_param_set;
+
+//走行パラメータセット
+typedef struct {
+
+	//並進パラメータセット
+	t_move_param_set search;
+	t_move_param_set straight;
+	t_move_param_set diagonal;
+
+	//ターンパラメータセット
+	t_turn_param_set turn_s90;
+	t_turn_param_set turn_45;
+	t_turn_param_set turn_90;
+	t_turn_param_set turn_V90;
+	t_turn_param_set turn_135;
+	t_turn_param_set turn_180;
+
+} t_param_set;
+
 
 
 ////移動方向モード
@@ -36,6 +78,8 @@ typedef enum {
 	zero 	= 0, 	//停止
 	slow 	= 1, 	//スロー
 } speed_under_lim_mode;
+
+
 
 void target_1ms ( void );
 //void set_direction_mode ( direction_mode );
@@ -64,9 +108,10 @@ void set_target_move_speed_fin ( float t_movespeed_fin );
 void set_target_move_accel ( float t_moveaccel );
 void set_target_rotate_speed_max ( float t_rotatespeed );
 void set_target_rotate_accel ( float t_rotateaccel );
-void set_target_turn_param ( turn_lib turnlibnum,float t_length, float t_m_speed_fin );
-
-
+void set_target_move_param (e_movement_pattern_No pattern_No,float t_length, float t_m_speed_fin );
+void set_target_turn_param ( e_movement_pattern_No pattern_No);
+float get_offset_length(e_movement_pattern_No pattern_num, e_offset_No dir);
+void init_target_turn_param(void);
 
 
 
