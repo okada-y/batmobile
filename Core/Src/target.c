@@ -225,14 +225,30 @@ void set_target_move_param (e_movement_pattern_No pattern_No,float t_length, flo
 		set_target_move_speed_fin(t_m_speed_fin);
 		break;
 
-		//各種ターンは定速（＝ターン時に速度、加速度を更新しない。)
-
-
-	default:
-		set_target_move_speed_max(0);
-		set_target_move_accel(0);
-		set_target_length(0);
-		set_target_move_speed_fin(0);
+		//各種ターン時は距離、最大速度の更新（＝ターン時に加速度,最終速度を更新しない。)
+	case turn_s90://探索90
+		set_target_move_speed_max(param_set.turn_s90.move_v);
+		set_target_length(t_length);
+		break;
+	case turn_45://45
+		set_target_move_speed_max(param_set.turn_45.move_v);
+		set_target_length(t_length);
+		break;
+	case turn_90://大廻90
+		set_target_move_speed_max(param_set.turn_90.move_v);
+		set_target_length(t_length);
+		break;
+	case turn_V90://V90
+		set_target_move_speed_max(param_set.turn_V90.move_v);
+		set_target_length(t_length);
+		break;
+	case turn_135://135
+		set_target_move_speed_max(param_set.turn_135.move_v);
+		set_target_length(t_length);
+		break;
+	case turn_180://180
+		set_target_move_speed_max(param_set.turn_180.move_v);
+		set_target_length(t_length);
 		break;
 	}
 }

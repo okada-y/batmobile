@@ -1,24 +1,50 @@
 #ifndef MATLAB_MOVEMENT
 #define MATLAB_MOVEMENT
 
-//ï¿½Oï¿½i
+//‘Oi
 void m_move_front(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//ï¿½Eï¿½ï¿½
+//‘Oi_ƒƒ“ƒO
+void m_move_front_long(unsigned char straight_count,unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+
+//‰EÜ
 void m_move_right(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//ï¿½ï¿½ï¿½ï¿½
+//¶Ü
 void m_move_left(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//ï¿½oï¿½bï¿½N
+//ƒoƒbƒN
 void m_move_back(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ƒXƒ^[ƒg“®ì
 void m_start_movement(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½iï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½j
+//ƒS[ƒ‹‚Ì“®ìi’â~ˆ—j
 void m_goal_movement(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
 
-//å‰é€²_ãƒ­ãƒ³ã‚°
-void m_move_front_long(unsigned char straight_count,unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+
+//ƒGƒ‰[‚Ì“®ì
+void m_error_movement(unsigned char error_flg);
+
+//‰EV90“xƒ^[ƒ“
+void m_turn_V90_r(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//¶V90“xƒ^[ƒ“
+void m_turn_V90_l(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//‰E90“xƒ^[ƒ“
+void m_turn_90_r(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//¶90“xƒ^[ƒ“
+void m_turn_90_l(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//‰E180“xƒ^[ƒ“
+void m_turn_180_r(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//¶180“xƒ^[ƒ“
+void m_turn_180_l(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//‰E135“xƒ^[ƒ“
+void m_turn_135_r(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//¶135“xƒ^[ƒ“
+void m_turn_135_l(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//‰E45“xƒ^[ƒ“
+void m_turn_45_r(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+//¶45“xƒ^[ƒ“
+void m_turn_45_l(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property);
+
 #endif

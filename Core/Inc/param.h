@@ -48,9 +48,9 @@
 										//一行目、ゴールのx座標
 										//二行目、ゴールのy座標
 //ir
-#define front_th            (100) //前壁有無判定の閾値
-#define right_th            (200) //右壁有無判定の閾値
-#define left_th             (200) //左壁有無判定の閾値
+#define front_th            (300) //前壁有無判定の閾値
+#define right_th            (300) //右壁有無判定の閾値
+#define left_th             (400) //左壁有無判定の閾値
 
 //mode
 #define mode_count_up_th 	(0.10f)     //モードカウントアップの右タイヤ速度閾値
@@ -80,9 +80,9 @@
 #define move_speed_slow (0.01)						//停止前速度
 
 //直進
-#define straight_move_accel          (5.0f)      //移動加速度[m/ss]
+#define straight_move_accel          (2.5f)      //移動加速度[m/ss]
 #define straight_rotate_accel         (80*PI)      //角加速度[rad/ss]
-#define straight_move_speed_max      (2.0f)      //最大移動速度[m/s]
+#define straight_move_speed_max      (1.0f)      //最大移動速度[m/s]
 #define straight_rotate_speed_max     (4*PI)      //最大角速度[rad/s]
 #define straight_move_speed_slow     (0.03)      //スロー走行時の速度[m/s]
 
@@ -114,7 +114,7 @@
 ///slalom
 
 //#define slalom_front_wall_adj (0.0545) //探索90における前距離補正時の前壁距離
-#define slalom_front_wall_adj (0.0525) //探索90における前距離補正時の前壁距離
+#define slalom_front_wall_adj (0.04) //探索90における前距離補正時の前壁距離
 
 //90度時計周り
 #define slalom_clk_90_before_offset (0.011)      //前オフセット距離
@@ -163,8 +163,10 @@
 #define slalom_180_ao_1 (0.031)
 
 //adjust
-#define front_sensor_r_ref      (0.016f)	        //前壁補正時の右前距離目標値(1cm)
-#define front_sensor_l_ref      (0.0165f)	        //前壁補正時の左前距離目標値(1cm)
+#define front_sensor_r_ref      (0.01f)	        //前壁補正時の右前距離目標値(1cm)
+#define front_sensor_l_ref      (0.007f)	        //前壁補正時の左前距離目標値(1cm)
+//#define front_sensor_r_ref      (0.0325f)	        //前壁補正時の右前距離目標値(1cm)
+//#define front_sensor_l_ref      (0.0325f)	        //前壁補正時の左前距離目標値(1cm)
 #define chassis_width           (0.036787f)         //シャシー幅
 #define front_sensor_move_KP	(50.412292054546f)	//前壁距離のPゲイン
 #define front_sensor_move_KI	(26.2444668681538f)	//前壁距離のIゲイン

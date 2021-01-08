@@ -27,6 +27,6 @@ uint8_t mode_decide_jud(void);
 void mode_start(void);
 uint8_t select_num_r_tire (uint8_t);
 void maze_run_mode_decide(void);
-
+void set_run_mode_3(uint8_t num);
 
 #endif /* MODE_H_ */

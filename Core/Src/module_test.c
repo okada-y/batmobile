@@ -34,6 +34,8 @@ typedef struct {	//データ格納用構造体の定義
 	float   	front_sensor_l;		//左前壁センサ値
 	float   	side_sensor_r;		//右横壁センサ値
 	float   	side_sensor_l;		//左横壁センサ値
+	float		wall_sensor_t;		//壁センサ値取得回数（区画ごと）
+	uint8_t offset_run_flg;    //オフセット走行判別フラグ
 } log_struct;
 
 static log_struct log_store[log_count_lim / log_count_step];  // データ格納用の構造体
@@ -79,14 +81,16 @@ void data_get (void)
 			log_store[i].speed_w = (float)IMU_GetGyro_Z();
 			log_store[i].ideal_d_w = (float)get_ideal_angle();
 			log_store[i].real_d_w = (float)get_rotation_angle();
-			log_store[i].front_sensor_r = (float)get_wall_dis_table(Sensor_GetValue(front_right), front_right);
-			log_store[i].front_sensor_l = (float)get_wall_dis_table(Sensor_GetValue(front_left), front_left);
-			log_store[i].side_sensor_r = (float)get_wall_dis_table(Sensor_GetValue(side_right), side_right);
-			log_store[i].side_sensor_l = (float)get_wall_dis_table(Sensor_GetValue(side_left), side_left);
-//			log_store[i].front_sensor_r = (float)(Sensor_GetValue(front_right));
-//			log_store[i].front_sensor_l = (float)(Sensor_GetValue(front_left));
-//			log_store[i].side_sensor_r = (float)(Sensor_GetValue(side_right));
-//			log_store[i].side_sensor_l = (float)(Sensor_GetValue(side_left));
+//			log_store[i].front_sensor_r = (float)get_wall_dis_table(Sensor_GetValue(front_right), front_right);
+//			log_store[i].front_sensor_l = (float)get_wall_dis_table(Sensor_GetValue(front_left), front_left);
+//			log_store[i].side_sensor_r = (float)get_wall_dis_table(Sensor_GetValue(side_right), side_right);
+//			log_store[i].side_sensor_l = (float)get_wall_dis_table(Sensor_GetValue(side_left), side_left);
+			log_store[i].front_sensor_r = (float)(Sensor_GetValue(front_right));
+			log_store[i].front_sensor_l = (float)(Sensor_GetValue(front_left));
+			log_store[i].side_sensor_r = (float)(Sensor_GetValue(side_right));
+			log_store[i].side_sensor_l = (float)(Sensor_GetValue(side_left));
+			log_store[i].wall_sensor_t = (float)(get_times_wall_sensor());
+			log_store[i].offset_run_flg = get_offset_run_discrimination_flg();
 		}
 		log_counter += 1; //logカウンタ更新
 	}
@@ -107,20 +111,20 @@ void data_read(void)
 //			"v[m/s],distance[m],accel_m[m/ss],angle_velocity[rad/s],angle[rad],IR_SL,IR_FL,IR_FR,IR_SR\r\n") ;	//パラメータ名を記述
 
 	printf( "Time[ms],BV[V],int_duty,Duty_R[%%],Dyty_L[%%],rt_v[m/s],lt_v[m/s],rt_an[],lt_an[],rt_c_an[],lt_c_an[],"
-			"target_v,v[m/s],ideal_d,distance[m],accel_m[m/ss],target_w,w[rad/s],ideal_angle,angle[rad],IR_SL,IR_FL,IR_FR,IR_SR\r\n") ;	//パラメータ名を記述
+			"target_v,v[m/s],ideal_d,distance[m],accel_m[m/ss],target_w,w[rad/s],ideal_angle,angle[rad],IR_SL,IR_FL,IR_FR,IR_SR,wall_times,offset_run_flg\r\n") ;	//パラメータ名を記述
 
 
 
 	//パラメータ名が出力されたのち、ボタンを押してデータを吐き出す
-	while(!button_state){
-		HAL_Delay(1);
+	while(!read_button()){
+		HAL_Delay(10);
 	}
 
 	for(i = 0; i <= j ; i++)
 	{
 		//以下出力形式を整えて記述
 //		  snprintf(temp_str,300,"%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.7f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f,%5.3f\r\n",
-		  printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\r\n",
+		  printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d\r\n",
 					log_store[i].time,
 					log_store[i].V_battery,
 					log_store[i].interrupt_duty,
@@ -144,7 +148,9 @@ void data_read(void)
 					log_store[i].front_sensor_r ,
 					log_store[i].front_sensor_l ,
 					log_store[i].side_sensor_r ,
-					log_store[i].side_sensor_l );
+					log_store[i].side_sensor_l ,
+					log_store[i].wall_sensor_t,
+					log_store[i].offset_run_flg);
 	    HAL_Delay(50);
 	}
 }

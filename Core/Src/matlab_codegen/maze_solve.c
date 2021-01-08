@@ -5,7 +5,7 @@
  * File: maze_solve.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 04-Sep-2020 15:57:17
+ * C/C++ source code generated on  : 08-Jan-2021 11:16:43
  */
 
 /* Include Files */
@@ -14,7 +14,6 @@
 #include "maze_init.h"
 #include "maze_solve.h"
 #include "rem.h"
-#include "isequal.h"
 #include "maze_init_data.h"
 #include "C:\work\matlab\maze_sim_git\src\C_src\matlab_movement.h"
 #include "C:\work\matlab\maze_sim_git\src\C_src\matlab_IR_sensor.h"
@@ -118,7 +117,8 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
   coder_internal_ref *goal_size, coder_internal_ref *wall_flg, const
   coder_internal_ref_6 *wall, const unsigned char b_maze_wall[1024], const
   unsigned short contour_map[1024], const unsigned char maze_goal[18], unsigned
-  short max_length, unsigned char start_x, unsigned char start_y);
+  short max_length, unsigned char start_x, unsigned char start_y, unsigned char
+  start_flg);
 static void b_make_map_find(const coder_internal_ref_6 *wall, const unsigned
   char maze_goal[2], const unsigned char maze_wall[1024], unsigned char
   current_x, unsigned char current_y, unsigned short contour_map[1024]);
@@ -160,9 +160,9 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
   unsigned char goal_node2[2], unsigned char goal_matrix_dir2, const unsigned
   char goal_section[2], unsigned char *next_dir, unsigned char next_node[2],
   unsigned char *next_node_property);
-static unsigned char get_nextdir2(unsigned char current_x, unsigned char
-  current_y, const unsigned char maze_wall[1024], const unsigned short
-  contour_map[1024]);
+static void get_nextdir2(unsigned char current_x, unsigned char current_y, const
+  unsigned char maze_wall[1024], const unsigned short contour_map[1024],
+  unsigned char *next_dir, unsigned char *error_flg);
 static unsigned char get_turn_pattern_num(const double move_dir_buffer[3],
   unsigned char ref_move_mode);
 static double goal_judge(const unsigned char maze_goal[18], unsigned char x,
@@ -190,7 +190,8 @@ static void make_new_goal_sh(const coder_internal_ref_6 *wall, const unsigned
   char maze_wall[1024], unsigned char current_x, unsigned char current_y, const
   unsigned char unexp_square[1024], unsigned char unexp_square_idx, unsigned
   short contour_map[1024], unsigned char new_goal[2]);
-static void make_route_diagonal(const unsigned short row_num_node[1056], const
+static void make_route_diagonal(const coder_internal_ref *start_flg, const
+  coder_internal_ref *wall_flg, const unsigned short row_num_node[1056], const
   unsigned short col_num_node[1056], const unsigned char goal_section[2], const
   unsigned char goal_node2[2], unsigned char goal_node_property);
 static void move_step(unsigned char *temp_x, unsigned char *temp_y, unsigned
@@ -254,13 +255,15 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
  *                unsigned short max_length
  *                unsigned char start_x
  *                unsigned char start_y
+ *                unsigned char start_flg
  * Return Type  : void
  */
 static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
   coder_internal_ref *goal_size, coder_internal_ref *wall_flg, const
   coder_internal_ref_6 *wall, const unsigned char b_maze_wall[1024], const
   unsigned short contour_map[1024], const unsigned char maze_goal[18], unsigned
-  short max_length, unsigned char start_x, unsigned char start_y)
+  short max_length, unsigned char start_x, unsigned char start_y, unsigned char
+  start_flg)
 {
   unsigned char goal_flag;
   unsigned short little;
@@ -326,10 +329,11 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
       if (straight_count > 0) {
         /* 直進カウンタが立っている場合 */
         /* 走行モード時、Cの動作関数を呼び出し */
-        m_move_front_long(straight_count, 0, wall_flg->contents,
+        m_move_front_long(straight_count, start_flg, wall_flg->contents,
                           move_dir_property.straight);
 
         /* スタート直後フラグと壁フラグをクリア */
+        start_flg = 0U;
         wall_flg->contents = 0U;
 
         /* 移動後、ストレートカウンタをクリア */
@@ -337,7 +341,7 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
 
       /* 参照マス、参照方向を更新 */
       /* 走行モード時、Cの動作関数を呼び出し */
-      m_goal_movement(0, wall_flg->contents, move_dir_property.straight);
+      m_goal_movement(start_flg, wall_flg->contents, move_dir_property.straight);
       exitg1 = true;
     } else {
       /*         %%進行方向選定 */
@@ -505,10 +509,11 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
         if (straight_count > 0) {
           /* 直進カウンタが立っている場合 */
           /* 走行モード時、Cの動作関数を呼び出し */
-          m_move_front_long(straight_count, 0, wall_flg->contents,
+          m_move_front_long(straight_count, start_flg, wall_flg->contents,
                             move_dir_property.straight);
 
           /* スタート直後フラグと壁フラグをクリア */
+          start_flg = 0U;
           wall_flg->contents = 0U;
 
           /* 移動後、ストレートカウンタをクリア */
@@ -567,9 +572,10 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
         }
 
         /* 走行モード時、Cの動作関数を呼び出し */
-        m_move_right(0, wall_flg->contents, move_dir_property.straight);
+        m_move_right(start_flg, wall_flg->contents, move_dir_property.straight);
 
         /* スタート直後フラグと壁フラグをクリア */
+        start_flg = 0U;
         wall_flg->contents = 0U;
         break;
 
@@ -577,10 +583,11 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
         if (straight_count > 0) {
           /* 直進カウンタが立っている場合 */
           /* 走行モード時、Cの動作関数を呼び出し */
-          m_move_front_long(straight_count, 0, wall_flg->contents,
+          m_move_front_long(straight_count, start_flg, wall_flg->contents,
                             move_dir_property.straight);
 
           /* スタート直後フラグと壁フラグをクリア */
+          start_flg = 0U;
           wall_flg->contents = 0U;
 
           /* 移動後、ストレートカウンタをクリア */
@@ -634,9 +641,10 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
         }
 
         /* 走行モード時、Cの動作関数を呼び出し */
-        m_move_back(0, wall_flg->contents, move_dir_property.straight);
+        m_move_back(start_flg, wall_flg->contents, move_dir_property.straight);
 
         /* スタート直後フラグと壁フラグをクリア */
+        start_flg = 0U;
         wall_flg->contents = 0U;
         break;
 
@@ -644,10 +652,11 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
         if (straight_count > 0) {
           /* 直進カウンタが立っている場合 */
           /* 走行モード時、Cの動作関数を呼び出し */
-          m_move_front_long(straight_count, 0, wall_flg->contents,
+          m_move_front_long(straight_count, start_flg, wall_flg->contents,
                             move_dir_property.straight);
 
           /* スタート直後フラグと壁フラグをクリア */
+          start_flg = 0U;
           wall_flg->contents = 0U;
 
           /* 移動後、ストレートカウンタをクリア */
@@ -702,9 +711,10 @@ static void b_fust_run(const coder_internal_ref_1 *maze_wall, const
 
         /* disp("left") */
         /* 走行モード時、Cの動作関数を呼び出し */
-        m_move_left(0, wall_flg->contents, move_dir_property.straight);
+        m_move_left(start_flg, wall_flg->contents, move_dir_property.straight);
 
         /* スタート直後フラグと壁フラグをクリア */
+        start_flg = 0U;
         wall_flg->contents = 0U;
         break;
       }
@@ -1600,7 +1610,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                  (contor_renew_node_row[row_num_node_tmp + 1024]
-                                  - 1)) - 1] + 4U;
+                                  - 1)) - 1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -1615,7 +1625,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 4U;
+                                    1024] - 1)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -1668,7 +1678,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 4U;
+                                    1024] - 1)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -1859,7 +1869,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                  (contor_renew_node_row[row_num_node_tmp + 1024]
-                                  - 1)) - 1] + 4U;
+                                  - 1)) - 1] + 10U;
             u9 = b_qY;
             if (b_qY > 65535U) {
               u9 = 65535U;
@@ -2429,7 +2439,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                  (contor_renew_node_row[row_num_node_tmp + 1024]
-                                  - 1)) - 1] + 4U;
+                                  - 1)) - 1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -2443,7 +2453,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 4U;
+                                    1024] - 1)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -2494,7 +2504,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 4U;
+                                    1024] - 1)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -2658,7 +2668,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
             /* かつ北西のノードが更新予定値よりも大きな値の場合 */
             b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                  (contor_renew_node_row[row_num_node_tmp + 1024]
-                                  - 1)) - 1] + 4U;
+                                  - 1)) - 1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -2669,7 +2679,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
               /* 歩数MAP更新 */
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 4U;
+                                    1024] - 1)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -2705,7 +2715,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
             } else {
               b_qY = row_num_node[(contor_renew_node_row[row_num_node_tmp] + 33 *
                                    (contor_renew_node_row[row_num_node_tmp +
-                                    1024] - 1)) - 1] + 4U;
+                                    1024] - 1)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -2835,7 +2845,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                  ((contor_renew_node_col[row_num_node_tmp + 1024]
-              - 1) << 5)) - 1] + 4U;
+              - 1) << 5)) - 1] + 10U;
             u9 = b_qY;
             if (b_qY > 65535U) {
               u9 = 65535U;
@@ -3308,7 +3318,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
             /* かつ南東のノードが更新予定値よりも大きな値の場合 */
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                  ((contor_renew_node_col[row_num_node_tmp + 1024]
-              - 1) << 5)) - 1] + 4U;
+              - 1) << 5)) - 1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -3319,7 +3329,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
               /* 歩数MAP更新 */
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
-                1024] - 1) << 5)) - 1] + 4U;
+                1024] - 1) << 5)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -3361,7 +3371,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
             } else {
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
-                1024] - 1) << 5)) - 1] + 4U;
+                1024] - 1) << 5)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -3501,7 +3511,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                  ((contor_renew_node_col[row_num_node_tmp + 1024]
-              - 1) << 5)) - 1] + 4U;
+              - 1) << 5)) - 1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -3516,7 +3526,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
-                1024] - 1) << 5)) - 1] + 4U;
+                1024] - 1) << 5)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -3570,7 +3580,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
-                1024] - 1) << 5)) - 1] + 4U;
+                1024] - 1) << 5)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -4018,7 +4028,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                  ((contor_renew_node_col[row_num_node_tmp + 1024]
-              - 1) << 5)) - 1] + 4U;
+              - 1) << 5)) - 1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -4037,7 +4047,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
-                1024] - 1) << 5)) - 1] + 4U;
+                1024] - 1) << 5)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -4104,7 +4114,7 @@ static void b_make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = col_num_node[(contor_renew_node_col[row_num_node_tmp] +
                                    ((contor_renew_node_col[row_num_node_tmp +
-                1024] - 1) << 5)) - 1] + 4U;
+                1024] - 1) << 5)) - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -4349,7 +4359,8 @@ static void b_search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
   unsigned char goal_flg;
   unsigned char contour_flg;
   int exitg1;
-  unsigned char next_dir;
+  unsigned char temp_maze_wall_tmp;
+  unsigned char error_flg;
   int q0;
   unsigned int qY;
 
@@ -4375,14 +4386,15 @@ static void b_search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
     if (goal_after_flg != 1) {
       /* 既知区間加速時でなければ、壁情報を取得しない */
       if (straight_count == 0) {
-        next_dir = b_maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
+        temp_maze_wall_tmp = b_maze_wall[(*current_y + ((*current_x - 1) << 5))
+          - 1];
         wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size,
                  *current_x, *current_y, *current_dir, b_maze_wall,
                  maze_wall_search);
 
         /* 壁情報が更新されれば、コンター更新のフラグを立てる。 */
-        if (next_dir != b_maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1])
-        {
+        if (temp_maze_wall_tmp != b_maze_wall[(*current_y + ((*current_x - 1) <<
+              5)) - 1]) {
           contour_flg = 1U;
         }
       }
@@ -4423,10 +4435,16 @@ static void b_search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
     } else {
       /*  進行方向選定 */
       /* 優先順位　北⇒東⇒南⇒西 */
-      next_dir = get_nextdir2(*current_x, *current_y, b_maze_wall, contour_map);
+      get_nextdir2(*current_x, *current_y, b_maze_wall, contour_map,
+                   &temp_maze_wall_tmp, &error_flg);
+
+      /* 進行方向が見つからなかったときのエラー処理 */
+      if (error_flg == 1) {
+        m_error_movement(1);
+      }
 
       /*  現在方向と進行方向に応じた処理 */
-      q0 = (int)(4U + next_dir);
+      q0 = (int)(4U + temp_maze_wall_tmp);
       if ((unsigned int)q0 > 255U) {
         q0 = 255;
       }
@@ -4436,14 +4454,14 @@ static void b_search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
         qY = 0U;
       }
 
-      next_dir = b_rem((unsigned char)qY);
-      if (l_direction.front == next_dir) {
+      temp_maze_wall_tmp = b_rem((unsigned char)qY);
+      if (l_direction.front == temp_maze_wall_tmp) {
         q0 = 0;
-      } else if (l_direction.right == next_dir) {
+      } else if (l_direction.right == temp_maze_wall_tmp) {
         q0 = 1;
-      } else if (l_direction.back == next_dir) {
+      } else if (l_direction.back == temp_maze_wall_tmp) {
         q0 = 2;
-      } else if (l_direction.left == next_dir) {
+      } else if (l_direction.left == temp_maze_wall_tmp) {
         q0 = 3;
       } else {
         q0 = -1;
@@ -7292,18 +7310,19 @@ static void get_next_dir_diagonal(const unsigned short row_num_node[1056], const
 
 /*
  * 入力 現在地x,y,壁情報,等高線map,最大経路長
- *  出力 次の進行方角
+ *  出力 次の進行方角,エラーフラグ
  * Arguments    : unsigned char current_x
  *                unsigned char current_y
  *                const unsigned char maze_wall[1024]
  *                const unsigned short contour_map[1024]
- * Return Type  : unsigned char
+ *                unsigned char *next_dir
+ *                unsigned char *error_flg
+ * Return Type  : void
  */
-static unsigned char get_nextdir2(unsigned char current_x, unsigned char
-  current_y, const unsigned char maze_wall[1024], const unsigned short
-  contour_map[1024])
+static void get_nextdir2(unsigned char current_x, unsigned char current_y, const
+  unsigned char maze_wall[1024], const unsigned short contour_map[1024],
+  unsigned char *next_dir, unsigned char *error_flg)
 {
-  unsigned char next_dir;
   unsigned short little;
   int i11;
   int i12;
@@ -7314,8 +7333,11 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
   int i16;
 
   /*     %% get_nextdir2 等高線mapから次に向かう方向を選択 */
+  /* エラーフラグセット(方向が定まる場合リセット) */
+  *error_flg = 1U;
+
   /* 出力の初期化 */
-  next_dir = 0U;
+  *next_dir = 0U;
   little = MAX_uint16_T;
 
   /*     %%進行方向選定 */
@@ -7335,7 +7357,8 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
     little = contour_map[current_y + ((current_x - 1) << 5)];
 
     /* 北側を進行方向に変更y */
-    next_dir = g_direction.North;
+    *next_dir = g_direction.North;
+    *error_flg = 0U;
   }
 
   /* 東側 */
@@ -7349,7 +7372,8 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
     u0 = contour_map[(current_y + (current_x << 5)) - 1];
     if (u0 < little) {
       little = u0;
-      next_dir = g_direction.East;
+      *next_dir = g_direction.East;
+      *error_flg = 0U;
     }
   }
 
@@ -7364,7 +7388,8 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
     u0 = contour_map[i11 - 2];
     if (u0 < little) {
       little = u0;
-      next_dir = g_direction.South;
+      *next_dir = g_direction.South;
+      *error_flg = 0U;
     }
   }
 
@@ -7378,10 +7403,9 @@ static unsigned char get_nextdir2(unsigned char current_x, unsigned char
   if (((i12 & i16) == 0) && (contour_map[(current_y + ((current_x - 2) << 5)) -
        1] < little)) {
     /*  little = contour_map(current_y,current_x-1); */
-    next_dir = g_direction.West;
+    *next_dir = g_direction.West;
+    *error_flg = 0U;
   }
-
-  return next_dir;
 }
 
 /*
@@ -9413,7 +9437,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                  (contor_renew_node_row[n + 1024] - 1)) - 1] +
-              4U;
+              10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -9428,7 +9452,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                4U;
+                10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -9481,7 +9505,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                4U;
+                10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -9670,7 +9694,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                  (contor_renew_node_row[n + 1024] - 1)) - 1] +
-              4U;
+              10U;
             u7 = b_qY;
             if (b_qY > 65535U) {
               u7 = 65535U;
@@ -10224,7 +10248,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                  (contor_renew_node_row[n + 1024] - 1)) - 1] +
-              4U;
+              10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -10238,7 +10262,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                4U;
+                10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -10289,7 +10313,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                4U;
+                10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -10453,7 +10477,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
             /* かつ北西のノードが更新予定値よりも大きな値の場合 */
             b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                  (contor_renew_node_row[n + 1024] - 1)) - 1] +
-              4U;
+              10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -10464,7 +10488,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
               /* 歩数MAP更新 */
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                4U;
+                10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -10500,7 +10524,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
             } else {
               b_qY = row_num_node[(contor_renew_node_row[n] + 33 *
                                    (contor_renew_node_row[n + 1024] - 1)) - 1] +
-                4U;
+                10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -10629,7 +10653,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = col_num_node[(contor_renew_node_col[n] +
                                  ((contor_renew_node_col[n + 1024] - 1) << 5)) -
-              1] + 4U;
+              1] + 10U;
             u7 = b_qY;
             if (b_qY > 65535U) {
               u7 = 65535U;
@@ -11091,7 +11115,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
             /* かつ南東のノードが更新予定値よりも大きな値の場合 */
             b_qY = col_num_node[(contor_renew_node_col[n] +
                                  ((contor_renew_node_col[n + 1024] - 1) << 5)) -
-              1] + 4U;
+              1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -11102,7 +11126,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
               /* 歩数MAP更新 */
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
-                - 1] + 4U;
+                - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -11142,7 +11166,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
             } else {
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
-                - 1] + 4U;
+                - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -11279,7 +11303,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = col_num_node[(contor_renew_node_col[n] +
                                  ((contor_renew_node_col[n + 1024] - 1) << 5)) -
-              1] + 4U;
+              1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -11294,7 +11318,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
-                - 1] + 4U;
+                - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -11347,7 +11371,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
-                - 1] + 4U;
+                - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -11786,7 +11810,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
             b_qY = col_num_node[(contor_renew_node_col[n] +
                                  ((contor_renew_node_col[n + 1024] - 1) << 5)) -
-              1] + 4U;
+              1] + 10U;
             if (b_qY > 65535U) {
               b_qY = 65535U;
             }
@@ -11805,7 +11829,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
-                - 1] + 4U;
+                - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -11872,7 +11896,7 @@ static void make_map_fustrun_diagonal(coder_internal_ref_3 *max_length, const
 
               b_qY = col_num_node[(contor_renew_node_col[n] +
                                    ((contor_renew_node_col[n + 1024] - 1) << 5))
-                - 1] + 4U;
+                - 1] + 10U;
               if (b_qY > 65535U) {
                 b_qY = 65535U;
               }
@@ -12919,14 +12943,17 @@ static void make_new_goal_sh(const coder_internal_ref_6 *wall, const unsigned
 
 /*
  * スタートノードの初期化
- * Arguments    : const unsigned short row_num_node[1056]
+ * Arguments    : const coder_internal_ref *start_flg
+ *                const coder_internal_ref *wall_flg
+ *                const unsigned short row_num_node[1056]
  *                const unsigned short col_num_node[1056]
  *                const unsigned char goal_section[2]
  *                const unsigned char goal_node2[2]
  *                unsigned char goal_node_property
  * Return Type  : void
  */
-static void make_route_diagonal(const unsigned short row_num_node[1056], const
+static void make_route_diagonal(const coder_internal_ref *start_flg, const
+  coder_internal_ref *wall_flg, const unsigned short row_num_node[1056], const
   unsigned short col_num_node[1056], const unsigned char goal_section[2], const
   unsigned char goal_node2[2], unsigned char goal_node_property)
 {
@@ -12952,8 +12979,8 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
   int k;
   unsigned char turn_pattern_num;
   unsigned char b_next_node_property;
-  unsigned int qY;
   unsigned char b_next_move_dir;
+  unsigned int qY;
 
   /*     %% make_route_diagonal 斜め有での最短ルート生成、走行 */
   current_node[0] = 1U;
@@ -13032,108 +13059,105 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
           ((next_node_property == matrix_dir.section) && (goal_section[1] ==
             b_next_node[0]) && (goal_section[0] == b_next_node[1]))) {
         /* 現在位置がノードである時、ゴール進入時のパターンを決定する。 */
-        p = false;
-        b_p = true;
-        k = 0;
-        exitg2 = false;
-        while ((!exitg2) && (k < 2)) {
-          if (b_next_node[k] != goal_node2[k]) {
-            b_p = false;
-            exitg2 = true;
-          } else {
-            k++;
-          }
-        }
+        /*                  if (isequal(ref_node,goal_node2) && (ref_node_property == goal_node_property)) */
+        /* ゴールの場合、ゴール進入時のパターンを決定する。 */
+        get_next_dir_diagonal(row_num_node, col_num_node, next_move_dir,
+                              b_next_node, next_node_property, goal_node2,
+                              goal_node_property, goal_section, &b_next_move_dir,
+                              next_node, &b_next_node_property);
 
-        if (b_p) {
-          p = true;
-        }
-
-        if (p && (next_node_property == goal_node_property)) {
-          /* ゴールの場合、ゴール進入時のパターンを決定する。 */
-          get_next_dir_diagonal(row_num_node, col_num_node, next_move_dir,
-                                b_next_node, next_node_property, goal_node2,
-                                goal_node_property, goal_section,
-                                &b_next_move_dir, next_node,
-                                &b_next_node_property);
-
-          /* 直進の場合（直進侵入） */
-          if (next_move_dir == b_next_move_dir) {
-            /* ゴール分カウンタを増加 */
-            i = (int)((unsigned char)i + 1U);
-            if ((unsigned int)i > 255U) {
-              i = 255;
-            }
-
-            /* 現在ノードから直進カウンタ分移動する関数。 */
-            move_straight(current_node, &current_node_property,
-                          &current_move_dir, &current_move_mode, (unsigned char)
-                          i);
-            straight_count = 0U;
-
-            /*                          disp("ゴール直線侵入") */
-            /*                          disp(current_node) */
-            /* ターンの場合（斜め侵入） */
-            /* 45度ターンのみ想定(一つ先の移動方向でターンの種類が決定) */
-          } else {
-            /*                          disp("ゴール時直進前") */
-            /*                          disp(current_node) */
-            /* 直進カウンタがあれば移動 */
-            /* 軌跡をプロット */
-            /* 現在ノードから直進カウンタ分移動する関数。 */
-            move_straight(current_node, &current_node_property,
-                          &current_move_dir, &current_move_mode, (unsigned char)
-                          i);
-            straight_count = 0U;
-
-            /*                          disp("ゴール時直進後") */
-            /*                          disp(current_node) */
-            /* 進行方向のバッファをクリア */
-            move_dir_buffer[1] = 0.0;
-            move_dir_buffer[2] = 0.0;
-
-            /* 1つ先までの進行方向から、ターンのパターンを決定 */
-            /* 現在進行方向からの相対的な移動方向をバッファ */
-            if (b_next_move_dir > 127) {
-              b_next_move_dir = 127U;
-            }
-
-            turn_pattern_num = current_move_dir;
-            if (current_move_dir > 127) {
-              turn_pattern_num = 127U;
-            }
-
-            move_dir_buffer[0] = (b_next_move_dir - turn_pattern_num) & 7;
-
-            /* ターンの種類を判定する */
-            turn_pattern_num = get_turn_pattern_num(move_dir_buffer,
-              ref_move_mode);
-
-            /* ターンの軌跡を描画する */
-            /* パターンが決まらなかった場合、エラー */
-            /* パターンに応じた移動処理 */
-            if (turn_pattern_num == turn_pattern.r_45) {
-              turn_r_45(current_node, &current_node_property, &current_move_dir,
-                        &current_move_mode);
-            } else {
-              if (turn_pattern_num == turn_pattern.l_45) {
-                turn_l_45(current_node, &current_node_property,
-                          &current_move_dir, &current_move_mode);
-              }
-            }
+        /* 直進の場合（直進侵入） */
+        if (next_move_dir == b_next_move_dir) {
+          /* ゴール分カウンタを増加 */
+          i = (int)((unsigned char)i + 1U);
+          if ((unsigned int)i > 255U) {
+            i = 255;
           }
 
-          /* 参照位置がセクションであるとき */
-        } else {
-          /* 直進カウンタがあれば、移動する。 */
-          /*                      disp("ゴール時直進（セクション）") */
           /* 軌跡をプロット */
+          /* 直進走行 */
+          m_move_front_long((unsigned char)i, start_flg->contents,
+                            wall_flg->contents, current_move_mode);
+
           /* 現在ノードから直進カウンタ分移動する関数。 */
           move_straight(current_node, &current_node_property, &current_move_dir,
                         &current_move_mode, (unsigned char)i);
           straight_count = 0U;
+
+          /*                          disp("ゴール直線侵入") */
+          /*                          disp(current_node) */
+          /* ターンの場合（斜め侵入） */
+          /* 45度ターンのみ想定(一つ先の移動方向でターンの種類が決定) */
+        } else {
+          /*                          disp("ゴール時直進前") */
+          /*                          disp(current_node) */
+          /* 直進カウンタがあれば移動 */
+          /* 軌跡をプロット */
+          /* 直進走行 */
+          m_move_front_long((unsigned char)i, start_flg->contents,
+                            wall_flg->contents, current_move_mode);
+
+          /* 現在ノードから直進カウンタ分移動する関数。 */
+          move_straight(current_node, &current_node_property, &current_move_dir,
+                        &current_move_mode, (unsigned char)i);
+          straight_count = 0U;
+
+          /*                          disp("ゴール時直進後") */
+          /*                          disp(current_node) */
+          /* 進行方向のバッファをクリア */
+          move_dir_buffer[1] = 0.0;
+          move_dir_buffer[2] = 0.0;
+
+          /* 1つ先までの進行方向から、ターンのパターンを決定 */
+          /* 現在進行方向からの相対的な移動方向をバッファ */
+          if (b_next_move_dir > 127) {
+            b_next_move_dir = 127U;
+          }
+
+          turn_pattern_num = current_move_dir;
+          if (current_move_dir > 127) {
+            turn_pattern_num = 127U;
+          }
+
+          move_dir_buffer[0] = (b_next_move_dir - turn_pattern_num) & 7;
+
+          /* ターンの種類を判定する */
+          turn_pattern_num = get_turn_pattern_num(move_dir_buffer, ref_move_mode);
+
+          /* ターンの軌跡を描画する */
+          /* パターンが決まらなかった場合、エラー */
+          /* パターンに応じた移動処理 */
+          if (turn_pattern_num == turn_pattern.r_45) {
+            /* 右45度ターン移動 */
+            m_turn_45_r(start_flg->contents, wall_flg->contents,
+                        current_move_mode);
+            turn_r_45(current_node, &current_node_property, &current_move_dir,
+                      &current_move_mode);
+          } else {
+            if (turn_pattern_num == turn_pattern.l_45) {
+              /* 左45度ターン移動 */
+              m_turn_45_l(start_flg->contents, wall_flg->contents,
+                          current_move_mode);
+              turn_l_45(current_node, &current_node_property, &current_move_dir,
+                        &current_move_mode);
+            }
+          }
         }
 
+        /* 参照位置がセクションであるとき */
+        /*                  else %セクションでここに入ることはない。はず。 */
+        /*                      %直進カウンタがあれば、移動する。 */
+        /*                      %                     disp("ゴール時直進（セクション）") */
+        /*                      if straight_count > 0 */
+        /*                          %軌跡をプロット */
+        /*                          if coder.target('MATLAB') */
+        /*                              straight_plot(current_node,current_node_property,current_move_dir,current_move_mode,straight_count); */
+        /*                          end */
+        /*                          %現在ノードから直進カウンタ分移動する関数。 */
+        /*                          [current_node,current_node_property,current_move_dir,current_move_mode,straight_count]... */
+        /*                              = move_straight(current_node,current_node_property,current_move_dir,current_move_mode,straight_count); */
+        /*                      end */
+        /*                  end */
         /* ゴール処理がおわったらフラグを立てる */
         /*                  disp("ゴール後") */
         /*                  disp(straight_count) */
@@ -13147,6 +13171,10 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
       /* 直進カウンタあるとき */
       if (straight_count > 0) {
         /* 軌跡をプロット */
+        /* 直進走行 */
+        m_move_front_long(straight_count, start_flg->contents,
+                          wall_flg->contents, current_move_mode);
+
         /* 現在ノードから直進カウンタ分移動する関数。 */
         move_straight(current_node, &current_node_property, &current_move_dir,
                       &current_move_mode, straight_count);
@@ -13204,12 +13232,26 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
 
       /* パターンに応じて移動 */
       if (turn_pattern_num == turn_pattern.r_45) {
+        /* 右45度ターン移動 */
+        m_turn_45_r(start_flg->contents, wall_flg->contents, current_move_mode);
         turn_r_45(current_node, &current_node_property, &current_move_dir,
                   &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.l_45) {
+        /* 左45度ターン移動 */
+        m_turn_45_l(start_flg->contents, wall_flg->contents, current_move_mode);
         turn_l_45(current_node, &current_node_property, &current_move_dir,
                   &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.r_90) {
+        /* 右90度ターン移動 */
+        if (current_move_mode == move_dir_property.straight) {
+          m_turn_90_r(start_flg->contents, wall_flg->contents, current_move_mode);
+        } else {
+          if (current_move_mode == move_dir_property.diagonal) {
+            m_turn_V90_r(start_flg->contents, wall_flg->contents,
+                         current_move_mode);
+          }
+        }
+
         /* 直進パターンの時 */
         /*  右90度 */
         if (current_move_mode == move_dir_property.straight) {
@@ -13318,15 +13360,32 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
           }
         }
       } else if (turn_pattern_num == turn_pattern.l_90) {
+        /* 左90度ターン移動 */
+        if (current_move_mode == move_dir_property.straight) {
+          m_turn_90_l(start_flg->contents, wall_flg->contents, current_move_mode);
+        } else {
+          if (current_move_mode == move_dir_property.diagonal) {
+            m_turn_V90_l(start_flg->contents, wall_flg->contents,
+                         current_move_mode);
+          }
+        }
+
         turn_l_90(current_node, &current_node_property, &current_move_dir,
                   &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.r_135) {
+        /* 右135度ターン移動 */
+        m_turn_135_r(start_flg->contents, wall_flg->contents, current_move_mode);
         turn_r_135(current_node, &current_node_property, &current_move_dir,
                    &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.l_135) {
+        /* 左135度ターン移動 */
+        m_turn_135_l(start_flg->contents, wall_flg->contents, current_move_mode);
         turn_l_135(current_node, &current_node_property, &current_move_dir,
                    &current_move_mode);
       } else if (turn_pattern_num == turn_pattern.r_180) {
+        /* 右180度ターン移動 */
+        m_turn_180_r(start_flg->contents, wall_flg->contents, current_move_mode);
+
         /* 直進パターンの時 */
         /*  右180度 */
         if (current_move_mode == move_dir_property.straight) {
@@ -13402,6 +13461,9 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
         }
       } else {
         if (turn_pattern_num == turn_pattern.l_180) {
+          /* 左180度ターン移動 */
+          m_turn_180_l(start_flg->contents, wall_flg->contents,
+                       current_move_mode);
           turn_l_180(current_node, &current_node_property, &current_move_dir,
                      &current_move_mode);
         }
@@ -13411,8 +13473,24 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
       /*              disp(current_node) */
       /*              disp(goal_node2) */
       /* 移動後、ゴールを判定 */
-      if (isequal(current_node, goal_node2) && (current_node_property ==
-           goal_node_property)) {
+      p = false;
+      b_p = true;
+      k = 0;
+      exitg2 = false;
+      while ((!exitg2) && (k < 2)) {
+        if (current_node[k] != goal_node2[k]) {
+          b_p = false;
+          exitg2 = true;
+        } else {
+          k++;
+        }
+      }
+
+      if (b_p) {
+        p = true;
+      }
+
+      if (p && (current_node_property == goal_node_property)) {
         goal_flag = 1;
       }
 
@@ -13439,6 +13517,8 @@ static void make_route_diagonal(const unsigned short row_num_node[1056], const
       /*          disp(next_move_dir) */
     }
   } while (exitg1 == 0);
+
+  m_goal_movement(start_flg->contents, wall_flg->contents, current_move_mode);
 }
 
 /*
@@ -13835,11 +13915,11 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
   unsigned char contour_flg;
   int i226;
   int exitg1;
-  unsigned char next_dir;
+  unsigned char temp_maze_wall_tmp;
   int i;
   bool exitg2;
+  unsigned char error_flg;
   unsigned int qY;
-  *start_flg = 0U;
 
   /*     %% search_adachi 足立法での探索 */
   /* local変数宣言 */
@@ -13863,13 +13943,15 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
     /* ゴール直後は壁情報を更新しない */
     /* 既知区間加速時でなければ、壁情報を取得しない */
     if (straight_count == 0) {
-      next_dir = b_maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1];
+      temp_maze_wall_tmp = b_maze_wall[(*current_y + ((*current_x - 1) << 5)) -
+        1];
       wall_set(wall, wall_flg, search, maze_goal, maze_row_size, maze_col_size, *
                current_x, *current_y, *current_dir, b_maze_wall,
                maze_wall_search);
 
       /* 壁情報が更新されれば、コンター更新のフラグを立てる。 */
-      if (next_dir != b_maze_wall[(*current_y + ((*current_x - 1) << 5)) - 1]) {
+      if (temp_maze_wall_tmp != b_maze_wall[(*current_y + ((*current_x - 1) << 5))
+          - 1]) {
         contour_flg = 1U;
       }
     }
@@ -13912,10 +13994,16 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
     } else {
       /*  進行方向選定 */
       /* 優先順位　北⇒東⇒南⇒西 */
-      next_dir = get_nextdir2(*current_x, *current_y, b_maze_wall, contour_map);
+      get_nextdir2(*current_x, *current_y, b_maze_wall, contour_map,
+                   &temp_maze_wall_tmp, &error_flg);
+
+      /* 進行方向が見つからなかったときのエラー処理 */
+      if (error_flg == 1) {
+        m_error_movement(1);
+      }
 
       /*  現在方向と進行方向に応じた処理 */
-      i = (int)(4U + next_dir);
+      i = (int)(4U + temp_maze_wall_tmp);
       if ((unsigned int)i > 255U) {
         i = 255;
       }
@@ -13925,14 +14013,14 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
         qY = 0U;
       }
 
-      next_dir = b_rem((unsigned char)qY);
-      if (l_direction.front == next_dir) {
+      temp_maze_wall_tmp = b_rem((unsigned char)qY);
+      if (l_direction.front == temp_maze_wall_tmp) {
         i = 0;
-      } else if (l_direction.right == next_dir) {
+      } else if (l_direction.right == temp_maze_wall_tmp) {
         i = 1;
-      } else if (l_direction.back == next_dir) {
+      } else if (l_direction.back == temp_maze_wall_tmp) {
         i = 2;
-      } else if (l_direction.left == next_dir) {
+      } else if (l_direction.left == temp_maze_wall_tmp) {
         i = 3;
       } else {
         i = -1;
@@ -13969,7 +14057,7 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
               i = 255;
             }
 
-            m_move_front_long((unsigned char)i, 0, wall_flg->contents,
+            m_move_front_long((unsigned char)i, *start_flg, wall_flg->contents,
                               move_dir_property.straight);
             straight_count = 0U;
 
@@ -13980,7 +14068,8 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
             wall_flg->contents = 0U;
           } else {
             /* 直進カウンタがない場合 */
-            m_move_front(0, wall_flg->contents, move_dir_property.straight);
+            m_move_front(*start_flg, wall_flg->contents,
+                         move_dir_property.straight);
 
             /* スタート直後フラグをクリア */
             *start_flg = 0U;
@@ -13995,11 +14084,13 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
         /* 直進カウンタがある場合、移動 */
         if (straight_count > 0) {
           /* 前回位置での壁フラグを使用し、マウスを移動させる（C) */
-          m_move_front_long(straight_count, 0, wall_flg->contents,
+          m_move_front_long(straight_count, *start_flg, wall_flg->contents,
                             move_dir_property.straight);
           straight_count = 0U;
 
           /* スタート直後フラグをクリア */
+          *start_flg = 0U;
+
           /* 壁フラグをクリア */
           wall_flg->contents = 0U;
 
@@ -14009,7 +14100,7 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         /* マウスを移動させる（C) */
-        m_move_right(0, wall_flg->contents, move_dir_property.straight);
+        m_move_right(*start_flg, wall_flg->contents, move_dir_property.straight);
 
         /* 参照位置、方向を更新 */
         turn_clk_90deg(current_dir);
@@ -14027,11 +14118,13 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
         /* 直進カウンタがある場合、移動 */
         if (straight_count > 0) {
           /* 前回位置での壁フラグを使用し、マウスを移動させる（C) */
-          m_move_front_long(straight_count, 0, wall_flg->contents,
+          m_move_front_long(straight_count, *start_flg, wall_flg->contents,
                             move_dir_property.straight);
           straight_count = 0U;
 
           /* スタート直後フラグをクリア */
+          *start_flg = 0U;
+
           /* 壁フラグをクリア */
           wall_flg->contents = 0U;
 
@@ -14041,7 +14134,7 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         /* マウスを移動させる（C） */
-        m_move_back(0, wall_flg->contents, move_dir_property.straight);
+        m_move_back(*start_flg, wall_flg->contents, move_dir_property.straight);
 
         /* 参照位置、方向を更新 */
         turn_180deg(current_dir);
@@ -14058,11 +14151,13 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
         /* 直進カウンタがある場合、移動 */
         if (straight_count > 0) {
           /* 前回位置での壁フラグを使用し、マウスを移動させる（C) */
-          m_move_front_long(straight_count, 0, wall_flg->contents,
+          m_move_front_long(straight_count, *start_flg, wall_flg->contents,
                             move_dir_property.straight);
           straight_count = 0U;
 
           /* スタート直後フラグをクリア */
+          *start_flg = 0U;
+
           /* 壁フラグをクリア */
           wall_flg->contents = 0U;
 
@@ -14072,7 +14167,7 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         /* マウスを移動させる（C） */
-        m_move_left(0, wall_flg->contents, move_dir_property.straight);
+        m_move_left(*start_flg, wall_flg->contents, move_dir_property.straight);
 
         /* 参照位置、方向を更新 */
         turn_conclk_90deg(current_dir);
@@ -14092,7 +14187,7 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
 
   /* 直進カウンタ分移動 */
   if (straight_count > 0) {
-    m_move_front_long(straight_count, 0, wall_flg->contents,
+    m_move_front_long(straight_count, *start_flg, wall_flg->contents,
                       move_dir_property.straight);
 
     /* スタート直後フラグをクリア */
@@ -14104,7 +14199,7 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
 
   /* ゴール時停止フラグが立っているとき */
   /* 停止動作を実施 */
-  m_goal_movement(0, wall_flg->contents, move_dir_property.straight);
+  m_goal_movement(*start_flg, wall_flg->contents, move_dir_property.straight);
 
   /* ゴール時停止フラグが立っていなければ、動作させたまま終了 */
 }
@@ -16773,6 +16868,7 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   int N;
   coder_internal_ref_1 b_maze_wall;
   coder_internal_ref_2 b_maze_goal;
+  coder_internal_ref start_flg;
   coder_internal_ref wall_flg;
   unsigned char new_goal[2];
   coder_internal_ref_6 wall;
@@ -16780,13 +16876,12 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   coder_internal_ref_4 adachi_search_mode;
   coder_internal_ref_3 max_length;
   unsigned short start_num;
-  unsigned char current_x;
+  unsigned char goal_matrix_dir2;
   unsigned char search_flag;
   unsigned char goal_dir;
   unsigned char current_y;
   unsigned char goal_section[2];
   unsigned char goal_node2[2];
-  unsigned char start_flg;
   unsigned char current_dir;
   unsigned short unusedExpr[1024];
   int exitg1;
@@ -16805,6 +16900,8 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   /* C言語関数インクルード */
   /* ローカル変数定義 */
   /*  ゴール時ストップフラグ(0:移動継続　1:ストップ) */
+  start_flg.contents = 0U;
+
   /*  スタートフラグ(0:動作中　1:停止からの移動開始) */
   /* ゴール直後フラグ(0:ゴール直後でない, 1:ゴール直後) */
   wall_flg.contents = 0U;
@@ -16897,9 +16994,9 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     /* 停止処理を実施する */
     /* ゴール直後フラグはクリア */
     /* 一マス前進 */
-    current_x = 1U;
+    goal_matrix_dir2 = 1U;
     current_y = 1U;
-    move_step(&current_x, &current_y, g_direction.North);
+    move_step(&goal_matrix_dir2, &current_y, g_direction.North);
 
     /* C言語でのスタート処理 */
     m_start_movement(1, 0, move_dir_property.straight);
@@ -16910,14 +17007,15 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     current_dir = g_direction.North;
     search_flag = 0U;
     search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                  &adachi_search_mode, &current_x, &current_y, &current_dir,
-                  maze_row_size, maze_col_size, maze_wall, maze_wall_search,
-                  maze_goal, goal_size, &search_flag, 0U, unusedExpr);
+                  &adachi_search_mode, &goal_matrix_dir2, &current_y,
+                  &current_dir, maze_row_size, maze_col_size, maze_wall,
+                  maze_wall_search, maze_goal, goal_size, &search_flag, 0U,
+                  unusedExpr);
     memcpy(&b_maze_wall.contents[0], &maze_wall[0], sizeof(unsigned char) << 10);
 
     /* ひとまづゴール(停止) */
     /* 各フラグを定義 */
-    start_flg = 1U;
+    start_flg.contents = 1U;
 
     /* 停止直後 */
     /* 停止処理を実施しない */
@@ -16945,10 +17043,10 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned char)
                << 10);
         b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                        &adachi_search_mode, &current_x, &current_y,
+                        &adachi_search_mode, &goal_matrix_dir2, &current_y,
                         &current_dir, maze_row_size, maze_col_size, unexp_square,
-                        maze_wall_search, new_goal, &start_flg, 0U, 1U, 1U,
-                        b_unusedExpr);
+                        maze_wall_search, new_goal, &start_flg.contents, 0U, 1U,
+                        1U, b_unusedExpr);
         memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned char)
                << 10);
 
@@ -16968,7 +17066,7 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
       do {
         exitg1 = 0;
         make_new_goal_all(&wall, b_maze_wall.contents, maze_wall_search,
-                          current_x, current_y, contour_map, new_goal);
+                          goal_matrix_dir2, current_y, contour_map, new_goal);
         if (new_goal[0] == 0) {
           exitg1 = 1;
         } else {
@@ -16977,10 +17075,10 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
           memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned
                   char) << 10);
           b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                          &adachi_search_mode, &current_x, &current_y,
+                          &adachi_search_mode, &goal_matrix_dir2, &current_y,
                           &current_dir, maze_row_size, maze_col_size,
-                          unexp_square, maze_wall_search, new_goal, &start_flg,
-                          0U, 1U, 1U, c_unusedExpr);
+                          unexp_square, maze_wall_search, new_goal,
+                          &start_flg.contents, 0U, 1U, 1U, c_unusedExpr);
           memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned
                   char) << 10);
 
@@ -16989,10 +17087,11 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
       } while (exitg1 == 0);
 
       /* 新規ゴールが見つからないとき、停止処理を実施 */
-      m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
+      m_goal_movement(start_flg.contents, wall_flg.contents,
+                      move_dir_property.straight);
 
       /* 探索終了時、停止させているため、フラグをたてる。 */
-      start_flg = 1U;
+      start_flg.contents = 1U;
 
       /* 停止直後 */
       /* 最短経路探索 */
@@ -17018,18 +17117,19 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         } else {
           /* 未探索マスがある場合、探索する。 */
           /* 現在地点からコンターを展開し、該当の未探索が更新されれば、そこを新規ゴールとして出力 */
-          make_new_goal_sh(&wall, b_maze_wall.contents, current_x, current_y,
-                           unexp_square, search_flag, contour_map, new_goal);
+          make_new_goal_sh(&wall, b_maze_wall.contents, goal_matrix_dir2,
+                           current_y, unexp_square, search_flag, contour_map,
+                           new_goal);
 
           /* ゴールをプロット */
           /* 新規ゴールに向け、探索 */
           memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned
                   char) << 10);
           b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                          &adachi_search_mode, &current_x, &current_y,
+                          &adachi_search_mode, &goal_matrix_dir2, &current_y,
                           &current_dir, maze_row_size, maze_col_size,
-                          unexp_square, maze_wall_search, new_goal, &start_flg,
-                          0U, 1U, 1U, d_unusedExpr);
+                          unexp_square, maze_wall_search, new_goal,
+                          &start_flg.contents, 0U, 1U, 1U, d_unusedExpr);
           memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned
                   char) << 10);
 
@@ -17038,10 +17138,11 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
       } while (exitg1 == 0);
 
       /* 新規ゴールが見つからないとき、停止処理を実施 */
-      m_goal_movement(start_flg, wall_flg.contents, move_dir_property.straight);
+      m_goal_movement(start_flg.contents, wall_flg.contents,
+                      move_dir_property.straight);
 
       /* 探索終了時、停止させているため、停止フラグを立てる。 */
-      start_flg = 1U;
+      start_flg.contents = 1U;
 
       /* 停止直後 */
       /* その他の場合無視 */
@@ -17049,7 +17150,7 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
 
      default:
       /* 停止させない */
-      start_flg = 0U;
+      start_flg.contents = 0U;
 
       /* 停止直後でない */
       break;
@@ -17067,9 +17168,10 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     goal_section[0] = 1U;
     goal_section[1] = 1U;
     b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                    &adachi_search_mode, &current_x, &current_y, &current_dir,
-                    maze_row_size, maze_col_size, unexp_square, maze_wall_search,
-                    goal_section, &start_flg, 1U, 1U, 0U, contour_map);
+                    &adachi_search_mode, &goal_matrix_dir2, &current_y,
+                    &current_dir, maze_row_size, maze_col_size, unexp_square,
+                    maze_wall_search, goal_section, &start_flg.contents, 1U, 1U,
+                    0U, contour_map);
     memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned char) <<
            10);
 
@@ -17098,9 +17200,9 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         /* 停止処理を実施する */
         /* ゴール直後フラグはクリア */
         /* 一マス前進 */
-        current_x = 1U;
+        goal_matrix_dir2 = 1U;
         current_y = 1U;
-        move_step(&current_x, &current_y, g_d_direction.North);
+        move_step(&goal_matrix_dir2, &current_y, g_d_direction.North);
 
         /* C言語でのスタート処理 */
         m_start_movement(1, 0, move_dir_property.straight);
@@ -17108,7 +17210,8 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         /* 停止直後フラグをクリア */
         /* 最短距離走行 */
         b_fust_run(&b_maze_wall, &b_goal_size, &wall_flg, &wall, maze_wall,
-                   contour_map, maze_goal, MAX_uint16_T, current_x, current_y);
+                   contour_map, maze_goal, MAX_uint16_T, goal_matrix_dir2,
+                   current_y, 0U);
 
         /*  斜めでの最短走行 */
       } else {
@@ -17126,7 +17229,7 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
 
           /* 確定されたゴールノード、方向からゴールマス、ノードを再定義 */
           decide_goal_section(maze_goal, new_goal, search_flag, goal_dir,
-                              goal_section, goal_node2, &start_flg);
+                              goal_section, goal_node2, &goal_matrix_dir2);
 
           /* 確定されたゴールマスから、再度マップを生成 */
           new_goal[0] = goal_section[1];
@@ -17137,8 +17240,8 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
             maze_wall, maze_wall_search, row_num_node, col_num_node, &start_num);
 
           /* 生成されたMAPをもとに最短走行 */
-          make_route_diagonal(row_num_node, col_num_node, new_goal, goal_node2,
-                              start_flg);
+          make_route_diagonal(&start_flg, &wall_flg, row_num_node, col_num_node,
+                              new_goal, goal_node2, goal_matrix_dir2);
         }
       }
     }

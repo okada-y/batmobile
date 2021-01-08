@@ -229,3 +229,10 @@ void maze_run_mode_decide(void)
 
 }
 
+//機能:ランモード3にセット(デバッグ用)
+//引数	:ランモード3番号
+//返り値	:なし
+void set_run_mode_3(uint8_t num)
+{
+	run_mode_3 = num;
+}

@@ -5,7 +5,7 @@
  * File: maze_init_terminate.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 27-Aug-2020 19:25:52
+ * C/C++ source code generated on  : 08-Jan-2021 11:16:43
  */
 
 /* Include Files */

@@ -16,6 +16,7 @@ uint8_t			sensor_mode;		// センシングパターン
 static uint16_t			adc_value[5];		// AD変換値
 static uint16_t			battery_value;		// a バッテリ電圧の生データ
 static t_sensor_value	sensor_value[4];	// IRセンサの生データ
+static uint16_t sensor_get_times = 0;
 
 uint8_t mode_number_int = 0; //m モードごとの割り込み用フラグ　（0は使わないこと
 
@@ -173,6 +174,16 @@ double SensorValue2length( uint8_t dir )
 
 	return length_tmp;
 
+}
+
+//壁センサ取得回数をインクリメントする
+void inc_times_wall_sensor (void){
+	sensor_get_times++;
+}
+
+//壁センサ取得回数を取得する
+uint16_t get_times_wall_sensor (void){
+	return sensor_get_times;
 }
 
 

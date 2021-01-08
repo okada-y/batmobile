@@ -10,6 +10,10 @@ uint16_t Sensor_GetBatteryValue( void );
 int16_t Sensor_GetValue( uint8_t dir );
 double SensorValue2length( uint8_t dir );
 void Sensor_DebugPrintf( void );
+void inc_times_wall_sensor (void);
+uint16_t get_times_wall_sensor (void);
+
+
 
 #define SENSOR_ALL_OFF()			HAL_GPIO_WritePin(GPIOB, FR_LED_Pin|SL_LED_Pin|SR_LED_Pin|FL_LED_Pin, GPIO_PIN_RESET)
 #define SENSOR_FRONT_ON()		HAL_GPIO_WritePin(GPIOB, FR_LED_Pin|FL_LED_Pin, GPIO_PIN_SET)

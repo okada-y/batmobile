@@ -151,7 +151,9 @@ int16_t i = 0;
 		  switch(get_mode_number()){
 
 		  case 0:
+			  //__disable_irq();
 		  	  data_read();
+		  	  //__enable_irq();
 			  break;
 
 		    case 1:
@@ -164,7 +166,6 @@ int16_t i = 0;
 
 		    case 2:
 		        log_init();
-		        move_front_long(8,1,0,0);
 		        half_deceleration();
 		        HAL_Delay(1000);
 		    	break;
@@ -172,7 +173,7 @@ int16_t i = 0;
 		  case 3:
 			  	log_init();
 			  	init_target_turn_param();
-			  	turn_pattern(turn_s90, PI/2);
+			  	move_turn_pattern(turn_s90, PI/2);
 			  break;
 
 		  case 4:
@@ -184,17 +185,27 @@ int16_t i = 0;
 
 		  case 5:
 			  log_init();
-		      set_mode_ctrl(trace);
-		      half_acceleration();
-		      move_front (already,2,1);
-		      move_front (already,0,1);
-		      move_front (already,2,1);
-		      half_deceleration();
-		      HAL_Delay(4000);
+			  run_mode_3 = 0; //走行モード3と仮定
+			  init_target_turn_param(); //走行モード3に応じたパラメータ設定
+			  move_front_long(2,0.5,0,0,p_straight);
+			  slalom_conclock_45(0,p_straight);
+			  move_front_long(2,0.0,0,0,p_diagonal);
+			  set_target_move_param(straight, 0.0, 0.0);//目標距離を0として、停止
+
+		      HAL_Delay(1000);
 			  break;
 
 		  case 6:
-		       log_init();
+			  log_init();
+			  run_mode_3 = 0; //走行モード3と仮定
+			  init_target_turn_param(); //走行モード3に応じたパラメータ設定
+			  move_front_long(2,0.5,0,0,p_straight);
+			  slalom_clock_45(0,p_straight);
+			  move_front_long(2,0.0,0,0,p_diagonal);
+			  set_target_move_param(straight, 0.0, 0.0);//目標距離を0として、停止
+
+
+		      HAL_Delay(1000);
 			  break;
 
 		  case 7://モジュールテスト
@@ -235,9 +246,13 @@ int16_t i = 0;
 			  //探索時、迷路情報を初期化
 			  if (run_mode_1 == search){
 				  maze_init(maze_data.maze_y_size, maze_data.maze_x_size, maze_data.m_wall_tmp, maze_data.m_search_tmp);
+			  }else{ //最短時、ロムの迷路データ呼び出し
+				  loadFlash(start_address, (uint8_t*)&maze_data, sizeof(maze_data_t));
 			  }
 			  //走行パラメータの初期化
 			  init_target_turn_param();
+			  //ログ開始
+			  log_init();
 			  //決定されたモードで走行
 			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size,
 					  	  maze_data.goal_size,maze_data.maze_goal, run_mode_1,run_mode_2,maze_data.contour_map,maze_data.row_num_node,maze_data.col_num_node);

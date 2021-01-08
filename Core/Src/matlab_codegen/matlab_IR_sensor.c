@@ -14,6 +14,7 @@ int m_get_front_sensor(void)
 {
     //c側で記述したセンサ値取得関数を呼び出すこと
 	return (Sensor_GetValue(front_left)+Sensor_GetValue(front_right))/2;
+//	return (Sensor_GetValue(front_right));
 }
 
 
@@ -28,6 +29,8 @@ int m_get_right_sensor(void)
 // 左センサ値取得
 int m_get_left_sensor(void)
 {
+	//壁センサ値読み込み回数をインクリメント
+	inc_times_wall_sensor();
     //c側で記述したセンサ値取得関数を呼び出すこと
 	return Sensor_GetValue(side_left);
 }
