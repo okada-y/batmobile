@@ -30,6 +30,23 @@ static speed_under_lim_mode speed_under_lim_flg = zero;		//下限速度フラグ
 
 static t_param_set param_set;
 
+//tragetの変数をクリアする
+void clr_target(void)
+{
+	target_move_speed = 0;			//目標移動速度[m/s]
+	target_move_speed_fin = 0;		//目標終端速度[m/s]
+	target_rotation_speed = 0;		//目標角速度[rad/s]
+	target_move_accel = 0;			//目標移動加速度[m/s2]
+	target_rotation_accel = 0;		//目標角加速度[rad/s2]
+	target_length = 0;				//目標移動距離[m]
+	target_angle = 0;				//目標回転角度[rad]
+	ideal_length = 0;				//理想移動距離[m]
+	ideal_angle = 0;				//理想回転角度[rad]
+	target_rotation_speed_max = 0;//目標移動速度[rad/s]
+	target_move_speed_max = 0;//目標移動速度[m/s]
+}
+
+
 //機能	: traget.cの1msタスクのまとめ
 //引数	: なし
 //返り値	: なし
@@ -141,7 +158,58 @@ void init_target_turn_param(void)
 		param_set.turn_180.offset_befor = slalom_180_bo_1;
 		param_set.turn_180.offset_after = slalom_180_ao_1;
 		break;
-	case 1:
+
+	case 1://暫定的に0と同じ
+		//並進パラメータ
+		param_set.search.move_v = search_move_speed_max;
+		param_set.search.move_a = search_move_accel;
+		param_set.straight.move_v = straight_move_speed_max;
+		param_set.straight.move_a = straight_move_accel;
+		param_set.diagonal.move_v = straight_move_speed_max;
+		param_set.diagonal.move_a = straight_move_accel;
+
+		//ターンパラメータ
+		//探索90
+		param_set.turn_s90.move_v = slalom_s90_v_1;
+		param_set.turn_s90.turn_w = slalom_s90_w_1;
+		param_set.turn_s90.turn_wa = slalom_s90_wa_1;
+		param_set.turn_s90.offset_befor = slalom_s90_bo_1;
+		param_set.turn_s90.offset_after = slalom_s90_ao_1;
+
+		//斜め45
+		param_set.turn_45.move_v = slalom_45_v_1;
+		param_set.turn_45.turn_w = slalom_45_w_1;
+		param_set.turn_45.turn_wa = slalom_45_wa_1;
+		param_set.turn_45.offset_befor = slalom_45_bo_1;
+		param_set.turn_45.offset_after = slalom_45_ao_1;
+
+		//大廻90
+		param_set.turn_90.move_v = slalom_90_v_1;
+		param_set.turn_90.turn_w = slalom_90_w_1;
+		param_set.turn_90.turn_wa = slalom_90_wa_1;
+		param_set.turn_90.offset_befor = slalom_90_bo_1;
+		param_set.turn_90.offset_after = slalom_90_ao_1;
+
+		//V90
+		param_set.turn_V90.move_v = slalom_v90_v_1;
+		param_set.turn_V90.turn_w = slalom_v90_w_1;
+		param_set.turn_V90.turn_wa = slalom_v90_wa_1;
+		param_set.turn_V90.offset_befor = slalom_v90_bo_1;
+		param_set.turn_V90.offset_after = slalom_v90_ao_1;
+
+		//135
+		param_set.turn_135.move_v = slalom_135_v_1;
+		param_set.turn_135.turn_w = slalom_135_w_1;
+		param_set.turn_135.turn_wa = slalom_135_wa_1;
+		param_set.turn_135.offset_befor = slalom_135_bo_1;
+		param_set.turn_135.offset_after = slalom_135_ao_1;
+
+		//180
+		param_set.turn_180.move_v = slalom_180_v_1;
+		param_set.turn_180.turn_w = slalom_180_w_1;
+		param_set.turn_180.turn_wa = slalom_180_wa_1;
+		param_set.turn_180.offset_befor = slalom_180_bo_1;
+		param_set.turn_180.offset_after = slalom_180_ao_1;
 		break;
 	case 2:
 		break;

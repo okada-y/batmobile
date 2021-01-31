@@ -34,11 +34,53 @@ static float target_vol_diff_sidewall = 0;			//横壁制御におけるモータ
 static side_wall_ctrl side_wall_ctrl_mode = none;	//横壁補正モード（左、右、両方、なし)
 static double side_sensor_l_th = 0;				//左壁制御の閾値
 static double side_sensor_r_th = 0;				//右壁制御の閾値
+static double side_sensor_r_old = 0;	//前回右前センサ値[m]
+static double side_sensor_l_old = 0; 	//前回左前センサ値[m]
+static float right_wall_break = 0;//右壁切れ目距離[m]
+static float left_wall_break = 0;//左壁切れ目距離[m]
+
+typedef struct {
+double		right;
+double		left;
+} ave_temp;
+
+static ave_temp ave_store[ir_diff_ave_num];  // データ格納用の構造体
+static uint16_t ave_counter = 0;
 
 uint8_t wall_break_calib_flg = 0; 	//壁切れ制御有効化フラグ
 uint8_t wall_break_calib_mode = 0; 	//壁切れ補正モード(0:なし　2:右 8:左)（壁情報と同じ）
 float wall_break_calib_ref = 0; 	//壁切れ推定距離
 
+//Adjustの変数をクリアする
+void clr_adjust(void){
+	front_sensor_move_err_I = 0;   	//偏差和のI項
+	front_sensor_rotate_err_I = 0;   	//偏差差のI項
+	front_sensor_move_err_prev = 0;   //前回偏差和
+	front_sensor_rotate_err_prev = 0; //前回偏差差
+	front_sensor_move_D_prev = 0; 	//前回偏差和微分
+	front_sensor_rotate_D_prev = 0;   //前回偏差差微分
+	target_vol_sum_frontwall = 0;		//前壁制御によるモータ印加電圧の和[V]
+	target_vol_diff_frontwall = 0;		//前壁制御によるモータ印加電圧の差[V]
+	fornt_wall_calibrate_tim = 0;  		//前壁補正用カウンタ
+	fornt_wall_calibrate_tim_lim = 0;  	//前壁補正制限時間用カウンタ
+	target_vol_diff_sidewall = 0;			//横壁制御におけるモータ印加電圧の差[V]
+	side_wall_ctrl_mode = none;	//横壁補正モード（左、右、両方、なし)
+	side_sensor_l_th = 0;				//左壁制御の閾値
+	side_sensor_r_th = 0;				//右壁制御の閾値
+	side_sensor_r_old = 0;	//前回右前センサ値[m]
+	side_sensor_l_old = 0; 	//前回左前センサ値[m]
+	right_wall_break = 0;//右壁切れ目距離[m]
+	left_wall_break = 0;//左壁切れ目距離[m]
+	ave_counter = 0;
+	wall_break_calib_flg = 0; 	//壁切れ制御有効化フラグ
+	wall_break_calib_mode = 0; 	//壁切れ補正モード(0:なし　2:右 8:左)（壁情報と同じ）
+	wall_break_calib_ref = 0; 	//壁切れ推定距離
+	for(int i = 0;i<ir_diff_ave_num;i++)
+	{
+		ave_store[i].right = 0;
+		ave_store[i].left = 0;
+	}
+}
 
 //機能	: adjust.cの1msタスクまとめ
 //引数	: なし
@@ -125,8 +167,6 @@ void calc_side_wall_ctrl_mode ( void )
 {
 	double side_sensor_r = 0; 				//右前センサ値[m]
     double side_sensor_l = 0; 				//左前センサ値[m]
-	static double side_sensor_r_old = 0;	//前回右前センサ値[m]
-    static double side_sensor_l_old = 0; 	//前回左前センサ値[m]
 	double side_sensor_r_diff = 0;			//右前センサ値変化量
     double side_sensor_l_diff = 0; 			//左前センサ値変化量
 	double side_sensor_r_diff_sum = 0;		//右前センサ値変化量合計
@@ -134,13 +174,7 @@ void calc_side_wall_ctrl_mode ( void )
 	double side_sensor_r_diff_ave = 0;		//右前センサ値平均
     double side_sensor_l_diff_ave = 0; 		//左前センサ値平均
 
-    typedef struct {
-	double	right;			
-	double  left;			
-    } ave_temp;
 
-	static ave_temp ave_store[ir_diff_ave_num];  // データ格納用の構造体
-	static uint16_t ave_counter = 0;
 	uint16_t i = 0;
 	uint16_t j = 0;
 
@@ -456,8 +490,6 @@ void calibrate_tim (void){
 //			事前にフラグをたて、壁情報、壁切れ推定値をセットすること。
 void wall_break_calibrate(void){
 
-	static float right_wall_break = 0;//右壁切れ目距離[m]
-	static float left_wall_break = 0;//左壁切れ目距離[m]
 	float temp_wall_break = 0;//壁切れ目距離
 
 	if(wall_break_calib_flg){

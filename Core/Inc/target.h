@@ -80,7 +80,7 @@ typedef enum {
 } speed_under_lim_mode;
 
 
-
+void clr_target(void);
 void target_1ms ( void );
 //void set_direction_mode ( direction_mode );
 void set_rotation_mode ( rotation_mode );

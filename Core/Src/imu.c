@@ -17,6 +17,7 @@
 
 void 	IMU_Write1byte( uint8_t , uint8_t );
 uint8_t IMU_Read1byte( uint8_t );
+uint8_t IMU_refresh_flg = 0;//IMU更新フラグ
 
 static uint8_t  imu_address = ACCEL_XOUT_H | 0x80;	//a 加速度、ジャイロデータの先頭データ（X方向加速度のH側データかつread設定
 static uint8_t	imu_value[13];			// value[0]はダミーデータが入るため注意
@@ -27,6 +28,15 @@ static int32_t	accel_x_reference;		// X軸加速度計のリファレンス
 static int16_t	gyro_z_value;			// Z軸ジャイロの生データ
 static int16_t	gyro_z_reference;		// Z軸ジャイロのリファレンス
 
+//imuの変数をクリアする
+void clr_imu(void){
+	imu_address = ACCEL_XOUT_H | 0x80;	//a 加速度、ジャイロデータの先頭データ（X方向加速度のH側データかつread設定
+	for(int i = 0;i<13;i++){
+		imu_value[i]=0;
+	}
+	accel_x_value=0;			// X軸加速度計の生データ
+	gyro_z_value=0;			// Z軸ジャイロの生データ
+}
 
 
 /* ---------------------------------------------------------------
@@ -111,6 +121,7 @@ void IMU_Initialize( void )
 
 	// DMAの開始
 	HAL_GPIO_WritePin(SPI2_CS_GPIO_Port, SPI2_CS_Pin, GPIO_PIN_RESET);//CSpinをLowに、SPI通信開始
+	IMU_refresh_flg = 1;//IMU更新フラグ
 	HAL_SPI_TransmitReceive_DMA( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t) );
 //	HAL_SPI_TransmitReceive( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t),100);
 }
@@ -137,10 +148,11 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi)
 		HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_SET );//CSpinをHIに、SPI通信停止
 		accel_x_value = ( ( (int16_t)imu_value[3]<<8 ) | ( (int16_t)imu_value[4]&0x00ff ) );//ICMのy軸方向加速度をx方向加速度として取得
 		gyro_z_value =  ( ( (int16_t)imu_value[11]<<8 ) | ( (int16_t)imu_value[12]&0x00ff ) );//z軸角速度を取得
+		if(	IMU_refresh_flg == 1){//IMU更新フラグ)
 		HAL_GPIO_WritePin(SPI2_CS_GPIO_Port,SPI2_CS_Pin,GPIO_PIN_RESET );//CSpinをLowに、SPI通信開始
 		HAL_SPI_TransmitReceive_DMA( &hspi2, &imu_address, imu_value, sizeof(imu_value)/sizeof(uint8_t) );
+		}
 	}
-
 }
 
 /* ---------------------------------------------------------------
@@ -150,9 +162,12 @@ void IMU_ResetReference( void )
 {
 	int16_t i;
 
+	accel_x_reference = 0;
+	gyro_z_value = 0;
+
 	for(i = 0; i < REFFERENCE_NUM; i++) {
 		HAL_Delay(1);
-		IMU_Receive();
+		//IMU_Receive();
 		accel_x_reference += accel_x_value;
 		gyro_z_reference += gyro_z_value;
 	}

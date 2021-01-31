@@ -88,7 +88,7 @@ int main(void)
 //	  static uint8_t m_search_tmp[1024];//探索情報格納用配列
 
 	//static uint8_t run_mode = search_mode;
-	uint8_t maze_data_mode = 0;
+//	uint8_t maze_data_mode = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -160,6 +160,7 @@ int16_t i = 0;
 		    	log_init();
 		    			set_duty_l(100);
 		    			set_duty_r(100);
+		    			Indicator_number(8);
 		    			HAL_Delay(1100);
 
 		    	break;
@@ -173,6 +174,7 @@ int16_t i = 0;
 		  case 3:
 			  	log_init();
 			  	init_target_turn_param();
+
 			  	move_turn_pattern(turn_s90, PI/2);
 			  break;
 
@@ -187,9 +189,10 @@ int16_t i = 0;
 			  log_init();
 			  run_mode_3 = 0; //走行モード3と仮定
 			  init_target_turn_param(); //走行モード3に応じたパラメータ設定
-			  move_front_long(2,0.5,0,0,p_straight);
-			  slalom_conclock_45(0,p_straight);
-			  move_front_long(2,0.0,0,0,p_diagonal);
+			  set_mode_ctrl(trace);
+			  constant_speed(2*0.09, straight, 0.3);
+			  slalom_conclock_s90(0);
+			  constant_speed(2*0.09, straight, 0.0);
 			  set_target_move_param(straight, 0.0, 0.0);//目標距離を0として、停止
 
 		      HAL_Delay(1000);
@@ -199,11 +202,11 @@ int16_t i = 0;
 			  log_init();
 			  run_mode_3 = 0; //走行モード3と仮定
 			  init_target_turn_param(); //走行モード3に応じたパラメータ設定
-			  move_front_long(2,0.5,0,0,p_straight);
-			  slalom_clock_45(0,p_straight);
-			  move_front_long(2,0.0,0,0,p_diagonal);
+			  set_mode_ctrl(trace);
+			  constant_speed(2*0.09, straight, 0.3);
+			  slalom_clock_s90(0);
+			  constant_speed(2*0.09, straight, 0.0);
 			  set_target_move_param(straight, 0.0, 0.0);//目標距離を0として、停止
-
 
 		      HAL_Delay(1000);
 			  break;
@@ -242,39 +245,63 @@ int16_t i = 0;
 		  case 14:	//迷路走行
 
 			  //フェイルセーフ有効化
-			  //set_failsafe_flg(1);
+			  set_failsafe_flg(1);
 			  //探索時、迷路情報を初期化
-			  if (run_mode_1 == search){
+			  //run_mode3を暫定的に既存迷路を読むか読まないかの設定に。0のとき読まない。（初期化）
+			  if (run_mode_1 == search && run_mode_3 == 0){
 				  maze_init(maze_data.maze_y_size, maze_data.maze_x_size, maze_data.m_wall_tmp, maze_data.m_search_tmp);
 			  }else{ //最短時、ロムの迷路データ呼び出し
 				  loadFlash(start_address, (uint8_t*)&maze_data, sizeof(maze_data_t));
 			  }
 			  //走行パラメータの初期化
 			  init_target_turn_param();
+			  //マウスの初期化
+			  mouse_reset();
 			  //ログ開始
 			  log_init();
 			  //決定されたモードで走行
 			  maze_solve(maze_data.m_wall_tmp, maze_data.m_search_tmp, maze_data.maze_y_size, maze_data.maze_x_size,
 					  	  maze_data.goal_size,maze_data.maze_goal, run_mode_1,run_mode_2,maze_data.contour_map,maze_data.row_num_node,maze_data.col_num_node);
+			  //走行完了時、迷路をほぞん
+			  //flash書き込み時、dmaを停止する必要がある。ため、ADC結果のDMA停止
+				//割り込み停止
+				 HAL_TIM_Base_Stop_IT(&htim6);
+				 //ジャイロ更新停止
+				 IMU_refresh_flg = 0;
+				 HAL_Delay(10);
+			    //C���Ŗ��H�f�[�^�L�^���������邱�ƁB
+				  //ADCのDMA停止
+				  Sensor_StopADC();
+				  //現在の迷路情報をromに書き込み
+				  writeFlash(start_address, (uint8_t*)&maze_data, sizeof(maze_data_t));
+				  //ADCのDMA再開
+				  Sensor_StartADC();
+				  //ジャイロ初期化
+				  IMU_Initialize();
+				  //マウスをリセット
+				  mouse_reset();
+				  //割り込み再開
+				  HAL_TIM_Base_Start_IT( &htim6 );
 			  break;
 
 		  case 15:	//迷路データの書き込み、読み込み、消去
-			  maze_data_mode = 0;
+//			  maze_data_mode = 0;
 
-			  while(!button_state){
-				  maze_data_mode = select_num_r_tire (maze_data_mode);
-				  Indicator_number(maze_data_mode);
-			  }
+//			  while(!button_state){
+//				  maze_data_mode = select_num_r_tire (maze_data_mode);
+//				  Indicator_number(maze_data_mode);
+//			  }
+//
+//			  for(int i=0; i<2; i++){ // モード処理終了時、LEDを2回点灯
+//				  LED_ALL_ON();
+//				  HAL_Delay(100);
+//				  LED_ALL_OFF();
+//				  HAL_Delay(200);
+//			  }
 
-			  for(int i=0; i<2; i++){ // モード処理終了時、LEDを2回点灯
-				  LED_ALL_ON();
-				  HAL_Delay(700);
-				  LED_ALL_OFF();
-				  HAL_Delay(300);
-			  }
-
-			  switch(maze_data_mode){
-			  case 0://迷路データの出力
+			  switch(rom_mode){
+			  case 0://ROMに記録した迷路データの出力
+				  loadFlash(start_address, (uint8_t*)&maze_data, sizeof(maze_data_t));
 				  maze_data_output();
 				  break;
 			  case 1://読み込み
@@ -302,15 +329,17 @@ int16_t i = 0;
 
 		  for(int i=0; i<3; i++){ // モード処理終了時、LEDを3回点灯
 			  LED_ALL_ON();
-			  HAL_Delay(700);
+			  HAL_Delay(100);
 			  LED_ALL_OFF();
-			  HAL_Delay(300);
+			  HAL_Delay(100);
 		  }
 
-	  HAL_Delay(500);
+	  HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
+
+
 
 /**
   * @brief System Clock Configuration
@@ -357,6 +386,15 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+//各処理の変数をクリアする。
+void mouse_reset(void){
+	clr_adjust();
+	clr_control();
+	clr_exvol();
+	clr_imu();
+	clr_mouse_state();
+	clr_target();
+}
 
 /* USER CODE END 4 */
 

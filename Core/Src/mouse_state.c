@@ -11,6 +11,11 @@
 #include "imu.h"
 #include "mouse_state.h"
 
+typedef struct {
+	float		speed;
+	float		accel;
+} ave_temp;
+
 static float tire_r_speed = 0;
 static float tire_l_speed = 0;
 static float tire_r_speed_max = 0;
@@ -28,13 +33,50 @@ static float est_v = 0;
 static uint16_t right_count = 0;
 static uint16_t left_count = 0;
 
+static uint16_t right_count_old = 0;
+static uint8_t init_r_flg = 0;
+static uint16_t left_count_old = 0;
+static uint8_t init_l_flg = 0;
+static ave_temp ave_store[ave_num];  // データ格納用の構造体
+static uint16_t ave_counter = 0;
+static float post_rotation_speed;		//前回角速度
+
+//mouse_stateの変数を初期化する。
+void clr_mouse_state(void)
+{
+	tire_r_speed = 0;
+	tire_l_speed = 0;
+	tire_r_speed_max = 0;
+	tire_r_speed_min = 0;
+	tire_l_speed_max = 0;
+	tire_l_speed_min = 0;
+	move_speed = 0;
+	move_speed_ave = 0;
+	move_accel_ave = 0;
+	move_length = 0;
+	rotation_speed = 0;
+	rotation_angle = 0;
+	right_count_old = 0;
+	init_r_flg = 0;
+	left_count_old = 0;
+	init_l_flg = 0;
+	ave_counter = 0;
+	post_rotation_speed=0;		//前回角速度
+	//速度フィルタ用配列の初期化
+	for(int i = 0; i<ave_num; i++)
+	{
+		ave_store[i].speed = 0;
+		ave_store[i].accel = 0;
+	}
+}
+
 //機能	: mouse_stateの1msタスクまとめ
 //引数	: なし
 //返り値	: なし
 void mouse_state_1ms ( void )
 {
 //	calc_move_speed();		//速度計算 //速度計算のみ別枠にて処理
-	IMU_Receive();				//IMUからヨー方向角速度、ｘ方向加速度を取得 割り込み10%
+//	IMU_Receive();				//IMUからヨー方向角速度、ｘ方向加速度を取得 割り込み10%
 	calc_rotation_speed();	//角速度計算
 	filter_move_speed();	//速度をフィルタ処理
 // speed_estimate_kalman();//速度をカルマンフィルタにて推定
@@ -48,15 +90,13 @@ void mouse_state_1ms ( void )
 int16_t Get_diff_right_count( void )
 {
 	uint16_t right_count_correct = 0;
-	static uint16_t right_count_old = 0;
     int16_t delta_right_count = 0;
-    static uint8_t init_flg = 0;
 
     //初回は初期位置を取得し、記録する。
-    if (init_flg == 0){
+    if (init_r_flg == 0){
     	right_count_old = encoder_Getangle_r();
     	right_count_old = encoder_correct_angle_r(right_count_old);
-    	init_flg= 1;
+    	init_r_flg= 1;
     }
 
     right_count =  encoder_Getangle_r();
@@ -74,15 +114,14 @@ int16_t Get_diff_right_count( void )
 int16_t Get_diff_left_count( void )
 {
 	uint16_t left_count_correct = 0;
-	static uint16_t left_count_old = 0;
     int16_t delta_left_count = 0;
-    static uint8_t init_flg = 0;
+
 
     //初回は初期位置を取得し、記録する。
-    if (init_flg == 0){
+    if (init_l_flg == 0){
     	left_count_old = encoder_Getangle_l();
     	left_count_old = encoder_correct_angle_l(left_count_old);
-    	init_flg= 1;
+    	init_l_flg= 1;
     }
 
     left_count =  encoder_Getangle_l();
@@ -229,14 +268,6 @@ float get_move_speed ( void )
 //      : 1msタスク 
 void filter_move_speed( void )
 {
-    typedef struct {
-	float	speed;			
-	float   accel;			
-    } ave_temp;
-
-    static ave_temp ave_store[ave_num];  // データ格納用の構造体
-
-	static uint16_t ave_counter = 0;
 	uint16_t i = 0;
 	uint16_t j = 0;
 
@@ -322,7 +353,7 @@ void set_move_length ( float length )
 //備考 :ローパスフィルタ
 void calc_rotation_speed ( void )
 {
-	static float post_rotation_speed;		//前回角速度
+
 	float tau = 1.0/(2.0*PI*cut_off_w);		//ローパスフィルタの時定数
 	float den = tau + Sampling_cycle;
 

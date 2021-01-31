@@ -56,7 +56,7 @@ uint8_t move_comp_jud_stop ( void )
 //返り値	: 判断結果(0:未完,1:完了)
 uint8_t rotate_comp_jud ( void )
 {
-    return (uint8_t)(ABS(get_target_angle() - get_ideal_angle()) < rotate_comp_th);
+    return (uint8_t)((ABS(get_target_angle() - get_ideal_angle()) < rotate_comp_th)&&(get_target_rotation_speed() == 0));
 }
 
 //機能	: スタート時加速
@@ -114,7 +114,7 @@ void half_deceleration (void)
 {
 	/*移動方向、加速モード設定*/
 	/*加速度等パラメータ、移動距離、終端速度設定*/
-	set_target_move_param(search, 0.045, 0);
+	set_target_move_param(search, 0.045, move_speed_slow);
 	/*停止時動作設定*/
 	set_speed_under_lim_flg(slow);
 
@@ -231,12 +231,14 @@ void constant_speed_front_wall_adj(float target_front_wall_length)
 
     while (1)
     {
+    	Indicator_number(3);
     	temp = 0.5 * (get_wall_dis_table(Sensor_GetValue(front_left), front_left)
     				+get_wall_dis_table(Sensor_GetValue(front_right), front_right));
     	//前壁距離が目標値よりも小さくなるとき、終了
     	if(temp < target_front_wall_length){
     		//ブザーをならす。
     		set_buzzer_flg(2);
+    		Indicator_number(0);
     		/*理想移動距離、実移動距離をクリア*/
     		set_ideal_length(0.0);
     		set_move_length(0.0);
@@ -930,6 +932,6 @@ void move_stop(unsigned char start_flg,unsigned char wall_flg,unsigned char move
 {
 	half_deceleration();//半区画減速で中央に停止
 	LED_ALL_ON();
-	HAL_Delay(1000);
+	HAL_Delay(100);
 	LED_ALL_OFF();
 }

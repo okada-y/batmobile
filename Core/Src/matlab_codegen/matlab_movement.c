@@ -23,7 +23,7 @@ void m_move_front_long(unsigned char straight_count,unsigned char start_flg,unsi
 	{
 		move_front_long(straight_count,slalom_45_v_1 ,start_flg,wall_flg,move_dir_property);
 	}else{
-		move_front_long(straight_count,search_move_speed_max,0,wall_flg,move_dir_property);
+		move_front_long(straight_count,search_move_speed_max,start_flg,wall_flg,move_dir_property);
 	}
 }
 
@@ -55,7 +55,7 @@ void m_start_movement(unsigned char start_flg,unsigned char wall_flg,unsigned ch
 //ゴール時の動作（停止処理）
 void m_goal_movement(unsigned char start_flg,unsigned char wall_flg,unsigned char move_dir_property){  
 //     c側で記述した動作関数を記述すること
-	if(run_mode_1 == 1 && run_mode_1 == 2)//斜め探索時
+	if(run_mode_1 == 1 && run_mode_2 == 1)//斜め走行時
 	{
 		set_target_move_param(search, 0.0, 0);//即停止
 	}else{

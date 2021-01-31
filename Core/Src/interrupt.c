@@ -104,7 +104,7 @@ void Interrupt_Main( void )
 					 calc_motor_vol_ctrl();	//速度、角速度制御による印加電圧を計算
 					 adjust_1ms();			//壁制御による印加電圧を計算
 					 motor_1ms();			//制御モードに応じた印加電圧を出力
-					 data_get();
+					 //data_get();
 					break;
 
 				case 15 :

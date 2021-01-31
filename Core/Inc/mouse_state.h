@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+void clr_mouse_state(void);
 void mouse_state_1ms ( void );
 int16_t Get_diff_right_count( void );
 int16_t Get_diff_left_count( void );

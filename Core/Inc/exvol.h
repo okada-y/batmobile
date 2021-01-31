@@ -8,6 +8,7 @@ typedef enum {
 	side_wall = 2,
 } ctrl_mode_num;
 
+void clr_exvol(void);
 void motor_1ms ( void );
 void set_mode_ctrl( ctrl_mode_num );
 ctrl_mode_num get_mode_ctrl(void);

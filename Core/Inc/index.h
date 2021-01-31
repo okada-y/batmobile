@@ -39,6 +39,7 @@
 //#include "isequal.h"
 #include "matlab_IR_sensor.h"
 #include	"matlab_movement.h"
+#include "matlab_rom.h"
 #include	"maze_init.h"
 #include "maze_init_terminate.h"
 #include "maze_init_types.h"

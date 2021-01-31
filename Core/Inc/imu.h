@@ -11,6 +11,8 @@ float 		IMU_GetAccel_X( void );			// X軸加速度計の加速度を取得する
 float 		IMU_GetGyro_Z( void );			// Z軸ジャイロの角速度を取得する[rad/s]
 int16_t 	get_accel_x_value ( void );
 int32_t 	get_accel_x_reference ( void );
+void clr_imu(void);
+extern uint8_t IMU_refresh_flg ;
 
 
 

@@ -37,9 +37,11 @@ void Sensor_Initialize( void )
 --------------------------------------------------------------- */
 void Sensor_StartADC( void )
 {
+	//センサ値をDMA開始
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_value, sizeof(adc_value)/sizeof(uint16_t));
 
+	//タイマ割り込みの開始
 	sensor_mode = sensor_all_off_mode;
-
 	__HAL_TIM_CLEAR_FLAG(&htim1, TIM_FLAG_UPDATE);
 	__HAL_TIM_SET_COUNTER(&htim1,0);
 	HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_1);
@@ -55,6 +57,9 @@ void Sensor_StartADC( void )
 --------------------------------------------------------------- */
 void Sensor_StopADC( void )
 {
+	//センサ値のDMA停止
+	HAL_ADC_Stop_DMA(&hadc1);
+	//タイマ割り込みの停止
 	HAL_TIM_OC_Stop_IT(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_OC_Stop_IT(&htim1, TIM_CHANNEL_2);
 	HAL_TIM_OC_Stop(&htim1, TIM_CHANNEL_3);

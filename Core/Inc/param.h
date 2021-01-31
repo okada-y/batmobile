@@ -32,19 +32,19 @@
 #define Sampling_cycle      (0.001)  //サンプリング周期
 
 /*module_test*/
-#define log_count_lim		(1000)	//データ取得する期間[ms]
-#define log_count_step		(1)	    //データを取得する時間間隔[ms]
+#define log_count_lim		(100000)	//データ取得する期間[ms]
+#define log_count_step		(100)	    //データを取得する時間間隔[ms]
 
 #define DATA_DEFAULT              //測定モード１
 //#define DATA_SIDE                 //測定モード２
 //#define DATA_MAZE                 //測定モード３
 
 //maze
-#define x_size              (10)     //x軸方向の壁(縦壁)の枚数+1
-#define y_size              (10)     //y軸方向の壁(横壁)の枚数+1
+#define x_size              (17)     //x軸方向の壁(縦壁)の枚数+1
+#define y_size              (17)     //y軸方向の壁(横壁)の枚数+1
 #define g_size              (4)     //ゴールのマスの数
-#define goal_cordinate      {4, 4, 5, 5, 3, 3, 4, 4, 4,\
-                             	 	 	 	  4, 5, 4, 5, 2, 3, 1, 2, 3}
+#define goal_cordinate      {10, 10, 11, 11, 3, 3, 4, 4, 4,\
+                             	 	 	 	  10, 11, 10, 11, 2, 3, 1, 2, 3}
 										//一行目、ゴールのx座標
 										//二行目、ゴールのy座標
 //ir
@@ -109,7 +109,7 @@
 
 //movement
 #define move_comp_th        (0.001f)   //移動完了の閾値
-#define rotate_comp_th      (0.001f)    //回転完了の閾値
+#define rotate_comp_th      (0.5)    //回転完了の閾値
 
 ///slalom
 
@@ -218,7 +218,7 @@
 #define MOT_DUTY_MAX	(800)						//モータの最大Duty
 
 //failsafe
-#define speed_m_err_th (0.025f)					//速度偏差の閾値(m/s)
+#define speed_m_err_th (0.1f)					//速度偏差の閾値(m/s)
 #define theta_err_th (0.1f)							//角度偏差の閾値(rad)
 #define mouse_state_err_count_th 	(50)		//速度、角度偏差によるエラー検出のカウンタ値(ms)
 #define front_wall_err_count_th 	(1000)		//前壁制御時のエラー検出のカウンタ値(ms)

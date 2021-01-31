@@ -16,9 +16,11 @@ static uint8_t mode_number = 0;   //mode番号
 static MODE_DECIDE ready_mode = before;
 static MODE_STATE mode_state = preparation;
 
+uint8_t rom_mode = 0;
 uint8_t run_mode_1 = 0;
 uint8_t run_mode_2 = 0;
 uint8_t run_mode_3 = 0;
+
 
 //機能 	:メインモード処理
 //引数 	:なし
@@ -38,17 +40,21 @@ void mode_main(void)
 		ready_mode = mode_decide_jud();
 	}
 	
-	if (get_mode_number() == 14){
+	if (get_mode_number() == 14){//走行モード番号選択時、走行モードを選択
 		maze_run_mode_decide();
+	}
+
+	if (get_mode_number() == 15){//ROM操作モード番号選択時、ROM操作モードを選択
+		rom_mode_decide();
 	}
 
 	//モード開始可能状態に遷移したとき、2回LEDを点滅させる。
 	for(int i=0; i<2; i++)
 	{ 
 		LED_ALL_ON();
-		HAL_Delay(700);
+		HAL_Delay(100);
 		LED_ALL_OFF();
-		HAL_Delay(300);
+		HAL_Delay(100);
 	}
 
 	//IRセンサを稼働させる。
@@ -167,6 +173,29 @@ void mode_start(void)
 			break;
 		}
 	}
+}
+
+//機能:ROM操作用のモードを選択する
+//引数	:なし
+//返り値	:なし
+void rom_mode_decide(void)
+{
+	uint8_t l_rom_mode = 0;
+
+	//ボタンで決定されるまで、モード選択中
+	while(!button_state) //モード選択モードのとき
+	{
+		 l_rom_mode = select_num_r_tire(l_rom_mode);
+		Indicator_number(l_rom_mode);
+	}
+	//ブザーを1回鳴らす
+	set_buzzer_flg(2);
+	//ボタンを離されるまで停止
+	while(button_state){
+	}
+
+	//グローバル変数へ展開
+	rom_mode = l_rom_mode;
 }
 
 //機能:迷路走行時のモードを選択する

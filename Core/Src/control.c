@@ -6,9 +6,23 @@
 
 static float move_speed_err_I = 0; 			//移動速度偏差積分
 static float rotate_speed_err_I = 0;	    //角速度偏差積分
-
 static float target_vol_sum_ctrl = 0;		//右タイヤの操作量[ duty % ]
 static float target_vol_diff_ctrl = 0;		//左タイヤの操作量[ duty % ]
+static float post_target_rotation_speed = 0; //前回の回転速度目標値
+static float post_target_move_speed = 0; //前回の速度目標値
+
+//機能	: controlの変数をクリアする
+//引数	: なし
+//返り値	: なし
+void clr_control(void)
+{
+	move_speed_err_I = 0;
+	rotate_speed_err_I = 0;
+	target_vol_sum_ctrl = 0;		//右タイヤの操作量[ duty % ]
+	target_vol_diff_ctrl = 0;		//左タイヤの操作量[ duty % ]
+	post_target_rotation_speed = 0; //前回の回転速度目標値
+	post_target_move_speed = 0; //前回の速度目標値
+}
 
 //機能	: 軌道制御によるモータ印加電圧の和を取得する
 //引数	: なし
@@ -38,9 +52,9 @@ void calc_motor_vol_ctrl(void)
 	float move_speed_err_PI = 0; 		//移動速度偏差によるPIコントローラ出力
 	float rotate_speed_err_PI = 0;		//角速度偏差によるPIコントローラ出力
 
-    static float post_target_rotation_speed = 0; //前回の回転速度目標値
+
     float target_rotation_accel = 0;        //目標回転角加速度
-    static float post_target_move_speed = 0; //前回の速度目標値
+
     float target_move_accel = 0;        //目標加速度
 
     float rotate_FF = 0;   //FFコントローラによる電圧差出力（回転方向）

@@ -8,6 +8,7 @@ typedef enum{
     none
 }side_wall_ctrl;
 
+void clr_adjust(void);
 void adjust_1ms (void);
 void set_target_side_sensor(void);
 void calc_motor_vol_side_wall ( void );

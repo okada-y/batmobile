@@ -19,6 +19,18 @@ static float target_vol_l = 0;
 static int16_t target_duty_r = 0;
 static int16_t target_duty_l = 0;
 
+//exvolの変数をクリアする
+void clr_exvol(void)
+{
+	ctrl_mode = trace;
+	target_vol_sum = 0;
+	target_vol_diff = 0;
+	target_vol_r = 0;
+	target_vol_l = 0;
+	target_duty_r = 0;
+	target_duty_l = 0;
+}
+
 //機能	: モータの1msタスクまとめ
 //引数	: なし
 //返り値	: なし

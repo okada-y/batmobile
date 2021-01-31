@@ -5,7 +5,7 @@
  * File: maze_solve.c
  *
  * MATLAB Coder version            : 4.2
- * C/C++ source code generated on  : 08-Jan-2021 11:16:43
+ * C/C++ source code generated on  : 29-Jan-2021 00:40:38
  */
 
 /* Include Files */
@@ -17,6 +17,7 @@
 #include "maze_init_data.h"
 #include "C:\work\matlab\maze_sim_git\src\C_src\matlab_movement.h"
 #include "C:\work\matlab\maze_sim_git\src\C_src\matlab_IR_sensor.h"
+#include "C:\work\matlab\maze_sim_git\src\C_src\matlab_rom.h"
 
 /* Type Definitions */
 #ifndef typedef_coder_internal_ref
@@ -4393,10 +4394,8 @@ static void b_search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
                  maze_wall_search);
 
         /* 壁情報が更新されれば、コンター更新のフラグを立てる。 */
-        if (temp_maze_wall_tmp != b_maze_wall[(*current_y + ((*current_x - 1) <<
-              5)) - 1]) {
-          contour_flg = 1U;
-        }
+        contour_flg = (unsigned char)(temp_maze_wall_tmp != b_maze_wall
+          [(*current_y + ((*current_x - 1) << 5)) - 1]);
       }
     } else {
       /* ゴール直後のとき */
@@ -13950,10 +13949,8 @@ static void search_adachi(const coder_internal_ref_6 *wall, coder_internal_ref
                maze_wall_search);
 
       /* 壁情報が更新されれば、コンター更新のフラグを立てる。 */
-      if (temp_maze_wall_tmp != b_maze_wall[(*current_y + ((*current_x - 1) << 5))
-          - 1]) {
-        contour_flg = 1U;
-      }
+      contour_flg = (unsigned char)(temp_maze_wall_tmp != b_maze_wall
+        [(*current_y + ((*current_x - 1) << 5)) - 1]);
     }
 
     /*  等高線MAP生成 */
@@ -14246,15 +14243,15 @@ static unsigned char sh_route_unexp_sq_jud(const unsigned char
  */
 static void turn_180deg(unsigned char *current_dir)
 {
-  int i322;
+  int i320;
 
   /*     %% turn_180deg 180度ターンする関数 */
-  i322 = (int)(4U + *current_dir);
-  if ((unsigned int)i322 > 255U) {
-    i322 = 255;
+  i320 = (int)(4U + *current_dir);
+  if ((unsigned int)i320 > 255U) {
+    i320 = 255;
   }
 
-  *current_dir = (unsigned char)((i322 - 2) % 4);
+  *current_dir = (unsigned char)((i320 - 2) % 4);
 }
 
 /*
@@ -14265,20 +14262,20 @@ static void turn_180deg(unsigned char *current_dir)
  */
 static void turn_clk_90deg(unsigned char *current_dir)
 {
-  int i321;
+  int i319;
 
   /*     %% turn_clk_90deg 時計周りに90度ターンする関数 */
-  i321 = (int)(4U + *current_dir);
-  if ((unsigned int)i321 > 255U) {
-    i321 = 255;
+  i319 = (int)(4U + *current_dir);
+  if ((unsigned int)i319 > 255U) {
+    i319 = 255;
   }
 
-  i321++;
-  if ((unsigned int)i321 > 255U) {
-    i321 = 255;
+  i319++;
+  if ((unsigned int)i319 > 255U) {
+    i319 = 255;
   }
 
-  *current_dir = (unsigned char)(i321 % 4);
+  *current_dir = (unsigned char)(i319 % 4);
 }
 
 /*
@@ -14289,15 +14286,15 @@ static void turn_clk_90deg(unsigned char *current_dir)
  */
 static void turn_conclk_90deg(unsigned char *current_dir)
 {
-  int i323;
+  int i321;
 
   /*     %% turn_conclk_90deg 反時計周りに90度回る関数 */
-  i323 = (int)(4U + *current_dir);
-  if ((unsigned int)i323 > 255U) {
-    i323 = 255;
+  i321 = (int)(4U + *current_dir);
+  if ((unsigned int)i321 > 255U) {
+    i321 = 255;
   }
 
-  *current_dir = (unsigned char)((i323 - 1) % 4);
+  *current_dir = (unsigned char)((i321 - 1) % 4);
 }
 
 /*
@@ -15121,11 +15118,15 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
   unsigned char wall_write[4];
   unsigned char serch_write[4];
   short wall_sensor_front;
+  int b_current_dir;
   int i227;
+  unsigned char k;
+  int b_k;
+  int c_k;
   int ex;
   int i228;
   int i229;
-  int k;
+  int d_k;
   int i230;
   int i231;
   int i232;
@@ -15134,15 +15135,15 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
   int i235;
   int i236;
   int i237;
+  unsigned int qY;
   int i238;
   int i239;
   int i240;
-  unsigned int qY;
   int i241;
+  signed char varargin_1[9];
   int i242;
   int i243;
   int i244;
-  signed char varargin_1[9];
   int i245;
   int i246;
   int i247;
@@ -15174,10 +15175,10 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
   int i273;
   int i274;
   int i275;
+  unsigned int b_qY;
   int i276;
   int i277;
   int i278;
-  unsigned int b_qY;
   int i279;
   int i280;
   int i281;
@@ -15208,10 +15209,10 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
   int i306;
   int i307;
   int i308;
-  int i309;
-  int i310;
   unsigned int c_qY;
   unsigned int d_qY;
+  int i309;
+  int i310;
   int i311;
   int i312;
   int i313;
@@ -15220,8 +15221,6 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
   int i316;
   int i317;
   int i318;
-  int i319;
-  int i320;
 
   /*     %%  wall_set 壁情報取得 */
   /* グローバル変数(matlabでは迷路データを、Cでは壁センサ値を参照) */
@@ -15261,6 +15260,19 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
 
     /* 壁フラグセット */
     wall_flg->contents |= 1;
+  } else {
+    if (current_dir <= 7) {
+      b_current_dir = (unsigned char)(1 << current_dir);
+    } else {
+      b_current_dir = 0;
+    }
+
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & b_current_dir) !=
+        0) {
+      /* すでに壁情報がある場合も壁フラグを立てる。%見落としたとき用 */
+      /* 壁フラグセット */
+      wall_flg->contents |= 1;
+    }
   }
 
   /* 探索情報取更新 */
@@ -15293,6 +15305,24 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
 
     /* 壁フラグセット */
     wall_flg->contents = (unsigned char)(wall_flg->contents | 2);
+  } else {
+    i227 = (int)(current_dir + 1U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
+    }
+
+    k = b_rem((unsigned char)i227);
+    if (k <= 7) {
+      b_k = (unsigned char)(1 << k);
+    } else {
+      b_k = 0;
+    }
+
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & b_k) != 0) {
+      /* すでに壁情報がある場合も壁フラグを立てる。%見落としたとき用 */
+      /* 壁フラグセット */
+      wall_flg->contents = (unsigned char)(wall_flg->contents | 2);
+    }
   }
 
   /* 探索情報取更新 */
@@ -15331,6 +15361,24 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
 
     /* 壁フラグセット */
     wall_flg->contents = (unsigned char)(wall_flg->contents | 8);
+  } else {
+    i227 = (int)(current_dir + 3U);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
+    }
+
+    k = b_rem((unsigned char)i227);
+    if (k <= 7) {
+      c_k = (unsigned char)(1 << k);
+    } else {
+      c_k = 0;
+    }
+
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & c_k) != 0) {
+      /* すでに壁情報がある場合も壁フラグを立てる。%見落としたとき用 */
+      /* 壁フラグセット */
+      wall_flg->contents = (unsigned char)(wall_flg->contents | 8);
+    }
   }
 
   /* 探索情報取更新 */
@@ -15366,37 +15414,75 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
     ex = 255;
   }
 
-  i229 = (current_x - 1) << 5;
-  k = current_y + i229;
-  i230 = k - 1;
-  maze_wall[i230] = (unsigned char)(maze_wall[i230] | ex);
+  maze_wall[(current_y + ((current_x - 1) << 5)) - 1] = (unsigned char)
+    (maze_wall[(current_y + ((current_x - 1) << 5)) - 1] | ex);
   ex = i227;
   if ((unsigned int)i227 > 255U) {
     ex = 255;
   }
 
   if (g_direction.North <= 7) {
-    i231 = (unsigned char)(1 << g_direction.North);
+    i229 = (unsigned char)(1 << g_direction.North);
   } else {
-    i231 = 0;
+    i229 = 0;
   }
 
-  ex = (int)((unsigned int)i231 * serch_write[ex - 1]);
+  ex = (int)((unsigned int)i229 * serch_write[ex - 1]);
   if ((unsigned int)ex > 255U) {
     ex = 255;
   }
 
-  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | ex);
+  maze_wall_search[(current_y + ((current_x - 1) << 5)) - 1] = (unsigned char)
+    (maze_wall_search[(current_y + ((current_x - 1) << 5)) - 1] | ex);
 
   /* 東側 */
   ex = (int)(g_direction.East + 1U);
-  i232 = ex;
+  d_k = ex;
   if ((unsigned int)ex > 255U) {
-    i232 = 255;
+    d_k = 255;
   }
 
   if (g_direction.East <= 7) {
-    i233 = (unsigned char)(1 << g_direction.East);
+    i230 = (unsigned char)(1 << g_direction.East);
+  } else {
+    i230 = 0;
+  }
+
+  d_k = (int)((unsigned int)i230 * wall_write[d_k - 1]);
+  if ((unsigned int)d_k > 255U) {
+    d_k = 255;
+  }
+
+  maze_wall[(current_y + ((current_x - 1) << 5)) - 1] = (unsigned char)
+    (maze_wall[(current_y + ((current_x - 1) << 5)) - 1] | d_k);
+  d_k = ex;
+  if ((unsigned int)ex > 255U) {
+    d_k = 255;
+  }
+
+  if (g_direction.East <= 7) {
+    i231 = (unsigned char)(1 << g_direction.East);
+  } else {
+    i231 = 0;
+  }
+
+  d_k = (int)((unsigned int)i231 * serch_write[d_k - 1]);
+  if ((unsigned int)d_k > 255U) {
+    d_k = 255;
+  }
+
+  maze_wall_search[(current_y + ((current_x - 1) << 5)) - 1] = (unsigned char)
+    (maze_wall_search[(current_y + ((current_x - 1) << 5)) - 1] | d_k);
+
+  /* 南側 */
+  d_k = (int)(g_direction.South + 1U);
+  i232 = d_k;
+  if ((unsigned int)d_k > 255U) {
+    i232 = 255;
+  }
+
+  if (g_direction.South <= 7) {
+    i233 = (unsigned char)(1 << g_direction.South);
   } else {
     i233 = 0;
   }
@@ -15406,14 +15492,15 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
     i232 = 255;
   }
 
-  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i232);
-  i232 = ex;
-  if ((unsigned int)ex > 255U) {
+  maze_wall[(current_y + ((current_x - 1) << 5)) - 1] = (unsigned char)
+    (maze_wall[(current_y + ((current_x - 1) << 5)) - 1] | i232);
+  i232 = d_k;
+  if ((unsigned int)d_k > 255U) {
     i232 = 255;
   }
 
-  if (g_direction.East <= 7) {
-    i234 = (unsigned char)(1 << g_direction.East);
+  if (g_direction.South <= 7) {
+    i234 = (unsigned char)(1 << g_direction.South);
   } else {
     i234 = 0;
   }
@@ -15423,17 +15510,18 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
     i232 = 255;
   }
 
-  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i232);
+  maze_wall_search[(current_y + ((current_x - 1) << 5)) - 1] = (unsigned char)
+    (maze_wall_search[(current_y + ((current_x - 1) << 5)) - 1] | i232);
 
-  /* 南側 */
-  i232 = (int)(g_direction.South + 1U);
+  /* 西側 */
+  i232 = (int)(g_direction.West + 1U);
   i235 = i232;
   if ((unsigned int)i232 > 255U) {
     i235 = 255;
   }
 
-  if (g_direction.South <= 7) {
-    i236 = (unsigned char)(1 << g_direction.South);
+  if (g_direction.West <= 7) {
+    i236 = (unsigned char)(1 << g_direction.West);
   } else {
     i236 = 0;
   }
@@ -15443,14 +15531,15 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
     i235 = 255;
   }
 
-  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i235);
+  maze_wall[(current_y + ((current_x - 1) << 5)) - 1] = (unsigned char)
+    (maze_wall[(current_y + ((current_x - 1) << 5)) - 1] | i235);
   i235 = i232;
   if ((unsigned int)i232 > 255U) {
     i235 = 255;
   }
 
-  if (g_direction.South <= 7) {
-    i237 = (unsigned char)(1 << g_direction.South);
+  if (g_direction.West <= 7) {
+    i237 = (unsigned char)(1 << g_direction.West);
   } else {
     i237 = 0;
   }
@@ -15460,44 +15549,8 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
     i235 = 255;
   }
 
-  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i235);
-
-  /* 西側 */
-  i235 = (int)(g_direction.West + 1U);
-  i238 = i235;
-  if ((unsigned int)i235 > 255U) {
-    i238 = 255;
-  }
-
-  if (g_direction.West <= 7) {
-    i239 = (unsigned char)(1 << g_direction.West);
-  } else {
-    i239 = 0;
-  }
-
-  i238 = (int)((unsigned int)i239 * wall_write[i238 - 1]);
-  if ((unsigned int)i238 > 255U) {
-    i238 = 255;
-  }
-
-  maze_wall[i230] = (unsigned char)(maze_wall[i230] | i238);
-  i238 = i235;
-  if ((unsigned int)i235 > 255U) {
-    i238 = 255;
-  }
-
-  if (g_direction.West <= 7) {
-    i240 = (unsigned char)(1 << g_direction.West);
-  } else {
-    i240 = 0;
-  }
-
-  i238 = (int)((unsigned int)i240 * serch_write[i238 - 1]);
-  if ((unsigned int)i238 > 255U) {
-    i238 = 255;
-  }
-
-  maze_wall_search[i230] = (unsigned char)(maze_wall_search[i230] | i238);
+  maze_wall_search[(current_y + ((current_x - 1) << 5)) - 1] = (unsigned char)
+    (maze_wall_search[(current_y + ((current_x - 1) << 5)) - 1] | i235);
 
   /* 隣り合うマスの情報にも入力 */
   /* 北側のマスの南側の壁情報 */
@@ -15507,9 +15560,26 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
   }
 
   if (current_y < (int)qY) {
-    i238 = i227;
+    i235 = i227;
     if ((unsigned int)i227 > 255U) {
-      i238 = 255;
+      i235 = 255;
+    }
+
+    if (g_direction.South <= 7) {
+      i238 = (unsigned char)(1 << g_direction.South);
+    } else {
+      i238 = 0;
+    }
+
+    i235 = (int)((unsigned int)i238 * wall_write[i235 - 1]);
+    if ((unsigned int)i235 > 255U) {
+      i235 = 255;
+    }
+
+    maze_wall[current_y + ((current_x - 1) << 5)] = (unsigned char)
+      (maze_wall[current_y + ((current_x - 1) << 5)] | i235);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
     }
 
     if (g_direction.South <= 7) {
@@ -15518,28 +15588,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
       i241 = 0;
     }
 
-    i238 = (int)((unsigned int)i241 * wall_write[i238 - 1]);
-    if ((unsigned int)i238 > 255U) {
-      i238 = 255;
-    }
-
-    maze_wall[k] = (unsigned char)(maze_wall[k] | i238);
+    i227 = (int)((unsigned int)i241 * serch_write[i227 - 1]);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
     }
 
-    if (g_direction.South <= 7) {
-      i244 = (unsigned char)(1 << g_direction.South);
-    } else {
-      i244 = 0;
-    }
-
-    i227 = (int)((unsigned int)i244 * serch_write[i227 - 1]);
-    if ((unsigned int)i227 > 255U) {
-      i227 = 255;
-    }
-
-    maze_wall_search[k] = (unsigned char)(maze_wall_search[k] | i227);
+    maze_wall_search[current_y + ((current_x - 1) << 5)] = (unsigned char)
+      (maze_wall_search[current_y + ((current_x - 1) << 5)] | i227);
   }
 
   /* 東側のマスの西側の壁情報 */
@@ -15555,67 +15610,67 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
     }
 
     if (g_direction.West <= 7) {
-      i242 = (unsigned char)(1 << g_direction.West);
+      i239 = (unsigned char)(1 << g_direction.West);
     } else {
-      i242 = 0;
+      i239 = 0;
     }
 
-    i227 = (int)((unsigned int)i242 * wall_write[i227 - 1]);
+    i227 = (int)((unsigned int)i239 * wall_write[i227 - 1]);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
     }
 
-    i238 = (current_y + (current_x << 5)) - 1;
-    maze_wall[i238] = (unsigned char)(maze_wall[i238] | i227);
+    i235 = (current_y + (current_x << 5)) - 1;
+    maze_wall[i235] = (unsigned char)(maze_wall[i235] | i227);
     if ((unsigned int)ex > 255U) {
       ex = 255;
     }
 
     if (g_direction.West <= 7) {
-      i246 = (unsigned char)(1 << g_direction.West);
-    } else {
-      i246 = 0;
-    }
-
-    i227 = (int)((unsigned int)i246 * serch_write[ex - 1]);
-    if ((unsigned int)i227 > 255U) {
-      i227 = 255;
-    }
-
-    maze_wall_search[i238] = (unsigned char)(maze_wall_search[i238] | i227);
-  }
-
-  /* 南側のマスの北側の壁情報 */
-  if (current_y > 1) {
-    i227 = i232;
-    if ((unsigned int)i232 > 255U) {
-      i227 = 255;
-    }
-
-    if (g_direction.North <= 7) {
-      i243 = (unsigned char)(1 << g_direction.North);
+      i243 = (unsigned char)(1 << g_direction.West);
     } else {
       i243 = 0;
     }
 
-    i227 = (int)((unsigned int)i243 * wall_write[i227 - 1]);
+    i227 = (int)((unsigned int)i243 * serch_write[ex - 1]);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
     }
 
-    ex = k - 2;
-    maze_wall[ex] = (unsigned char)(maze_wall[ex] | i227);
-    if ((unsigned int)i232 > 255U) {
-      i232 = 255;
+    maze_wall_search[i235] = (unsigned char)(maze_wall_search[i235] | i227);
+  }
+
+  /* 南側のマスの北側の壁情報 */
+  if (current_y > 1) {
+    i227 = d_k;
+    if ((unsigned int)d_k > 255U) {
+      i227 = 255;
     }
 
     if (g_direction.North <= 7) {
-      i248 = (unsigned char)(1 << g_direction.North);
+      i240 = (unsigned char)(1 << g_direction.North);
     } else {
-      i248 = 0;
+      i240 = 0;
     }
 
-    i227 = (int)((unsigned int)i248 * serch_write[i232 - 1]);
+    i227 = (int)((unsigned int)i240 * wall_write[i227 - 1]);
+    if ((unsigned int)i227 > 255U) {
+      i227 = 255;
+    }
+
+    ex = (current_y + ((current_x - 1) << 5)) - 2;
+    maze_wall[ex] = (unsigned char)(maze_wall[ex] | i227);
+    if ((unsigned int)d_k > 255U) {
+      d_k = 255;
+    }
+
+    if (g_direction.North <= 7) {
+      i245 = (unsigned char)(1 << g_direction.North);
+    } else {
+      i245 = 0;
+    }
+
+    i227 = (int)((unsigned int)i245 * serch_write[d_k - 1]);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
     }
@@ -15625,35 +15680,35 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
 
   /* 西側のマスの東側の壁情報 */
   if (current_x > 1) {
-    i227 = i235;
-    if ((unsigned int)i235 > 255U) {
+    i227 = i232;
+    if ((unsigned int)i232 > 255U) {
       i227 = 255;
     }
 
     if (g_direction.East <= 7) {
-      i245 = (unsigned char)(1 << g_direction.East);
+      i242 = (unsigned char)(1 << g_direction.East);
     } else {
-      i245 = 0;
+      i242 = 0;
     }
 
-    i227 = (int)((unsigned int)i245 * wall_write[i227 - 1]);
+    i227 = (int)((unsigned int)i242 * wall_write[i227 - 1]);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
     }
 
     ex = (current_y + ((current_x - 2) << 5)) - 1;
     maze_wall[ex] = (unsigned char)(maze_wall[ex] | i227);
-    if ((unsigned int)i235 > 255U) {
-      i235 = 255;
+    if ((unsigned int)i232 > 255U) {
+      i232 = 255;
     }
 
     if (g_direction.East <= 7) {
-      i250 = (unsigned char)(1 << g_direction.East);
+      i247 = (unsigned char)(1 << g_direction.East);
     } else {
-      i250 = 0;
+      i247 = 0;
     }
 
-    i227 = (int)((unsigned int)i250 * serch_write[i235 - 1]);
+    i227 = (int)((unsigned int)i247 * serch_write[i232 - 1]);
     if ((unsigned int)i227 > 255U) {
       i227 = 255;
     }
@@ -15668,8 +15723,8 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
   }
 
   ex = varargin_1[0];
-  for (k = 0; k < 8; k++) {
-    i227 = varargin_1[k + 1];
+  for (d_k = 0; d_k < 8; d_k++) {
+    i227 = varargin_1[d_k + 1];
     if (ex < i227) {
       ex = i227;
     }
@@ -15679,31 +15734,31 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
     /* 柱に対し、3方向探索済みかつ、すべて壁がない場合、もう一方向の壁を確定させる。 */
     /* 北,東に壁がない場合 */
     if (g_direction.North <= 7) {
-      i247 = (unsigned char)(1 << g_direction.North);
+      i244 = (unsigned char)(1 << g_direction.North);
     } else {
-      i247 = 0;
+      i244 = 0;
     }
 
     if (g_direction.North <= 7) {
-      i249 = (unsigned char)(1 << g_direction.North);
+      i246 = (unsigned char)(1 << g_direction.North);
     } else {
-      i249 = 0;
+      i246 = 0;
     }
 
-    if ((maze_wall[i230] & i247) != i249) {
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i244) != i246) {
       if (g_direction.East <= 7) {
-        i251 = (unsigned char)(1 << g_direction.East);
+        i248 = (unsigned char)(1 << g_direction.East);
       } else {
-        i251 = 0;
+        i248 = 0;
       }
 
       if (g_direction.East <= 7) {
-        i253 = (unsigned char)(1 << g_direction.East);
+        i250 = (unsigned char)(1 << g_direction.East);
       } else {
-        i253 = 0;
+        i250 = 0;
       }
 
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i251) != i253)
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i248) != i250)
       {
         /* 北のマスの東が探索済み　かつ　壁がないとき */
         i227 = (int)(current_y + 1U);
@@ -15713,67 +15768,67 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         if (g_direction.East <= 7) {
-          i258 = (unsigned char)(1 << g_direction.East);
+          i255 = (unsigned char)(1 << g_direction.East);
         } else {
-          i258 = 0;
+          i255 = 0;
         }
 
-        if ((maze_wall_search[(ex + i229) - 1] & i258) != 0) {
+        if ((maze_wall_search[(ex + ((current_x - 1) << 5)) - 1] & i255) != 0) {
           ex = i227;
           if ((unsigned int)i227 > 255U) {
             ex = 255;
           }
 
           if (g_direction.East <= 7) {
-            i261 = (unsigned char)(1 << g_direction.East);
+            i258 = (unsigned char)(1 << g_direction.East);
           } else {
-            i261 = 0;
+            i258 = 0;
           }
 
           if (g_direction.East <= 7) {
-            i266 = (unsigned char)(1 << g_direction.East);
+            i263 = (unsigned char)(1 << g_direction.East);
           } else {
-            i266 = 0;
+            i263 = 0;
           }
 
-          if ((maze_wall[(ex + i229) - 1] & i261) != i266) {
+          if ((maze_wall[(ex + ((current_x - 1) << 5)) - 1] & i258) != i263) {
             /* 東のマスの北の壁が確定、探索済みとする。 */
             ex = (int)(current_x + 1U);
             if ((unsigned int)ex > 255U) {
               ex = 255;
             }
 
-            k = (int)(current_x + 1U);
-            if ((unsigned int)k > 255U) {
-              k = 255;
+            d_k = (int)(current_x + 1U);
+            if ((unsigned int)d_k > 255U) {
+              d_k = 255;
             }
 
             if (g_direction.North <= 7) {
-              i276 = (unsigned char)(1 << g_direction.North);
+              i273 = (unsigned char)(1 << g_direction.North);
             } else {
-              i276 = 0;
+              i273 = 0;
             }
 
             maze_wall[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + ((k - 1) << 5)) - 1] | i276);
+              (maze_wall[(current_y + ((d_k - 1) << 5)) - 1] | i273);
             ex = (int)(current_x + 1U);
             if ((unsigned int)ex > 255U) {
               ex = 255;
             }
 
-            k = (int)(current_x + 1U);
-            if ((unsigned int)k > 255U) {
-              k = 255;
+            d_k = (int)(current_x + 1U);
+            if ((unsigned int)d_k > 255U) {
+              d_k = 255;
             }
 
             if (g_direction.North <= 7) {
-              i285 = (unsigned char)(1 << g_direction.North);
+              i282 = (unsigned char)(1 << g_direction.North);
             } else {
-              i285 = 0;
+              i282 = 0;
             }
 
             maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(current_y + ((k - 1) << 5)) - 1] | i285);
+              (maze_wall_search[(current_y + ((d_k - 1) << 5)) - 1] | i282);
 
             /* 隣り合うマス（東北マス）の南の壁も確定 */
             ex = i227;
@@ -15781,77 +15836,84 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
               ex = 255;
             }
 
-            k = (int)(current_x + 1U);
-            if ((unsigned int)k > 255U) {
-              k = 255;
+            d_k = (int)(current_x + 1U);
+            if ((unsigned int)d_k > 255U) {
+              d_k = 255;
             }
 
-            i230 = i227;
+            i232 = i227;
             if ((unsigned int)i227 > 255U) {
-              i230 = 255;
-            }
-
-            i232 = (int)(current_x + 1U);
-            if ((unsigned int)i232 > 255U) {
               i232 = 255;
             }
 
-            if (g_direction.South <= 7) {
-              i301 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i301 = 0;
+            i235 = (int)(current_x + 1U);
+            if ((unsigned int)i235 > 255U) {
+              i235 = 255;
             }
 
-            maze_wall[(ex + ((k - 1) << 5)) - 1] = (unsigned char)(maze_wall
-              [(i230 + ((i232 - 1) << 5)) - 1] | i301);
+            if (g_direction.South <= 7) {
+              i298 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i298 = 0;
+            }
+
+            maze_wall[(ex + ((d_k - 1) << 5)) - 1] = (unsigned char)(maze_wall
+              [(i232 + ((i235 - 1) << 5)) - 1] | i298);
             ex = i227;
             if ((unsigned int)i227 > 255U) {
               ex = 255;
             }
 
-            k = (int)(current_x + 1U);
-            if ((unsigned int)k > 255U) {
-              k = 255;
+            d_k = (int)(current_x + 1U);
+            if ((unsigned int)d_k > 255U) {
+              d_k = 255;
             }
 
-            i230 = i227;
+            i232 = i227;
             if ((unsigned int)i227 > 255U) {
-              i230 = 255;
-            }
-
-            i232 = (int)(current_x + 1U);
-            if ((unsigned int)i232 > 255U) {
               i232 = 255;
             }
 
-            if (g_direction.South <= 7) {
-              i307 = (unsigned char)(1 << g_direction.South);
-            } else {
-              i307 = 0;
+            i235 = (int)(current_x + 1U);
+            if ((unsigned int)i235 > 255U) {
+              i235 = 255;
             }
 
-            maze_wall_search[(ex + ((k - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(i230 + ((i232 - 1) << 5)) - 1] | i307);
+            if (g_direction.South <= 7) {
+              i305 = (unsigned char)(1 << g_direction.South);
+            } else {
+              i305 = 0;
+            }
+
+            maze_wall_search[(ex + ((d_k - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(i232 + ((i235 - 1) << 5)) - 1] | i305);
           }
         }
 
         /* 東のマスの北が探索済み　かつ　壁がないとき */
         ex = (int)(current_x + 1U);
-        k = ex;
+        d_k = ex;
         if ((unsigned int)ex > 255U) {
-          k = 255;
+          d_k = 255;
         }
 
         if (g_direction.North <= 7) {
-          i265 = (unsigned char)(1 << g_direction.North);
+          i262 = (unsigned char)(1 << g_direction.North);
         } else {
-          i265 = 0;
+          i262 = 0;
         }
 
-        if ((maze_wall_search[(current_y + ((k - 1) << 5)) - 1] & i265) != 0) {
-          k = ex;
+        if ((maze_wall_search[(current_y + ((d_k - 1) << 5)) - 1] & i262) != 0)
+        {
+          d_k = ex;
           if ((unsigned int)ex > 255U) {
-            k = 255;
+            d_k = 255;
+          }
+
+          if (g_direction.North <= 7) {
+            i269 = (unsigned char)(1 << g_direction.North);
+          } else {
+            i269 = 0;
           }
 
           if (g_direction.North <= 7) {
@@ -15860,60 +15922,11 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             i272 = 0;
           }
 
-          if (g_direction.North <= 7) {
-            i275 = (unsigned char)(1 << g_direction.North);
-          } else {
-            i275 = 0;
-          }
-
-          if ((maze_wall[(current_y + ((k - 1) << 5)) - 1] & i272) != i275) {
+          if ((maze_wall[(current_y + ((d_k - 1) << 5)) - 1] & i269) != i272) {
             /* 北のマスの東の壁が確定、探索済みとする。 */
-            k = i227;
+            d_k = i227;
             if ((unsigned int)i227 > 255U) {
-              k = 255;
-            }
-
-            i230 = i227;
-            if ((unsigned int)i227 > 255U) {
-              i230 = 255;
-            }
-
-            if (g_direction.East <= 7) {
-              i284 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i284 = 0;
-            }
-
-            maze_wall[(k + i229) - 1] = (unsigned char)(maze_wall[(i230 + i229)
-              - 1] | i284);
-            k = i227;
-            if ((unsigned int)i227 > 255U) {
-              k = 255;
-            }
-
-            i230 = i227;
-            if ((unsigned int)i227 > 255U) {
-              i230 = 255;
-            }
-
-            if (g_direction.East <= 7) {
-              i294 = (unsigned char)(1 << g_direction.East);
-            } else {
-              i294 = 0;
-            }
-
-            maze_wall_search[(k + i229) - 1] = (unsigned char)(maze_wall_search
-              [(i230 + i229) - 1] | i294);
-
-            /* 隣り合うマス（東北マス）の西の壁も確定 */
-            k = i227;
-            if ((unsigned int)i227 > 255U) {
-              k = 255;
-            }
-
-            i230 = ex;
-            if ((unsigned int)ex > 255U) {
-              i230 = 255;
+              d_k = 255;
             }
 
             i232 = i227;
@@ -15921,27 +15934,70 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
               i232 = 255;
             }
 
-            i235 = ex;
+            if (g_direction.East <= 7) {
+              i281 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i281 = 0;
+            }
+
+            maze_wall[(d_k + ((current_x - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(i232 + ((current_x - 1) << 5)) - 1] | i281);
+            d_k = i227;
+            if ((unsigned int)i227 > 255U) {
+              d_k = 255;
+            }
+
+            i232 = i227;
+            if ((unsigned int)i227 > 255U) {
+              i232 = 255;
+            }
+
+            if (g_direction.East <= 7) {
+              i291 = (unsigned char)(1 << g_direction.East);
+            } else {
+              i291 = 0;
+            }
+
+            maze_wall_search[(d_k + ((current_x - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[(i232 + ((current_x - 1) << 5)) - 1] | i291);
+
+            /* 隣り合うマス（東北マス）の西の壁も確定 */
+            d_k = i227;
+            if ((unsigned int)i227 > 255U) {
+              d_k = 255;
+            }
+
+            i232 = ex;
             if ((unsigned int)ex > 255U) {
+              i232 = 255;
+            }
+
+            i235 = i227;
+            if ((unsigned int)i227 > 255U) {
               i235 = 255;
             }
 
-            if (g_direction.West <= 7) {
-              i306 = (unsigned char)(1 << g_direction.West);
-            } else {
-              i306 = 0;
-            }
-
-            maze_wall[(k + ((i230 - 1) << 5)) - 1] = (unsigned char)(maze_wall
-              [(i232 + ((i235 - 1) << 5)) - 1] | i306);
-            k = i227;
-            if ((unsigned int)i227 > 255U) {
-              k = 255;
-            }
-
-            i230 = ex;
+            i299 = ex;
             if ((unsigned int)ex > 255U) {
-              i230 = 255;
+              i299 = 255;
+            }
+
+            if (g_direction.West <= 7) {
+              i304 = (unsigned char)(1 << g_direction.West);
+            } else {
+              i304 = 0;
+            }
+
+            maze_wall[(d_k + ((i232 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(i235 + ((i299 - 1) << 5)) - 1] | i304);
+            d_k = i227;
+            if ((unsigned int)i227 > 255U) {
+              d_k = 255;
+            }
+
+            i232 = ex;
+            if ((unsigned int)ex > 255U) {
+              i232 = 255;
             }
 
             if ((unsigned int)i227 > 255U) {
@@ -15953,13 +16009,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.West <= 7) {
-              i312 = (unsigned char)(1 << g_direction.West);
+              i310 = (unsigned char)(1 << g_direction.West);
             } else {
-              i312 = 0;
+              i310 = 0;
             }
 
-            maze_wall_search[(k + ((i230 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(i227 + ((ex - 1) << 5)) - 1] | i312);
+            maze_wall_search[(d_k + ((i232 - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall_search[(i227 + ((ex - 1) << 5)) - 1] | i310);
           }
         }
       }
@@ -15967,31 +16023,31 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
 
     /* 北,西に壁がない場合 */
     if (g_direction.North <= 7) {
-      i252 = (unsigned char)(1 << g_direction.North);
+      i249 = (unsigned char)(1 << g_direction.North);
     } else {
-      i252 = 0;
+      i249 = 0;
     }
 
     if (g_direction.North <= 7) {
-      i254 = (unsigned char)(1 << g_direction.North);
+      i251 = (unsigned char)(1 << g_direction.North);
     } else {
-      i254 = 0;
+      i251 = 0;
     }
 
-    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i252) != i254) {
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i249) != i251) {
       if (g_direction.West <= 7) {
-        i255 = (unsigned char)(1 << g_direction.West);
+        i252 = (unsigned char)(1 << g_direction.West);
       } else {
-        i255 = 0;
+        i252 = 0;
       }
 
       if (g_direction.West <= 7) {
-        i257 = (unsigned char)(1 << g_direction.West);
+        i254 = (unsigned char)(1 << g_direction.West);
       } else {
-        i257 = 0;
+        i254 = 0;
       }
 
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i255) != i257)
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i252) != i254)
       {
         /* 北のマスの西が探索済み　かつ　壁がないとき */
         i227 = (int)(current_y + 1U);
@@ -16000,30 +16056,31 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         if (g_direction.West <= 7) {
-          i263 = (unsigned char)(1 << g_direction.West);
+          i260 = (unsigned char)(1 << g_direction.West);
         } else {
-          i263 = 0;
+          i260 = 0;
         }
 
-        if ((maze_wall_search[(i227 + i229) - 1] & i263) != 0) {
+        if ((maze_wall_search[(i227 + ((current_x - 1) << 5)) - 1] & i260) != 0)
+        {
           i227 = (int)(current_y + 1U);
           if ((unsigned int)i227 > 255U) {
             i227 = 255;
           }
 
           if (g_direction.West <= 7) {
-            i269 = (unsigned char)(1 << g_direction.West);
+            i266 = (unsigned char)(1 << g_direction.West);
           } else {
-            i269 = 0;
+            i266 = 0;
           }
 
           if (g_direction.West <= 7) {
-            i274 = (unsigned char)(1 << g_direction.West);
+            i271 = (unsigned char)(1 << g_direction.West);
           } else {
-            i274 = 0;
+            i271 = 0;
           }
 
-          if ((maze_wall[(i227 + i229) - 1] & i269) != i274) {
+          if ((maze_wall[(i227 + ((current_x - 1) << 5)) - 1] & i266) != i271) {
             /* 西のマスの北の壁が確定、探索済みとする。 */
             qY = current_x - 1U;
             if (qY > current_x) {
@@ -16036,13 +16093,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.North <= 7) {
-              i283 = (unsigned char)(1 << g_direction.North);
+              i280 = (unsigned char)(1 << g_direction.North);
             } else {
-              i283 = 0;
+              i280 = 0;
             }
 
             maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i283);
+              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i280);
             qY = current_x - 1U;
             if (qY > current_x) {
               qY = 0U;
@@ -16054,14 +16111,14 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.North <= 7) {
-              i293 = (unsigned char)(1 << g_direction.North);
+              i290 = (unsigned char)(1 << g_direction.North);
             } else {
-              i293 = 0;
+              i290 = 0;
             }
 
             maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned
               char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
-                    i293);
+                    i290);
 
             /* 隣り合うマス（北西マス）の南の壁も確定 */
             i227 = (int)(current_y + 1U);
@@ -16085,13 +16142,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.South <= 7) {
-              i303 = (unsigned char)(1 << g_direction.South);
+              i301 = (unsigned char)(1 << g_direction.South);
             } else {
-              i303 = 0;
+              i301 = 0;
             }
 
             maze_wall[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i303);
+              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i301);
             i227 = (int)(current_y + 1U);
             if ((unsigned int)i227 > 255U) {
               i227 = 255;
@@ -16113,13 +16170,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.South <= 7) {
-              i311 = (unsigned char)(1 << g_direction.South);
+              i309 = (unsigned char)(1 << g_direction.South);
             } else {
-              i311 = 0;
+              i309 = 0;
             }
 
             maze_wall_search[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i311);
+              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i309);
           }
         }
 
@@ -16130,12 +16187,12 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         if (g_direction.North <= 7) {
-          i271 = (unsigned char)(1 << g_direction.North);
+          i268 = (unsigned char)(1 << g_direction.North);
         } else {
-          i271 = 0;
+          i268 = 0;
         }
 
-        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i271) !=
+        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i268) !=
             0) {
           qY = current_x - 1U;
           if (qY > current_x) {
@@ -16143,18 +16200,18 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
           }
 
           if (g_direction.North <= 7) {
-            i278 = (unsigned char)(1 << g_direction.North);
+            i275 = (unsigned char)(1 << g_direction.North);
           } else {
-            i278 = 0;
+            i275 = 0;
           }
 
           if (g_direction.North <= 7) {
-            i282 = (unsigned char)(1 << g_direction.North);
+            i279 = (unsigned char)(1 << g_direction.North);
           } else {
-            i282 = 0;
+            i279 = 0;
           }
 
-          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i278) != i282)
+          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i275) != i279)
           {
             /* 北のマスの西の壁が確定、探索済みとする。 */
             i227 = (int)(current_y + 1U);
@@ -16168,13 +16225,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.West <= 7) {
-              i292 = (unsigned char)(1 << g_direction.West);
+              i289 = (unsigned char)(1 << g_direction.West);
             } else {
-              i292 = 0;
+              i289 = 0;
             }
 
-            maze_wall[(i227 + i229) - 1] = (unsigned char)(maze_wall[(ex + i229)
-              - 1] | i292);
+            maze_wall[(i227 + ((current_x - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[(ex + ((current_x - 1) << 5)) - 1] | i289);
             i227 = (int)(current_y + 1U);
             if ((unsigned int)i227 > 255U) {
               i227 = 255;
@@ -16186,13 +16243,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.West <= 7) {
-              i300 = (unsigned char)(1 << g_direction.West);
+              i297 = (unsigned char)(1 << g_direction.West);
             } else {
-              i300 = 0;
+              i297 = 0;
             }
 
-            maze_wall_search[(i227 + i229) - 1] = (unsigned char)
-              (maze_wall_search[(ex + i229) - 1] | i300);
+            maze_wall_search[(i227 + ((current_x - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[(ex + ((current_x - 1) << 5)) - 1] | i297);
 
             /* 隣り合うマス（北西マス）の東の壁も確定 */
             i227 = (int)(current_y + 1U);
@@ -16216,13 +16273,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.East <= 7) {
-              i309 = (unsigned char)(1 << g_direction.East);
+              i307 = (unsigned char)(1 << g_direction.East);
             } else {
-              i309 = 0;
+              i307 = 0;
             }
 
             maze_wall[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i309);
+              (maze_wall[(ex + (((int)b_qY - 1) << 5)) - 1] | i307);
             i227 = (int)(current_y + 1U);
             if ((unsigned int)i227 > 255U) {
               i227 = 255;
@@ -16244,13 +16301,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.East <= 7) {
-              i316 = (unsigned char)(1 << g_direction.East);
+              i314 = (unsigned char)(1 << g_direction.East);
             } else {
-              i316 = 0;
+              i314 = 0;
             }
 
             maze_wall_search[(i227 + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i316);
+              (maze_wall_search[(ex + (((int)b_qY - 1) << 5)) - 1] | i314);
           }
         }
       }
@@ -16258,31 +16315,31 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
 
     /* 南,東に壁がない場合 */
     if (g_direction.East <= 7) {
+      i253 = (unsigned char)(1 << g_direction.East);
+    } else {
+      i253 = 0;
+    }
+
+    if (g_direction.East <= 7) {
       i256 = (unsigned char)(1 << g_direction.East);
     } else {
       i256 = 0;
     }
 
-    if (g_direction.East <= 7) {
-      i259 = (unsigned char)(1 << g_direction.East);
-    } else {
-      i259 = 0;
-    }
-
-    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i256) != i259) {
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i253) != i256) {
       if (g_direction.South <= 7) {
-        i260 = (unsigned char)(1 << g_direction.South);
+        i257 = (unsigned char)(1 << g_direction.South);
       } else {
-        i260 = 0;
+        i257 = 0;
       }
 
       if (g_direction.South <= 7) {
-        i264 = (unsigned char)(1 << g_direction.South);
+        i261 = (unsigned char)(1 << g_direction.South);
       } else {
-        i264 = 0;
+        i261 = 0;
       }
 
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i260) != i264)
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i257) != i261)
       {
         /* 南のマスの東が探索済み　かつ　壁がないとき */
         qY = current_y - 1U;
@@ -16291,30 +16348,32 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         if (g_direction.East <= 7) {
-          i270 = (unsigned char)(1 << g_direction.East);
+          i267 = (unsigned char)(1 << g_direction.East);
         } else {
-          i270 = 0;
+          i267 = 0;
         }
 
-        if ((maze_wall_search[((int)qY + i229) - 1] & i270) != 0) {
+        if ((maze_wall_search[((int)qY + ((current_x - 1) << 5)) - 1] & i267) !=
+            0) {
           qY = current_y - 1U;
           if (qY > current_y) {
             qY = 0U;
           }
 
           if (g_direction.East <= 7) {
-            i277 = (unsigned char)(1 << g_direction.East);
+            i274 = (unsigned char)(1 << g_direction.East);
           } else {
-            i277 = 0;
+            i274 = 0;
           }
 
           if (g_direction.East <= 7) {
-            i281 = (unsigned char)(1 << g_direction.East);
+            i278 = (unsigned char)(1 << g_direction.East);
           } else {
-            i281 = 0;
+            i278 = 0;
           }
 
-          if ((maze_wall[((int)qY + i229) - 1] & i277) != i281) {
+          if ((maze_wall[((int)qY + ((current_x - 1) << 5)) - 1] & i274) != i278)
+          {
             /* 東のマスの南の壁が確定、探索済みとする。 */
             i227 = (int)(current_x + 1U);
             if ((unsigned int)i227 > 255U) {
@@ -16327,13 +16386,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.South <= 7) {
-              i291 = (unsigned char)(1 << g_direction.South);
+              i288 = (unsigned char)(1 << g_direction.South);
             } else {
-              i291 = 0;
+              i288 = 0;
             }
 
             maze_wall[(current_y + ((i227 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + ((ex - 1) << 5)) - 1] | i291);
+              (maze_wall[(current_y + ((ex - 1) << 5)) - 1] | i288);
             i227 = (int)(current_x + 1U);
             if ((unsigned int)i227 > 255U) {
               i227 = 255;
@@ -16345,13 +16404,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.South <= 7) {
-              i299 = (unsigned char)(1 << g_direction.South);
+              i296 = (unsigned char)(1 << g_direction.South);
             } else {
-              i299 = 0;
+              i296 = 0;
             }
 
             maze_wall_search[(current_y + ((i227 - 1) << 5)) - 1] = (unsigned
-              char)(maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] | i299);
+              char)(maze_wall_search[(current_y + ((ex - 1) << 5)) - 1] | i296);
 
             /* 隣り合うマス（南東マス）の北の壁も確定 */
             qY = current_y - 1U;
@@ -16375,13 +16434,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.North <= 7) {
-              i308 = (unsigned char)(1 << g_direction.North);
+              i306 = (unsigned char)(1 << g_direction.North);
             } else {
-              i308 = 0;
+              i306 = 0;
             }
 
             maze_wall[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i308);
+              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i306);
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16403,13 +16462,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.North <= 7) {
-              i315 = (unsigned char)(1 << g_direction.North);
+              i313 = (unsigned char)(1 << g_direction.North);
             } else {
-              i315 = 0;
+              i313 = 0;
             }
 
             maze_wall_search[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i315);
+              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i313);
           }
         }
 
@@ -16420,16 +16479,22 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         if (g_direction.South <= 7) {
-          i280 = (unsigned char)(1 << g_direction.South);
+          i277 = (unsigned char)(1 << g_direction.South);
         } else {
-          i280 = 0;
+          i277 = 0;
         }
 
-        if ((maze_wall_search[(current_y + ((i227 - 1) << 5)) - 1] & i280) != 0)
+        if ((maze_wall_search[(current_y + ((i227 - 1) << 5)) - 1] & i277) != 0)
         {
           i227 = (int)(current_x + 1U);
           if ((unsigned int)i227 > 255U) {
             i227 = 255;
+          }
+
+          if (g_direction.South <= 7) {
+            i284 = (unsigned char)(1 << g_direction.South);
+          } else {
+            i284 = 0;
           }
 
           if (g_direction.South <= 7) {
@@ -16438,13 +16503,7 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             i287 = 0;
           }
 
-          if (g_direction.South <= 7) {
-            i290 = (unsigned char)(1 << g_direction.South);
-          } else {
-            i290 = 0;
-          }
-
-          if ((maze_wall[(current_y + ((i227 - 1) << 5)) - 1] & i287) != i290) {
+          if ((maze_wall[(current_y + ((i227 - 1) << 5)) - 1] & i284) != i287) {
             /* 南のマスの東の壁が確定、探索済みとする。 */
             qY = current_y - 1U;
             if (qY > current_y) {
@@ -16457,13 +16516,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.East <= 7) {
-              i298 = (unsigned char)(1 << g_direction.East);
+              i295 = (unsigned char)(1 << g_direction.East);
             } else {
-              i298 = 0;
+              i295 = 0;
             }
 
-            maze_wall[((int)qY + i229) - 1] = (unsigned char)(maze_wall[((int)
-              b_qY + i229) - 1] | i298);
+            maze_wall[((int)qY + ((current_x - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)b_qY + ((current_x - 1) << 5)) - 1] | i295);
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16475,13 +16534,14 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.East <= 7) {
-              i305 = (unsigned char)(1 << g_direction.East);
+              i303 = (unsigned char)(1 << g_direction.East);
             } else {
-              i305 = 0;
+              i303 = 0;
             }
 
-            maze_wall_search[((int)qY + i229) - 1] = (unsigned char)
-              (maze_wall_search[((int)b_qY + i229) - 1] | i305);
+            maze_wall_search[((int)qY + ((current_x - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[((int)b_qY + ((current_x - 1) << 5)) - 1] |
+                    i303);
 
             /* 隣り合うマス（南東マス）の西の壁が確定。探索済みとする */
             qY = current_y - 1U;
@@ -16505,13 +16565,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.West <= 7) {
-              i314 = (unsigned char)(1 << g_direction.West);
+              i312 = (unsigned char)(1 << g_direction.West);
             } else {
-              i314 = 0;
+              i312 = 0;
             }
 
             maze_wall[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i314);
+              (maze_wall[((int)b_qY + ((ex - 1) << 5)) - 1] | i312);
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16533,13 +16593,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.West <= 7) {
-              i319 = (unsigned char)(1 << g_direction.West);
+              i317 = (unsigned char)(1 << g_direction.West);
             } else {
-              i319 = 0;
+              i317 = 0;
             }
 
             maze_wall_search[((int)qY + ((i227 - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i319);
+              (maze_wall_search[((int)b_qY + ((ex - 1) << 5)) - 1] | i317);
           }
         }
       }
@@ -16547,31 +16607,31 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
 
     /* 南,西に壁がない場合 */
     if (g_direction.West <= 7) {
-      i262 = (unsigned char)(1 << g_direction.West);
+      i259 = (unsigned char)(1 << g_direction.West);
     } else {
-      i262 = 0;
+      i259 = 0;
     }
 
     if (g_direction.West <= 7) {
-      i267 = (unsigned char)(1 << g_direction.West);
+      i264 = (unsigned char)(1 << g_direction.West);
     } else {
-      i267 = 0;
+      i264 = 0;
     }
 
-    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i262) != i267) {
+    if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i259) != i264) {
       if (g_direction.South <= 7) {
-        i268 = (unsigned char)(1 << g_direction.South);
+        i265 = (unsigned char)(1 << g_direction.South);
       } else {
-        i268 = 0;
+        i265 = 0;
       }
 
       if (g_direction.South <= 7) {
-        i273 = (unsigned char)(1 << g_direction.South);
+        i270 = (unsigned char)(1 << g_direction.South);
       } else {
-        i273 = 0;
+        i270 = 0;
       }
 
-      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i268) != i273)
+      if ((maze_wall[(current_y + ((current_x - 1) << 5)) - 1] & i265) != i270)
       {
         /* 南のマスの西が探索済み　かつ　壁がないとき */
         qY = current_y - 1U;
@@ -16580,15 +16640,22 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         if (g_direction.West <= 7) {
-          i279 = (unsigned char)(1 << g_direction.West);
+          i276 = (unsigned char)(1 << g_direction.West);
         } else {
-          i279 = 0;
+          i276 = 0;
         }
 
-        if ((maze_wall_search[((int)qY + i229) - 1] & i279) != 0) {
+        if ((maze_wall_search[((int)qY + ((current_x - 1) << 5)) - 1] & i276) !=
+            0) {
           qY = current_y - 1U;
           if (qY > current_y) {
             qY = 0U;
+          }
+
+          if (g_direction.West <= 7) {
+            i283 = (unsigned char)(1 << g_direction.West);
+          } else {
+            i283 = 0;
           }
 
           if (g_direction.West <= 7) {
@@ -16597,13 +16664,8 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             i286 = 0;
           }
 
-          if (g_direction.West <= 7) {
-            i289 = (unsigned char)(1 << g_direction.West);
-          } else {
-            i289 = 0;
-          }
-
-          if ((maze_wall[((int)qY + i229) - 1] & i286) != i289) {
+          if ((maze_wall[((int)qY + ((current_x - 1) << 5)) - 1] & i283) != i286)
+          {
             /* 西のマスの南の壁が確定、探索済みとする。 */
             qY = current_x - 1U;
             if (qY > current_x) {
@@ -16616,13 +16678,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.South <= 7) {
-              i297 = (unsigned char)(1 << g_direction.South);
+              i294 = (unsigned char)(1 << g_direction.South);
             } else {
-              i297 = 0;
+              i294 = 0;
             }
 
             maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i297);
+              (maze_wall[(current_y + (((int)b_qY - 1) << 5)) - 1] | i294);
             qY = current_x - 1U;
             if (qY > current_x) {
               qY = 0U;
@@ -16634,14 +16696,14 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.South <= 7) {
-              i304 = (unsigned char)(1 << g_direction.South);
+              i302 = (unsigned char)(1 << g_direction.South);
             } else {
-              i304 = 0;
+              i302 = 0;
             }
 
             maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] = (unsigned
               char)(maze_wall_search[(current_y + (((int)b_qY - 1) << 5)) - 1] |
-                    i304);
+                    i302);
 
             /* 隣り合うマス（南西マス）の北の壁が確定。探索済みとする */
             qY = current_y - 1U;
@@ -16665,13 +16727,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.North <= 7) {
-              i313 = (unsigned char)(1 << g_direction.North);
+              i311 = (unsigned char)(1 << g_direction.North);
             } else {
-              i313 = 0;
+              i311 = 0;
             }
 
             maze_wall[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i313);
+              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i311);
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16693,14 +16755,14 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.North <= 7) {
-              i318 = (unsigned char)(1 << g_direction.North);
+              i316 = (unsigned char)(1 << g_direction.North);
             } else {
-              i318 = 0;
+              i316 = 0;
             }
 
             maze_wall_search[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned
               char)(maze_wall_search[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] |
-                    i318);
+                    i316);
           }
         }
 
@@ -16711,12 +16773,12 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
         }
 
         if (g_direction.South <= 7) {
-          i288 = (unsigned char)(1 << g_direction.South);
+          i285 = (unsigned char)(1 << g_direction.South);
         } else {
-          i288 = 0;
+          i285 = 0;
         }
 
-        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i288) !=
+        if ((maze_wall_search[(current_y + (((int)qY - 1) << 5)) - 1] & i285) !=
             0) {
           qY = current_x - 1U;
           if (qY > current_x) {
@@ -16724,18 +16786,18 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
           }
 
           if (g_direction.South <= 7) {
-            i295 = (unsigned char)(1 << g_direction.South);
+            i292 = (unsigned char)(1 << g_direction.South);
           } else {
-            i295 = 0;
+            i292 = 0;
           }
 
           if (g_direction.South <= 7) {
-            i296 = (unsigned char)(1 << g_direction.South);
+            i293 = (unsigned char)(1 << g_direction.South);
           } else {
-            i296 = 0;
+            i293 = 0;
           }
 
-          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i295) != i296)
+          if ((maze_wall[(current_y + (((int)qY - 1) << 5)) - 1] & i292) != i293)
           {
             /* 南のマスの西の壁が確定、探索済みとする。 */
             qY = current_y - 1U;
@@ -16749,13 +16811,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.West <= 7) {
-              i302 = (unsigned char)(1 << g_direction.West);
+              i300 = (unsigned char)(1 << g_direction.West);
             } else {
-              i302 = 0;
+              i300 = 0;
             }
 
-            maze_wall[((int)qY + i229) - 1] = (unsigned char)(maze_wall[((int)
-              b_qY + i229) - 1] | i302);
+            maze_wall[((int)qY + ((current_x - 1) << 5)) - 1] = (unsigned char)
+              (maze_wall[((int)b_qY + ((current_x - 1) << 5)) - 1] | i300);
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16767,13 +16829,14 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.West <= 7) {
-              i310 = (unsigned char)(1 << g_direction.West);
+              i308 = (unsigned char)(1 << g_direction.West);
             } else {
-              i310 = 0;
+              i308 = 0;
             }
 
-            maze_wall_search[((int)qY + i229) - 1] = (unsigned char)
-              (maze_wall_search[((int)b_qY + i229) - 1] | i310);
+            maze_wall_search[((int)qY + ((current_x - 1) << 5)) - 1] = (unsigned
+              char)(maze_wall_search[((int)b_qY + ((current_x - 1) << 5)) - 1] |
+                    i308);
 
             /* 隣り合うマス（南西マス）の東の壁が確定。探索済みとする */
             qY = current_y - 1U;
@@ -16797,13 +16860,13 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.East <= 7) {
-              i317 = (unsigned char)(1 << g_direction.East);
+              i315 = (unsigned char)(1 << g_direction.East);
             } else {
-              i317 = 0;
+              i315 = 0;
             }
 
             maze_wall[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned char)
-              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i317);
+              (maze_wall[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] | i315);
             qY = current_y - 1U;
             if (qY > current_y) {
               qY = 0U;
@@ -16825,14 +16888,14 @@ static void wall_set(const coder_internal_ref_6 *wall, coder_internal_ref
             }
 
             if (g_direction.East <= 7) {
-              i320 = (unsigned char)(1 << g_direction.East);
+              i318 = (unsigned char)(1 << g_direction.East);
             } else {
-              i320 = 0;
+              i318 = 0;
             }
 
             maze_wall_search[((int)qY + (((int)b_qY - 1) << 5)) - 1] = (unsigned
               char)(maze_wall_search[((int)c_qY + (((int)d_qY - 1) << 5)) - 1] |
-                    i320);
+                    i318);
           }
         }
       }
@@ -16884,12 +16947,16 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
   unsigned char goal_node2[2];
   unsigned char current_dir;
   unsigned short unusedExpr[1024];
+  unsigned char current_x;
+  unsigned char b_current_y;
+  unsigned char stop_flg;
   int exitg1;
   bool exitg2;
   unsigned char unexp_square[1024];
   unsigned short b_unusedExpr[1024];
   unsigned short c_unusedExpr[1024];
   unsigned short d_unusedExpr[1024];
+  unsigned short e_unusedExpr[1024];
   b_goal_size.contents = goal_size;
   for (N = 0; N < 18; N++) {
     b_maze_goal.contents[N] = maze_goal[N];
@@ -17011,15 +17078,20 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
                   &current_dir, maze_row_size, maze_col_size, maze_wall,
                   maze_wall_search, maze_goal, goal_size, &search_flag, 0U,
                   unusedExpr);
+    current_x = goal_matrix_dir2;
+    b_current_y = current_y;
     memcpy(&b_maze_wall.contents[0], &maze_wall[0], sizeof(unsigned char) << 10);
 
-    /* ひとまづゴール(停止) */
+    /* ひとまづゴール(停止させる) */
     /* 各フラグを定義 */
     start_flg.contents = 1U;
 
     /* 停止直後 */
+    stop_flg = 0U;
+
     /* 停止処理を実施しない */
     /* ゴール直後フラグをたてる */
+    /* 進入時のゴールを記憶する */
     /* ゴールをすべて探索 */
     do {
       exitg1 = 0;
@@ -17043,7 +17115,7 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned char)
                << 10);
         b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                        &adachi_search_mode, &goal_matrix_dir2, &current_y,
+                        &adachi_search_mode, &current_x, &b_current_y,
                         &current_dir, maze_row_size, maze_col_size, unexp_square,
                         maze_wall_search, new_goal, &start_flg.contents, 0U, 1U,
                         1U, b_unusedExpr);
@@ -17056,7 +17128,36 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
       }
     } while (exitg1 == 0);
 
+    /* 未探索のゴールマスがなく、現在地がゴール進入マスでない（ゴールが一マスでない） */
+    /* ゴール進入マスで停止させる。 */
+    if ((current_x == goal_matrix_dir2) && (b_current_y == current_y)) {
+    } else {
+      stop_flg = 1U;
+
+      /* 停止処理を実施する */
+      memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned char) <<
+             10);
+      goal_section[0] = goal_matrix_dir2;
+      goal_section[1] = current_y;
+      b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
+                      &adachi_search_mode, &current_x, &b_current_y,
+                      &current_dir, maze_row_size, maze_col_size, unexp_square,
+                      maze_wall_search, goal_section, &start_flg.contents, 1U,
+                      1U, 0U, c_unusedExpr);
+      memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned char) <<
+             10);
+
+      /* ゴール直後フラグをたてる */
+    }
+
+    /* 未探索ゴールがなくなったとき、マウスは停止しているはず。 */
+    /* 停止直後フラグを立てる。 */
+    start_flg.contents = 1U;
+
     /* 帰路探索 */
+    /* 帰路探索前に今までの迷路情報を書き込む */
+    m_rom_write();
+
     /* 全面探索 */
     /* 未探索マスがなくなるまで。 */
     /* 現地点から一番近い未探索マスを探索 */
@@ -17066,7 +17167,7 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
       do {
         exitg1 = 0;
         make_new_goal_all(&wall, b_maze_wall.contents, maze_wall_search,
-                          goal_matrix_dir2, current_y, contour_map, new_goal);
+                          current_x, b_current_y, contour_map, new_goal);
         if (new_goal[0] == 0) {
           exitg1 = 1;
         } else {
@@ -17075,10 +17176,10 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
           memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned
                   char) << 10);
           b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                          &adachi_search_mode, &goal_matrix_dir2, &current_y,
+                          &adachi_search_mode, &current_x, &b_current_y,
                           &current_dir, maze_row_size, maze_col_size,
                           unexp_square, maze_wall_search, new_goal,
-                          &start_flg.contents, 0U, 1U, 1U, c_unusedExpr);
+                          &start_flg.contents, stop_flg, 1U, 1U, d_unusedExpr);
           memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned
                   char) << 10);
 
@@ -17117,19 +17218,18 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
         } else {
           /* 未探索マスがある場合、探索する。 */
           /* 現在地点からコンターを展開し、該当の未探索が更新されれば、そこを新規ゴールとして出力 */
-          make_new_goal_sh(&wall, b_maze_wall.contents, goal_matrix_dir2,
-                           current_y, unexp_square, search_flag, contour_map,
-                           new_goal);
+          make_new_goal_sh(&wall, b_maze_wall.contents, current_x, b_current_y,
+                           unexp_square, search_flag, contour_map, new_goal);
 
           /* ゴールをプロット */
           /* 新規ゴールに向け、探索 */
           memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned
                   char) << 10);
           b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                          &adachi_search_mode, &goal_matrix_dir2, &current_y,
+                          &adachi_search_mode, &current_x, &b_current_y,
                           &current_dir, maze_row_size, maze_col_size,
                           unexp_square, maze_wall_search, new_goal,
-                          &start_flg.contents, 0U, 1U, 1U, d_unusedExpr);
+                          &start_flg.contents, stop_flg, 1U, 1U, e_unusedExpr);
           memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned
                   char) << 10);
 
@@ -17147,13 +17247,6 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
       /* 停止直後 */
       /* その他の場合無視 */
       break;
-
-     default:
-      /* 停止させない */
-      start_flg.contents = 0U;
-
-      /* 停止直後でない */
-      break;
     }
 
     /* スタートを目的地として足立法で再探索 */
@@ -17165,15 +17258,17 @@ void maze_solve(unsigned char maze_wall[1024], unsigned char maze_wall_search
     /* 足立法で帰宅 */
     memcpy(&unexp_square[0], &b_maze_wall.contents[0], sizeof(unsigned char) <<
            10);
-    goal_section[0] = 1U;
-    goal_section[1] = 1U;
+    goal_node2[0] = 1U;
+    goal_node2[1] = 1U;
     b_search_adachi(&wall, &wall_flg, &search, &b_maze_goal, &b_maze_wall,
-                    &adachi_search_mode, &goal_matrix_dir2, &current_y,
-                    &current_dir, maze_row_size, maze_col_size, unexp_square,
-                    maze_wall_search, goal_section, &start_flg.contents, 1U, 1U,
-                    0U, contour_map);
+                    &adachi_search_mode, &current_x, &b_current_y, &current_dir,
+                    maze_row_size, maze_col_size, unexp_square, maze_wall_search,
+                    goal_node2, &start_flg.contents, 1U, 1U, 0U, contour_map);
     memcpy(&b_maze_wall.contents[0], &unexp_square[0], sizeof(unsigned char) <<
            10);
+
+    /* 走行完了時、迷路情報を記録する。 */
+    m_rom_write();
 
     /* for code generation */
     /* 終了時、ゴールプロットを消す。 */
